@@ -1,0 +1,63 @@
+@import '../variables.scss';
+@import '../extends.scss';
+
+.BookingNavigation-wrapper {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $brand-color;
+
+  @media (max-width: $screen-sm-min) {
+    flex-direction: column;
+  }
+}
+
+.BookingNavigation {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: $screen-lg-min) {
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: $screen-sm-min) {
+    justify-content: center;
+  }
+}
+
+.BookingNavigation-item {
+  padding: 0 0.5em;
+}
+
+.BookingNavigation-link {
+  display: inline-block;
+  padding: 0.5em 1em;
+  color: #fff;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    border-bottom: 3px solid $text-color;
+    color: $text-color;
+    text-decoration: none;
+  }
+
+  @media (max-width: $screen-sm-min) {
+    font-size: 12px;
+  }
+}
+
+.BookingNavigation-link.active {
+  border-bottom: 3px solid $brand-color;
+  color: $brand-color;
+  font-weight: bold;
+}

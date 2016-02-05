@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { FaFacebook, FaTwitter } from 'react-icons/lib/fa';
 import './Footer.scss';
 import Container from '../Container';
 
@@ -27,8 +28,8 @@ class Footer extends Component {
             <div className="Footer-item">
               <div>
                 <span>Find us on:</span>
-                <a href="https://www.facebook.com/ebeecare/" className="Footer-social-media"><i className="fa fa-facebook"></i></a>
-                <a href="https://twitter.com/ebeecaresg" className="Footer-social-media"><i className="fa fa-twitter"></i></a>
+                <a href="https://www.facebook.com/ebeecare/" className="Footer-social-media"><FaFacebook /></a>
+                <a href="https://twitter.com/ebeecaresg" className="Footer-social-media"><FaTwitter /></a>
                 {/*
                 <a href="" className="Footer-social-media"><i className="fa fa-instagram"></i></a>
                 <a href="" className="Footer-social-media"><i className="fa fa-google-plus"></i></a>

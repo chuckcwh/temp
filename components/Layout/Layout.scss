@@ -1,0 +1,311 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+@import '../extends.scss';
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: $body-bg;
+  color: $text-color;
+  font-family: $font-family-base;
+  font-size: 18px;
+}
+
+h1 {
+  color: $secondary-color;
+  font-weight: normal;
+  font-size: 40px;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+strong {
+  font-weight: 600;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #E0DFDF;
+  border-bottom: 1px solid #FEFEFE;
+  background: transparent url(divider.png) no-repeat center 0;
+  height: 6px;
+}
+
+a.btn {
+  text-decoration: none;
+}
+
+a.btn-primary {
+  display: inline-block;
+  background-color: $secondary-color;
+  color: #fff;
+  width: 260px;
+  padding: 0.3em 0 0.3em 0;
+  text-transform: uppercase;
+  font-size: 25px;
+  @extend font-smoothing;
+
+  &:hover {
+    background-color: $brand-color;
+  }
+}
+
+.Layout {
+  margin: 0 auto;
+}
+
+.NavWrapper {
+  background-color: #FFF;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.featured {
+  font-size: 25px;
+  line-height: 2em;
+}
+
+.Banner {
+  .Banner-item {
+    height: 500px;
+    background-color: $body-bg;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    @media (max-width: $screen-sm-min) {
+      background-position: -550px 0px;
+    }
+  }
+
+  .Banner-item-text-wrapper {
+    position: relative;
+    color: #fff;
+
+    .Banner-item-text {
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      @mixin text-shadow 1px 1px 1px rgba(0, 0, 0, 0.5);
+    }
+
+    .Banner-item-button {
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  #Banner-item-1 {
+    .Banner-item-text-1 {
+      top: 140px;
+      font-size: 25px;
+    }
+
+    .Banner-item-text-2 {
+      top: 200px;
+      font-weight: bold;
+      font-size: 60px;
+      text-transform: uppercase;
+    }
+
+    .Banner-item-text-3 {
+      top: 272px;
+      font-size: 37px;
+    }
+
+    .Banner-item-text-4 {
+      top: 340px;
+    }
+
+    @media (max-width: $screen-sm-min) {
+      .Banner-item-text-1 {
+        top: 70px;
+      }
+
+      .Banner-item-text-2 {
+        top: 140px;
+      }
+
+      .Banner-item-text-3 {
+        top: 300px;
+      }
+
+      .Banner-item-text-4 {
+        top: 400px;
+      }
+    }
+  }
+}
+
+.Features-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 0 5em 0;
+  list-style: none;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 50px 0 0 0;
+
+  @media (max-width: $screen-sm-min) {
+    padding: 0;
+  }
+}
+
+.Features-item {
+  padding: 0 0.5em;
+  width: 200px;
+  text-align: center;
+
+  @media (max-width: $screen-sm-min) {
+    width: 100%;
+  }
+}
+
+.Features-item-icon {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.Features-item-title {
+  color: $secondary-color;
+  font-size: 22px;
+  padding: 5px 0 5px 0;
+}
+
+.Actions {
+  background-color: $brand-color;
+
+  .Actions-list {
+    display: flex;
+    flex-direction: row;
+    margin: 0 0 5em 0;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    list-style: none;
+    justify-content: space-around;
+    align-items: flex-start;
+
+    @media (max-width: $screen-sm-min) {
+      flex-wrap: wrap;
+    }
+
+    .Actions-item {
+      flex-grow: 1;
+      padding: 20px 60px;
+      text-align: center;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      .Actions-item + .Actions-item {
+        border-left: 1px solid #ffffff;
+      }
+    }
+
+    @media (max-width: $screen-sm-min) {
+      .Actions-item + .Actions-item {
+        border-top: 1px solid #ffffff;
+      }
+    }
+
+    .Actions-item-title {
+      color: #ffffff;
+      font-weight: 100;
+      font-size: 40px;
+      text-transform: uppercase;
+      padding: 5px;
+      @extend font-smoothing;
+    }
+
+    .Actions-item-button {
+      display: inline-block;
+      padding: 5px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 26px;
+      text-transform: uppercase;
+      width: 260px;
+      border: 1px solid #ffffff;
+      @mixin border-radius 5px;
+      @extend font-smoothing;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+    }
+  }
+}
+
+.Testimonials-list {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 5em 0;
+  list-style: none;
+  justify-content: center;
+  align-items: flex-start;
+
+  @media (max-width: $screen-sm-min) {
+    flex-wrap: wrap;
+  }
+}
+
+.Testimonials-item {
+  position: relative;
+  margin: 0 15px 65px 15px;
+  padding: 0;
+  width: 310px;
+  height: 390px;
+  border: 1px solid $secondary-color;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5em;
+
+  .Testimonials-wrapper {
+    padding: 1.5em;
+
+    .Testimonials-item-text {
+      color: $text-color;
+      max-height: 230px;
+      overflow: hidden;
+    }
+
+    .Testimonials-item-name {
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      bottom: 80px;
+      color: $brand-color;
+    }
+
+    .Testimonials-item-avatar {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      bottom: -60px;
+    }
+  }
+}

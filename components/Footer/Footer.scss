@@ -1,0 +1,64 @@
+@import '../variables.scss';
+@import '../extends.scss';
+@import '../mixins.scss';
+
+.Footer {
+  margin: 0 auto;
+  padding: 40px 0 20px 0;
+  color: #ffffff;
+  background-color: $brand-color;
+  font-weight: 600;
+  font-size: 15px;
+  @extend font-smoothing;
+}
+
+.Footer-list {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 5em 0;
+  list-style: none;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  @media (max-width: $screen-sm-min) {
+    flex-wrap: wrap;
+  }
+}
+
+.Footer-item {
+  padding: 0 0.5em;
+
+  .Footer-maps-button {
+    display: flex;
+    max-height: 32px;
+    flex-direction: row;
+    align-items: center;
+    background-color: #eee;
+
+    &:hover {
+      @mixin box-shadow 3px 3px 5px rgba(0, 0, 0, 0.25);
+    }
+
+    .Footer-maps-label {
+      flex: 1;
+      text-align: center;
+      line-height: 0.75em;
+      padding: 5px;
+      color: $text-color;
+    }
+  }
+
+  .Footer-social-media {
+    color: #fbeaaa;
+    margin-left: 10px;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.Footer-tel {
+  font-size: 25px;
+  font-weight: bold;
+}

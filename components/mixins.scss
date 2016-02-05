@@ -1,0 +1,20 @@
+@define-mixin border-radius $radius {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+@define-mixin box-shadow $args {
+  -webkit-box-shadow: $args;
+     -moz-box-shadow: $args;
+      -ms-box-shadow: $args;
+          box-shadow: $args;
+}
+
+@define-mixin text-shadow $args {
+  -webkit-text-shadow: $args;
+     -moz-text-shadow: $args;
+      -ms-text-shadow: $args;
+          text-shadow: $args;
+}

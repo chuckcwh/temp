@@ -1,0 +1,15 @@
+@import '../variables.scss';
+
+.Logo {
+  flex: 1;
+
+  img {
+    width: 260px;
+    height: 90px;
+
+    @media (max-width: $screen-sm-min) {
+      width: 130px;
+      height: 45px;
+    }
+  }
+}

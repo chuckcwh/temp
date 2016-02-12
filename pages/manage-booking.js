@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Container from '../components/Container/Container';
 
-
-
 export default class extends Component {
     
   clickTab(index) {
@@ -24,7 +22,7 @@ export default class extends Component {
         }
         var loginContainer = document.getElementById("loginFormContainer");
         var bookingContainer = document.getElementById("getBookingFormContainer");
-        console.log(index)
+        // console.log(index)
         if(index == 1){
             loginContainer.style.display = "none";
             bookingContainer.style.display = "block";
@@ -40,12 +38,7 @@ export default class extends Component {
   };
   
   render() {
-    var avatar = image => {
-      return '<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><g><clipPath id="hex-mask"><polygon fill="#ff0000" points="60,0 120,30 120,90 60,120 0,90 0,30"/></clipPath></g><image clip-path="url(#hex-mask)" height="120" width="120" xlink:href="' + image + '" /></svg>';
-    }
     return (
-
-    
         <div className="page-padding">
             <Container>
                 <div className="modal" id="modal-one" aria-hidden="true">

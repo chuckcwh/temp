@@ -16,6 +16,7 @@ export default class extends Component {
               <div className="Banner-item-text Banner-item-text-2">Family Caregivers</div>
               <div className="Banner-item-text Banner-item-text-3">From SGD 30 / Visit</div>
               <a href="/booking1" className="btn btn-primary Banner-item-button Banner-item-text-4">Book A Caregiver</a>
+            
             </div>
           </div>
         </div>
@@ -56,10 +57,16 @@ export default class extends Component {
                 <a href="" className="btn Actions-item-button">Book A Caregiver</a>
               </div>
               <div className="Actions-item">
+                <img src="home-actions-1.png" />
+                <div className="Actions-item-title">Sign up now & Get a Free Home Visit!</div>
+                <a href="/free-campaign" className="btn Actions-item-button" disabled={true}>Proceed</a>
+              </div>
+              <div className="Actions-item">
                 <img src="home-actions-2.png" />
                 <div className="Actions-item-title">Call Ebeecare Hotline</div>
                 <a href="#" className="btn Actions-item-button" disabled={true}>9733 6938</a>
               </div>
+
             </div>
           </Container>
         </div>

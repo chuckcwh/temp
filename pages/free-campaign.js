@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Container from '../components/Container/Container';
-//import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.scss';
 import 'whatwg-fetch';
@@ -71,6 +71,7 @@ export default class extends Component {
     if (time.trim() == "" ){
         messages.push("Please select a valid time slot");
     }
+    
     if (postal.trim() == "" ){
         messages.push("Invalid/Blank postal code");
     }
@@ -94,12 +95,25 @@ export default class extends Component {
         
         alert(messages.join('\n'));
     } else {
+        //remove the extra letters
+
+        var timeSplitted = time.split("-");
+        
+        var startTime = timeSplitted[0];
+        var endTime = timeSplitted[1];
+        var startDateTime = date.clone().startOf('day').hours(startTime).minutes(0).seconds(0);
+        var endDateTime = date.clone().startOf('day').hours(endTime).minutes(0).seconds(0);
+        var startDTString = startDateTime.format("YYYY-MM-DD HH:mm:ss")
+        var endDTString = endDateTime.format("YYYY-MM-DD HH:mm:ss")
+        console.log(startDTString + " - "+ endDTString);
         var jsonParams = {
-            "fullname" : fullname,
+            "fullName" : fullname,
             "email" : email,
             "mobile" : mobile,
             "date" : date,
             "time" : time,
+            "dateTimeStart" : startDTString,
+            "dateTimeEnd": endDTString,
             "postal" : postal,
             "floor" : floor,
             "unit" : unit,
@@ -172,11 +186,11 @@ export default class extends Component {
                     </div>
                     <div className="item">
                         <DatePicker
-                        className="input"
-                        selected={this.state.startDate}
-                        onChange={this.handleChange.bind(this)}
-                        isClearable={true} 
-                        placeholderText='Select date'/>
+                            className="input"
+                            selected={this.state.startDate}
+                            onChange={this.handleChange.bind(this)}
+                            isClearable={true} 
+                            placeholderText='Select date'/>
                        
                     </div>
                     <div className="item">
@@ -233,13 +247,14 @@ export default class extends Component {
         <div className="content-details-bottom">
             <div className="content-details-left">
                 <div className="how-it-work-info">
-                    <img src="PrettyNurse.png"/>
+                    
                     <div className="details">
                         <h2>HOW IT WORK?</h2>
                         <p>Step 1: Sign up with us and book a slot for home visit.</p>
                         <p>Step 2: Email will send to you with booking confirmation.</p>
                         <p>Step 3: We will inform you the visit one week before</p>
                     </div>
+                    <img src="PrettyNurse.png"/>
                 </div>
             </div>
             <div className="content-details-right">

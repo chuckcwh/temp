@@ -1,26 +1,136 @@
 import React, { Component } from 'react';
 import Container from '../components/Container/Container';
-    /*
-import DatePicker from 'react-datepicker';
+//import DatePicker from 'react-datepicker';
 import moment from 'moment';
-                
-                        <DatePicker
-                        selected={this.state.startDate}
-                        onChange={this.handleChange} > </DatePicker>
-                    */
+import 'react-datepicker/dist/react-datepicker.scss';
+import 'whatwg-fetch';
 
 export default class extends Component {
 
-  getInitialState() {
-    return {
-      startDate: moment()
-    };
+  constructor(props) {
+    super(props);
+    this.state = {startDate: moment()};
+    this.handleChange = this.handleChange.bind(this);
   };
-
+    
   handleChange(date) {
     this.setState({
       startDate: date
     });
+  };
+  
+  radioButtonsClicked(value){
+     //alert(value);
+    var buttons = document.getElementsByName("meantesting-passed");
+    for(var i = 0; i < buttons.length; i++) {
+       if(buttons[i].value == value) {
+           buttons[i].checked = true;
+       }else{
+           buttons[i].checked = false;
+       }
+    }
+  };
+  
+  submitForm(){
+    var fullname =  document.getElementById("fullname").value;
+    var email =  document.getElementById("email").value;
+    var mobile =  document.getElementById("mobile").value;
+    var date =  this.state.startDate;
+    var timeSelect =  document.getElementById("time");
+    var time =  timeSelect.options[timeSelect.selectedIndex].value;
+    var postal =  document.getElementById("postal").value;
+    var floor =  document.getElementById("floor").value;
+    var unit =  document.getElementById("unit").value;
+    var address =  document.getElementById("address").value;
+    var medicalSelect =  document.getElementById("medical");
+    var medical =  medicalSelect.options[medicalSelect.selectedIndex].value;
+    var family =  document.getElementById("family").checked;
+    var meantesting = document.getElementsByName('meantesting-passed');
+    var meantesting_val = "";
+    for(var i = 0; i < meantesting.length; i++){
+        if(meantesting[i].checked){
+            meantesting_val = meantesting[i].value;
+            break;
+        }
+    }
+    var referral_code = document.getElementById('referral').value;
+    var messages = [];
+  
+    if (fullname.trim() == ""){
+        messages.push("Invalid/Blank name");
+    }
+    if (email.trim() == "" || email.indexOf("@") < 1 ){
+        messages.push("Invalid/Blank email");
+    }
+    if (mobile.trim() == "" || mobile.toString().length != 8 ){
+        messages.push("Invalid/Blank mobile");
+    }
+    if (date == null ){
+        messages.push("Invalid/Blank date");
+    }
+    if (time.trim() == "" ){
+        messages.push("Please select a valid time slot");
+    }
+    if (postal.trim() == "" ){
+        messages.push("Invalid/Blank postal code");
+    }
+    if (floor.trim() == "" ){
+        messages.push("Invalid/Blank floor");
+    }
+    if (unit.trim() == "" ){
+        messages.push("Invalid/Blank unit");
+    }
+    if (address.trim() == "" ){
+        messages.push("Invalid/Blank address");
+    }
+    if (medical.trim() == ""){
+        messages.push("Please select a medical condition");
+    }
+    if (meantesting_val.trim() == ""){
+        messages.push("Please select a valid mean testing.");
+    }
+    
+    if (messages.length > 0 ){
+        
+        alert(messages.join('\n'));
+    } else {
+        var jsonParams = {
+            "fullname" : fullname,
+            "email" : email,
+            "mobile" : mobile,
+            "date" : date,
+            "time" : time,
+            "postal" : postal,
+            "floor" : floor,
+            "unit" : unit,
+            "address" : address,
+            "medical" : medical,
+            "family" : family,
+            "meantesting_val" : meantesting_val,
+            "referral" : referral_code
+        }
+        console.log("everything "+ JSON.stringify(jsonParams) );
+        fetch('http://161.202.19.121/api/registerFreeCampaignUsers', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic '+ btoa("secret:secret0nlyWeilsonKnowsShhh852~")
+          },
+          body: JSON.stringify(jsonParams)
+        }).then(function(response) {
+          return response.json();
+        }).then(function(data) {
+            
+            if(data.status == 1){
+                alert("Successful call : " + data.message);
+            }else{
+               alert("Unsuccessful call : " + data.message); 
+            }
+        }).catch(function() {
+          console.log("Error ");
+        });
+    }
   };
      
   render() {
@@ -52,28 +162,69 @@ export default class extends Component {
                         Sign Up & get a FREE Home Nursing Visit
                     </div>
                     <div className="item">
-                        <input type="text" name="salutation" placeholder="Salutation"> </input>
+                        <input className="input fill-width" type="text" name="fullname" id="fullname" placeholder="Enter Full Name*"></input>
                     </div>
                     <div className="item">
-                        <input type="text" name="name" placeholder="Enter Full Name*"> </input>
+                        <input className="input fill-width" type="email" name="email" id="email" placeholder="Enter Email*"></input>
                     </div>
                     <div className="item">
-                        <input type="email" name="email" placeholder="Enter Email*"> </input>
+                        <input className="input fill-width" type="number" name="mobile" id="mobile" placeholder="Enter Mobile Phone*"></input>
                     </div>
                     <div className="item">
-                        <input type="number" name="mobile" placeholder="Enter Mobile Phone*"> </input>
+                        <DatePicker
+                        className="input"
+                        selected={this.state.startDate}
+                        onChange={this.handleChange.bind(this)}
+                        isClearable={true} 
+                        placeholderText='Select date'/>
+                       
                     </div>
                     <div className="item">
-
-                        <input type="text" name="mobile" placeholder="Date*"> </input>
+                        <select name="time" id="time" className="input fill-width" defaultValue="" >
+                            <option value="" hidden className="place_holder">Select Time*</option>
+                            <option value="7-9">7am - 9 am</option>
+                            <option value="9-11">9am - 11am</option>
+                            <option value="11-1">11am - 1pm</option>
+                            <option value="13-15">1pm - 3pm</option>
+                            <option value="15-17">3pm - 5pm</option>
+                            <option value="17-19">5pm - 7pm</option>
+                            <option value="19-21">7pm - 9pm</option>
+                            <option value="21-23">9pm - 11pm</option>
+                        </select>
                     </div>
                     <div className="item">
-                        <input type="text" name="time" placeholder="Time"> </input>
+                        <input className="input fill-width" type="text" name="postal" id="postal" placeholder="Postal Code*"></input>
                     </div>
                     <div className="item">
-                        <input type="text" name="referral" placeholder="Referral/ Invite Code"> </input>
+                        <input type="number" name="floor" id="floor"  placeholder="Floor*" className="input col4"></input>
+                        &nbsp;-&nbsp;
+                        <input type="number" name="unit" id="unit" placeholder="Unit number*" className="input col2"></input>
                     </div>
-                    <div className="submit">
+                    <div className="item">
+                        <textarea className="input fill-width" name="address" id="address" placeholder="Address*"></textarea>
+                    </div>
+                    <div className="item">
+                        <select name="medical" id="medical" className="input fill-width" defaultValue="" >
+                            <option value="" disabled hidden className="place_holder">Select medical condition*</option>
+                            <option value="cancer">Cancer</option>
+                            <option value="diabetes">Diabetes</option>
+                            <option value="disabled">Disabled</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+                    <div className="item">
+                        <label className="input fill-width"><input type="checkbox" name="family" id="family"/>&nbsp;Stay with family members</label>
+                    </div>
+                    <div className="item">
+                        <p className="col1">Mean testing passed?</p> 
+                          <input type="radio" name="meantesting-passed" value="yes" onClick={this.radioButtonsClicked.bind(this, "yes")} />&nbsp;Yes&nbsp;&nbsp;
+                          <input type="radio" name="meantesting-passed" value="no" onClick={this.radioButtonsClicked.bind(this, "no")}  />&nbsp;No&nbsp;&nbsp;
+                          <input type="radio" name="meantesting-passed" value="unknown" onClick={this.radioButtonsClicked.bind(this, "unknown")}  />&nbsp;Unknown&nbsp;&nbsp;
+                    </div>
+                    <div className="item">
+                        <input className="input fill-width" type="text" name="referral" id="referral" placeholder="Referral/ Invite Code"></input>
+                    </div>
+                    <div className="submit" onClick={this.submitForm.bind(this)} >
                         Sign Up
                     </div>
                 </div>

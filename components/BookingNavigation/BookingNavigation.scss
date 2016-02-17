@@ -41,23 +41,21 @@
   display: inline-block;
   padding: 0.5em 1em;
   color: #fff;
-  font-size: 15px;
+  font-size: 25px;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    border-bottom: 3px solid $text-color;
-    color: $text-color;
+    color: $secondary-color;
     text-decoration: none;
   }
 
   @media (max-width: $screen-sm-min) {
-    font-size: 12px;
+    // font-size: 12px;
   }
 }
 
 .BookingNavigation-link.active {
-  border-bottom: 3px solid $brand-color;
   color: $brand-color;
   font-weight: bold;
 }

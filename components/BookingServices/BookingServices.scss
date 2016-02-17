@@ -8,7 +8,6 @@
   list-style: none;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid $secondary-color;
 
   @media (max-width: $screen-sm-min) {
     flex-direction: column;
@@ -39,8 +38,8 @@
   text-align: center;
 }
 
-.BookingServicesNav-item + .BookingServicesNav-item {
-  @media (min-width: $screen-sm-min) {
+@media (min-width: $screen-sm-min) {
+  .BookingServicesNav-item + .BookingServicesNav-item {
     border-left: 1px solid $brand-color;
   }
 }
@@ -49,54 +48,23 @@
   display: inline-block;
   padding: 0.5em 1em;
   color: $text-color;
-  font-size: 25px;
+  font-size: 15px;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: $secondary-color;
+    border-bottom: 3px solid $text-color;
+    color: $text-color;
     text-decoration: none;
   }
 
   @media (max-width: $screen-sm-min) {
-    // font-size: 12px;
-  }
-
-  &.active {
-    color: $brand-color;
-    background: center/bottom url(arrow-down.png) no-repeat;
+    font-size: 12px;
   }
 }
 
-.BookingServicesBody {
-  margin-top: 50px;
-  margin-bottom: 100px;
-
-  .BookingServicesItem {
-    display: inline-block;
-    color: $text-color;
-    font-size: 15px;
-    width: 100%;
-
-    @media (min-width: $screen-sm-min) {
-      width: 50%;
-    }
-
-    @media (min-width: $screen-lg-min) {
-      width: calc(100% / 3);
-    }
-
-    .BookingServicesRadio {
-      // margin-right: 5px;
-    }
-
-    .BookingServicesRadioLabel {
-      // cursor: pointer;
-    }
-  }
-}
-
-.BookingServicesFooter {
-  margin-bottom: 100px;
-  text-align: center;
+.BookingServicesNav-link.active {
+  border-bottom: 3px solid $brand-color;
+  color: $brand-color;
+  font-weight: bold;
 }

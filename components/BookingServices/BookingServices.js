@@ -9,10 +9,7 @@ export default class BookingServices extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      services: undefined,
-      filter: 'All'
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -25,7 +22,6 @@ export default class BookingServices extends Component {
       success: data => {
         if (data && data.services) {
           this.setState({services: data.services});
-          console.log(this.state.services);
         } else {
           console.error('Services data not obtained');
         }
@@ -41,58 +37,31 @@ export default class BookingServices extends Component {
   }
 
   render() {
-    if (!this.state.services) return null;
     return (
       <div className="BookingServices">
         <div className="BookingServicesNav-wrapper">
           <Container>
             <ul className="BookingServicesNav">
               <li className="BookingServicesNav-item">
-                <a className={classNames('BookingServicesNav-link', (this.state.filter === 'All') ? 'active' : '')} href="/" onClick={this._onClickFilter.bind(this, 'All')}>All Services</a>
+                <a className={classNames('BookingServicesNav-link', (this.props.path === '/') ? 'active' : '')} href="/" onClick={Link.handleClick}>All Services</a>
               </li>
               <li className="BookingServicesNav-item">
-                <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Nursing') ? 'active' : '')} href="/about" onClick={this._onClickFilter.bind(this, 'Home Nursing')}>Home Nursing</a>
+                <a className={classNames('BookingServicesNav-link', (this.props.path === '/about') ? 'active' : '')} href="/about" onClick={Link.handleClick}>Home Nursing</a>
               </li>
               <li className="BookingServicesNav-item">
-                <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home TCM') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home TCM')}>Home TCM</a>
+                <a className={classNames('BookingServicesNav-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>Home TCM</a>
               </li>
               <li className="BookingServicesNav-item">
-                <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Care')}>Home Care</a>
+                <a className={classNames('BookingServicesNav-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>Home Care</a>
               </li>
               <li className="BookingServicesNav-item">
-                <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Medical') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Medical')}>Home Medical</a>
+                <a className={classNames('BookingServicesNav-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>Home Medical</a>
               </li>
             </ul>
           </Container>
         </div>
-        <div>
-          <Container>
-            <div className="BookingServicesBody">
-            {
-              this.state.services && this.state.services.map(function(service) {
-                var id = "BookingServicesRadio" + service.id;
-                return <div className="BookingServicesItem" key={service.id}><input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id}/><label className="BookingServicesRadioLabel" htmlFor={id}><span><span></span></span><span>{service.name}</span></label></div>
-              })
-            }
-              {/*}
-              <li className="BookingServicesNav-item">
-                <a className={classNames('BookingServicesNav-link', (this.state.filter === '/') ? 'active' : '')} href="/" onClick={Link.handleClick}>{service.name}</a>
-              </li>
-              */}
-            </div>
-            <div className="BookingServicesFooter">
-              <a href="/booking1" className="btn btn-primary">NEXT</a>
-            </div>
-          </Container>
-        </div>
       </div>
     );
-  }
-
-  _onClickFilter(filter, event) {
-    event.preventDefault();
-    
-    this.setState({filter: filter});
   }
 
   _onNext() {

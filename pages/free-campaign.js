@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Container from '../components/Container/Container';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import 'react-datepicker/dist/react-datepicker.scss';
+import '../components/react-datepicker.scss';
 import 'whatwg-fetch';
 
 export default class extends Component {

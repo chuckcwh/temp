@@ -404,23 +404,23 @@ input[type=radio]:not(old):checked + label > span:first-child > span {
 
 /* Manage Booking page */
 .page-padding{
-    padding: 16px;
+  padding: 16px;
 }
 
 .flexi-layout{
-    display: flex;
-    /* Then we define the flow direction and if we allow the items to wrap 
-    * Remember this is the same as:
-    * flex-direction: row;
-    * flex-wrap: wrap;
-    */
-    flex-flow: row wrap;
-    flex-direction: row;
+  display: flex;
+  /* Then we define the flow direction and if we allow the items to wrap 
+  * Remember this is the same as:
+  * flex-direction: row;
+  * flex-wrap: wrap;
+  */
+  flex-flow: row wrap;
+  flex-direction: row;
 }
 
 .card_shadow{
-    background-color: #F5F5F5;
-    @mixin box-shadow 0px 5px 5px -0px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+  @mixin box-shadow 0px 5px 5px -0px rgba(0,0,0,0.3);
 }
 
 .mytab{
@@ -433,55 +433,56 @@ input[type=radio]:not(old):checked + label > span:first-child > span {
 	padding-left:0px;
 	padding-right:0px;
 	vertical-align: middle;
-    &:hover, &.active:hover{
-        background:$secondary-color;
-        color:white;
-    }
-    
-    &.active{
-        background:$brand-color;
-        color:white;
-    }
+  
+  &:hover, &.active:hover{
+    background:$secondary-color;
+    color:white;
+  }
+  
+  &.active{
+    background:$brand-color;
+    color:white;
+  }
 }
 
 
 
 .col1{
-    width:100%; 
+  width:100%; 
 }
 
 .col2{
-    width:50%; 
+  width:50%; 
 }
 
 .col4{
-    width:25%; 
+  width:25%; 
 }
 
 .myTabLayout{
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .myForm {
-    width:100%;
-    margin: 0 auto; 
-    padding: 16px; 
-    text-align: center;
-    
-    .formLabel {
-        padding: 5px;
-        margin: 0px;
-    }
-    
-    .formItem {
-        padding-bottom: 25px;
-    }
+  width:100%;
+  margin: 0 auto; 
+  padding: 16px; 
+  text-align: center;
+  
+  .formLabel {
+    padding: 5px;
+    margin: 0px;
+  }
+  
+  .formItem {
+    padding-bottom: 25px;
+  }
 
-    .formInput {
-        height: 34px;
-        padding-left: 5px;
-        line-height: 34px; 
-    }
+  .formInput {
+    height: 34px;
+    padding-left: 5px;
+    line-height: 34px; 
+  }
 }
 /*---------- Modal  -------*/
 $gray: #333;
@@ -588,194 +589,192 @@ $blue-dark: darken($blue, 5%);
 
 /* Free campaign landing page */
 .top-header-label{
-    background-color: $brand-color;
-    
-    h2{
-        color:#FFF;
-        padding:32px;
-        text-align:center;
-    }
+  background-color: $brand-color;
+  
+  h2 {
+    color:#FFF;
+    padding:32px;
+    text-align:center;
+  }
 }
 
 .content-details-top{
-    display: flex;
-    /* Then we define the flow direction and if we allow the items to wrap 
-    * Remember this is the same as:
-    * flex-direction: row;
-    * flex-wrap: wrap;
-    */
-    flex-direction: row;
-    padding-bottom:8px;
-    
-    @media (max-width: $screen-sm-min) {
-        flex-wrap: wrap;
-    }
+  display: flex;
+  /* Then we define the flow direction and if we allow the items to wrap 
+  * Remember this is the same as:
+  * flex-direction: row;
+  * flex-wrap: wrap;
+  */
+  flex-direction: row;
+  padding-bottom:8px;
+  
+  @media (max-width: $screen-sm-min) {
+    flex-wrap: wrap;
+  }
 }
 
 .content-details-bottom{
-    padding-top:8px;
-    display: flex;
-    /* Then we define the flow direction and if we allow the items to wrap 
-    * Remember this is the same as:
-    * flex-direction: row;
-    * flex-wrap: wrap;
-    */
-    flex-direction: row;
-    
-    @media (max-width: $screen-md-min) {
-        flex-wrap: wrap;
-    }
+  padding-top:8px;
+  display: flex;
+  /* Then we define the flow direction and if we allow the items to wrap 
+  * Remember this is the same as:
+  * flex-direction: row;
+  * flex-wrap: wrap;
+  */
+  flex-direction: row;
+  
+  @media (max-width: $screen-md-min) {
+    flex-wrap: wrap;
+  }
 }
 
 .content-details-left{
-    flex-grow: 2;
-    min-width: 500px;
-    margin-right:2%;
+  flex-grow: 2;
+  min-width: 500px;
+  margin-right:2%;
 }
-.content-details-right{
-    flex-grow: 1;
-    margin-left:5%;
-    min-width: 300px;
-    
-    @media (max-width: $screen-md-min) {
-        width: 100%;
-    }
 
+.content-details-right{
+  flex-grow: 1;
+  margin-left:5%;
+  min-width: 300px;
+  
+  @media (max-width: $screen-md-min) {
+      width: 100%;
+  }
 }
 
 .special-text{
-    color: $brand-color;
-    font-weight: bold;
+  color: $brand-color;
+  font-weight: bold;
 }
 .fill-width {
-    width:100%;
-    max-width: 100%;
+  width:100%;
+  max-width: 100%;
 }
 
 select {
-
-    .place_holder{
-        color: #a5a5a5;
-    }
-    
-    option {
-      color : #000;   
-    }
+  .place_holder{
+    color: #a5a5a5;
+  }
+  
+  option {
+    color : #000;   
+  }
 }
+
 .sign-up-form {
 
-    .header {
-        background-color: $brand-color;
-        color: #FFF;
-        text-align:center;
-        padding:5px;
-        font-weight: bold;
-    }
+  .header {
+      background-color: $brand-color;
+      color: #FFF;
+      text-align:center;
+      padding:5px;
+      font-weight: bold;
+  }
+  
+  .item {
+    border-width: 0px 1px 1px 1px;
+    border-style: solid;
+    border-color: #e7e7e7;
+    padding:5px;
+    display: flex;
+    flex-flow: row wrap;
+    flex-direction: row;
     
-    .item {
-        border-width: 0px 1px 1px 1px;
-        border-style: solid;
-        border-color: #e7e7e7;
+    .input {
         padding:5px;
-        display: flex;
-        flex-flow: row wrap;
-        flex-direction: row;
-        
-        .input {
-            padding:5px;
-            outline: none;
-            border: 0px;
-        }
-
+        outline: none;
+        border: 0px;
     }
-    
-    .submit {
-        background-color: $secondary-color;
-        color: #FFF;
-        cursor:pointer;
-        text-align:center;
-        padding:5px;
-        font-weight: bold;
-    }
+  }
+  
+  .submit {
+    background-color: $secondary-color;
+    color: #FFF;
+    cursor:pointer;
+    text-align:center;
+    padding:5px;
+    font-weight: bold;
+  }
 
 }
 
 .how-it-work-info{
-    position: relative;
-    margin-top:16px;
-    display:inline-block;
+  position: relative;
+  margin-top:16px;
+  display:inline-block;
+  
+  img {
+      bottom:0;
+      position: absolute;
+  }
+  
+  .details{
+    margin-left:200px;
+    margin-top:120px;
+    padding: 20px;
+    padding-bottom : 10px;
+    background-color: #6e6e6e;
+    color: #fff;
     
-    img{
-        bottom:0;
-        position: absolute;
+    h2 {
+      margin-left:125px;
+      font-weight:bold;
+      color:white;
     }
     
-    .details{
-        margin-left:200px;
-        margin-top:120px;
-        padding: 20px;
-        padding-bottom : 10px;
-        background-color: #6e6e6e;
-        color: #fff;
-        
-        h2{
-            margin-left:125px;
-            font-weight:bold;
-            color:white;
-        }
-        
-        p{
-            margin-left:125px;
-            color:white;
-            
-        }
+    p {
+      margin-left:125px;
+      color:white;
     }
+  }
 }
 
 .relativePosition {
-    position : relative;
+  position : relative;
 }
 
 .nurse-comment-section {
-    position : relative;
-    margin: 0 auto;
-    display:inline-block;
-    margin-top:80px;
+  position : relative;
+  margin: 0 auto;
+  display:inline-block;
+  margin-top:80px;
+  height:100%;
+  bottom:0;
+
+  img{
+    z-index:100;
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  
+  .content {
+    margin-top:50px;
+    vertical-align:middle;
     height:100%;
-    bottom:0;
-    img{
-        z-index:100;
-        position: absolute;
-        left:0;
-        right:0;
-        top:0;
-        margin-left:auto;
-        margin-right:auto;
+    border-width: 2px 2px 0px 2px;
+    border-style: solid;
+    border-color: $secondary-color; 
+    text-align:center;
+    
+    .comment{
+      text-align:center;
+      display:block;
+      margin-top:115px;
     }
     
-    .content {
-        margin-top:50px;
-        vertical-align:middle;
-        height:100%;
-        border-width: 2px 2px 0px 2px;
-        border-style: solid;
-        border-color: $secondary-color; 
-        text-align:center;
-        
-        .comment{
-            text-align:center;
-            display:block;
-            margin-top:115px;
-        }
-        
-        .name {
-            color : $secondary-color;
-            padding-top:16px;            
-            display:block;
-            margin-bottom:100px;
-        }
-    
-    }
+    .name {
+      color : $secondary-color;
+      padding-top:16px;            
+      display:block;
+      margin-bottom:100px;
+    }  
+  }
 }
 
 

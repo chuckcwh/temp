@@ -10,7 +10,7 @@ export default class extends Component {
     return (
       <div>
         <div>
-          <BookingNavigation />
+          <BookingNavigation path={this.props.path} />
           <BookingServices />          
         </div>
       </div>

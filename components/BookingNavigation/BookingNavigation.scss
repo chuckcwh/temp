@@ -40,6 +40,7 @@
       padding: 0.5em 1em;
       color: #fff;
       font-size: 28px;
+      font-weight: 600;
       text-decoration: none;
       cursor: pointer;
 
@@ -77,10 +78,6 @@
         .BookingNavigation-item-icon-text {
           fill: $secondary-color;
         }
-      }
-
-      &.active {
-        font-weight: 600;
       }
 
       @media (max-width: $screen-sm-min) {

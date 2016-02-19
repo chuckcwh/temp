@@ -3,9 +3,9 @@ import './Container.scss';
 
 class Container extends Component {
 
-  static propTypes = {
-    children: PropTypes.element.isRequired,
-  };
+  // static propTypes = {
+  //   children: PropTypes.element.isRequired,
+  // };
 
   render() {
     return (

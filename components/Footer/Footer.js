@@ -5,9 +5,9 @@ import Container from '../Container';
 
 class Footer extends Component {
 
-  static propTypes = {
-    children: PropTypes.element.isRequired,
-  };
+  // static propTypes = {
+  //   children: PropTypes.element.isRequired,
+  // };
 
   render() {
     return (

@@ -1,0 +1,57 @@
+@import '../variables.scss';
+
+.Testimonials-list {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 5em 0;
+  list-style: none;
+  justify-content: center;
+  align-items: flex-start;
+
+  @media (max-width: $screen-sm-min) {
+    flex-wrap: wrap;
+  }
+}
+
+.Testimonials-item {
+  position: relative;
+  margin: 0 15px 65px 15px;
+  padding: 0;
+  width: 310px;
+  height: 390px;
+  border: 1px solid $secondary-color;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5em;
+
+  .Testimonials-wrapper {
+    padding: 1.5em;
+
+    .Testimonials-item-text {
+      color: $text-color;
+      max-height: 230px;
+      overflow: hidden;
+    }
+
+    .Testimonials-item-name {
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      bottom: 80px;
+      color: $brand-color;
+    }
+
+    .Testimonials-item-avatar {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      bottom: -60px;
+    }
+  }
+}

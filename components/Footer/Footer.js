@@ -17,7 +17,7 @@ class Footer extends Component {
             <div className="Footer-item">
               <div>71 Ayer Rajah Crescent<br/>#04-11 S(139951)</div>
               <a href="https://www.google.com.sg/maps/place/71+Ayer+Rajah+Crescent,+Singapore+139951/@1.2967471,103.7844749,17z/data=!3m1!4b1!4m2!3m1!1s0x31da1a4fd6a29643:0x1cbb8a56dd8c9ccf!6m1!1e1" className="btn Footer-maps-button" target="_blank">
-                <img src="footer-map.png" />
+                <img src={require('./map.png')} />
                 <span className="Footer-maps-label">Find Location</span>
               </a>
             </div>

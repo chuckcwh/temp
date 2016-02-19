@@ -46,8 +46,9 @@
 }
 
 .BookingServicesNav-link {
+  position: relative;
   display: inline-block;
-  padding: 0.5em 1em;
+  padding: 0;
   color: $text-color;
   font-size: 25px;
   text-decoration: none;
@@ -64,7 +65,18 @@
 
   &.active {
     color: $brand-color;
-    background: center/bottom url(arrow-down.png) no-repeat;
+
+    .BookingServicesNav-arrow {
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      width: 38px;
+      height: 14px;
+      background: url(arrow-down.png);
+      bottom: -24px;
+      left: 0;
+      right: 0;
+    }
   }
 }
 

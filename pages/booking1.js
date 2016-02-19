@@ -11,8 +11,7 @@ export default class extends Component {
       <div>
         <div>
           <BookingNavigation />
-          <BookingServices />
-          
+          <BookingServices />          
         </div>
       </div>
     );

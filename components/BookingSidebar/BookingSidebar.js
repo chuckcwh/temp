@@ -27,6 +27,12 @@ export default class BookingSidebar extends Component {
             <div className="BookingSidebarItem"></div>
           </div>
         </div>
+        <div className="BookingSidebarFooter">
+          <div className="BookingSidebarPrice">
+            <span className="BookingSidebarPriceLabel">Price</span>
+            <span className="BookingSidebarPriceCost">SGD 110</span>
+          </div>
+        </div>
       </div>
     );
   }

@@ -7,13 +7,13 @@
   align-self: flex-start;
 
   .BookingSidebarTitle {
-    padding: 25px;
+    padding: 15px 25px;
     border-bottom: 2px solid #f3f3f3;
     font-size: 25px;
   }
 
   .BookingSidebarContent {
-    padding: 25px;
+    padding: 15px 25px;
     color: #969696;
     font-size: 21px;
 
@@ -34,6 +34,17 @@
       &:first-child {
         margin-top: 0;
       }
+    }
+  }
+
+  .BookingSidebarFooter {
+    padding: 15px 25px;
+    border-top: 2px solid #f3f3f3;
+    font-size: 25px;
+
+    .BookingSidebarPriceCost {
+      float: right;
+      color: $secondary-color;
     }
   }
 }

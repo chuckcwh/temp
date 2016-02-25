@@ -1,0 +1,16 @@
+@import '../variables.scss';
+
+.BookingResults {
+  flex: 10;
+  font-size: 21px;
+  justify-content: center;
+
+  .BookingResultsItem {
+    padding: 10px 0;
+    border-top: 1px solid $border-color;
+
+    &:first-child {
+      border-top: 0;
+    }
+  }
+}

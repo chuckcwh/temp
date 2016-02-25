@@ -13,28 +13,19 @@ export default class BookingNavigation extends Component {
           <ul className="BookingNavigation">
             <li className="BookingNavigation-item">
               <a className={classNames('BookingNavigation-link', (this.props.path === '/booking1') ? 'active' : '')} href="/booking1" onClick={Link.handleClick}>
-                <svg className="BookingNavigation-item-icon" height="50" width="45">
-                  <polygon className="BookingNavigation-item-icon-polygon" points="22.5,0 45,12.5 45,37.5 22.5,50 0,37.5 0,12.5" />
-                  <text className="BookingNavigation-item-icon-text" x="18" y="32.5" textAnchor="start">1</text>
-                </svg>
+                <div className="BookingNavigation-item-icon">1</div>
                 <span className="BookingNavigation-item-text">Select Services</span>
               </a>
             </li>
             <li className="BookingNavigation-item">
               <a className={classNames('BookingNavigation-link', (this.props.path === '/booking2') ? 'active' : '')} href="/booking2" onClick={Link.handleClick}>
-                <svg className="BookingNavigation-item-icon" height="50" width="45">
-                  <polygon className="BookingNavigation-item-icon-polygon" points="22.5,0 45,12.5 45,37.5 22.5,50 0,37.5 0,12.5" />
-                  <text className="BookingNavigation-item-icon-text" x="15" y="32.5" textAnchor="start">2</text>
-                </svg>
+                <div className="BookingNavigation-item-icon">2</div>
                 <span className="BookingNavigation-item-text">Select Location</span>
               </a>
             </li>
             <li className="BookingNavigation-item">
               <a className={classNames('BookingNavigation-link', (this.props.path.indexOf('/booking3')==0) ? 'active' : '')} href="/booking3a" onClick={Link.handleClick}>
-                <svg className="BookingNavigation-item-icon" height="50" width="45">
-                  <polygon className="BookingNavigation-item-icon-polygon" points="22.5,0 45,12.5 45,37.5 22.5,50 0,37.5 0,12.5" />
-                  <text className="BookingNavigation-item-icon-text" x="15" y="32.5" textAnchor="start">3</text>
-                </svg>
+                <div className="BookingNavigation-item-icon">3</div>
                 <span className="BookingNavigation-item-text">Select Date & Time</span>
               </a>
             </li>

@@ -45,17 +45,13 @@
       cursor: pointer;
 
       .BookingNavigation-item-icon {
+        display: inline-block;
+        width: 45px;
+        height: 51px;
+        background: url(polygon-white.png) no-repeat;
         vertical-align: middle;
-      }
-
-      .BookingNavigation-item-icon-polygon {
-        fill: transparent;
-        stroke-width: 2;
-        stroke: #ffffff;
-      }
-
-      .BookingNavigation-item-icon-text {
-        fill: #ffffff;
+        text-align: center;
+        line-height: 51px;
       }
 
       .BookingNavigation-item-text {
@@ -68,15 +64,7 @@
         text-decoration: none;
 
         .BookingNavigation-item-icon {
-          stroke: $secondary-color;
-        }
-
-        .BookingNavigation-item-icon-polygon {
-          stroke: $secondary-color;
-        }
-
-        .BookingNavigation-item-icon-text {
-          fill: $secondary-color;
+          background: url(polygon-orange.png) no-repeat;
         }
       }
 

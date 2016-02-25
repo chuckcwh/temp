@@ -1,0 +1,80 @@
+@import '../variables.scss';
+
+.BookingLocation {
+  background-color: #f3f3f3;
+
+  .BookingLocationWrapper {
+    display: flex;
+    flex-direction: row;
+    padding-top: 50px;
+    padding-bottom: 100px;
+  }
+
+  .BookingLocationBody {
+    flex: 10;
+    font-size: 21px;
+
+    input[type=radio] {
+      margin-top: 20px;
+    }
+
+    textarea {
+      width: 100%;
+    }
+
+    .select {
+      display: inline-block;
+    }
+
+    .BookingLocationBodySection {
+      padding: 20px 0;
+      border-top: 1px solid $border-color;
+
+      &:first-child {
+        border: 0;
+      }
+    }
+
+    .BookingLocationItem {
+      display: inline-block;
+      color: $text-color;
+      width: 100%;
+
+      @media (min-width: $screen-sm-min) {
+        width: 50%;
+      }
+
+      @media (min-width: $screen-lg-min) {
+        width: calc(100% / 3);
+      }
+
+      .BookingLocationRadio {
+        // margin-right: 5px;
+      }
+
+      .BookingLocationRadioLabel {
+        // cursor: pointer;
+      }
+    }
+
+    .PatientAddress {
+      display: flex;
+
+      .PatientAddressLeft {
+        flex: 1 0;
+      }
+
+      .PatientAddressRight {
+        flex: 1 0;
+      }
+
+      @media (max-width: $screen-sm-min) {
+        flex-flow: row wrap;
+      }
+    }
+  }
+
+  .BookingLocationSidebar {
+    flex: 1 1 auto;
+  }
+}

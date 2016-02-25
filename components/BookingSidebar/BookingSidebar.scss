@@ -1,0 +1,39 @@
+@import '../variables.scss';
+
+.BookingSidebar {
+  margin-left: 40px;
+  background-color: #ffffff;
+  flex: 5;
+  align-self: flex-start;
+
+  .BookingSidebarTitle {
+    padding: 25px;
+    border-bottom: 2px solid #f3f3f3;
+    font-size: 25px;
+  }
+
+  .BookingSidebarContent {
+    padding: 25px;
+    color: #969696;
+    font-size: 21px;
+
+    .BookingSidebarService {
+      text-transform: uppercase;
+    }
+
+    .BookingSidebarItem {
+      box-sizing: border-box;
+      width: 100%;
+      padding-right: 30px;
+      background: url(pencil.png) no-repeat top right;
+    }
+
+    div {
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}

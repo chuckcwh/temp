@@ -66,6 +66,17 @@ a.btn-primary {
   }
 }
 
+a.btn-small {
+  width: 150px;
+  font-size: 21px;
+  padding: 0.25em 0 0.25em 0;
+}
+
+a.btn-inline {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
 input[type=checkbox]:not(old) {
   width     : 2em;
   margin    : 0;
@@ -86,35 +97,25 @@ input[type=checkbox]:not(old) + label > span:first-child {
   width            : 0.875em;
   height           : 0.875em;
   margin           : 0.25em 0.5em 0.25em 0.25em;
-  border           : 0.0625em solid rgb(192,192,192);
-  border-radius    : 0.25em;
-  background       : rgb(224,224,224);
-  background-image :    -moz-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image :     -ms-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image :      -o-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image : -webkit-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image :         linear-gradient(rgb(240,240,240),rgb(224,224,224));
+  border           : 0.0625em solid $secondary-color;
+  border-radius    : 0;
+  background       : transparent;
   vertical-align   : bottom;
   cursor           : pointer;
 }
 
-input[type=checkbox]:not(old):checked + label > span:first-child {
-  background-image :    -moz-linear-gradient(rgb(224,224,224),rgb(240,240,240));
-  background-image :     -ms-linear-gradient(rgb(224,224,224),rgb(240,240,240));
-  background-image :      -o-linear-gradient(rgb(224,224,224),rgb(240,240,240));
-  background-image : -webkit-linear-gradient(rgb(224,224,224),rgb(240,240,240));
-  background-image :         linear-gradient(rgb(224,224,224),rgb(240,240,240));
+input[type=checkbox]:not(old):checked + label > span {
+  color: $secondary-color;
 }
 
-input[type=checkbox]:not(old):checked + label > span:before {
+input[type=checkbox]:not(old):checked + label > span:first-child:before {
   content     : '✓';
   display     : block;
   width       : 1em;
-  color       : rgb(153,204,102);
+  color       : $secondary-color;
   font-size   : 0.875em;
   line-height : 1em;
   text-align  : center;
-  text-shadow : 0 0 0.0714em rgb(115,153,77);
   font-weight : bold;
 }
 
@@ -155,6 +156,117 @@ input[type=radio]:not(old):checked + label > span:first-child > span {
   cursor           : pointer;
 }
 
+input[type=text], input[type=email] {
+  width: 230px;
+  margin: 20px 20px 0 0;
+  padding: 15px;
+  border: 1px solid $border-color;
+}
+
+input.btn-inline {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+textarea {
+  box-sizing: border-box;
+  min-width: 230px;
+  border: 1px solid $border-color;
+  margin-top: 20px;
+  padding: 15px;
+}
+
+.select {
+  position: relative;
+  margin: 20px 20px 0 0;
+
+  select {
+    outline: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 260px;
+    padding: 15px;
+    margin: 0;
+    
+    border: 1px solid $border-color;
+    border-radius: 0;
+
+    background: #fff;
+    color: #555;
+    line-height: normal;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  & > span {
+    background: #fff;
+    bottom: 5px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 50px;
+    pointer-events: none;
+  }
+
+  & > span:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    margin-top: -5px;
+    pointer-events: none;
+    border-top: 10px solid $secondary-color;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+  }
+
+  & > span:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 17px;
+    margin-top: -5px;
+    pointer-events: none;
+    border-top: 8px solid #fff;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+}
+
+.radio {
+  margin-right: 20px;
+}
+
+.radio-inline {
+  display: inline-block;
+}
+
+.nav-caret {
+  display: none;
+  position: relative;
+}
+
+.nav-caret:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top: 10px solid $secondary-color;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}
+
+.nav-caret:after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0;
+  border-top: 9px solid #f3f3f3;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+}
+
 .Layout {
   margin: 0 auto;
 }
@@ -163,8 +275,16 @@ input[type=radio]:not(old):checked + label > span:first-child > span {
   background-color: #FFF;
 }
 
+.small {
+  font-size: 75%;
+}
+
 .text-center {
   text-align: center;
+}
+
+.inline {
+  display: inline-block;
 }
 
 .featured {

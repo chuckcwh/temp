@@ -1,4 +1,4 @@
 {
-  "name": "BookingServicesNav",
-  "main": "./BookingServicesNav.js"
+  "name": "BookingServices",
+  "main": "./BookingServices.js"
 }

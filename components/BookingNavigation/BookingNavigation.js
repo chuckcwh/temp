@@ -12,7 +12,7 @@ export default class BookingNavigation extends Component {
         <Container>
           <ul className="BookingNavigation">
             <li className="BookingNavigation-item">
-              <a className={classNames('BookingNavigation-link', (this.props.path === '/booking1') ? 'active' : '')} href="/" onClick={Link.handleClick}>
+              <a className={classNames('BookingNavigation-link', (this.props.path === '/booking1') ? 'active' : '')} href="/booking1" onClick={Link.handleClick}>
                 <svg className="BookingNavigation-item-icon" height="50" width="45">
                   <polygon className="BookingNavigation-item-icon-polygon" points="22.5,0 45,12.5 45,37.5 22.5,50 0,37.5 0,12.5" />
                   <text className="BookingNavigation-item-icon-text" x="18" y="32.5" textAnchor="start">1</text>
@@ -21,7 +21,7 @@ export default class BookingNavigation extends Component {
               </a>
             </li>
             <li className="BookingNavigation-item">
-              <a className={classNames('BookingNavigation-link', (this.props.path === '/booking2') ? 'active' : '')} href="/about" onClick={Link.handleClick}>
+              <a className={classNames('BookingNavigation-link', (this.props.path === '/booking2') ? 'active' : '')} href="/booking2" onClick={Link.handleClick}>
                 <svg className="BookingNavigation-item-icon" height="50" width="45">
                   <polygon className="BookingNavigation-item-icon-polygon" points="22.5,0 45,12.5 45,37.5 22.5,50 0,37.5 0,12.5" />
                   <text className="BookingNavigation-item-icon-text" x="15" y="32.5" textAnchor="start">2</text>
@@ -30,7 +30,7 @@ export default class BookingNavigation extends Component {
               </a>
             </li>
             <li className="BookingNavigation-item">
-              <a className={classNames('BookingNavigation-link', (this.props.path === '/booking3') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>
+              <a className={classNames('BookingNavigation-link', (this.props.path.indexOf('/booking3')==0) ? 'active' : '')} href="/booking3a" onClick={Link.handleClick}>
                 <svg className="BookingNavigation-item-icon" height="50" width="45">
                   <polygon className="BookingNavigation-item-icon-polygon" points="22.5,0 45,12.5 45,37.5 22.5,50 0,37.5 0,12.5" />
                   <text className="BookingNavigation-item-icon-text" x="15" y="32.5" textAnchor="start">3</text>

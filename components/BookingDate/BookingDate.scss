@@ -1,0 +1,16 @@
+@import '../variables.scss';
+
+.BookingDate {
+  flex: 10;
+  font-size: 21px;
+  justify-content: center;
+
+  .BookingDateTo {
+    display: inline-block;
+
+    @media (max-width: $screen-md-min) {
+      display: block;
+      margin-top: 20px;
+    }
+  }
+}

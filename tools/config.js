@@ -70,7 +70,7 @@ const config = {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'url-loader?limit=10000',
       }, {
-        test: /\.(eot|ttf|wav|mp3)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(otf|eot|ttf|wav|mp3)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'file-loader',
       },
     ],

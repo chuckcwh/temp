@@ -21,6 +21,7 @@ class Html extends Component {
         <meta name="description" content={this.props.description || description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+        <link rel="stylesheet" type="text/css" href="proxima-nova.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src={'/app.js?' + new Date().getTime()}></script>
       </head>

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import '../normalize.scss';
 import './Layout.scss';
 import Container from '../Container';
 import Navigation from '../Navigation';

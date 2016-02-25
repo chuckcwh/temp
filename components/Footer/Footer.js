@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import { FaFacebook, FaTwitter } from 'react-icons/lib/fa';
+import FaFacebook from 'react-icons/lib/fa/facebook';
+import FaTwitter from 'react-icons/lib/fa/twitter';
 import './Footer.scss';
 import Container from '../Container';
 

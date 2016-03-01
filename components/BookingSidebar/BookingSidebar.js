@@ -8,6 +8,13 @@ export default class BookingSidebar extends Component {
   }
 
   render() {
+    var service, location;
+    if (this.props.allServicesHash && this.props.query && this.props.query.service) {
+      service = this.props.allServicesHash[this.props.query.service];
+    }
+    if (this.props.query && this.props.query.location && this.props.query.location.postalCode) {
+      location = this.props.query.location.postalCode;
+    }
     return (
       <div className="BookingSidebar">
         <div className="BookingSidebarTitle">
@@ -15,10 +22,10 @@ export default class BookingSidebar extends Component {
         </div>
         <div className="BookingSidebarContent">
           <div className="BookingSidebarService">
-            <div className="BookingSidebarItem">Nasogastric Tube (NGT) Feeding</div>
+            <div className="BookingSidebarItem">{service && service.name}</div>
           </div>
           <div className="BookingSidebarDates">
-            <div className="BookingSidebarItem">Nasogastric Tube (NGT) Feeding</div>
+            <div className="BookingSidebarItem">{location}</div>
           </div>
           <div className="BookingSidebarTimings">
             <div className="BookingSidebarItem">Nasogastric Tube (NGT) Feeding</div>

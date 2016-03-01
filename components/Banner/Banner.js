@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Banner.scss';
+import Link from '../Link';
 
 export default class Banner extends Component {
 
@@ -11,7 +12,7 @@ export default class Banner extends Component {
             <div className="Banner-item-text Banner-item-text-1">The Best Homecare Option</div>
             <div className="Banner-item-text Banner-item-text-2">Family Caregivers</div>
             <div className="Banner-item-text Banner-item-text-3">From SGD 30 / Visit</div>
-            <a href="/booking1" className="btn btn-primary Banner-item-button Banner-item-text-4">Book A Caregiver</a>
+            <a href="/booking1" className="btn btn-primary Banner-item-button Banner-item-text-4" onClick={Link.handleClick}>Book A Caregiver</a>
           </div>
         </div>
       </div>

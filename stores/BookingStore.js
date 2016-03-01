@@ -6,6 +6,10 @@ var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
 var _todos = {};
+var _services = [];
+var _servicesHash = {};
+var _query = {};
+var _booking = {};
 
 /**
  * Create a BOOKING item.
@@ -66,6 +70,42 @@ function destroyCompleted() {
 var BookingStore = assign({}, EventEmitter.prototype, {
 
   /**
+   * Get the state.
+   * @return {object}
+   */
+  getState: function() {
+    return {
+      allServices: _services,
+      allServicesHash: _servicesHash,
+      query: _query
+    };
+  },
+
+  /**
+   * Get the services.
+   * @return {object}
+   */
+  getServices: function() {
+    return _services;
+  },
+
+  /**
+   * Get the services hash.
+   * @return {object}
+   */
+  getServicesHash: function() {
+    return _servicesHash;
+  },
+
+  /**
+   * Get the query.
+   * @return {object}
+   */
+  getQuery: function() {
+    return _query;
+  },
+
+  /**
    * Tests whether all the remaining BOOKING items are marked as completed.
    * @return {boolean}
    */
@@ -110,49 +150,88 @@ AppDispatcher.register(function(action) {
   var text;
 
   switch(action.actionType) {
+    case BookingConstants.QUERY_SET_SERVICES:
+      _services = action.services;
+      BookingStore.emitChange();
+      _services.forEach(function(service) {
+        _servicesHash[service.id] = service;
+      });
+      break;
+
+    case BookingConstants.QUERY_SET_SERVICE:
+      _query.service = action.service;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.QUERY_SET_LOCATION:
+      _query.location = action.location;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.QUERY_SET_DATES:
+      _query.dateStart = action.dateStart;
+      _query.dateEnd = action.dateEnd;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.QUERY_SET_TIMINGS:
+      _query.preferredTimes = action.preferredTimes;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.QUERY_SET_USER:
+      _booking.user = action.user;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.QUERY_SET_PATIENT:
+      _booking.patient = action.patient;
+      BookingStore.emitChange();
+      break;
+
     case BookingConstants.BOOKING_CREATE:
       text = action.text.trim();
       if (text !== '') {
         create(text);
-        TodoStore.emitChange();
+        BookingStore.emitChange();
       }
       break;
 
     case BookingConstants.BOOKING_TOGGLE_COMPLETE_ALL:
-      if (TodoStore.areAllComplete()) {
+      if (BookingStore.areAllComplete()) {
         updateAll({complete: false});
       } else {
         updateAll({complete: true});
       }
-      TodoStore.emitChange();
+      BookingStore.emitChange();
       break;
 
     case BookingConstants.BOOKING_UNDO_COMPLETE:
       update(action.id, {complete: false});
-      TodoStore.emitChange();
+      BookingStore.emitChange();
       break;
 
     case BookingConstants.BOOKING_COMPLETE:
       update(action.id, {complete: true});
-      TodoStore.emitChange();
+      BookingStore.emitChange();
       break;
 
     case BookingConstants.BOOKING_UPDATE_TEXT:
       text = action.text.trim();
       if (text !== '') {
         update(action.id, {text: text});
-        TodoStore.emitChange();
+        BookingStore.emitChange();
       }
       break;
 
     case BookingConstants.BOOKING_DESTROY:
       destroy(action.id);
-      TodoStore.emitChange();
+      BookingStore.emitChange();
       break;
 
     case BookingConstants.BOOKING_DESTROY_COMPLETED:
       destroyCompleted();
-      TodoStore.emitChange();
+      BookingStore.emitChange();
       break;
 
     default:

@@ -32,7 +32,6 @@ export default class BookingDateTime extends Component {
           <Container>
             <div className="BookingDateTimeBody">
               {this.props.children}
-              <BookingSidebar />
             </div>
           </Container>
         </div>

@@ -4,11 +4,82 @@ var BookingConstants = require('../constants/BookingConstants');
 var BookingActions = {
 
   /**
+   * @param  {string} services The services
+   */
+  setServices: function(services) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.QUERY_SET_SERVICES,
+      services: services
+    });
+  },
+
+  /**
+   * @param  {string} service The ID of the Service
+   */
+  setService: function(service) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.QUERY_SET_SERVICE,
+      service: service
+    });
+  },
+
+  /**
+   * @param  {string} location The location
+   */
+  setLocation: function(location) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.QUERY_SET_LOCATION,
+      location: location
+    });
+  },
+
+  /**
+   * @param  {string} dates { dateStart, dateEnd }
+   */
+  setDates: function(dates) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.QUERY_SET_DATES,
+      dateStart: dates.dateStart,
+      dateEnd: dates.dateEnd
+    });
+  },
+
+  /**
+   * @param  {string} timings Array of 'Morning', 'Afternoon' or 'Evening'
+   */
+  setTimings: function(timings) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.QUERY_SET_TIMINGS,
+      preferredTimes: timings
+    });
+  },
+
+  /**
+   * @param  {string} timings Array of 'Morning', 'Afternoon' or 'Evening'
+   */
+  setUser: function(user) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.QUERY_SET_USER,
+      user: user
+    });
+  },
+
+  /**
+   * @param  {string} timings Array of 'Morning', 'Afternoon' or 'Evening'
+   */
+  setPatient: function(patient) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.QUERY_SET_PATIENT,
+      patient: patient
+    });
+  },
+
+  /**
    * @param  {string} text
    */
   create: function(text) {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_CREATE,
+      actionType: BookingConstants.TODO_CREATE,
       text: text
     });
   },
@@ -19,7 +90,7 @@ var BookingActions = {
    */
   updateText: function(id, text) {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_UPDATE_TEXT,
+      actionType: BookingConstants.TODO_UPDATE_TEXT,
       id: id,
       text: text
     });
@@ -32,8 +103,8 @@ var BookingActions = {
   toggleComplete: function(todo) {
     var id = todo.id;
     var actionType = todo.complete ?
-        TodoConstants.TODO_UNDO_COMPLETE :
-        TodoConstants.TODO_COMPLETE;
+        BookingConstants.TODO_UNDO_COMPLETE :
+        BookingConstants.TODO_COMPLETE;
 
     AppDispatcher.dispatch({
       actionType: actionType,
@@ -46,7 +117,7 @@ var BookingActions = {
    */
   toggleCompleteAll: function() {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_TOGGLE_COMPLETE_ALL
+      actionType: BookingConstants.TODO_TOGGLE_COMPLETE_ALL
     });
   },
 
@@ -55,7 +126,7 @@ var BookingActions = {
    */
   destroy: function(id) {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_DESTROY,
+      actionType: BookingConstants.TODO_DESTROY,
       id: id
     });
   },
@@ -65,7 +136,7 @@ var BookingActions = {
    */
   destroyCompleted: function() {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_DESTROY_COMPLETED
+      actionType: BookingConstants.TODO_DESTROY_COMPLETED
     });
   }
 

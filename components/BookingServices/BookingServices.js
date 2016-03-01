@@ -3,6 +3,7 @@ import classNames from 'classNames';
 import './BookingServices.scss';
 import Container from '../Container';
 import Link from '../Link';
+import BookingActions from '../../actions/BookingActions';
 import BookingStore from '../../stores/BookingStore';
 
 const ALL_SERVICES = 'All Services';
@@ -12,43 +13,16 @@ export default class BookingServices extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      services: undefined,
-      filteredServices: undefined,
-      filter: ALL_SERVICES
+      filter: ALL_SERVICES,
+      selectedService: undefined
     };
   }
 
-  componentDidMount() {
-    this.serverRequest = $.ajax({
-      url: 'http://161.202.19.121/api/getServices',
-      dataType: 'json',
-      headers: {
-        'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-      },
-      success: data => {
-        if (data && data.services && Array.isArray(data.services)) {
-          var filteredServices = this._filterServices(data.services, this.state.filter);
-          this.setState({
-            services: data.services,
-            filteredServices: filteredServices
-          });
-          // console.log(this.state.services);
-        } else {
-          console.error('Failed to obtain services data.');
-        }
-      },
-      error: (xhr, status, err) => {
-        console.error('http://161.202.19.121/api/getServices', status, err.toString());
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.serverRequest.abort();
-  }
-
   render() {
-    if (!this.state.services) return null;
+    if (!this.props.allServices) return null;
+
+    var filteredServices = this._filterServices(this.props.allServices, this.state.filter);
+
     return (
       <div className="BookingServices">
         <div className="BookingServicesNav-wrapper">
@@ -76,9 +50,9 @@ export default class BookingServices extends Component {
           <Container>
             <div className="BookingServicesBody">
             {
-              this.state.filteredServices && this.state.filteredServices.map(function(service) {
+              filteredServices.map(service => {
                 var id = "BookingServicesRadio" + service.id;
-                return <div className="BookingServicesItem" key={service.id}><input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id}/><label className="BookingServicesRadioLabel" htmlFor={id}><span><span></span></span><span>{service.name}</span></label></div>
+                return <div className="BookingServicesItem" key={service.id}><input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === this.state.selectedService} onChange={this._onSelect.bind(this)} /><label className="BookingServicesRadioLabel" htmlFor={id}><span><span></span></span><span>{service.name}</span></label></div>
               })
             }
               {/*}
@@ -88,7 +62,7 @@ export default class BookingServices extends Component {
               */}
             </div>
             <div className="BookingServicesFooter">
-              <a href="/booking2" className="btn btn-primary">NEXT</a>
+              <a href="/booking2" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
             </div>
           </Container>
         </div>
@@ -99,15 +73,22 @@ export default class BookingServices extends Component {
   _onClickFilter(filter, event) {
     event.preventDefault();
 
-    var filteredServices = this._filterServices(this.state.services, filter);
     this.setState({
-      filter: filter,
-      filteredServices: filteredServices
+      filter: filter
     });
   }
 
-  _onNext() {
+  _onSelect(event) {
+    this.setState({
+      selectedService: parseInt(event.target.value)
+    });
+  }
 
+  _onNext(event) {
+    Link.handleClick(event);
+
+    this.props.query.service = this.state.selectedService;
+    // BookingActions.setService(this.state.selectedService);
   }
 
   _filterServices(services, filter) {

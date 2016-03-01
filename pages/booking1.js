@@ -11,7 +11,7 @@ export default class extends Component {
       <div>
         <div>
           <BookingNavigation path={this.props.path} />
-          <BookingServices />          
+          <BookingServices />
         </div>
       </div>
     );

@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import linkState from 'react-link-state';
 import classNames from 'classNames';
 import './BookingLocation.scss';
 import Container from '../Container';
-import BookingSidebar from '../BookingSidebar';
-import BookingStore from '../../stores/BookingStore';
+import Link from '../Link';
+import BookingActions from '../../actions/BookingActions';
 
 export default class BookingLocation extends Component {
+
+  mixins: [LinkedStateMixin]
 
   constructor(props) {
     super(props);
@@ -26,15 +29,15 @@ export default class BookingLocation extends Component {
               </div>
               <div className="BookingLocationBodySection">
                 <div>Continue booking as guest</div>
-                <input type="email" name="email" placeholder="Enter Email*" />
+                <input type="email" name="email" ref="email" placeholder="Enter Email*" />
                 <div className="select">
                   <span></span>
                   <select name="salutation">
                     <option value="">Salutation</option>
                   </select>
                 </div>
-                <input type="text" name="tel" placeholder="Enter Mobile Phone*" />
-                <input type="text" name="name" placeholder="Enter Full Name*" />
+                <input type="text" name="tel" ref="mobilePhone" placeholder="Enter Mobile Phone*" />
+                <input type="text" name="name" ref="name" placeholder="Enter Full Name*" />
               </div>
               <div className="BookingLocationBodySection">
                 <div>Patient Details</div>
@@ -61,7 +64,7 @@ export default class BookingLocation extends Component {
                 <div>Patient Location / Address</div>
                 <div className="PatientAddress">
                   <div className="PatientAddressLeft inline">
-                    <input type="text" name="postal" placeholder="Enter Postal Code*" />
+                    <input type="text" name="postalCode" valueLink={linkState(this, 'postalCode')} placeholder="Enter Postal Code*" required />
                     <input type="text" name="unit" placeholder="Enter Unit Number" />
                   </div>
                   <div className="PatientAddressRight inline">
@@ -69,10 +72,10 @@ export default class BookingLocation extends Component {
                   </div>
                 </div>
                 <p className="small">This information will only be used to contact you about your booking.</p>
-                <a href="/booking3a" className="btn btn-primary">NEXT</a>
+                <a href="/booking3a" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
               </div>
             </div>
-            <BookingSidebar />
+            {this.props.children}
             {/*}
             <div className="BookingLocationFooter">
               <a href="/booking2" className="btn btn-primary">NEXT</a>
@@ -83,6 +86,17 @@ export default class BookingLocation extends Component {
 
       </div>
     );
+  }
+
+  _onNext(event) {
+    Link.handleClick(event);
+
+    var location = {
+      postalCode: this.state.postalCode
+    };
+    this.props.query.location = location;
+    // BookingActions.setLocation(location);
+    // BookingActions.setService(this.state.selectedService);
   }
 
 }

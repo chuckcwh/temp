@@ -7,16 +7,18 @@ import Layout from './components/Layout';
 
 const routes = {}; // Auto-generated on build. See tools/lib/routes-loader.js
 
-const route = async (path, callback) => {
-  const handler = routes[path] || routes['/404'];
+const route = async (location, callback) => {
+  const path = location.pathname;
+  const handler = (path && path.indexOf('/booking') > -1) ? routes['/booking'] : (routes[path] || routes['/404']);
   const component = await handler();
-  await callback(<Layout path={path}>{React.createElement(component, { path: path })}</Layout>);
+  await callback(<Layout location={location} path={path}>{React.createElement(component, { location: location, path: path })}</Layout>);
 };
 
 function run() {
   const container = document.getElementById('app');
   Location.listen(location => {
-    route(location.pathname, async (component) => ReactDOM.render(component, container, () => {
+    // console.log(location);
+    route(location, async (component) => ReactDOM.render(component, container, () => {
       // Track the page view event via Google Analytics
       window.ga('send', 'pageview');
     }));

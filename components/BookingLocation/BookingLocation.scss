@@ -1,4 +1,7 @@
 @import '../variables.scss';
+@import '../mixins.scss';
+
+@import 'react-datepicker/dist/react-datepicker.css';
 
 .BookingLocation {
   background-color: #f3f3f3;
@@ -32,6 +35,12 @@
 
       &:first-child {
         border: 0;
+      }
+
+      .datepicker__input {
+        font: inherit;
+        @mixin border-radius 0;
+        @mixin box-shadow none;
       }
     }
 

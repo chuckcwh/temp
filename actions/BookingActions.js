@@ -8,7 +8,7 @@ var BookingActions = {
    */
   setServices: function(services) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.QUERY_SET_SERVICES,
+      actionType: BookingConstants.BOOKING_SET_SERVICES,
       services: services
     });
   },
@@ -18,7 +18,7 @@ var BookingActions = {
    */
   setService: function(service) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.QUERY_SET_SERVICE,
+      actionType: BookingConstants.BOOKING_SET_SERVICE,
       service: service
     });
   },
@@ -28,7 +28,7 @@ var BookingActions = {
    */
   setLocation: function(location) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.QUERY_SET_LOCATION,
+      actionType: BookingConstants.BOOKING_SET_LOCATION,
       location: location
     });
   },
@@ -38,19 +38,38 @@ var BookingActions = {
    */
   setDates: function(dates) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.QUERY_SET_DATES,
-      dateStart: dates.dateStart,
-      dateEnd: dates.dateEnd
+      actionType: BookingConstants.BOOKING_SET_DATES,
+      range: dates
     });
   },
 
   /**
    * @param  {string} timings Array of 'Morning', 'Afternoon' or 'Evening'
    */
-  setTimings: function(timings) {
+  setTimeslots: function(timeslots) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.QUERY_SET_TIMINGS,
-      preferredTimes: timings
+      actionType: BookingConstants.BOOKING_SET_TIMESLOTS,
+      timeslots: timeslots
+    });
+  },
+
+  /**
+   * @param  {string} sessions The booked sessions
+   */
+  setSessions: function(sessions) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_SET_SESSIONS,
+      sessions: sessions
+    });
+  },
+
+  /**
+   * @param  {string} sum The total sum
+   */
+  setSum: function(sum) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_SET_SUM,
+      sum: sum
     });
   },
 
@@ -59,18 +78,47 @@ var BookingActions = {
    */
   setUser: function(user) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.QUERY_SET_USER,
+      actionType: BookingConstants.BOOKING_SET_USER,
       user: user
     });
   },
 
   /**
-   * @param  {string} timings Array of 'Morning', 'Afternoon' or 'Evening'
+   * @param  {string} booking The completed booking
    */
-  setPatient: function(patient) {
+  setBooking: function(booking) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.QUERY_SET_PATIENT,
-      patient: patient
+      actionType: BookingConstants.BOOKING_SET_BOOKING,
+      booking: booking
+    });
+  },
+
+  /**
+   * @param  {string} last The last page
+   */
+  setLast: function(last) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_SET_LAST,
+      last: last
+    });
+  },
+
+  /**
+   * Destroy booking
+   */
+  destroyBooking: function() {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_DESTROY
+    });
+  },
+
+  /**
+   * @param  {string} last The last page
+   */
+  setPostStatus: function(postStatus) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_SET_POST_STATUS,
+      postStatus: postStatus
     });
   },
 

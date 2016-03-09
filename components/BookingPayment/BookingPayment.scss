@@ -1,0 +1,95 @@
+@import '../variables.scss';
+
+.BookingPayment {
+  background-color: #f3f3f3;
+
+  .BookingPaymentNav-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid $secondary-color;
+
+    @media (max-width: $screen-sm-min) {
+      flex-direction: column;
+    }
+  }
+
+  .BookingPaymentNav {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 10px 0;
+    list-style: none;
+    justify-content: flex-start;
+    align-items: center;
+
+    @media (max-width: $screen-lg-min) {
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: $screen-sm-min) {
+      justify-content: center;
+    }
+  }
+
+  .BookingPaymentNav-item {
+    padding: 0 1em;
+    text-align: center;
+  }
+
+  .BookingPaymentNav-item + .BookingPaymentNav-item {
+    @media (min-width: $screen-sm-min) {
+      border-left: 1px solid $brand-color;
+    }
+  }
+
+  .BookingPaymentNav-link {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    color: $text-color;
+    font-size: 25px;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: $secondary-color;
+      text-decoration: none;
+    }
+
+    @media (max-width: $screen-sm-min) {
+      // font-size: 12px;
+    }
+
+    &.active {
+      color: $brand-color;
+
+      .BookingPaymentNav-arrow {
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        width: 20px;
+        height: 14px;
+        bottom: -24px;
+        left: 0;
+        right: 0;
+
+        .nav-caret {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .BookingPaymentBody {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 50px;
+    padding-bottom: 100px;
+    background-color: #f3f3f3;
+  }
+}

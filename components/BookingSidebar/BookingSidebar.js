@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './BookingSidebar.scss';
+import Link from '../Link';
 
 export default class BookingSidebar extends Component {
 
@@ -8,12 +9,21 @@ export default class BookingSidebar extends Component {
   }
 
   render() {
-    var service, location;
-    if (this.props.allServicesHash && this.props.query && this.props.query.service) {
-      service = this.props.allServicesHash[this.props.query.service];
+    var service, location, dateRange, timeslots, sum;
+    if (this.props.allServicesHash && this.props.booking && this.props.booking.service) {
+      service = this.props.allServicesHash[this.props.booking.service].name;
     }
-    if (this.props.query && this.props.query.location && this.props.query.location.postalCode) {
-      location = this.props.query.location.postalCode;
+    if (this.props.booking && this.props.booking.location && this.props.booking.location.postalCode) {
+      location = (<span>{this.props.booking.location.address}<br/>{this.props.booking.location.unitNumber}</span>);
+    }
+    if (this.props.booking && this.props.booking.range) {
+      dateRange = this.props.booking.range.start.format('DD-MM-YYYY') + ' - ' + this.props.booking.range.end.format('DD-MM-YYYY');
+    }
+    if (this.props.booking && this.props.booking.timeslots) {
+      timeslots = this.props.booking.timeslots;
+    }
+    if (this.props.booking && typeof this.props.booking.sum === 'number') {
+      sum = this.props.booking.sum;
     }
     return (
       <div className="BookingSidebar">
@@ -21,23 +31,54 @@ export default class BookingSidebar extends Component {
           Your Booking
         </div>
         <div className="BookingSidebarContent">
-          <div className="BookingSidebarService">
-            <div className="BookingSidebarItem">{service && service.name}</div>
-          </div>
-          <div className="BookingSidebarDates">
-            <div className="BookingSidebarItem">{location}</div>
-          </div>
-          <div className="BookingSidebarTimings">
-            <div className="BookingSidebarItem">Nasogastric Tube (NGT) Feeding</div>
-          </div>
-          <div className="BookingSidebarSlots">
-            <div className="BookingSidebarItem"></div>
-          </div>
+          <a href="/booking1" onClick={Link.handleClick}>
+            <div className="BookingSidebarService">
+              <div className="BookingSidebarItem">{service}</div>
+            </div>
+          </a>
+          <a href="/booking2" onClick={Link.handleClick}>
+            <div className="BookingSidebarLocation">
+              <div className="BookingSidebarItem">{location}</div>
+            </div>
+          </a>
+          <a href="/booking3a" onClick={Link.handleClick}>
+            <div className="BookingSidebarDates">
+              <div className="BookingSidebarItem">{dateRange}</div>
+            </div>
+          </a>
+          <a href="/booking3b" onClick={Link.handleClick}>
+            <div className="BookingSidebarTimings">
+              <div className="BookingSidebarItem">
+              {
+                timeslots && timeslots.map(timeslot => {
+                  if (timeslot === 'Morning') {
+                    return (
+                      <div key="Morning">Morning: 8.00am - 11:00am</div>
+                    );
+                  } else if (timeslot === 'Afternoon') {
+                    return (
+                      <div key="Afternoon">Afternoon: 12:00pm - 5:00pm</div>
+                    );
+                  } else if (timeslot === 'Evening') {
+                    return (
+                      <div key="Evening">Evening: 7:00pm - 10:00pm</div>
+                    );
+                  }
+                })
+              }
+              </div>
+            </div>
+          </a>
+          <a href="/booking3c" onClick={Link.handleClick}>
+            <div className="BookingSidebarSlots">
+              <div className="BookingSidebarItem"></div>
+            </div>
+          </a>
         </div>
         <div className="BookingSidebarFooter">
           <div className="BookingSidebarPrice">
-            <span className="BookingSidebarPriceLabel">Price</span>
-            <span className="BookingSidebarPriceCost">SGD 110</span>
+            <span className="BookingSidebarPriceLabel">{typeof sum === 'number' ? 'Estimated Costs' : ''}</span>
+            <span className="BookingSidebarPriceCost">{typeof sum === 'number' ? ('SGD ' + sum.toFixed(2)) : ''}</span>
           </div>
         </div>
       </div>

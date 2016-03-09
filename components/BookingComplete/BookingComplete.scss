@@ -1,0 +1,37 @@
+@import '../variables.scss';
+
+.BookingComplete {
+  background-color: #f3f3f3;
+  position: relative;
+
+  .BookingCompleteBody {
+    text-align: center;
+    padding: 80px 0;
+    min-height: 300px;
+
+    div {
+      margin: 20px 0;
+    }
+
+    a {
+      color: $brand-color;
+    }
+
+    .BookingCompleteHeader {
+      color: $brand-color;
+      font-weight: 100;
+      font-size: 50px;
+      text-transform: uppercase;
+    }
+
+    .BookingCompleteFooter {
+      
+      a.btn-primary {
+        color: #fff;
+        text-transform: none;
+        font-size: 21px;
+        margin: 0 5px;
+      }
+    }
+  }
+}

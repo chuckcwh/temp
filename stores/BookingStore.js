@@ -6,10 +6,22 @@ var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
 var _todos = {};
-var _services = [];
-var _servicesHash = {};
-var _query = {};
+var _services;
+var _servicesHash;
 var _booking = {};
+var _last = '';
+var _postStatus = 'confirmation';
+
+var orders = [
+  '',
+  'booking1',
+  'booking2',
+  'booking3a',
+  'booking3b',
+  'booking3c',
+  'booking-confirmation',
+  'booking-payment'
+];
 
 /**
  * Create a BOOKING item.
@@ -77,7 +89,8 @@ var BookingStore = assign({}, EventEmitter.prototype, {
     return {
       allServices: _services,
       allServicesHash: _servicesHash,
-      query: _query
+      booking: _booking,
+      postStatus: _postStatus
     };
   },
 
@@ -98,11 +111,30 @@ var BookingStore = assign({}, EventEmitter.prototype, {
   },
 
   /**
-   * Get the query.
+   * Get the booking.
    * @return {object}
    */
-  getQuery: function() {
-    return _query;
+  getBooking: function() {
+    return _booking;
+  },
+
+  /**
+   * Get the last booking page.
+   * @return {string}
+   */
+  getLastBookingPage: function() {
+    return _last;
+  },
+
+  /**
+   * Get whether navigation is allowed.
+   * @return {object}
+   */
+  isNavigationAllowed: function(path) {
+    if (path.charAt(0) === '/') {
+      path = path.substring(1);
+    }
+    return (orders.indexOf(_last) + 1) >= orders.indexOf(path);
   },
 
   /**
@@ -150,42 +182,68 @@ AppDispatcher.register(function(action) {
   var text;
 
   switch(action.actionType) {
-    case BookingConstants.QUERY_SET_SERVICES:
+    case BookingConstants.BOOKING_SET_SERVICES:
       _services = action.services;
       BookingStore.emitChange();
+      _servicesHash = {};
       _services.forEach(function(service) {
         _servicesHash[service.id] = service;
       });
       break;
 
-    case BookingConstants.QUERY_SET_SERVICE:
-      _query.service = action.service;
+    case BookingConstants.BOOKING_SET_SERVICE:
+      _booking.service = action.service;
       BookingStore.emitChange();
       break;
 
-    case BookingConstants.QUERY_SET_LOCATION:
-      _query.location = action.location;
+    case BookingConstants.BOOKING_SET_LOCATION:
+      _booking.location = action.location;
       BookingStore.emitChange();
       break;
 
-    case BookingConstants.QUERY_SET_DATES:
-      _query.dateStart = action.dateStart;
-      _query.dateEnd = action.dateEnd;
+    case BookingConstants.BOOKING_SET_DATES:
+      _booking.range = action.range;
       BookingStore.emitChange();
       break;
 
-    case BookingConstants.QUERY_SET_TIMINGS:
-      _query.preferredTimes = action.preferredTimes;
+    case BookingConstants.BOOKING_SET_TIMESLOTS:
+      _booking.timeslots = action.timeslots;
       BookingStore.emitChange();
       break;
 
-    case BookingConstants.QUERY_SET_USER:
+    case BookingConstants.BOOKING_SET_USER:
       _booking.user = action.user;
       BookingStore.emitChange();
       break;
 
-    case BookingConstants.QUERY_SET_PATIENT:
-      _booking.patient = action.patient;
+    case BookingConstants.BOOKING_SET_SESSIONS:
+      _booking.sessions = action.sessions;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.BOOKING_SET_SUM:
+      _booking.sum = action.sum;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.BOOKING_SET_BOOKING:
+      _booking = action.booking;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.BOOKING_SET_LAST:
+      _last = action.last;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.BOOKING_DESTROY:
+      _booking = {};
+      _last = '';
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.BOOKING_SET_POST_STATUS:
+      _postStatus = action.postStatus;
       BookingStore.emitChange();
       break;
 

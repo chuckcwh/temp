@@ -25,11 +25,21 @@
       box-sizing: border-box;
       width: 100%;
       padding-right: 30px;
-      background: url(pencil.png) no-repeat top right;
+      background: url(../pencil.png) no-repeat top right;
     }
 
-    div {
-      margin-top: 10px;
+    a {
+      color: #969696;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    & > a {
+      & > div {
+        margin-top: 10px;
+      }
 
       &:first-child {
         margin-top: 0;

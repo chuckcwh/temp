@@ -1,0 +1,111 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+
+@import 'react-datepicker/dist/react-datepicker.css';
+
+.BookingConfirmation {
+  background-color: #f3f3f3;
+  position: relative;
+  min-height: 300px;
+
+  .BookingConfirmationWrapper {
+    display: flex;
+    flex-direction: row;
+    padding-top: 50px;
+    padding-bottom: 100px;
+  }
+
+  .BookingConfirmationBody {
+    flex: 10;
+    font-size: 21px;
+
+    input[type=radio] {
+      margin-top: 20px;
+    }
+
+    textarea {
+      width: 100%;
+    }
+
+    .select {
+      display: inline-block;
+    }
+
+    .BookingConfirmationBodySection {
+      padding: 20px 0;
+      // border-top: 1px solid $border-color;
+
+      &:first-child {
+        border: 0;
+      }
+
+      h3 {
+        font-weight: normal;
+        font-size: 28px;
+        border-bottom: 1px solid $border-color;
+      }
+
+      .BookingConfirmationBodySectionTitle {
+        position: relative;
+
+        a {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+      }
+
+      .datepicker__input {
+        font: inherit;
+        @mixin border-radius 0;
+        @mixin box-shadow none;
+      }
+
+      form a {
+        margin: 5px 5px 0 0; 
+      }
+    }
+
+    .BookingConfirmationItem {
+      display: inline-block;
+      color: $text-color;
+      width: 100%;
+
+      @media (min-width: $screen-sm-min) {
+        width: 50%;
+      }
+
+      @media (min-width: $screen-lg-min) {
+        width: calc(100% / 3);
+      }
+
+      .BookingConfirmationRadio {
+        // margin-right: 5px;
+      }
+
+      .BookingConfirmationRadioLabel {
+        // cursor: pointer;
+      }
+    }
+
+    .PatientAddress {
+      display: flex;
+
+      .PatientAddressLeft {
+        flex: 1 0;
+      }
+
+      .PatientAddressRight {
+        flex: 1 0;
+      }
+
+      @media (max-width: $screen-sm-min) {
+        flex-flow: row wrap;
+      }
+    }
+  }
+
+  .BookingConfirmationSidebar {
+    flex: 1 1 auto;
+  }
+}

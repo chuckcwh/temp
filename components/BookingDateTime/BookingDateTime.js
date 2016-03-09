@@ -3,10 +3,7 @@ import classNames from 'classNames';
 import './BookingDateTime.scss';
 import Container from '../Container';
 import Link from '../Link';
-import BookingSidebar from '../BookingSidebar';
-import BookingStore from '../../stores/BookingStore';
-
-const ALL_SERVICES = 'All Services';
+import BookingDateTimeNavItem from '../BookingDateTimeNavItem';
 
 export default class BookingDateTime extends Component {
 
@@ -16,15 +13,9 @@ export default class BookingDateTime extends Component {
         <div className="BookingDateTimeNav-wrapper">
           <Container>
             <ul className="BookingDateTimeNav">
-              <li className="BookingDateTimeNav-item">
-                <a className={classNames('BookingDateTimeNav-link', (this.props.path === '/booking3a') ? 'active' : '')} href="/booking3a">Select Service Date<span className="BookingDateTimeNav-arrow"><div className="nav-caret"></div></span></a>
-              </li>
-              <li className="BookingDateTimeNav-item">
-                <a className={classNames('BookingDateTimeNav-link', (this.props.path === '/booking3b') ? 'active' : '')} href="/booking3b">Select Timeslots<span className="BookingDateTimeNav-arrow"><div className="nav-caret"></div></span></a>
-              </li>
-              <li className="BookingDateTimeNav-item">
-                <a className={classNames('BookingDateTimeNav-link', (this.props.path === '/booking3c') ? 'active' : '')} href="/booking3c">Select Service Time<span className="BookingDateTimeNav-arrow"><div className="nav-caret"></div></span></a>
-              </li>
+              <BookingDateTimeNavItem path={this.props.path} active={'booking3a'} link={'booking3a'} name={'Select Service Date'} />
+              <BookingDateTimeNavItem path={this.props.path} active={'booking3b'} link={'booking3b'} name={'Select Timeslots'} />
+              <BookingDateTimeNavItem path={this.props.path} active={'booking3c'} link={'booking3c'} name={'Select Sessions'} />
             </ul>
           </Container>
         </div>

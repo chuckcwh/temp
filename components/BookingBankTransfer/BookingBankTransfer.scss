@@ -1,0 +1,12 @@
+@import '../variables.scss';
+
+.BookingBankTransfer {
+  position: relative;
+  flex: 10;
+  font-size: 21px;
+  justify-content: center;
+
+  .BookingBankTransferLogo {
+    margin: 0 10px;
+  }
+}

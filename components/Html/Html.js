@@ -22,12 +22,12 @@ class Html extends Component {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
         <link rel="stylesheet" type="text/css" href="proxima-nova.css" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src={'/app.js?' + new Date().getTime()}></script>
       </head>
       <body>
         <div id="app" dangerouslySetInnerHTML={{__html: this.props.body}} />
         <GoogleAnalytics />
+        <script src="https://maps.googleapis.com/maps/api/js"></script>
       </body>
       </html>
     );

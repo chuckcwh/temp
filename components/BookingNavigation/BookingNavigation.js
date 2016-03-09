@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
 import './BookingNavigation.scss';
 import Container from '../Container';
-import Link from '../Link';
+import BookingNavigationItem from '../BookingNavigationItem';
 
 export default class BookingNavigation extends Component {
 
@@ -11,24 +10,9 @@ export default class BookingNavigation extends Component {
       <div className="BookingNavigation-wrapper">
         <Container>
           <ul className="BookingNavigation">
-            <li className="BookingNavigation-item">
-              <a className={classNames('BookingNavigation-link', (this.props.path === '/booking1') ? 'active' : '')} href="/booking1" onClick={Link.handleClick}>
-                <div className="BookingNavigation-item-icon">1</div>
-                <span className="BookingNavigation-item-text">Select Services</span>
-              </a>
-            </li>
-            <li className="BookingNavigation-item">
-              <a className={classNames('BookingNavigation-link', (this.props.path === '/booking2') ? 'active' : '')} href="/booking2" onClick={Link.handleClick}>
-                <div className="BookingNavigation-item-icon">2</div>
-                <span className="BookingNavigation-item-text">Select Location</span>
-              </a>
-            </li>
-            <li className="BookingNavigation-item">
-              <a className={classNames('BookingNavigation-link', (this.props.path.indexOf('/booking3')==0) ? 'active' : '')} href="/booking3a" onClick={Link.handleClick}>
-                <div className="BookingNavigation-item-icon">3</div>
-                <span className="BookingNavigation-item-text">Select Date & Time</span>
-              </a>
-            </li>
+            <BookingNavigationItem path={this.props.path} active={'booking1'} link={'booking1'} icon={'1'} text={'Select Services'} />
+            <BookingNavigationItem path={this.props.path} active={'booking2'} link={'booking2'} icon={'2'} text={'Select Location'} />
+            <BookingNavigationItem path={this.props.path} active={'booking3'} link={'booking3a'} icon={'3'} text={'Select Date & Time'} />
           </ul>
         </Container>
       </div>

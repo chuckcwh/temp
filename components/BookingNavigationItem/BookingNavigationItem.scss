@@ -1,0 +1,54 @@
+@import '../variables.scss';
+@import '../extends.scss';
+
+.BookingNavigationItem {
+  padding: 0 0.5em;
+
+  .BookingNavigation-link {
+    display: inline-block;
+    padding: 0.5em 1em;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 600;
+    text-decoration: none;
+
+    .BookingNavigationItem-icon {
+      display: inline-block;
+      width: 45px;
+      height: 51px;
+      background: url(../polygon-white.png) no-repeat;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 51px;
+    }
+
+    .BookingNavigationItem-text {
+      vertical-align: middle;
+      margin-left: 25px;
+    }
+
+    &.active {
+      color: $secondary-color;
+      text-decoration: none;
+
+      .BookingNavigationItem-icon {
+        background: url(../polygon-orange.png) no-repeat;
+      }
+    }
+
+    @media (max-width: $screen-sm-min) {
+      // font-size: 12px;
+    }
+  }
+
+  a.BookingNavigation-link {
+    &:hover, &.active {
+      color: $secondary-color;
+      text-decoration: none;
+
+      .BookingNavigationItem-icon {
+        background: url(../polygon-orange.png) no-repeat;
+      }
+    }
+  }
+}

@@ -1,9 +1,16 @@
 @import '../variables.scss';
 
+@import 'react-daterange-picker/dist/css/react-calendar.css';
+
 .BookingDate {
   flex: 10;
   font-size: 21px;
   justify-content: center;
+
+  .btn-inline {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 
   .BookingDateTo {
     display: inline-block;
@@ -11,6 +18,47 @@
     @media (max-width: $screen-md-min) {
       display: block;
       margin-top: 20px;
+    }
+  }
+
+  input {
+    text-align: center;
+  }
+
+  .DateRangePicker {
+    font-size: 18px;
+
+    .DateRangePicker__Month {
+      color: #969696;
+    }
+
+    .DateRangePicker__MonthHeader {
+      color: $text-color;
+      font-size: 18px;
+    }
+
+    .DateRangePicker__WeekdayHeading {
+      color: $text-color;
+      font-weight: 600;
+    }
+
+    .DateRangePicker__WeekdayHeading abbr[title] {
+      color: $text-color;
+    }
+
+    .DateRangePicker__WeekdayHeading, .DateRangePicker__Date {
+      // color: $text-color;
+      font-size: 16px;
+    }
+
+    .DateRangePicker__CalendarHighlight {
+      border-color: $secondary-color;
+    }
+
+    .DateRangePicker__CalendarSelection {
+      // color: #000000;
+      background-color: $secondary-color;
+      border-color: $secondary-color;
     }
   }
 }

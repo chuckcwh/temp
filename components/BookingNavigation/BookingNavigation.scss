@@ -31,46 +31,4 @@
   @media (max-width: $screen-sm-min) {
     justify-content: center;
   }
-
-  .BookingNavigation-item {
-    padding: 0 0.5em;
-
-    .BookingNavigation-link {
-      display: inline-block;
-      padding: 0.5em 1em;
-      color: #fff;
-      font-size: 28px;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-
-      .BookingNavigation-item-icon {
-        display: inline-block;
-        width: 45px;
-        height: 51px;
-        background: url(polygon-white.png) no-repeat;
-        vertical-align: middle;
-        text-align: center;
-        line-height: 51px;
-      }
-
-      .BookingNavigation-item-text {
-        vertical-align: middle;
-        margin-left: 25px;
-      }
-
-      &:hover, &.active {
-        color: $secondary-color;
-        text-decoration: none;
-
-        .BookingNavigation-item-icon {
-          background: url(polygon-orange.png) no-repeat;
-        }
-      }
-
-      @media (max-width: $screen-sm-min) {
-        // font-size: 12px;
-      }
-    }
-  }
 }

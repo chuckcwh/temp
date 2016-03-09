@@ -1,17 +1,16 @@
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  QUERY_SET_SERVICE: null,
-  QUERY_SET_USER: null,
-  QUERY_SET_PATIENT: null,
-  QUERY_SET_LOCATION: null,
-  QUERY_SET_DATES: null,
-  QUERY_SET_TIMINGS: null,
-  TODO_CREATE: null,
-  TODO_COMPLETE: null,
-  TODO_DESTROY: null,
-  TODO_DESTROY_COMPLETED: null,
-  TODO_TOGGLE_COMPLETE_ALL: null,
-  TODO_UNDO_COMPLETE: null,
-  TODO_UPDATE_TEXT: null
+  BOOKING_SET_SERVICE: null,
+  BOOKING_SET_USER: null,
+  BOOKING_SET_LOCATION: null,
+  BOOKING_SET_DATES: null,
+  BOOKING_SET_TIMINGS: null,
+  BOOKING_SET_SERVICES: null,
+  BOOKING_SET_SESSIONS: null,
+  BOOKING_SET_SUM: null,
+  BOOKING_SET_BOOKING: null,
+  BOOKING_SET_LAST: null,
+  BOOKING_DESTROY: null,
+  BOOKING_SET_POST_STATUS: null
 });

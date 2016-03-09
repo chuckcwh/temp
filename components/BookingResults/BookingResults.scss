@@ -4,6 +4,7 @@
   flex: 10;
   font-size: 21px;
   justify-content: center;
+  position: relative;
 
   .BookingResultsItem {
     padding: 10px 0;
@@ -11,6 +12,41 @@
 
     &:first-child {
       border-top: 0;
+    }
+
+    .BookingResultsCheckbox {
+      width: 0;
+      float: left;
+
+      &:checked + label {
+        color: $secondary-color;
+      }
+    }
+
+    .BookingResultsCheckboxLabel {
+      display: block;
+      // margin-left: 100px;
+
+      & > span {
+        float: left;
+      }
+
+      .BookingResultsCheckboxLabelMetaWrapper {
+        display: block;
+
+        .BookingResultsCheckboxLabelMeta {
+          display: flex;
+          justify-content: space-between;
+
+          span:nth-child(1) {
+            width: 75px;
+          }
+
+          span:nth-child(3) {
+            width: 100px;
+          }
+        }
+      }
     }
   }
 }

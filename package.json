@@ -25,6 +25,7 @@
     "lodash.merge": "^3.3.2",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
+    "moment": "^2.11.2",
     "ncp": "^2.0.0",
     "node-libs-browser": "^0.5.3",
     "node-sass": "^3.4.2",
@@ -37,9 +38,13 @@
     "precss": "^1.2.3",
     "raw-loader": "^0.5.1",
     "react": "^0.14.0",
+    "react-datepicker": "^0.23.2",
+    "react-daterange-picker": "^1.0.0",
     "react-dom": "^0.14.0",
     "react-icons": "^1.0.3",
     "react-link-state": "^0.1.1",
+    "react-loader": "^2.0.0",
+    "react-popup": "^0.2.3",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.1.1",
@@ -48,7 +53,8 @@
     "url-loader": "^0.5.6",
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.2.0",
-    "webpack-hot-middleware": "^2.4.1"
+    "webpack-hot-middleware": "^2.4.1",
+    "whatwg-fetch": "^0.11.0"
   },
   "scripts": {
     "lint": "eslint src tools test",

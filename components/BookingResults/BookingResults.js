@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import request from 'superagent';
 import moment from 'moment';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
@@ -22,50 +23,50 @@ export default class BookingResults extends Component {
     // Reset sum displayed on sidebar
     BookingActions.setSum();
 
-    var params = {
-      service: this.props.booking.service,
-      dateStart: this.props.booking.range.start.format('YYYY-MM-DD'),
-      dateEnd: this.props.booking.range.end.format('YYYY-MM-DD'),
-      preferredPostalCode: this.props.booking.location.postalCode,
-      preferredTimes: this.props.booking.timeslots
-    };
-    // console.log('http://161.202.19.121/api/getAvailableSchedule?' + serialize(params));
-    fetch('http://161.202.19.121/api/getAvailableSchedule?' + serialize(params), {
-      headers: {
-        'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data && data.timeSlots && Array.isArray(data.timeSlots)) {
-        // console.log(data.timeSlots);
-        var sessions = [], checkedData = [], sum = 0;
-        for (var i = 0; i < data.timeSlots.length; i++) {
-          var timeslot = data.timeSlots[i];
-          var session = {};
-          for (var j = 0; j < timeslot.slots.length; j++) {
-            if (timeslot.slots[j]['preferred']) {
-              session = timeslot.slots[j];
-              break;
-            }
-          }
-          sessions[i] = Object.assign(session, {date: timeslot.date});
-          checkedData['session'+i] = true;
-          sum += parseFloat(sessions[i]['price']);
+    this.serverRequest = request
+      .get('http://161.202.19.121/api/getAvailableSchedule')
+      .query({
+        service: this.props.booking.service,
+        dateStart: this.props.booking.range.start.format('YYYY-MM-DD'),
+        dateEnd: this.props.booking.range.end.format('YYYY-MM-DD'),
+        preferredPostalCode: this.props.booking.location.postalCode,
+        'preferredTimes[]': this.props.booking.timeslots   // hack to send PHP style arrays
+      })
+      .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+      .end((err, res) => {
+        if (err) {
+          return console.error('http://161.202.19.121/api/getAvailableSchedule', status, err.toString());
         }
-        var state = Object.assign({
-          slots: data.timeSlots,
-          sessions: sessions
-        }, checkedData);
-        this.setState(state);
-        BookingActions.setSum(sum);
-      } else {
-        console.error('Failed to obtain timeslots data.');
-      }
-    })
-    .catch(err => {
-      console.error('http://161.202.19.121/api/getAvailableSchedule', status, err.toString());
-    });
+        if (res.body && res.body.timeSlots && Array.isArray(res.body.timeSlots)) {
+          // console.log(res.body.timeSlots);
+          var sessions = [], checkedData = [], sum = 0;
+          for (var i = 0; i < res.body.timeSlots.length; i++) {
+            var timeslot = res.body.timeSlots[i];
+            var session = {};
+            for (var j = 0; j < timeslot.slots.length; j++) {
+              if (timeslot.slots[j]['preferred']) {
+                session = timeslot.slots[j];
+                break;
+              }
+            }
+            sessions[i] = Object.assign(session, {date: timeslot.date});
+            checkedData['session'+i] = true;
+            sum += parseFloat(sessions[i]['price']);
+          }
+          var state = Object.assign({
+            slots: res.body.timeSlots,
+            sessions: sessions
+          }, checkedData);
+          this.setState(state);
+          BookingActions.setSum(sum);
+        } else {
+          console.error('Failed to obtain timeslots data.');
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this.serverRequest && this.serverRequest.abort();
   }
 
   render() {

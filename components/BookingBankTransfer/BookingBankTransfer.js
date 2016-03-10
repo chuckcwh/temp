@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import request from 'superagent';
 import classNames from 'classNames';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import './BookingBankTransfer.scss';
 import Link from '../Link';
+import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
 export default class BookingBankTransfer extends Component {
@@ -17,12 +19,16 @@ export default class BookingBankTransfer extends Component {
     };
   }
 
+  componentWillUnmount() {
+    this.serverRequest && this.serverRequest.abort();
+  }
+
   render() {
     return (
       <div className="BookingBankTransfer">
         <Loader className="spinner" loaded={this.state.pending ? false : true}>
           <form id="BookingBankTransferForm">
-            <p className={classNames('error', this.state.error ? '' : 'hidden')}>Your bank transfer reference number is not acceptable.</p>
+            <p className={classNames('error', this.state.error ? '' : 'hidden')}>Your bank transfer reference number was not accepted.</p>
             <p><b>Your Total Amount is SGD {this.props.booking.case.price}</b></p>
             <p>
               Please transfer the total amount to<br />
@@ -44,6 +50,9 @@ export default class BookingBankTransfer extends Component {
             </div>
           </form>
         </Loader>
+        <AlertPopup ref="alertPopup">
+          Please fill up your bank transfer reference number.
+        </AlertPopup>
       </div>
     );
   }
@@ -54,40 +63,37 @@ export default class BookingBankTransfer extends Component {
       event.preventDefault();
 
       this.setState({
-        pending: true
+        pending: true,
+        ref: undefined
       });
 
-      fetch('http://161.202.19.121/api/verifyBankTransaction', {
-        method: 'post',
-        headers: {
-          'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-        },
-        body: JSON.stringify({
+      this.serverRequest = request
+        .post('http://161.202.19.121/api/verifyBankTransaction')
+        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .send({
           amount: this.props.booking.case.price,
           type: 'Payment',
           ref: this.state.ref,
           sku: 'ebc-case-' + this.props.booking.case.id
         })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.status === 1) {
-          console.log(data);
-          BookingActions.setPostStatus('success');
-        } else {
-          this.setState({
-            pending: false,
-            error: true
-          });
-          console.error('Failed to verify bank transfer payment.');
-        }
-      })
-      .catch(err => {
-        console.error('http://161.202.19.121/api/verifyBankTransaction', status, err.toString());
-      });
+        .end((err, res) => {
+          if (err) {
+            return console.error('http://161.202.19.121/api/verifyBankTransaction', status, err.toString());
+          }
+          if (res.body && res.body.status === 1) {
+            console.log(res.body);
+            BookingActions.setPostStatus('success');
+          } else {
+            this.setState({
+              pending: false,
+              error: true
+            });
+            console.error('Failed to verify bank transfer payment.');
+          }
+        });
     } else {
       event.preventDefault();
-      alert('Please fill up your bank transfer reference number.');
+      this.refs.alertPopup.show();
     }
   }
 

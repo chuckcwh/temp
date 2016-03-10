@@ -24,9 +24,9 @@ export default class BookingDate extends Component {
         </div>
         <div className="text-center">
           <form id="BookingDateForm">
-            <input className="btn-inline" type="text" id="startDate" name="startDate" value={this.state.range && this.state.range.start && this.state.range.start.format('ll')} required readonly />
+            <input className="btn-inline" type="text" id="startDate" name="startDate" value={this.state.range && this.state.range.start && this.state.range.start.format('ll')} required readOnly />
             <div className="BookingDateTo"><i>to</i></div>
-            <input className="btn-inline" type="text" id="endDate" name="endDate" value={this.state.range && this.state.range.end && this.state.range.end.format('ll')} required readonly />
+            <input className="btn-inline" type="text" id="endDate" name="endDate" value={this.state.range && this.state.range.end && this.state.range.end.format('ll')} required readOnly />
           </form>
         </div>
         <p></p>

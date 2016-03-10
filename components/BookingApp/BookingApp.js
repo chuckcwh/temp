@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classNames';
+import request from 'superagent';
 import './BookingApp.scss';
 import Container from '../Container';
 import BookingNavigation from '../BookingNavigation';
@@ -28,7 +29,7 @@ export default class BookingApp extends Component {
 
   constructor(props) {
     super(props);
-    if (!BookingStore.isNavigationAllowed(this.props.path)) {
+    if (this.props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(this.props.path)) {
       Location.replace('');
     } else {
       this.state = BookingStore.getState();
@@ -39,22 +40,19 @@ export default class BookingApp extends Component {
     BookingStore.addChangeListener(this._onChange.bind(this));
 
     if (!BookingStore.getServices()) {
-      fetch('http://161.202.19.121/api/getServices', {
-        headers: {
-          'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.services && Array.isArray(data.services)) {
-          BookingActions.setServices(data.services);
-        } else {
-          console.error('Failed to obtain services data.');
-        }
-      })
-      .catch(err => {
-        console.error('http://161.202.19.121/api/getServices', err.toString());
-      });
+      this.serverRequest1 = request
+        .get('http://161.202.19.121/api/getServices')
+        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .end((err, res) => {
+          if (err) {
+            return console.error('http://161.202.19.121/api/getServices', err.toString());
+          }
+          if (res.body && res.body.services && Array.isArray(res.body.services)) {
+            BookingActions.setServices(res.body.services);
+          } else {
+            console.error('Failed to obtain services data.');
+          }
+        });
     }
 
     // if "bid" query parameter exists, must be booking confirmation
@@ -63,35 +61,35 @@ export default class BookingApp extends Component {
         BookingActions.setPostStatus('payment-paypal');
       }
 
-      var params = {
-        bid: this.props.location.query.bid
-      };
-      fetch('http://161.202.19.121/api/getBooking?' + serialize(params), {
-        headers: {
-          'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.booking && data.status) {
-          console.log(data.booking);
-          // if booking has already been completed
-          if (data.booking && data.booking.case && data.booking.case.transactions && data.booking.case.transactions.length) {
-            BookingActions.setPostStatus('success');
+      this.serverRequest2 = request
+        .get('http://161.202.19.121/api/getBooking')
+        .query({
+          bid: this.props.location.query.bid
+        })
+        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .end((err, res) => {
+          if (err) {
+            return console.error('http://161.202.19.121/api/getBooking', status, err.toString());
           }
-          BookingActions.setBooking(data.booking);
-        } else {
-          console.error('Failed to obtain booking data.');
-        }
-      })
-      .catch(err => {
-        console.error('http://161.202.19.121/api/getBooking', status, err.toString());
-      });
+          if (res.body && res.body.booking && res.body.status) {
+            console.log(res.body.booking);
+            // if booking has already been completed
+            if (res.body.booking && res.body.booking.case && res.body.booking.case.transactions && res.body.booking.case.transactions.length) {
+              BookingActions.setPostStatus('success');
+            }
+            BookingActions.setBooking(res.body.booking);
+          } else {
+            console.error('Failed to obtain booking data.');
+          }
+        });
     }
   }
 
   componentWillUnmount() {
     BookingStore.removeChangeListener(this._onChange.bind(this));
+
+    this.serverRequest1 && this.serverRequest1.abort();
+    this.serverRequest2 && this.serverRequest2.abort();
   }
 
   render() {

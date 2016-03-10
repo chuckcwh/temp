@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import request from 'superagent';
 import Loader from 'react-loader';
 import './BookingPaypal.scss';
 import Link from '../Link';
@@ -21,29 +22,30 @@ export default class BookingPaypal extends Component {
         pending: true
       });
       // Execute paypal payment since this is returned from Paypal
-      fetch('http://161.202.19.121/api/verifyPaypalTransaction', {
-        method: 'post',
-        headers: {
-          'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-        },
-        body: JSON.stringify({
+      this.serverRequest1 = request
+        .post('http://161.202.19.121/api/verifyPaypalTransaction')
+        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .send({
           ppid: this.state.paymentId
         })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        if (data && data.status) {
-          // console.log(data.items);
-          BookingActions.setPostStatus('success');
-        } else {
-          console.error('Failed to execute paypal payment.');
-        }
-      })
-      .catch(err => {
-        console.error('http://161.202.19.121/api/verifyPaypalTransaction', status, err.toString());
-      });
+        .end((err, res) => {
+          if (err) {
+            return console.error('http://161.202.19.121/api/verifyPaypalTransaction', status, err.toString());
+          }
+          console.log(res.body);
+          if (res.body && res.body.status) {
+            // console.log(res.body.items);
+            BookingActions.setPostStatus('success');
+          } else {
+            console.error('Failed to execute paypal payment.');
+          }
+        });
     }
+  }
+
+  componentWillUnmount() {
+    this.serverRequest1 && this.serverRequest1.abort();
+    this.serverRequest2 && this.serverRequest2.abort();
   }
 
   render() {
@@ -90,37 +92,33 @@ export default class BookingPaypal extends Component {
       pending: true
     });
 
-    fetch('http://161.202.19.121/api/makePaypalWebPayment', {
-      method: 'post',
-      headers: {
-        'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-      },
-      body: JSON.stringify({
+    this.serverRequest2 = request
+      .post('http://161.202.19.121/api/makePaypalWebPayment')
+      .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+      .send({
         amount: this.props.booking.case.price,
         type: 'case',
         cid: this.props.booking.case.id,
         returnUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id,
         cancelUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id
       })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data && data.status) {
-        console.log(data.url);
-        console.log(data.payment_id);
-        // this.setState(data.booking);
-        // BookingActions.setBooking(data.booking);
-        this.setState({
-          redirecting: true
-        });
-        window.location = data.url;
-      } else {
-        console.error('Failed to create paypal payment.');
-      }
-    })
-    .catch(err => {
-      console.error('http://161.202.19.121/api/makePaypalWebPayment', status, err.toString());
-    });
+      .end((err, res) => {
+        if (err) {
+          return console.error('http://161.202.19.121/api/makePaypalWebPayment', status, err.toString());
+        }
+        if (res.body && res.body.status) {
+          console.log(res.body.url);
+          console.log(res.body.payment_id);
+          // this.setState(res.body.booking);
+          // BookingActions.setBooking(res.body.booking);
+          this.setState({
+            redirecting: true
+          });
+          window.location = res.body.url;
+        } else {
+          console.error('Failed to create paypal payment.');
+        }
+      });
   }
 
 }

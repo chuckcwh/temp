@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import request from 'superagent';
 import classNames from 'classNames';
 import Loader from 'react-loader';
 import './BookingComplete.scss';
@@ -28,14 +29,10 @@ export default class BookingComplete extends Component {
           price: this.props.booking.sessions[i].price
         });
       }
-      fetch('http://161.202.19.121/api/createBooking', {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + btoa('secret:secret0nlyWeilsonKnowsShhh852~')
-        },
-        body: JSON.stringify({
+      this.serverRequest = request
+        .post('http://161.202.19.121/api/createBooking')
+        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .send({
           booking: {
             client_contactEmail: this.props.booking && this.props.booking.user && this.props.booking.user.client_contactEmail,
             client_contactNumber: this.props.booking && this.props.booking.user && this.props.booking.user.client_contactNumber,
@@ -60,27 +57,29 @@ export default class BookingComplete extends Component {
             }]
           }
         })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        if (data && data.booking && data.booking.case) {
-          // Destroy booking
-          BookingActions.destroyBooking();
+        .end((err, res) => {
+          if (err) {
+            return console.error('http://161.202.19.121/api/createBooking', err.toString());
+          }
+          // console.log(res.body);
+          if (res.body && res.body.booking && res.body.booking.case) {
+            // Destroy booking
+            BookingActions.destroyBooking();
 
-          this.setState({
-            bookingStatus: data.status,
-            bookingId: data.booking.id,
-            bookingAmt: data.booking.case.price
-          });
-        } else {
-          console.error('Failed to create booking.');
-        }
-      })
-      .catch(err => {
-        console.error('http://161.202.19.121/api/createBooking', err.toString());
-      });
+            this.setState({
+              bookingStatus: res.body.status,
+              bookingId: res.body.booking.id,
+              bookingAmt: res.body.booking.case.price
+            });
+          } else {
+            console.error('Failed to create booking.');
+          }
+        });
     }
+  }
+
+  componentWillUnmount() {
+    this.serverRequest && this.serverRequest.abort();
   }
 
   render() {

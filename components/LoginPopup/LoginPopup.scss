@@ -1,0 +1,59 @@
+@import '../variables.scss';
+
+.LoginPopup {
+  &-footer {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .Account-container-item {
+    box-sizing: border-box;
+    width: 340px;
+    background-color: #fff;
+    padding: 40px;
+
+    form {
+      display: inline-block;
+
+      h3 {
+        color: $brand-color;
+        font-weight: normal;
+        font-size: 24px;
+        margin: 0 0 24px 0;
+      }
+
+      input {
+        margin: 0;
+        font-size: 21px;
+      }
+
+      input + input {
+        border-top: 0;
+      }
+
+      a.btn {
+        width: 100%;
+      }
+
+      .Account-container-item-middle {
+        height: 95px;
+
+        .ForgotPasswordContainer {
+          padding: 10px 0;
+
+          .ForgotPasswordLink {
+            color: $secondary-color;
+          }
+        }
+
+        input[type=checkbox]:not(old) + label > span:first-child {
+          border-color: #ccc;
+        }
+
+        input[type=checkbox]:not(old):checked + label > span {
+          color: $text-color;
+        }
+      }
+    }
+  }
+}

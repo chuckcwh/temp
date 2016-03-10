@@ -6,6 +6,7 @@ import moment from 'moment';
 import './BookingLocation.scss';
 import Container from '../Container';
 import Link from '../Link';
+import LoginPopup from '../LoginPopup';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
@@ -40,7 +41,7 @@ export default class BookingLocation extends Component {
               <form id="BookingLocationForm">
                 <div className="BookingLocationBodySection">
                   <span>I&apos;m an existing customer</span>
-                  <a href="/booking2" className="btn btn-primary btn-small btn-inline">LOGIN</a>
+                  <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this._onClickLogin.bind(this)}>LOGIN</a>
                   <span>or</span>
                   <a href="/booking2" className="btn btn-primary btn-small btn-inline">REGISTER</a>
                 </div>
@@ -98,9 +99,10 @@ export default class BookingLocation extends Component {
             {this.props.children}
           </div>
         </Container>
-        <AlertPopup ref="alertPopup">
+        <AlertPopup ref={(c) => this._alertPopup = c}>
           Please fill up all required fields.
         </AlertPopup>
+        <LoginPopup ref={(c) => this._loginPopup = c} />
       </div>
     );
   }
@@ -159,6 +161,12 @@ export default class BookingLocation extends Component {
     }
   }
 
+  _onClickLogin(event) {
+    event.preventDefault();
+
+    this._loginPopup.show();
+  }
+
   _onNext(event) {
     var form = document.getElementById('BookingLocationForm');
     if (form.checkValidity()) {
@@ -189,7 +197,7 @@ export default class BookingLocation extends Component {
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
-      this.refs.alertPopup.show();
+      this._alertPopup.show();
     }
   }
 

@@ -120,7 +120,7 @@ export default class extends Component {
     // );
     return (
       <div>
-        <Account type="login" />
+        <Account type="forgot-password" />
       </div>
     );
   }

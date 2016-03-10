@@ -167,11 +167,42 @@ input[type=radio]:not(old):checked + label > span:first-child > span {
   cursor           : pointer;
 }
 
-input[type=text], input[type=email] {
+input[type=text], input[type=email], input[type=password] {
   width: 230px;
   margin: 20px 20px 0 0;
   padding: 15px;
   border: 1px solid $border-color;
+
+  &.EmailInput {
+    width: 195px;
+    padding-left: 50px;
+    background: url('../mail.png') no-repeat 12.5px;
+  }
+
+  &.PasswordInput {
+    width: 195px;
+    padding-left: 50px;
+    background: url('../lock.png') no-repeat 12.5px;
+  }
+
+  &.BookingIdInput {
+    width: 195px;
+    padding-left: 50px;
+    background: url('../tick.png') no-repeat 12.5px;
+  }
+
+  &::-webkit-input-placeholder {
+    color: #ddd;  
+  }
+  &:-moz-placeholder {  
+    color: #ddd;  
+  }
+  &::-moz-placeholder {  
+    color: #ddd;  
+  }
+  &:-ms-input-placeholder {  
+    color: #ddd;  
+  }
 }
 
 input.btn-inline {

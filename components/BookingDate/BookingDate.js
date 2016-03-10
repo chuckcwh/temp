@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DateRangePicker from 'react-daterange-picker';
 import './BookingDate.scss';
 import Link from '../Link';
+import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
 export default class BookingDate extends Component {
@@ -23,15 +24,18 @@ export default class BookingDate extends Component {
         </div>
         <div className="text-center">
           <form id="BookingDateForm">
-            <input className="btn-inline" type="text" id="startDate" name="startDate" value={this.state.range && this.state.range.start && this.state.range.start.format('ll')} required disabled />
+            <input className="btn-inline" type="text" id="startDate" name="startDate" value={this.state.range && this.state.range.start && this.state.range.start.format('ll')} required readonly />
             <div className="BookingDateTo"><i>to</i></div>
-            <input className="btn-inline" type="text" id="endDate" name="endDate" value={this.state.range && this.state.range.end && this.state.range.end.format('ll')} required disabled />
+            <input className="btn-inline" type="text" id="endDate" name="endDate" value={this.state.range && this.state.range.end && this.state.range.end.format('ll')} required readonly />
           </form>
         </div>
         <p></p>
         <div className="text-center">
           <a href="/booking3b" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
+        <AlertPopup ref="alertPopup">
+          Please select a date range.
+        </AlertPopup>
       </div>
     );
   }
@@ -52,7 +56,8 @@ export default class BookingDate extends Component {
       BookingActions.setLast('booking3a');
     } else {
       event.preventDefault();
-      alert('Please select a date range.');
+      // alert('Please select a date range.');
+      this.refs.alertPopup.show();
     }
   }
 

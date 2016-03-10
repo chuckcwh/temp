@@ -5,6 +5,7 @@ import Loader from 'react-loader';
 import './BookingServices.scss';
 import Container from '../Container';
 import Link from '../Link';
+import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
 const ALL_SERVICES = 'All Services';
@@ -71,6 +72,9 @@ export default class BookingServices extends Component {
             </Container>
           </div>
         </Loader>
+        <AlertPopup ref="alertPopup">
+          Please select a service.
+        </AlertPopup>
       </div>
     );
   }
@@ -97,7 +101,8 @@ export default class BookingServices extends Component {
       BookingActions.setLast('booking1');
     } else {
       event.preventDefault();
-      alert('Please select a service');
+      // alert('Please select a service');
+      this.refs.alertPopup.show();
     }
   }
 

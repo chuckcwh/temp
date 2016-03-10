@@ -4,6 +4,7 @@ import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import './BookingResults.scss';
 import Link from '../Link';
+import AlertPopup from '../AlertPopup';
 import { serialize } from '../../lib/Utils';
 import BookingActions from '../../actions/BookingActions';
 
@@ -114,6 +115,9 @@ export default class BookingResults extends Component {
             <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
           </div>
         </Loader>
+        <AlertPopup ref="alertPopup">
+          Please select at least one session.
+        </AlertPopup>
       </div>
     );
   }
@@ -127,7 +131,8 @@ export default class BookingResults extends Component {
     }
 
     if (sessions.length === 0) {
-      alert('Please choose at least one session.');
+      // alert('Please choose at least one session.');
+      this.refs.alertPopup.show();
       return event.preventDefault();
     }
     

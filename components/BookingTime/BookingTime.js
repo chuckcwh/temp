@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import linkState from 'react-link-state';
 import './BookingTime.scss';
 import Link from '../Link';
+import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
 export default class BookingTime extends Component {
@@ -42,6 +43,9 @@ export default class BookingTime extends Component {
         <div className="text-center">
           <a href="/booking3c" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
+        <AlertPopup ref="alertPopup">
+          Please select at least one timeslot.
+        </AlertPopup>
       </div>
     );
   }
@@ -55,7 +59,8 @@ export default class BookingTime extends Component {
     }
 
     if (timeslots.length === 0) {
-      alert('Please choose at least one timeslot.');
+      // alert('Please choose at least one timeslot.');
+      this.refs.alertPopup.show();
       return event.preventDefault();
     }
 

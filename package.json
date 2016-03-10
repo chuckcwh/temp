@@ -45,6 +45,7 @@
     "react-link-state": "^0.1.1",
     "react-loader": "^2.0.0",
     "react-popup": "^0.2.3",
+    "react-skylight": "^0.3.0",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.1.1",

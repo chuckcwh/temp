@@ -6,6 +6,7 @@ import moment from 'moment';
 import './BookingLocation.scss';
 import Container from '../Container';
 import Link from '../Link';
+import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
 export default class BookingLocation extends Component {
@@ -97,7 +98,9 @@ export default class BookingLocation extends Component {
             {this.props.children}
           </div>
         </Container>
-
+        <AlertPopup ref="alertPopup">
+          Please fill up all required fields.
+        </AlertPopup>
       </div>
     );
   }
@@ -185,7 +188,8 @@ export default class BookingLocation extends Component {
       BookingActions.setLast('booking2');
     } else {
       event.preventDefault();
-      alert('Please fill up all required fields.');
+      // alert('Please fill up all required fields.');
+      this.refs.alertPopup.show();
     }
   }
 

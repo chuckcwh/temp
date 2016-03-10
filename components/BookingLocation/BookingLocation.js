@@ -42,8 +42,10 @@ export default class BookingLocation extends Component {
                 <div className="BookingLocationBodySection">
                   <span>I&apos;m an existing customer</span>
                   <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this._onClickLogin.bind(this)}>LOGIN</a>
+                  {/*
                   <span>or</span>
                   <a href="/booking2" className="btn btn-primary btn-small btn-inline">REGISTER</a>
+                  */}
                 </div>
                 <div className="BookingLocationBodySection">
                   <div>Continue booking as guest</div>

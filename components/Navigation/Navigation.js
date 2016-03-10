@@ -29,6 +29,9 @@ export default class Navigation extends Component {
           <li className="Navigation-item">
             <a className={classNames('Navigation-link', (this.props.path === '/manage-booking') ? 'active' : '')} href="/manage-booking" onClick={Link.handleClick}>Manage Booking</a>
           </li>
+          <li className="Navigation-item">
+            <a className="Navigation-link" href="http://161.202.19.121/login/">Login</a>
+          </li>
         </ul>
       </div>
     );

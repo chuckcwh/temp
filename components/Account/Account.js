@@ -14,27 +14,29 @@ export default class Account extends Component {
     if (this.props.type === 'login') {
       components = (
         <div className="Account-container">
+          {/*
           <div className="Account-login Account-container-item">
-            <form id="">
+            <form id="AccountLoginForm" action="http://161.202.19.121/login/" method="POST">
               <h3>Already a Member?</h3>
-              <input className="EmailInput" type="email" placeholder="Enter Email" />
-              <input className="PasswordInput" type="password" placeholder="Enter Password" />
+              <input className="EmailInput" type="email" name="email" placeholder="Enter Email" />
+              <input className="PasswordInput" type="password" name="password" placeholder="Enter Password" />
               <div className="Account-container-item-middle">
                 <div className="ForgotPasswordContainer">
                   <a href="/forgot-password" className="ForgotPasswordLink" onClick={Link.handleClick}>Forgot Password?</a>
                 </div>
                 <div>
-                  <input className="RememberMeCheckbox" type="checkbox" id="rememberMe" name="rememberMe" />
-                  <label className="RememberMeCheckboxLabel" htmlFor="rememberMe">
+                  <input className="RememberMeCheckbox" type="checkbox" id="remember" name="remember" />
+                  <label className="RememberMeCheckboxLabel" htmlFor="remember">
                     <span></span><span>Remember me</span>
                   </label>
                 </div>
               </div>
-              <a href="#" className="btn btn-primary">Login</a>
+              <a href="#" className="btn btn-primary" onClick={this._onClickLogin.bind(this)}>Login</a>
             </form>
           </div>
+          */}
           <div className="Account-find Account-container-item">
-            <form id="">
+            <form id="AccountManageBookingForm">
               <h3>Have Booking ID?</h3>
               <input className="BookingIdInput" type="text" placeholder="Booking ID" />
               <input className="EmailInput" type="email" placeholder="Enter Email" />
@@ -48,7 +50,7 @@ export default class Account extends Component {
       components = (
         <div className="Account-container">
           <div className="Account-login Account-container-item">
-            <form id="">
+            <form id="AccountForgotPasswordForm">
               <h3>Forgot Password?</h3>
               <input className="EmailInput" type="email" placeholder="Enter Email" />
               <div className="Account-container-item-middle">
@@ -69,6 +71,13 @@ export default class Account extends Component {
         </Container>
       </div>
     );
+  }
+
+  _onClickLogin(event) {
+    event.preventDefault();
+
+    var form = document.getElementById('AccountLoginForm');
+    form.submit();
   }
 
 }

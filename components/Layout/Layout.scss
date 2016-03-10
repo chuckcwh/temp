@@ -48,13 +48,14 @@ hr {
   height: 6px;
 }
 
-a.btn {
+a.btn, button.btn {
   text-decoration: none;
+  border: 0;
   cursor:pointer;
   text-align: center;
 }
 
-a.btn-primary {
+a.btn-primary, button.btn-primary {
   display: inline-block;
   background-color: $secondary-color;
   text-decoration: none;
@@ -69,13 +70,13 @@ a.btn-primary {
   }
 }
 
-a.btn-small {
+a.btn-small, button.btn-small {
   width: 150px;
   font-size: 21px;
   padding: 0.25em 0 0.25em 0;
 }
 
-a.btn-inline {
+a.btn-inline, button.btn-inline {
   margin-left: 20px;
   margin-right: 20px;
 }

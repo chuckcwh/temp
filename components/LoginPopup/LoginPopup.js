@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import linkState from 'react-link-state';
+import Loader from 'react-loader';
+import request from 'superagent';
 import SkyLight from 'react-skylight';
 import './LoginPopup.scss';
 import Link from '../Link';
@@ -8,19 +11,22 @@ export default class LoginPopup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      validationError: undefined,
-      loginError: undefined
+      email: undefined,
+      password: undefined,
+      error: undefined,
+      pending: false
     };
+  }
+
+  componentWillUnmount() {
+    this.serverRequest && this.serverRequest.abort();
   }
 
   render() {
     var styles = {
       dialogStyles: {
         width: '340px',
-        // height: '150px',
-        // marginTop: '-75px',
-        marginLeft: '-170px',
-        // textAlign: 'center'
+        marginLeft: '-170px'
       },
       title: {
         display: 'none'
@@ -33,31 +39,62 @@ export default class LoginPopup extends Component {
 
     return (
       <SkyLight dialogStyles={styles.dialogStyles} titleStyle={styles.title} closeButtonStyle={styles.closeButtonStyle} hideOnOverlayClicked ref={(c) => this._loginPopup = c}>
-        <div className="LoginPopup">
-          <div className="Account-login Account-container-item">
-            <form id="AccountLoginForm" ref={(c) => this._accountLoginForm = c}>
-              <h3>Account Login</h3>
-              <input className="EmailInput" type="email" name="email" placeholder="Enter Email" />
-              <input className="PasswordInput" type="password" name="password" placeholder="Enter Password" />
-              <div className="Account-container-item-middle">
-                <div className={this.state.validationError ? '' : 'hidden'}><span className="error">Please check your email or password.</span></div>
-                <div className={this.state.loginError ? '' : 'hidden'}><span className="error">Login failed.</span></div>
-              </div>
-              <a href="#" className="btn btn-primary" onClick={this._onClickLogin.bind(this)}>Login</a>
-            </form>
+        <Loader className="spinner" loaded={this.state.pending ? false : true}>
+          <div className="LoginPopup">
+            <div className="Account-login Account-container-item">
+              <form id="AccountLoginForm" ref={(c) => this._accountLoginForm = c} autoComplete="off">
+                <h3>eBeeCare Login</h3>
+                <input className="EmailInput" type="email" name="email" valueLink={linkState(this, 'email')} placeholder="Enter Email" required />
+                <input className="PasswordInput" type="password" name="password" valueLink={linkState(this, 'password')} placeholder="Enter Password" required />
+                <div className="Account-container-item-middle">
+                  <div className={this.state.error ? '' : 'hidden'}><span className="error">Failed to login. Please check your email or password.</span></div>
+                </div>
+                <button className="btn btn-primary" onClick={this._onClickLogin.bind(this)}>Login</button>
+              </form>
+            </div>
           </div>
-        </div>
+        </Loader>
       </SkyLight>
     );
   }
 
   _onClickLogin(event) {
-    event.preventDefault();
-
     if (this._accountLoginForm.checkValidity()) {
+      event.preventDefault();
 
-    } else {
-      this.setState({validationError: true});
+      this.setState({pending: true});
+
+      this.serverRequest = request
+        .post('http://161.202.19.121/api/mlogin')
+        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .send({
+          email: this.state.email,
+          password: this.state.password
+        })
+        .end((err, res) => {
+          this.setState({pending: false});
+          if (err) {
+            return console.error('http://161.202.19.121/api/mlogin', status, err.toString());
+          }
+          if (res.body && res.body.status === 1) {
+            console.log(res.body);
+            this.setState({
+              error: undefined
+            });
+            this._loginPopup.hide();
+            // BookingActions.setPostStatus('success');
+          } else {
+            this.setState({
+              error: true
+            });
+            console.error('Failed to login.');
+          }
+        });
+
+      this.setState({
+        email: undefined,
+        password: undefined
+      });
     }
   }
 

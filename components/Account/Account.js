@@ -41,7 +41,7 @@ export default class Account extends Component {
               <input className="BookingIdInput" type="text" placeholder="Booking ID" />
               <input className="EmailInput" type="email" placeholder="Enter Email" />
               <div className="Account-container-item-middle"></div>
-              <a href="#" className="btn btn-primary">Find Booking</a>
+              <button className="btn btn-primary">Find Booking</button>
             </form>
           </div>
         </div>
@@ -71,13 +71,6 @@ export default class Account extends Component {
         </Container>
       </div>
     );
-  }
-
-  _onClickLogin(event) {
-    event.preventDefault();
-
-    var form = document.getElementById('AccountLoginForm');
-    form.submit();
   }
 
 }

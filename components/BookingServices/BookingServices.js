@@ -50,7 +50,7 @@ export default class BookingServices extends Component {
           <div>
             <Container>
               <div className="BookingServicesBody">
-                <form id="BookingServicesForm">
+                <form ref={(c) => this._bookingServicesForm = c}>
                 {
                   this.props.allServices && this._filterServices(this.props.allServices, this.state.filter).map(service => {
                     var id = "BookingServicesRadio" + service.id;
@@ -72,7 +72,7 @@ export default class BookingServices extends Component {
             </Container>
           </div>
         </Loader>
-        <AlertPopup ref="alertPopup">
+        <AlertPopup ref={(c) => this._alertPopup = c}>
           Please select a service.
         </AlertPopup>
       </div>
@@ -94,15 +94,14 @@ export default class BookingServices extends Component {
   }
 
   _onNext(event) {
-    var form = document.getElementById('BookingServicesForm');
-    if (form.checkValidity()) {
+    if (this._bookingServicesForm.checkValidity()) {
       Link.handleClick(event);
       BookingActions.setService(this.state.selectedService);
       BookingActions.setLast('booking1');
     } else {
       event.preventDefault();
       // alert('Please select a service');
-      this.refs.alertPopup.show();
+      this._alertPopup.show();
     }
   }
 

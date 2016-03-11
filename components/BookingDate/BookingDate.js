@@ -33,7 +33,7 @@ export default class BookingDate extends Component {
         <div className="text-center">
           <a href="/booking3b" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
-        <AlertPopup ref="alertPopup">
+        <AlertPopup ref={(c) => this._alertPopup = c}>
           Please select a date range.
         </AlertPopup>
       </div>
@@ -57,7 +57,7 @@ export default class BookingDate extends Component {
     } else {
       event.preventDefault();
       // alert('Please select a date range.');
-      this.refs.alertPopup.show();
+      this._alertPopup.show();
     }
   }
 

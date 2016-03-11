@@ -50,7 +50,7 @@ export default class BookingBankTransfer extends Component {
             </div>
           </form>
         </Loader>
-        <AlertPopup ref="alertPopup">
+        <AlertPopup ref={(c) => this._alertPopup = c}>
           Please fill up your bank transfer reference number.
         </AlertPopup>
       </div>
@@ -93,7 +93,7 @@ export default class BookingBankTransfer extends Component {
         });
     } else {
       event.preventDefault();
-      this.refs.alertPopup.show();
+      this._alertPopup.show();
     }
   }
 

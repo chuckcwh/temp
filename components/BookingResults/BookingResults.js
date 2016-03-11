@@ -116,7 +116,7 @@ export default class BookingResults extends Component {
             <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
           </div>
         </Loader>
-        <AlertPopup ref="alertPopup">
+        <AlertPopup ref={(c) => this._alertPopup = c}>
           Please select at least one session.
         </AlertPopup>
       </div>
@@ -133,7 +133,7 @@ export default class BookingResults extends Component {
 
     if (sessions.length === 0) {
       // alert('Please choose at least one session.');
-      this.refs.alertPopup.show();
+      this._alertPopup.show();
       return event.preventDefault();
     }
     

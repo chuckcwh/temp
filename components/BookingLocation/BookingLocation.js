@@ -38,7 +38,7 @@ export default class BookingLocation extends Component {
         <Container>
           <div className="BookingLocationWrapper">
             <div className="BookingLocationBody">
-              <form id="BookingLocationForm">
+              <form ref={(c) => this._bookingLocationForm = c}>
                 <div className="BookingLocationBodySection">
                   <span>I&apos;m an existing customer</span>
                   <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this._onClickLogin.bind(this)}>LOGIN</a>
@@ -170,8 +170,7 @@ export default class BookingLocation extends Component {
   }
 
   _onNext(event) {
-    var form = document.getElementById('BookingLocationForm');
-    if (form.checkValidity()) {
+    if (this._bookingLocationForm.checkValidity()) {
       Link.handleClick(event);
 
       var user =  {

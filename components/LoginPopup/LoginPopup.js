@@ -38,7 +38,13 @@ export default class LoginPopup extends Component {
     };
 
     return (
-      <SkyLight dialogStyles={styles.dialogStyles} titleStyle={styles.title} closeButtonStyle={styles.closeButtonStyle} hideOnOverlayClicked ref={(c) => this._loginPopup = c}>
+      <SkyLight 
+        dialogStyles={styles.dialogStyles} 
+        titleStyle={styles.title} 
+        closeButtonStyle={styles.closeButtonStyle} 
+        afterOpen={this._executeAfterModalOpen.bind(this)}
+        hideOnOverlayClicked 
+        ref={(c) => this._loginPopup = c}>
         <Loader className="spinner" loaded={this.state.pending ? false : true}>
           <div className="LoginPopup">
             <div className="Account-login Account-container-item">
@@ -102,10 +108,13 @@ export default class LoginPopup extends Component {
     }
   }
 
+  _executeAfterModalOpen() {
+    this._startInput.focus();
+  }
+
   show(success) {
     this._success = success || () => {};
     this._loginPopup.show();
-    this._startInput.focus();
   }
 
 }

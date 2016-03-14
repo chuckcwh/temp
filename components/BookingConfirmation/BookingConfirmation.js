@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import linkState from 'react-link-state';
+import request from 'superagent';
 import classNames from 'classNames';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
@@ -18,10 +19,12 @@ export default class BookingConfirmation extends Component {
       booking: this.props.booking,
       editingUser: false,
       editingPatient: false,
-      editingAddress: false,
-      // temporary state variables
-      user: {}
+      editingAddress: false
     };
+  }
+
+  componentWillUnmount() {
+    this.serverRequest && this.serverRequest.abort();
   }
 
   render() {
@@ -29,7 +32,8 @@ export default class BookingConfirmation extends Component {
     if (this.state.editingUser) {
       userDetails = (
         <div>
-          <form id="userDetailsForm">
+          <form ref={(c) => this._userDetailsForm = c}>
+            {/*
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
               <div className="TableRowItem3">
@@ -48,10 +52,11 @@ export default class BookingConfirmation extends Component {
                 <input type="email" id="client_contactEmail" name="client_contactEmail" value={this.props.booking.client_contactEmail} placeholder="Email*" maxLength="50" required />
               </div>
             </div>
+            */}
             <div className="TableRow">
               <div className="TableRowItem1">Contact Number</div>
               <div className="TableRowItem3">
-                <input type="text" id="client_contactNumber" name="client_contactNumber" value={this.props.booking.client_contactNumber} placeholder="Contact Number*" maxLength="8" required />
+                <input type="text" id="client_contactNumber" name="client_contactNumber" valueLink={linkState(this, 'client_contactNumber')} placeholder="Contact Number*" maxLength="8" required />
               </div>
             </div>
             <div>
@@ -86,7 +91,7 @@ export default class BookingConfirmation extends Component {
     if (this.state.editingPatient) {
       patientDetails = (
         <div>
-          <form id="patientDetailsForm">
+          <form ref={(c) => this._patientDetailsForm = c}>
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
               <div className="TableRowItem3">
@@ -150,23 +155,23 @@ export default class BookingConfirmation extends Component {
     if (this.state.editingAddress) {
       addressDetails = (
         <div>
-          <form id="addressDetailsForm">
+          <form ref={(c) => this._addressDetailsForm = c}>
             <div className="TableRow">
               <div className="TableRowItem1">Postal Code</div>
               <div className="TableRowItem3">
-                <input type="text" id="postalCode" name="postalCode" onChange={this._onChangePostalCode.bind(this)} value={this.props.booking.case.addresses[0].postalCode} placeholder="Enter Postal Code*" required />
+                <input type="text" id="postalCode" name="postalCode" onChange={this._onChangePostalCode.bind(this)} value={this.state.postalCode} placeholder="Enter Postal Code*" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Address</div>
               <div className="TableRowItem3">
-                <textarea id="address" name="address" value={this.props.booking.case.addresses[0].address} placeholder="Enter Address*" required />
+                <textarea id="address" name="address" valueLink={linkState(this, 'address')} placeholder="Enter Address*" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Unit Number</div>
               <div className="TableRowItem3">
-                <input type="text" id="unitNumber" name="unitNumber" value={this.props.booking.case.addresses[0].unitNumber} placeholder="Enter Unit Number" />
+                <input type="text" id="unitNumber" name="unitNumber" valueLinkg={linkState(this, 'unitNumber')} placeholder="Enter Unit Number" />
               </div>
             </div>
             <div>
@@ -196,12 +201,14 @@ export default class BookingConfirmation extends Component {
                     <h3>Contact Person Details</h3>
                     <a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
                   </div>
-                  {userDetails}
+                  <Loader className="spinner" loaded={!this.state.updatingUser ? true : false}>
+                    {userDetails}
+                  </Loader>
                 </div>
                 <div className="BookingConfirmationBodySection">
                   <div className="BookingConfirmationBodySectionTitle">
                     <h3>Patient Details</h3>
-                    <a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>
+                    {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
                   </div>
                   {patientDetails}
                 </div>
@@ -210,7 +217,9 @@ export default class BookingConfirmation extends Component {
                     <h3>Patient Location / Address</h3>
                     <a href="#" className={this.state.editingAddress ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'address')}><img src={require('../pencil.png')} /></a>
                   </div>
-                  {addressDetails}
+                  <Loader className="spinner" loaded={!this.state.updatingAddress ? true : false}>
+                    {addressDetails}
+                  </Loader>
                 </div>
                 <div className={classNames('BookingConfirmationBodySection', ((this.props.booking && this.props.booking.case && this.props.booking.case.transactions && this.props.booking.case.transactions.length) || this.state.editingUser || this.state.editingPatient || this.state.editingAddress) ? 'hidden' : '')}>
                   <a href="#" className="btn btn-primary" onClick={this._onNext.bind(this)}>GO TO PAYMENT</a>
@@ -229,13 +238,22 @@ export default class BookingConfirmation extends Component {
 
     switch (entity) {
       case 'user':
-        this.setState({editingUser: true});
+        this.setState({
+          client_contactNumber: this.props.booking.client_contactNumber,
+
+          editingUser: true});
         break;
       case 'patient':
         this.setState({editingPatient: true});
         break;
       case 'address':
-        this.setState({editingAddress: true});
+        this.setState({
+          postalCode: this.props.booking.case.addresses[0].postalCode,
+          address: this.props.booking.case.addresses[0].address,
+          unitNumber: this.props.booking.case.addresses[0].unitNumber,
+
+          editingAddress: true
+        });
         break;
     }
   }
@@ -261,13 +279,74 @@ export default class BookingConfirmation extends Component {
 
     switch (entity) {
       case 'user':
-        this.setState({editingUser: false});
+        if (this._userDetailsForm.checkValidity()) {
+          this.setState({updatingUser: true});
+          this.serverRequest = request
+            .post('http://161.202.19.121/api/editBooking')
+            .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+            .send({
+              bid: this.props.booking && this.props.booking.id,
+              token: this.props.booking && this.props.booking.token,
+              booking: {
+                client_contactNumber: this.state.client_contactNumber
+              }
+            })
+            .end((err, res) => {
+              if (err) {
+                return console.error('http://161.202.19.121/api/editBooking', err.toString());
+              }
+              // console.log(res.body);
+              if (res.body && res.body.status === 1) {
+                this.setState({
+                  editingUser: false,
+                  updatingUser: false
+                });
+                BookingActions.setBooking(res.body.booking);
+              } else {
+                console.error('Failed to edit booking.');
+              }
+            });
+        }
         break;
       case 'patient':
-        this.setState({editingPatient: false});
+        if (this._patientDetailsForm.checkValidity()) {
+          this.setState({editingPatient: false});
+        }
         break;
       case 'address':
-        this.setState({editingAddress: false});
+        if (this._addressDetailsForm.checkValidity()) {
+          this.setState({updatingAddress: true});
+          this.serverRequest = request
+            .post('http://161.202.19.121/api/editBooking')
+            .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+            .send({
+              bid: this.props.booking && this.props.booking.id,
+              token: this.props.booking && this.props.booking.token,
+              case: {
+                addresses: [{
+                  id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
+                  address: this.state.address,
+                  postalCode: this.state.postalCode,
+                  unitNumber: this.state.unitNumber
+                }]
+              }
+            })
+            .end((err, res) => {
+              if (err) {
+                return console.error('http://161.202.19.121/api/editBooking', err.toString());
+              }
+              // console.log(res.body);
+              if (res.body && res.body.status === 1) {
+                this.setState({
+                  editingAddress: false,
+                  updatingAddress: false
+                });
+                BookingActions.setBooking(res.body.booking);
+              } else {
+                console.error('Failed to edit booking.');
+              }
+            });
+        }
         break;
     }
   }

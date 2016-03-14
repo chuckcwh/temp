@@ -68,29 +68,31 @@ export default class BookingLocationUser extends Component {
     if (this.state.editingUser) {
       userDetails = (
         <div>
-          <form id="userDetailsForm">
+          <form ref={(c) => this._userDetailsForm = c}>
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="first_name" name="first_name" value={this.props.user.first_name} placeholder="First Name*" maxLength="50" required />
+                <input type="text" id="first_name" name="first_name" valueLink={linkState(this, 'first_name')} placeholder="First Name*" maxLength="50" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Last Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="last_name" name="last_name" value={this.props.user.last_name} placeholder="Last Name*" maxLength="50" required />
+                <input type="text" id="last_name" name="last_name" valueLink={linkState(this, 'last_name')} placeholder="Last Name*" maxLength="50" required />
               </div>
             </div>
+            {/*
             <div className="TableRow">
               <div className="TableRowItem1">Email</div>
               <div className="TableRowItem3">
                 <input type="email" id="email" name="email" value={this.props.user.email} placeholder="Email*" maxLength="50" required />
               </div>
             </div>
+            */}
             <div className="TableRow">
               <div className="TableRowItem1">Mobile Number</div>
               <div className="TableRowItem3">
-                <input type="text" id="mobilePhone" name="mobilePhone" value={this.props.user.mobilePhone} placeholder="Mobile Number*" maxLength="8" required />
+                <input type="text" id="mobilePhone" name="mobilePhone" valueLink={linkState(this, 'mobilePhone')} placeholder="Mobile Number*" maxLength="8" required />
               </div>
             </div>
             <div>
@@ -116,7 +118,7 @@ export default class BookingLocationUser extends Component {
             <div className="TableRowItem3">{this.props.user.email}</div>
           </div>
           <div className="TableRow">
-            <div className="TableRowItem1">Contact Number</div>
+            <div className="TableRowItem1">Mobile Number</div>
             <div className="TableRowItem3">{this.props.user.mobilePhone}</div>
           </div>
         </div>
@@ -264,7 +266,7 @@ export default class BookingLocationUser extends Component {
         <div className="BookingLocationUserBodyEditSection">
           <div className="BookingLocationUserBodyEditSectionTitle">
             <h3>Patient Details</h3>
-            <a href="#" className={this.state.editingPatient || !this.state.patientId ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>
+            {/*<a href="#" className={this.state.editingPatient || !this.state.patientId ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
           </div>
           <Loader className="spinner" loaded={this.state.patients ? true : false}>
             {patientDetails}
@@ -303,7 +305,13 @@ export default class BookingLocationUser extends Component {
 
     switch (entity) {
       case 'user':
-        this.setState({editingUser: true});
+        this.setState({
+          first_name: this.props.user.first_name,
+          last_name: this.props.user.last_name,
+          mobilePhone: this.props.user.mobilePhone,
+
+          editingUser: true
+        });
         break;
       case 'patient':
         this.setState({editingPatient: true});
@@ -335,7 +343,9 @@ export default class BookingLocationUser extends Component {
 
     switch (entity) {
       case 'user':
-        this.setState({editingUser: false});
+        if (this._userDetailsForm.checkValidity()) {
+          this.setState({editingUser: false});
+        }
         break;
       case 'patient':
         this.setState({editingPatient: false});

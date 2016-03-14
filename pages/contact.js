@@ -8,12 +8,10 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <Container>
-          <div>
-            <h1 className="text-center">Contact eBeeCare</h1>
-            <div dangerouslySetInnerHTML={gmapsCode} />
-          </div>
-        </Container>
+        <div>
+          <h1 className="text-center">Contact eBeeCare</h1>
+          <div dangerouslySetInnerHTML={gmapsCode} />
+        </div>
       </div>
     );
   }

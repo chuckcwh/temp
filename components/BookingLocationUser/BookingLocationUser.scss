@@ -3,17 +3,17 @@
 
 @import 'react-datepicker/dist/react-datepicker.css';
 
-.BookingLocation {
+.BookingLocationUser {
   background-color: #f3f3f3;
 
-  .BookingLocationWrapper {
+  .BookingLocationUserWrapper {
     display: flex;
     flex-direction: row;
     padding-top: 50px;
     padding-bottom: 100px;
   }
 
-  .BookingLocationBody {
+  .BookingLocationUserBody {
     flex: 10;
     font-size: 21px;
 
@@ -29,7 +29,7 @@
       display: inline-block;
     }
 
-    .BookingLocationBodySection {
+    .BookingLocationUserBodySection {
       padding: 20px 0;
       border-top: 1px solid $border-color;
 
@@ -43,7 +43,7 @@
         @mixin box-shadow none;
       }
 
-      .BookingLocationBodySectionTitle {
+      .BookingLocationUserBodySectionTitle {
         position: relative;
 
         a {
@@ -54,7 +54,7 @@
       }
     }
 
-    .BookingLocationBodyEditSection {
+    .BookingLocationUserBodyEditSection {
       padding: 20px 0;
       // border-top: 1px solid $border-color;
 
@@ -68,7 +68,7 @@
         border-bottom: 1px solid $border-color;
       }
 
-      .BookingLocationBodyEditSectionTitle {
+      .BookingLocationUserBodyEditSectionTitle {
         position: relative;
 
         a {
@@ -89,7 +89,7 @@
       }
     }
 
-    .BookingLocationItem {
+    .BookingLocationUserItem {
       display: inline-block;
       color: $text-color;
       width: 100%;
@@ -102,11 +102,11 @@
         width: calc(100% / 3);
       }
 
-      .BookingLocationRadio {
+      .BookingLocationUserRadio {
         // margin-right: 5px;
       }
 
-      .BookingLocationRadioLabel {
+      .BookingLocationUserRadioLabel {
         // cursor: pointer;
       }
     }
@@ -127,7 +127,7 @@
       }
     }
 
-    .BookingLocationBodyAddPatient {
+    .BookingLocationUserBodyAddPatient {
       padding: 20px 0;
 
       span {
@@ -135,7 +135,7 @@
       }
     }
 
-    .BookingLocationBodySelectPatient {
+    .BookingLocationUserBodySelectPatient {
       background-color: $brand-color;
       padding: 20px;
 
@@ -151,7 +151,7 @@
     }
   }
 
-  .BookingLocationSidebar {
+  .BookingLocationUserSidebar {
     flex: 1 1 auto;
   }
 }

@@ -74,12 +74,12 @@ var BookingActions = {
   },
 
   /**
-   * @param  {string} timings Array of 'Morning', 'Afternoon' or 'Evening'
+   * @param  {string} booker The booker object containing contact and patient details
    */
-  setUser: function(user) {
+  setBooker: function(booker) {
     AppDispatcher.dispatch({
-      actionType: BookingConstants.BOOKING_SET_USER,
-      user: user
+      actionType: BookingConstants.BOOKING_SET_BOOKER,
+      booker: booker
     });
   },
 
@@ -90,6 +90,26 @@ var BookingActions = {
     AppDispatcher.dispatch({
       actionType: BookingConstants.BOOKING_SET_BOOKING,
       booking: booking
+    });
+  },
+
+  /**
+   * @param  {string} user The logged-in user
+   */
+  setUser: function(user) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_SET_USER,
+      user: user
+    });
+  },
+
+  /**
+   * @param  {string} patient The patient
+   */
+  setPatient: function(patient) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_SET_PATIENT,
+      patient: patient
     });
   },
 

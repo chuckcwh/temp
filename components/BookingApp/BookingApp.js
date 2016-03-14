@@ -6,6 +6,7 @@ import Container from '../Container';
 import BookingNavigation from '../BookingNavigation';
 import BookingServices from '../BookingServices';
 import BookingLocation from '../BookingLocation';
+import BookingLocationUser from '../BookingLocationUser';
 import BookingDateTime from '../BookingDateTime';
 import BookingDate from '../BookingDate';
 import BookingTime from '../BookingTime';
@@ -103,13 +104,23 @@ export default class BookingApp extends Component {
             <BookingServices allServices={this.state.allServices} booking={this.state.booking} />
           </div>;
       } else if (this.props.location && this.props.path === '/booking2') {
-        component = 
-          <div>
-            <BookingNavigation path={this.props.path} />
-            <BookingLocation allServicesHash={this.state.allServicesHash} booking={this.state.booking}>
-              <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
-            </BookingLocation>
-          </div>;
+        if (this.state.user) {
+          component = 
+            <div>
+              <BookingNavigation path={this.props.path} />
+              <BookingLocationUser allServicesHash={this.state.allServicesHash} booking={this.state.booking} user={this.state.user} patient={this.state.patient}>
+                <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
+              </BookingLocationUser>
+            </div>;
+        } else {
+          component = 
+            <div>
+              <BookingNavigation path={this.props.path} />
+              <BookingLocation allServicesHash={this.state.allServicesHash} booking={this.state.booking}>
+                <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
+              </BookingLocation>
+            </div>;
+        }
       } else if (this.props.location && (this.props.path === '/booking3' || this.props.path === '/booking3a')) {
         component = 
           <div>
@@ -139,7 +150,7 @@ export default class BookingApp extends Component {
           </div>;
       } else if (this.props.location && this.props.path === '/booking4') {
         component = 
-          <BookingComplete booking={this.state.booking} />;
+          <BookingComplete booking={this.state.booking} user={this.state.user} patient={this.state.patient} />;
       } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'confirmation') {
         component = 
           <div>

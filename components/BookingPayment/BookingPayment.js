@@ -19,9 +19,9 @@ export default class BookingPayment extends Component {
               <li className="BookingPaymentNav-item">
                 <a className={classNames('BookingPaymentNav-link', (this.props.path === '/booking-confirmation' && this.props.postStatus === 'payment-bank') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'bank')}>Bank Transfer<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
               </li>
-              <li className="BookingPaymentNav-item">
+              {/*<li className="BookingPaymentNav-item">
                 <a className={classNames('BookingPaymentNav-link', (this.props.path === '/booking-confirmation' && this.props.postStatus === 'payment-credits') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'credits')}>eBeeCare Credits<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
-              </li>
+              </li>*/}
             </ul>
           </Container>
         </div>

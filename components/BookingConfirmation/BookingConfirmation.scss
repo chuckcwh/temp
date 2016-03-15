@@ -13,6 +13,10 @@
     flex-direction: row;
     padding-top: 50px;
     padding-bottom: 100px;
+
+    @media (max-width: $screen-sm-min) {
+      flex-direction: column;
+    }
   }
 
   .BookingConfirmationBody {
@@ -103,6 +107,12 @@
 
       @media (max-width: $screen-sm-min) {
         flex-flow: row wrap;
+      }
+    }
+
+    .BookingConfirmationFooter {
+      @media (max-width: $screen-sm-min) {
+        text-align: center;
       }
     }
   }

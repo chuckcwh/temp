@@ -20,7 +20,7 @@
     text-decoration: none;
 
     @media (max-width: $screen-sm-min) {
-      // font-size: 12px;
+      font-size: 18px;
     }
 
     &.active {
@@ -39,6 +39,10 @@
         .nav-caret {
           display: block;
         }
+
+        @media (max-width: $screen-sm-min) {
+          display: none;
+        }
       }
     }
   }
@@ -48,5 +52,15 @@
       color: $secondary-color;
       text-decoration: none;
     }
+  }
+
+  @media (max-width: $screen-sm-min) {
+    width: 100%;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 65px;
+    margin: 0 0.5em;
+    border-bottom: 1px solid $border-color;
   }
 }

@@ -11,6 +11,10 @@
     flex-direction: row;
     padding-top: 50px;
     padding-bottom: 100px;
+
+    @media (max-width: $screen-sm-min) {
+      flex-direction: column;
+    }
   }
 
   .BookingLocationUserBody {

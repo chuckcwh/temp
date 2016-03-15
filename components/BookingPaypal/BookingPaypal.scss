@@ -9,5 +9,16 @@
 
   .BookingPaypalLogo {
     margin: 0 10px;
+
+    @media (max-width: $screen-sm-min) {
+      height: 25%;
+      width: 25%;
+    }
+  }
+
+  .BookingPaypalFooter {
+    @media (max-width: $screen-sm-min) {
+      text-align: center;
+    }
   }
 }

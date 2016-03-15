@@ -29,11 +29,11 @@
   }
 
   @media (max-width: $screen-sm-min) {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .BookingPostNavigation-item {
-    padding: 0 0.5em;
+    margin: 0 0.5em;
 
     .BookingPostNavigation-link {
       display: inline-block;
@@ -47,15 +47,23 @@
         display: inline-block;
         width: 45px;
         height: 51px;
-        background: url(../polygon-white.png) no-repeat;
+        background: url(../polygon-white.png) no-repeat center;
         vertical-align: middle;
         text-align: center;
         line-height: 51px;
+
+        @media (max-width: $screen-sm-min) {
+          background-size: 75%;
+        }
       }
 
       .BookingPostNavigation-item-text {
         vertical-align: middle;
         margin-left: 25px;
+
+        @media (max-width: $screen-sm-min) {
+          margin-left: 10px;
+        }
       }
 
       &.active {
@@ -63,12 +71,17 @@
         text-decoration: none;
 
         .BookingPostNavigation-item-icon {
-          background: url(../polygon-orange.png) no-repeat;
+          background: url(../polygon-orange.png) no-repeat center;
+
+          @media (max-width: $screen-sm-min) {
+            background-size: 75%;
+          }
         }
       }
 
       @media (max-width: $screen-sm-min) {
-        // font-size: 12px;
+        font-size: 21px;
+        padding: 0 0.5em;
       }
     }
 
@@ -78,8 +91,21 @@
         text-decoration: none;
 
         .BookingPostNavigation-item-icon {
-          background: url(../polygon-orange.png) no-repeat;
+          background: url(../polygon-orange.png) no-repeat center;
+
+          @media (max-width: $screen-sm-min) {
+            background-size: 75%;
+          }
         }
+      }
+    }
+
+    @media (max-width: $screen-sm-min) {
+      width: 100%;
+      border-top: 1px solid #fff;
+
+      &:first-child {
+        border-top: none;
       }
     }
   }

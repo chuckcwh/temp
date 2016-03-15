@@ -221,7 +221,7 @@ export default class BookingConfirmation extends Component {
                     {addressDetails}
                   </Loader>
                 </div>
-                <div className={classNames('BookingConfirmationBodySection', ((this.props.booking && this.props.booking.case && this.props.booking.case.transactions && this.props.booking.case.transactions.length) || this.state.editingUser || this.state.editingPatient || this.state.editingAddress) ? 'hidden' : '')}>
+                <div className={classNames('BookingConfirmationFooter', ((this.props.booking && this.props.booking.case && this.props.booking.case.transactions && this.props.booking.case.transactions.length) || this.state.editingUser || this.state.editingPatient || this.state.editingAddress) ? 'hidden' : '')}>
                   <a href="#" className="btn btn-primary" onClick={this._onNext.bind(this)}>GO TO PAYMENT</a>
                 </div>
               </div>

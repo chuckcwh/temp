@@ -30,8 +30,12 @@
         color: #fff;
         text-transform: none;
         font-size: 21px;
-        margin: 0 5px;
+        margin: 5px;
       }
+    }
+
+    @media (max-width: $screen-sm-min) {
+      padding-top: 20px;
     }
   }
 }

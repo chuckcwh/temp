@@ -57,4 +57,8 @@
       color: $secondary-color;
     }
   }
+
+  @media (max-width: $screen-sm-min) {
+    margin: 50px 0 0 0;
+  }
 }

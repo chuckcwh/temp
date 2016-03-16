@@ -16,21 +16,6 @@ export default class BookingLocationUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      client_contactEmail: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactEmail,
-      client_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
-      client_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_firstName,
-      client_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_lastName,
-      patient_contactEmail: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactEmail,
-      patient_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
-      patient_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_firstName,
-      patient_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_lastName,
-      patient_dob: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob,
-      patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender,
-      additionalInfo: this.props.booking && this.props.booking.booker && this.props.booking.booker.additionalInfo,
-      postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
-      address: this.props.booking && this.props.booking.location && this.props.booking.location.address,
-      unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber,
-
       editingUser: false,
       editingPatient: false,
       editingAddress: false,

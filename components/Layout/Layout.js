@@ -13,12 +13,10 @@ class Layout extends Component {
   render() {
     return (
       <div className="Layout">
-        <div className="NavWrapper">
-          <Container>
-            <Navigation path={this.props.path} />
-          </Container>
+        <Navigation path={this.props.path} pullRight={true} />
+        <div className="Body">
+          {this.props.children}
         </div>
-        {this.props.children}
         <Footer />
       </div>
     );

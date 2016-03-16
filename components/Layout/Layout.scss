@@ -312,10 +312,12 @@ textarea {
 
 .Layout {
   margin: 0 auto;
-}
 
-.NavWrapper {
-  background-color: #FFF;
+  .Body {
+    @media (max-width: $screen-sm-min) {
+      margin-top: 57px;
+    }
+  }
 }
 
 .small {

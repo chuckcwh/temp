@@ -6,7 +6,9 @@ export default class extends Component {
   render() {
     return (
       <div className="Logo">
-        <img src={require('./logo.png')} />
+        <a href="/">
+          <img src={require('./logo.png')} />
+        </a>
       </div>
     );
   }

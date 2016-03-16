@@ -16,6 +16,7 @@
 
     @media (max-width: $screen-sm-min) {
       flex-direction: column;
+      border-bottom: none;
     }
   }
 
@@ -41,11 +42,21 @@
     flex-grow: 1;
     padding: 0 0.5em;
     text-align: center;
-  }
 
-  .BookingServicesNav-item + .BookingServicesNav-item {
-    @media (min-width: $screen-sm-min) {
-      border-left: 1px solid $brand-color;
+    & + & {
+      @media (min-width: $screen-sm-min) {
+        border-left: 1px solid $brand-color;
+      }
+    }
+
+    @media (max-width: $screen-sm-min) {
+      width: 100%;
+      text-align: left;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 65px;
+      margin: 0 0.5em;
+      border-bottom: 1px solid $border-color;
     }
   }
 
@@ -64,7 +75,7 @@
     }
 
     @media (max-width: $screen-sm-min) {
-      // font-size: 12px;
+      font-size: 18px;
     }
 
     &.active {
@@ -82,6 +93,10 @@
 
         .nav-caret {
           display: block;
+        }
+
+        @media (max-width: $screen-sm-min) {
+          display: none;
         }
       }
     }

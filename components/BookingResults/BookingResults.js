@@ -6,7 +6,6 @@ import Loader from 'react-loader';
 import './BookingResults.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
-import { serialize } from '../../lib/Utils';
 import BookingActions from '../../actions/BookingActions';
 
 export default class BookingResults extends Component {

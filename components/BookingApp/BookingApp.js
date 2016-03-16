@@ -23,7 +23,6 @@ import BookingSidebar from '../BookingSidebar';
 import BookingPostSidebar from '../BookingPostSidebar';
 import BookingActions from '../../actions/BookingActions';
 import BookingStore from '../../stores/BookingStore';
-import { serialize } from '../../lib/Utils';
 import Location from '../../lib/Location';
 
 export default class BookingApp extends Component {

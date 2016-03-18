@@ -100,8 +100,8 @@ export default class BookingPaypal extends Component {
         amount: this.props.booking.case.price,
         type: 'case',
         cid: this.props.booking.case.id,
-        returnUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id,
-        cancelUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id
+        returnUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail,
+        cancelUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail
       })
       .end((err, res) => {
         if (err) {
@@ -113,6 +113,7 @@ export default class BookingPaypal extends Component {
           this.setState({
             redirecting: true
           });
+          console.log('Redirecting to ' + res.body.url);
           window.location = res.body.url;
         } else {
           console.error('Failed to create paypal payment.');

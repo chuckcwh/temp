@@ -7,6 +7,7 @@ import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
+import Util from '../../lib/Util';
 
 export default class Account extends Component {
 
@@ -29,7 +30,7 @@ export default class Account extends Component {
         <div className="Account-container">
           {/*
           <div className="Account-login Account-container-item">
-            <form id="AccountLoginForm" action="http://161.202.19.121/login/" method="POST">
+            <form id="AccountLoginForm" action="https://app.ebecare.com/login/" method="POST">
               <h3>Already a Member?</h3>
               <input className="EmailInput" type="email" name="email" placeholder="Enter Email" />
               <input className="PasswordInput" type="password" name="password" placeholder="Enter Password" />
@@ -96,15 +97,15 @@ export default class Account extends Component {
       event.preventDefault();
 
       this.serverRequest1 = request
-        .get('http://161.202.19.121/api/getBooking')
+        .get(Util.host + '/api/getBooking')
         .query({
           bid: this.state.bid,
           email: this.state.email
         })
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .auth(Util.authKey, Util.authSecret)
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/getBooking', status, err.toString());
+            return console.error(Util.host + '/api/getBooking', status, err.toString());
           }
           if (res.body && res.body.booking && res.body.status) {
             console.log(res.body.booking);

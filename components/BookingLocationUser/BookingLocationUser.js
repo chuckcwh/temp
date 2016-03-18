@@ -10,6 +10,7 @@ import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
+import Util from '../../lib/Util';
 
 export default class BookingLocationUser extends Component {
 
@@ -419,7 +420,7 @@ export default class BookingLocationUser extends Component {
     if (this._patientDetailsForm.checkValidity()) {
       event.preventDefault();
       this.serverRequest = request
-        .post('http://161.202.19.121/api/createPatient')
+        .post(Util.host + '/api/createPatient')
         .auth(this.props.user.id, this.props.user.token)
         .send({
           fullName: this.state.fullName,
@@ -433,7 +434,7 @@ export default class BookingLocationUser extends Component {
         })
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/createPatient', err.toString());
+            return console.error(Util.host + '/api/createPatient', err.toString());
           }
           // console.log(res.body);
           if (res.body && res.body.patient) {
@@ -486,11 +487,11 @@ export default class BookingLocationUser extends Component {
   _getPatients(user, cb) {
     cb = cb || () => {};
     this.serverRequest = request
-      .get('http://161.202.19.121/api/getPatients')
+      .get(Util.host + '/api/getPatients')
       .auth(user.id, user.token)
       .end((err, res) => {
         if (err) {
-          return console.error('http://161.202.19.121/api/getPatients', err.toString());
+          return console.error(Util.host + '/api/getPatients', err.toString());
         }
         if (res.body && res.body.status === 1) {
           console.log(res.body);

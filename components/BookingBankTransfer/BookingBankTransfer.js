@@ -7,6 +7,7 @@ import './BookingBankTransfer.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
+import Util from '../../lib/Util';
 
 export default class BookingBankTransfer extends Component {
 
@@ -68,8 +69,8 @@ export default class BookingBankTransfer extends Component {
       });
 
       this.serverRequest = request
-        .post('http://161.202.19.121/api/verifyBankTransaction')
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .post(Util.host + '/api/verifyBankTransaction')
+        .auth(Util.authKey, Util.authSecret)
         .send({
           amount: this.props.booking.case.price,
           type: 'Payment',
@@ -78,7 +79,7 @@ export default class BookingBankTransfer extends Component {
         })
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/verifyBankTransaction', status, err.toString());
+            return console.error(Util.host + '/api/verifyBankTransaction', status, err.toString());
           }
           if (res.body && res.body.status === 1) {
             console.log(res.body);

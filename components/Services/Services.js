@@ -10,6 +10,7 @@ import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 import Location from '../../lib/Location';
+import Util from '../../lib/Util';
 
 const ALL_SERVICES = 'All Services';
 
@@ -27,11 +28,11 @@ export default class Services extends Component {
   componentDidMount() {
     if (!this.state.services) {
       this.serverRequest1 = request
-        .get('http://161.202.19.121/api/getServices')
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .get(Util.host + '/api/getServices')
+        .auth(Util.authKey, Util.authSecret)
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/getServices', err.toString());
+            return console.error(Util.host + '/api/getServices', err.toString());
           }
           if (res.body && res.body.services && Array.isArray(res.body.services)) {
             // console.log(res.body.services);

@@ -23,14 +23,14 @@ export default class BookingPaypal extends Component {
       });
       // Execute paypal payment since this is returned from Paypal
       this.serverRequest1 = request
-        .post('http://161.202.19.121/api/verifyPaypalTransaction')
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .post(Util.host + '/api/verifyPaypalTransaction')
+        .auth(Util.authKey, Util.authSecret)
         .send({
           ppid: this.state.paymentId
         })
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/verifyPaypalTransaction', status, err.toString());
+            return console.error(Util.host + '/api/verifyPaypalTransaction', status, err.toString());
           }
           console.log(res.body);
           if (res.body && res.body.status) {
@@ -93,8 +93,8 @@ export default class BookingPaypal extends Component {
     });
 
     this.serverRequest2 = request
-      .post('http://161.202.19.121/api/makePaypalWebPayment')
-      .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+      .post(Util.host + '/api/makePaypalWebPayment')
+      .auth(Util.authKey, Util.authSecret)
       .send({
         amount: this.props.booking.case.price,
         type: 'case',
@@ -104,7 +104,7 @@ export default class BookingPaypal extends Component {
       })
       .end((err, res) => {
         if (err) {
-          return console.error('http://161.202.19.121/api/makePaypalWebPayment', status, err.toString());
+          return console.error(Util.host + '/api/makePaypalWebPayment', status, err.toString());
         }
         if (res.body && res.body.status) {
           console.log(res.body.url);

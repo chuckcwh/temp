@@ -9,6 +9,7 @@ import Container from '../Container';
 import Link from '../Link';
 import BookingActions from '../../actions/BookingActions';
 import Location from '../../lib/Location';
+import Util from '../../lib/Util';
 
 export default class BookingDetails extends Component {
 
@@ -307,8 +308,8 @@ export default class BookingDetails extends Component {
         if (this._userDetailsForm.checkValidity()) {
           this.setState({updatingUser: true});
           this.serverRequest = request
-            .post('http://161.202.19.121/api/editBooking')
-            .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+            .post(Util.host + '/api/editBooking')
+            .auth(Util.authKey, Util.authSecret)
             .send({
               bid: this.props.booking && this.props.booking.id,
               token: this.props.booking && this.props.booking.token,
@@ -320,7 +321,7 @@ export default class BookingDetails extends Component {
             })
             .end((err, res) => {
               if (err) {
-                return console.error('http://161.202.19.121/api/editBooking', err.toString());
+                return console.error(Util.host + '/api/editBooking', err.toString());
               }
               // console.log(res.body);
               if (res.body && res.body.status === 1) {
@@ -344,8 +345,8 @@ export default class BookingDetails extends Component {
         if (this._addressDetailsForm.checkValidity()) {
           this.setState({updatingAddress: true});
           this.serverRequest = request
-            .post('http://161.202.19.121/api/editBooking')
-            .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+            .post(Util.host + '/api/editBooking')
+            .auth(Util.authKey, Util.authSecret)
             .send({
               bid: this.props.booking && this.props.booking.id,
               token: this.props.booking && this.props.booking.token,
@@ -360,7 +361,7 @@ export default class BookingDetails extends Component {
             })
             .end((err, res) => {
               if (err) {
-                return console.error('http://161.202.19.121/api/editBooking', err.toString());
+                return console.error(Util.host + '/api/editBooking', err.toString());
               }
               // console.log(res.body);
               if (res.body && res.body.status === 1) {

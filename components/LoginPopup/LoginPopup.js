@@ -71,8 +71,8 @@ export default class LoginPopup extends Component {
       this.setState({pending: true});
 
       this.serverRequest = request
-        .post('http://161.202.19.121/api/mlogin')
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .post(Util.host + '/api/mlogin')
+        .auth(Util.authKey, Util.authSecret)
         .send({
           email: this.state.email,
           password: this.state.password
@@ -80,7 +80,7 @@ export default class LoginPopup extends Component {
         .end((err, res) => {
           this.setState({pending: false});
           if (err) {
-            return console.error('http://161.202.19.121/api/mlogin', status, err.toString());
+            return console.error(Util.host + '/api/mlogin', status, err.toString());
           }
           if (res.body && res.body.status === 1) {
             console.log(res.body);

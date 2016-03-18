@@ -6,6 +6,7 @@ import './BookingComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
 import BookingActions from '../../actions/BookingActions';
+import Util from '../../lib/Util';
 
 export default class BookingComplete extends Component {
 
@@ -31,7 +32,7 @@ export default class BookingComplete extends Component {
         });
       }
       this.serverRequest = request
-        .post('http://161.202.19.121/api/createCase')
+        .post(Util.host + '/api/createCase')
         .auth(this.props.user.id, this.props.user.token)
         .send({
           notes: this.props.booking && this.props.booking.booker && this.props.booking.booker.additionalInfo,
@@ -47,7 +48,7 @@ export default class BookingComplete extends Component {
         })
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/createCase', err.toString());
+            return console.error(Util.host + '/api/createCase', err.toString());
           }
           // console.log(res.body);
           if (res.body && res.body.case) {
@@ -74,8 +75,8 @@ export default class BookingComplete extends Component {
         });
       }
       this.serverRequest = request
-        .post('http://161.202.19.121/api/createBooking')
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .post(Util.host + '/api/createBooking')
+        .auth(Util.authKey, Util.authSecret)
         .send({
           booking: {
             client_contactEmail: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactEmail,
@@ -103,7 +104,7 @@ export default class BookingComplete extends Component {
         })
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/createBooking', err.toString());
+            return console.error(Util.host + '/api/createBooking', err.toString());
           }
           // console.log(res.body);
           if (res.body && res.body.booking && res.body.booking.case) {

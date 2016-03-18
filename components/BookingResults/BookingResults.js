@@ -9,6 +9,7 @@ import AlertPopup from '../AlertPopup';
 import ConfirmPopup from '../ConfirmPopup';
 import BookingActions from '../../actions/BookingActions';
 import Location from '../../lib/Location';
+import Util from '../../lib/Util';
 
 export default class BookingResults extends Component {
 
@@ -25,7 +26,7 @@ export default class BookingResults extends Component {
     BookingActions.setSum();
 
     this.serverRequest = request
-      .get('http://161.202.19.121/api/getAvailableSchedule')
+      .get(Util.host + '/api/getAvailableSchedule')
       .query({
         service: this.props.booking.service,
         dateStart: this.props.booking.range.start.format('YYYY-MM-DD'),
@@ -33,10 +34,10 @@ export default class BookingResults extends Component {
         preferredPostalCode: this.props.booking.location.postalCode,
         'preferredTimes[]': this.props.booking.timeslots   // hack to send PHP style arrays
       })
-      .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+      .auth(Util.authKey, Util.authSecret)
       .end((err, res) => {
         if (err) {
-          return console.error('http://161.202.19.121/api/getAvailableSchedule', status, err.toString());
+          return console.error(Util.host + '/api/getAvailableSchedule', status, err.toString());
         }
         if (res.body && res.body.timeSlots && Array.isArray(res.body.timeSlots)) {
           // console.log(res.body.timeSlots);

@@ -26,6 +26,7 @@ import Account from '../Account';
 import BookingActions from '../../actions/BookingActions';
 import BookingStore from '../../stores/BookingStore';
 import Location from '../../lib/Location';
+import Util from '../../lib/Util';
 
 export default class BookingApp extends Component {
 
@@ -43,11 +44,11 @@ export default class BookingApp extends Component {
 
     if (!BookingStore.getServices()) {
       this.serverRequest1 = request
-        .get('http://161.202.19.121/api/getServices')
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .get(Util.host + '/api/getServices')
+        .auth(Util.authKey, Util.authSecret)
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/getServices', err.toString());
+            return console.error(Util.host + '/api/getServices', err.toString());
           }
           if (res.body && res.body.services && Array.isArray(res.body.services)) {
             // console.log(res.body.services);
@@ -65,15 +66,15 @@ export default class BookingApp extends Component {
       }
 
       this.serverRequest2 = request
-        .get('http://161.202.19.121/api/getBooking')
+        .get(Util.host + '/api/getBooking')
         .query({
           bid: this.props.location.query.bid,
           email: this.props.location.query.email
         })
-        .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
+        .auth(Util.authKey, Util.authSecret)
         .end((err, res) => {
           if (err) {
-            return console.error('http://161.202.19.121/api/getBooking', status, err.toString());
+            return console.error(Util.host + '/api/getBooking', status, err.toString());
           }
           if (res.body && res.body.booking && res.body.status) {
             // console.log(res.body.booking);

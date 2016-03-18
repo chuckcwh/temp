@@ -5,6 +5,7 @@ import request from 'superagent';
 import './Account.scss';
 import Container from '../Container';
 import Link from '../Link';
+import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
 export default class Account extends Component {
@@ -51,8 +52,8 @@ export default class Account extends Component {
             <Loader className="spinner" loaded={(!(this.props.booking && this.props.booking.id) && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
               <form ref={(c) => this._accountManageBookingForm = c}>
                 <h3>Have Booking ID?</h3>
-                <input className="BookingIdInput" type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID" />
-                <input className="EmailInput" type="email" valueLink={linkState(this, 'email')} placeholder="Enter Email" />
+                <input className="BookingIdInput" type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />
+                <input className="EmailInput" type="email" valueLink={linkState(this, 'email')} placeholder="Enter Email*" required />
                 <div className="Account-container-item-middle"></div>
                 <button className="btn btn-primary" onClick={this._onClickFindBooking.bind(this)}>Find Booking</button>
               </form>
@@ -66,7 +67,7 @@ export default class Account extends Component {
           <div className="Account-login Account-container-item">
             <form ref={(c) => this._accountForgotPasswordForm = c}>
               <h3>Forgot Password?</h3>
-              <input className="EmailInput" type="email" placeholder="Enter Email" />
+              <input className="EmailInput" type="email" placeholder="Enter Email*" />
               <div className="Account-container-item-middle">
                 <div className="ForgotPasswordContainer">
                   <a href="/manage-booking" className="ForgotPasswordLink" onClick={Link.handleClick}>Remembered Password?</a>
@@ -83,6 +84,9 @@ export default class Account extends Component {
         <Container>
           {components}
         </Container>
+        <AlertPopup ref={(c) => this._alertPopup = c}>
+          Please fill up all required fields.
+        </AlertPopup>
       </div>
     );
   }
@@ -114,6 +118,7 @@ export default class Account extends Component {
         });
     } else {
       event.preventDefault();
+      this._alertPopup.show();
     }
   }
 

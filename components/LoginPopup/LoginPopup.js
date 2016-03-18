@@ -5,6 +5,7 @@ import request from 'superagent';
 import SkyLight from 'react-skylight';
 import './LoginPopup.scss';
 import Link from '../Link';
+import Util from '../../lib/Util';
 
 export default class LoginPopup extends Component {
 

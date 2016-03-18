@@ -45,7 +45,7 @@ export default class BookingResults extends Component {
             var timeslot = res.body.timeSlots[i];
             var session = {};
             for (var j = 0; j < timeslot.slots.length; j++) {
-              if (timeslot.slots[j]['preferred']) {
+              if (timeslot.slots[j]['selected']) {
                 session = timeslot.slots[j];
                 break;
               }

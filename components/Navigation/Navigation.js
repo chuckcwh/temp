@@ -38,7 +38,7 @@ export default class Navigation extends Component {
             <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
           </li>
           <li className="Navigation-item">
-            <a className="Navigation-link" href="http://161.202.19.121/login/">Login</a>
+            <a className="Navigation-link" href="https://app.ebeecare.com/login/">Login</a>
           </li>
         </Menu>
         <Container>
@@ -64,7 +64,7 @@ export default class Navigation extends Component {
                 <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
               </li>
               <li className="Navigation-item">
-                <a className="Navigation-link" href="http://161.202.19.121/login/">Login</a>
+                <a className="Navigation-link" href="https://app.ebeecare.com/login/">Login</a>
               </li>
             </ul>
           </div>

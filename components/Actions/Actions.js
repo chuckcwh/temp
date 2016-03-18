@@ -13,12 +13,16 @@ export default class Features extends Component {
             <div className="Actions-item">
               <img src={require('./actions-1.png')} />
               <div className="Actions-item-title">Book A Caregiver Online</div>
-              <a href="/booking1" className="btn Actions-item-button" onClick={Link.handleClick}>Book A Caregiver</a>
+              <div>
+                <a href="/booking1" className="btn Actions-item-button" onClick={Link.handleClick}>Book A Caregiver</a>
+              </div>
             </div>
             <div className="Actions-item">
               <img src={require('./actions-2.png')} />
               <div className="Actions-item-title">Call Ebeecare Hotline</div>
-              <a href="#" className="btn Actions-item-button" onClick={(e) => {e.preventDefault()}}>9733 6938</a>
+              <div>
+                <a href="#" className="btn Actions-item-button" onClick={(e) => {e.preventDefault()}}>9733 6938</a>
+              </div>
             </div>
           </div>
         </Container>

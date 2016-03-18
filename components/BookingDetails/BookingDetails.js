@@ -192,6 +192,16 @@ export default class BookingDetails extends Component {
       );
     }
     
+    // set booking status
+    var bookingStatus = '';
+    if (this.props.booking.case.status === 'Accepting Quotes') {
+      bookingStatus = 'Pending Confirmation';
+    } else if (this.props.booking.case.status === 'Closed') {
+      bookingStatus = 'Awaiting Payment for Confirmation';
+    } else {
+      bookingStatus = this.props.booking.case.status;
+    }
+
     return (
       <div className="BookingDetails">
         <Container>
@@ -211,7 +221,7 @@ export default class BookingDetails extends Component {
                   <div>
                     <div className="TableRow">
                       <div className="TableRowItem1">Status</div>
-                      <div className="TableRowItem3">{this.props.booking.case.status === 'Accepting Quotes' ? 'Pending Confirmation' : this.props.booking.case.status}</div>
+                      <div className="TableRowItem3">{bookingStatus}</div>
                     </div>
                   </div>
                 </div>

@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
-import Container from '../components/Container/Container';
+import Services from '../components/Services/Services';
 
 export default class extends Component {
 
   render() {
     return (
       <div>
-        <Container>
-          <div>
-            <h1 className="text-center">Services</h1>
-          </div>
-        </Container>
+        <Services />
       </div>
     );
   }

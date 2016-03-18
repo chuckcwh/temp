@@ -18,8 +18,33 @@ export default class BookingServices extends Component {
       filter: ALL_SERVICES,
       selectedService: undefined
     };
-    if (this.props.booking && this.props.booking.service)
+    if (this.props.booking && this.props.booking.service) {
       this.state.selectedService = this.props.booking.service;
+    } else if (this.props.allServices && this.props.location.query && this.props.location.query.sid) {
+      for (var i = 0; i < this.props.allServices.length; i++) {
+        if (parseInt(this.props.allServices[i].id) === parseInt(this.props.location.query.sid)) {
+          this.state.selectedService = this.props.allServices[i].id;
+          break;
+        }
+      }
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.booking && props.booking.service) {
+      this.setState({
+        selectedService: props.booking.service
+      });
+    } else if (props.allServices && props.location.query && props.location.query.sid) {
+      for (var i = 0; i < props.allServices.length; i++) {
+        if (parseInt(props.allServices[i].id) === parseInt(props.location.query.sid)) {
+          this.setState({
+            selectedService: props.allServices[i].id
+          });
+          break;
+        }
+      }
+    }
   }
 
   render() {

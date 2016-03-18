@@ -21,6 +21,8 @@ import BookingCredits from '../BookingCredits';
 import BookingPostComplete from '../BookingPostComplete';
 import BookingSidebar from '../BookingSidebar';
 import BookingPostSidebar from '../BookingPostSidebar';
+import BookingDetails from '../BookingDetails';
+import Account from '../Account';
 import BookingActions from '../../actions/BookingActions';
 import BookingStore from '../../stores/BookingStore';
 import Location from '../../lib/Location';
@@ -48,6 +50,7 @@ export default class BookingApp extends Component {
             return console.error('http://161.202.19.121/api/getServices', err.toString());
           }
           if (res.body && res.body.services && Array.isArray(res.body.services)) {
+            // console.log(res.body.services);
             BookingActions.setServices(res.body.services);
           } else {
             console.error('Failed to obtain services data.');
@@ -56,7 +59,7 @@ export default class BookingApp extends Component {
     }
 
     // if "bid" query parameter exists, must be booking confirmation
-    if (this.props.location && this.props.location.query && this.props.location.query.bid) {
+    if (this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) {
       if (this.props.location.query.token) {
         BookingActions.setPostStatus('payment-paypal');
       }
@@ -64,7 +67,8 @@ export default class BookingApp extends Component {
       this.serverRequest2 = request
         .get('http://161.202.19.121/api/getBooking')
         .query({
-          bid: this.props.location.query.bid
+          bid: this.props.location.query.bid,
+          email: this.props.location.query.email
         })
         .auth('secret', 'secret0nlyWeilsonKnowsShhh852~')
         .end((err, res) => {
@@ -72,10 +76,14 @@ export default class BookingApp extends Component {
             return console.error('http://161.202.19.121/api/getBooking', status, err.toString());
           }
           if (res.body && res.body.booking && res.body.status) {
-            console.log(res.body.booking);
-            // if booking has already been completed
-            if (res.body.booking && res.body.booking.case && res.body.booking.case.transactions && res.body.booking.case.transactions.length) {
+            // console.log(res.body.booking);
+            if (res.body.booking && res.body.booking.case && res.body.booking.case.isPaid) {
+              // if booking has already been completed
               BookingActions.setPostStatus('success');
+            } else if (res.body.booking && res.body.booking.case && res.body.booking.case.status === 'Accepting Quotes') {
+              // if booking is still pending service providers
+              Location.replace({ pathname: '/booking-manage', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
+              // Location.replace({ pathname: '/manage-booking', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
             }
             BookingActions.setBooking(res.body.booking);
           } else {
@@ -100,7 +108,7 @@ export default class BookingApp extends Component {
         component = 
           <div>
             <BookingNavigation path={this.props.path} />
-            <BookingServices allServices={this.state.allServices} booking={this.state.booking} />
+            <BookingServices location={this.props.location} allServices={this.state.allServices} booking={this.state.booking} />
           </div>;
       } else if (this.props.location && this.props.path === '/booking2') {
         if (this.state.user) {
@@ -188,6 +196,16 @@ export default class BookingApp extends Component {
       } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'success') {
         component = 
           <BookingPostComplete booking={this.state.booking} />
+      } else if (this.props.location && this.props.path === '/booking-manage') {
+        if (this.state.booking && this.state.booking.id) {
+          component = (
+            <BookingDetails location={this.props.location} booking={this.state.booking} />
+          );
+        } else {
+          component = (
+            <Account type="login" location={this.props.location} booking={this.props.booking} />
+          );
+        }
       }
     }
     return (

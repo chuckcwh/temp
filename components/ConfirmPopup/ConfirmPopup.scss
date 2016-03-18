@@ -1,0 +1,21 @@
+@import '../variables.scss';
+
+.ConfirmPopup {
+  a {
+    color: $brand-color;
+  }
+
+  label {
+    margin: 0;
+  }
+
+  &-footer {
+    text-align: center;
+    margin: 20px 0;
+
+    a {
+      margin: 5px;
+      color: #fff;
+    }
+  }
+}

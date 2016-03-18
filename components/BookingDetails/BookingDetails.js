@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import linkState from 'react-link-state';
 import request from 'superagent';
 import classNames from 'classNames';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Loader from 'react-loader';
-import './BookingConfirmation.scss';
+import './BookingDetails.scss';
 import Container from '../Container';
 import Link from '../Link';
 import BookingActions from '../../actions/BookingActions';
+import Location from '../../lib/Location';
 
-export default class BookingConfirmation extends Component {
+export default class BookingDetails extends Component {
 
   constructor(props) {
     super(props);
@@ -22,29 +22,25 @@ export default class BookingConfirmation extends Component {
     };
   }
 
-  componentWillUnmount() {
-    this.serverRequest && this.serverRequest.abort();
-  }
-
   render() {
     var userDetails, patientDetails, addressDetails, paymentButton;
     if (this.state.editingUser) {
       userDetails = (
         <div>
           <form ref={(c) => this._userDetailsForm = c}>
-            {/*
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="client_firstName" name="client_firstName" value={this.props.booking.client_firstName} placeholder="First Name*" maxLength="50" required />
+                <input type="text" id="client_firstName" name="client_firstName" valueLink={linkState(this, 'client_firstName')} placeholder="First Name*" maxLength="50" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Last Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="client_lastName" name="client_lastName" value={this.props.booking.client_lastName} placeholder="Last Name*" maxLength="50" required />
+                <input type="text" id="client_lastName" name="client_lastName" valueLink={linkState(this, 'client_lastName')} placeholder="Last Name*" maxLength="50" required />
               </div>
             </div>
+            {/*
             <div className="TableRow">
               <div className="TableRowItem1">Email</div>
               <div className="TableRowItem3">
@@ -191,18 +187,35 @@ export default class BookingConfirmation extends Component {
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
     if ((this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
-        <a href="#" className="btn btn-primary" onClick={this._onNext.bind(this)}>GO TO PAYMENT</a>
+        <a href="#" className="btn btn-primary" onClick={this._onClickPay.bind(this)}>GO TO PAYMENT</a>
       );
     }
     
     return (
-      <div className="BookingConfirmation">
+      <div className="BookingDetails">
         <Container>
           <Loader className="spinner" loaded={this.props.booking.id ? true : false}>
-            <div className="BookingConfirmationWrapper">
-              <div className="BookingConfirmationBody">
-                <div className="BookingConfirmationBodySection">
-                  <div className="BookingConfirmationBodySectionTitle">
+            <div className="BookingDetailsWrapper">
+              <div className="BookingDetailsBody">
+                <div className="BookingDetailsBodyActions">
+                  <span className="BookingDetailsFooter">
+                    {paymentButton}
+                  </span>
+                  <span className="BookingDetailsFooter">
+                    <a href="/booking-manage" className="btn btn-primary" onClick={this._onClickManageBooking.bind(this)}>ANOTHER BOOKING</a>
+                  </span>
+                </div>
+                <h2>Booking ID: #{this.state.booking.id}</h2>
+                <div className="">
+                  <div>
+                    <div className="TableRow">
+                      <div className="TableRowItem1">Status</div>
+                      <div className="TableRowItem3">{this.props.booking.case.status === 'Accepting Quotes' ? 'Pending Confirmation' : this.props.booking.case.status}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="BookingDetailsBodySection">
+                  <div className="BookingDetailsBodySectionTitle">
                     <h3>Contact Person Details</h3>
                     <a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
                   </div>
@@ -210,15 +223,15 @@ export default class BookingConfirmation extends Component {
                     {userDetails}
                   </Loader>
                 </div>
-                <div className="BookingConfirmationBodySection">
-                  <div className="BookingConfirmationBodySectionTitle">
+                <div className="BookingDetailsBodySection">
+                  <div className="BookingDetailsBodySectionTitle">
                     <h3>Patient Details</h3>
                     {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
                   </div>
                   {patientDetails}
                 </div>
-                <div className="BookingConfirmationBodySection">
-                  <div className="BookingConfirmationBodySectionTitle">
+                <div className="BookingDetailsBodySection">
+                  <div className="BookingDetailsBodySectionTitle">
                     <h3>Patient Location / Address</h3>
                     {/*<a href="#" className={this.state.editingAddress ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'address')}><img src={require('../pencil.png')} /></a>*/}
                   </div>
@@ -226,8 +239,13 @@ export default class BookingConfirmation extends Component {
                     {addressDetails}
                   </Loader>
                 </div>
-                <div className="BookingConfirmationFooter">
-                  {paymentButton}
+                <div className="BookingDetailsFooter">
+                  <span>
+                    {paymentButton}
+                  </span>
+                  <span>
+                    <a href="/booking-manage" className="btn btn-primary" onClick={this._onClickManageBooking.bind(this)}>ANOTHER BOOKING</a>
+                  </span>
                 </div>
               </div>
               {this.props.children}
@@ -244,6 +262,8 @@ export default class BookingConfirmation extends Component {
     switch (entity) {
       case 'user':
         this.setState({
+          client_firstName: this.props.booking.client_firstName,
+          client_lastName: this.props.booking.client_lastName,
           client_contactNumber: this.props.booking.client_contactNumber,
 
           editingUser: true});
@@ -293,6 +313,8 @@ export default class BookingConfirmation extends Component {
               bid: this.props.booking && this.props.booking.id,
               token: this.props.booking && this.props.booking.token,
               booking: {
+                client_firstName: this.state.client_firstName,
+                client_lastName: this.state.client_lastName,
                 client_contactNumber: this.state.client_contactNumber
               }
             })
@@ -404,11 +426,18 @@ export default class BookingConfirmation extends Component {
     }
   };
 
-  _onNext(event) {
+  _onClickManageBooking(event) {
+    Link.handleClick(event);
+
+    BookingActions.destroyBooking();
+  }
+
+  _onClickPay(event) {
     // Link.handleClick(event);
     event.preventDefault();
+    Location.push({ pathname: '/booking-confirmation', query: this.props.location.query });
 
-    BookingActions.setPostStatus('payment-paypal');
+    BookingActions.setPostStatus('confirmation');
   }
 
 }

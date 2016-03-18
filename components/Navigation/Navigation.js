@@ -35,7 +35,7 @@ export default class Navigation extends Component {
             <a className={classNames('Navigation-link', (this.props.path === '/contact') ? 'active' : '')} href="/contact" onClick={Link.handleClick}>Contact</a>
           </li>
           <li className="Navigation-item">
-            <a className={classNames('Navigation-link', (this.props.path === '/manage-booking') ? 'active' : '')} href="/manage-booking" onClick={Link.handleClick}>Manage Booking</a>
+            <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
           </li>
           <li className="Navigation-item">
             <a className="Navigation-link" href="http://161.202.19.121/login/">Login</a>
@@ -61,7 +61,7 @@ export default class Navigation extends Component {
                 <a className={classNames('Navigation-link', (this.props.path === '/contact') ? 'active' : '')} href="/contact" onClick={Link.handleClick}>Contact</a>
               </li>
               <li className="Navigation-item">
-                <a className={classNames('Navigation-link', (this.props.path === '/manage-booking') ? 'active' : '')} href="/manage-booking" onClick={Link.handleClick}>Manage Booking</a>
+                <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
               </li>
               <li className="Navigation-item">
                 <a className="Navigation-link" href="http://161.202.19.121/login/">Login</a>

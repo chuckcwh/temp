@@ -8,9 +8,10 @@ export default class AlertPopup extends Component {
     var styles = {
       dialogStyles: {
         width: '25%',
-        height: '150px',
-        marginTop: '-75px',
+        height: 'auto',
+        marginTop: '0',
         marginLeft: '-12.5%',
+        top: '100px',
         textAlign: 'center'
       },
       title: {
@@ -23,21 +24,23 @@ export default class AlertPopup extends Component {
     };
 
     return (
-      <SkyLight className="AlertPopup" dialogStyles={styles.dialogStyles} title={styles.title} closeButtonStyle={styles.closeButtonStyle} hideOnOverlayClicked ref="alertDialog" title="Alert">
-        {this.props.children}
-        <div className="AlertPopup-footer">
-          <a className="btn btn-primary btn-small" href="#" onClick={this._onClickClose.bind(this)}>OK</a>
+      <SkyLight dialogStyles={styles.dialogStyles} title={styles.title} closeButtonStyle={styles.closeButtonStyle} hideOnOverlayClicked ref={(c) => this._alertDialog = c} title="Alert">
+        <div className="AlertPopup">
+          {this.props.children}
+          <div className="AlertPopup-footer">
+            <a className="btn btn-primary btn-small" href="#" onClick={this._onClickClose.bind(this)}>OK</a>
+          </div>
         </div>
       </SkyLight>
     );
   }
 
   _onClickClose(event) {
-    this.refs.alertDialog.hide();
+    this._alertDialog.hide();
   }
 
   show() {
-    this.refs.alertDialog.show();
+    this._alertDialog.show();
   }
 
 }

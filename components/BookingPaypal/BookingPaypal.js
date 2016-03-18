@@ -109,8 +109,6 @@ export default class BookingPaypal extends Component {
         if (res.body && res.body.status) {
           console.log(res.body.url);
           console.log(res.body.payment_id);
-          // this.setState(res.body.booking);
-          // BookingActions.setBooking(res.body.booking);
           this.setState({
             redirecting: true
           });

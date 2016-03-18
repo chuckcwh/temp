@@ -6,7 +6,9 @@ import Loader from 'react-loader';
 import './BookingResults.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
+import ConfirmPopup from '../ConfirmPopup';
 import BookingActions from '../../actions/BookingActions';
+import Location from '../../lib/Location';
 
 export default class BookingResults extends Component {
 
@@ -112,11 +114,24 @@ export default class BookingResults extends Component {
           </div>
           <p></p>
           <div className="text-center">
-            <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
+            <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>BOOK NOW</a>
           </div>
         </Loader>
         <AlertPopup ref={(c) => this._alertPopup = c}>
           Please select at least one session.
+        </AlertPopup>
+        <ConfirmPopup ref={(c) => this._confirmPopup = c}>
+          <div>
+            <form ref={(c) => this._agreeForm = c}>
+              <input className="AgreeCheckbox" type="checkbox" id="agree" name="agree" value={false} required />
+              <label className="AgreeCheckboxLabel" htmlFor="agree">
+                <span></span><span>By making this booking, I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>.</span>
+              </label>
+            </form>
+          </div>
+        </ConfirmPopup>
+        <AlertPopup ref={(c) => this._rejectPopup = c}>
+          To continue, please accept our Terms of Service and Privacy Policy.
         </AlertPopup>
       </div>
     );
@@ -136,16 +151,24 @@ export default class BookingResults extends Component {
       return event.preventDefault();
     }
     
-    if (confirm('Would you like to confirm the sessions?')) {
-      Link.handleClick(event);
+    // if (confirm('Would you like to confirm the sessions?')) {
+    this._confirmPopup.show(() => {
+      if (this._agreeForm.checkValidity()) {
+        // Link.handleClick(event);
+        Location.push({ pathname: '/booking4' });
 
-      // console.log(sessions);
-      BookingActions.setSessions(sessions);
-      // console.log(this.state);
-      BookingActions.setLast('booking3c');
-    } else {
-      event.preventDefault();
-    }
+        // console.log(sessions);
+        BookingActions.setSessions(sessions);
+        // console.log(this.state);
+        BookingActions.setLast('booking3c');
+      } else {
+        this._rejectPopup.show();
+      }
+    });
+      
+    // } else {
+    event.preventDefault();
+    // }
   }
 
 }

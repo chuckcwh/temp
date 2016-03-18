@@ -24,7 +24,7 @@ class Footer extends Component {
               </a>
             </div>
             <div className="Footer-item">
-              <div className="Footer-tel">9733 6938</div>
+              <div className="Footer-tel">6873 0132</div>
               <div><a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a></div>
             </div>
             <div className="Footer-item">

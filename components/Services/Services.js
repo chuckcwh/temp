@@ -34,7 +34,7 @@ export default class Services extends Component {
             return console.error('http://161.202.19.121/api/getServices', err.toString());
           }
           if (res.body && res.body.services && Array.isArray(res.body.services)) {
-            console.log(res.body.services);
+            // console.log(res.body.services);
             this.setState({
               services: res.body.services
             });

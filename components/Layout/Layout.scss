@@ -91,40 +91,44 @@ input[type=checkbox]:not(old) {
   padding   : 0;
   font-size : 1em;
   opacity   : 0;
-}
 
-input[type=checkbox]:not(old) + label {
-  display     : inline-block;
-  margin-left : -2em;
-  line-height : 1.5em;
-  cursor      : pointer;
-}
+  & + label {
+    display     : inline-block;
+    margin-left : -2em;
+    line-height : 1.5em;
+    cursor      : pointer;
 
-input[type=checkbox]:not(old) + label > span:first-child {
-  display          : inline-block;
-  width            : 0.875em;
-  height           : 0.875em;
-  margin           : 0.25em 0.5em 0.25em 0.25em;
-  border           : 0.0625em solid $secondary-color;
-  border-radius    : 0;
-  background       : transparent;
-  vertical-align   : bottom;
-  cursor           : pointer;
-}
+    & > span:first-child {
+      display          : inline-block;
+      width            : 0.875em;
+      height           : 0.875em;
+      margin           : 0.25em 0.5em 0.25em 0.25em;
+      border           : 0.0625em solid $secondary-color;
+      border-radius    : 0;
+      background       : transparent;
+      vertical-align   : bottom;
+      cursor           : pointer;
+    }
+  }
 
-input[type=checkbox]:not(old):checked + label > span {
-  color: $secondary-color;
-}
+  &:checked + label > span {
+    color: $secondary-color;
 
-input[type=checkbox]:not(old):checked + label > span:first-child:before {
-  content     : '✓';
-  display     : block;
-  width       : 1em;
-  color       : $secondary-color;
-  font-size   : 0.875em;
-  line-height : 1em;
-  text-align  : center;
-  font-weight : bold;
+    &:first-child:before {
+      content     : '✓';
+      display     : block;
+      width       : 1em;
+      color       : $secondary-color;
+      font-size   : 0.875em;
+      line-height : 1em;
+      text-align  : center;
+      font-weight : bold;
+    }
+  }
+
+  &:disabled + label > span:first-child {
+    border-color: #969696;
+  }
 }
 
 input[type=radio]:not(old) {
@@ -133,39 +137,39 @@ input[type=radio]:not(old) {
   padding   : 0;
   font-size : 1em;
   opacity   : 0;
-}
 
-input[type=radio]:not(old) + label {
-  display     : inline-block;
-  margin-left : -2em;
-  line-height : 1.5em;
-  cursor      : pointer;
-}
+  & + label {
+    display     : inline-block;
+    margin-left : -2em;
+    line-height : 1.5em;
+    cursor      : pointer;
 
-input[type=radio]:not(old) + label > span:first-child {
-  display          : inline-block;
-  width            : 0.875em;
-  height           : 0.875em;
-  margin           : 0.25em 0.5em 0.25em 0.25em;
-  border           : 0.0625em solid $secondary-color;
-  border-radius    : 50%;
-  vertical-align   : bottom;
-  cursor           : pointer;
-}
+    & > span:first-child {
+      display          : inline-block;
+      width            : 0.875em;
+      height           : 0.875em;
+      margin           : 0.25em 0.5em 0.25em 0.25em;
+      border           : 0.0625em solid $secondary-color;
+      border-radius    : 50%;
+      vertical-align   : bottom;
+      cursor           : pointer;
+    }
+  }
 
-input[type=radio]:not(old):focus + label > span:first-child {
-  outline: -webkit-focus-ring-color auto 5px;
-}
+  &:focus + label > span:first-child {
+    outline: -webkit-focus-ring-color auto 5px;
+  }
 
-input[type=radio]:not(old):checked + label > span:first-child > span {
-  display          : block;
-  width            : 0.4em;
-  height           : 0.4em;
-  margin           : 0.175em;
-  border           : 0.0625em solid $secondary-color;
-  border-radius    : 50%;
-  background       : $secondary-color;
-  cursor           : pointer;
+  &:checked + label > span:first-child > span {
+    display          : block;
+    width            : 0.4em;
+    height           : 0.4em;
+    margin           : 0.175em;
+    border           : 0.0625em solid $secondary-color;
+    border-radius    : 50%;
+    background       : $secondary-color;
+    cursor           : pointer;
+  }
 }
 
 input[type=text], input[type=email], input[type=password] {
@@ -203,6 +207,10 @@ input[type=text], input[type=email], input[type=password] {
   }
   &:-ms-input-placeholder {  
     color: #ddd;  
+  }
+
+  &:disabled {
+    border: 1px solid #969696;
   }
 }
 

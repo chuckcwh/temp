@@ -4,6 +4,7 @@ import Loader from 'react-loader';
 import './BookingPaypal.scss';
 import Link from '../Link';
 import BookingActions from '../../actions/BookingActions';
+import Util from '../../lib/Util';
 
 export default class BookingPaypal extends Component {
 

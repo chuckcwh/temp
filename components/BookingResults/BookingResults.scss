@@ -21,6 +21,10 @@
       &:checked + label {
         color: $secondary-color;
       }
+
+      &:disabled + label {
+        color: #969696;
+      }
     }
 
     .BookingResultsCheckboxLabel {

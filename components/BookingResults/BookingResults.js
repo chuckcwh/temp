@@ -46,14 +46,26 @@ export default class BookingResults extends Component {
             var timeslot = res.body.timeSlots[i];
             var session = {};
             for (var j = 0; j < timeslot.slots.length; j++) {
-              if (timeslot.slots[j]['selected']) {
+              if (timeslot.slots[j]['selected'] && timeslot.slots[j]['preferred']) {
                 session = timeslot.slots[j];
                 break;
               }
             }
+            if (!session.time) {
+              for (var j = 0; j < timeslot.slots.length; j++) {
+                if (timeslot.slots[j]['selected']) {
+                  session = timeslot.slots[j];
+                  break;
+                }
+              }
+            }
             sessions[i] = Object.assign(session, {date: timeslot.date});
-            checkedData['session'+i] = true;
-            sum += parseFloat(sessions[i]['price']);
+            if (session.time) {
+              checkedData['session'+i] = true;
+              sum += parseFloat(sessions[i]['price']);
+            } else {
+              session.disabled = true;
+            }
           }
           var state = Object.assign({
             slots: res.body.timeSlots,
@@ -97,14 +109,14 @@ export default class BookingResults extends Component {
             this.state.sessions && this.state.sessions.map((session, index) => {
               return (
                 <div className="BookingResultsItem" key={index}>
-                  <input className="BookingResultsCheckbox" type="checkbox" id={index} name="time" checked={checkedLink('session'+index).value} onChange={handleChange('session'+index)} />
+                  <input className="BookingResultsCheckbox" type="checkbox" id={index} name="time" checked={checkedLink('session'+index).value} disabled={session.disabled} onChange={handleChange('session'+index)} />
                   <label className="BookingResultsCheckboxLabel" htmlFor={index}>
                     <span></span>
                     <div className="BookingResultsCheckboxLabelMetaWrapper">
                       <div className="BookingResultsCheckboxLabelMeta">
                         <span>{session ? moment(session.date, 'YYYY-MM-DD').format('DD MMM') : ''}</span>
-                        <span>{session ? session.time : 'Not Available'}</span>
-                        <span>{session ? '$ ' + session.price : ''}</span>
+                        <span>{session.time ? session.time : 'Not Available'}</span>
+                        <span>{session.time ? ('$ ' + session.price) : ''}</span>
                       </div>
                     </div>
                   </label>

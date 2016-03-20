@@ -88,6 +88,9 @@ export default class Account extends Component {
         <AlertPopup ref={(c) => this._alertPopup = c}>
           Please fill up all required fields.
         </AlertPopup>
+        <AlertPopup ref={(c) => this._noBookingAlertPopup = c}>
+          Sorry, we can't find your booking.
+        </AlertPopup>
       </div>
     );
   }
@@ -115,6 +118,7 @@ export default class Account extends Component {
             }
           } else {
             console.error('Failed to obtain booking data.');
+            this._noBookingAlertPopup.show();
           }
         });
     } else {

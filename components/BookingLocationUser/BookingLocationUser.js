@@ -129,7 +129,7 @@ export default class BookingLocationUser extends Component {
             </div>
             <div style={{marginTop: '40px'}}>
               <div>Additional Info:</div>
-              <textarea name="additionalInfo" valueLink={linkState(this, 'additionalInfo')} />
+              <textarea name="additionalInfo" valueLink={linkState(this, 'additionalInfo')} placeholder="Please provide important notes about patient here." />
             </div>
           </div>
         );

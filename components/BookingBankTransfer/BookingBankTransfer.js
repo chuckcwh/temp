@@ -33,9 +33,9 @@ export default class BookingBankTransfer extends Component {
             <p><b>Your Total Amount is SGD {this.props.booking.case.price}</b></p>
             <p>
               Please transfer the total amount to<br />
-              Bank: <b>POSB</b><br />
-              Type: <b>Savings</b><br />
-              Account Number: <b>150-27506-7</b><br />
+              Bank: <b>UOB</b><br />
+              Type: <b>Current</b><br />
+              Account Number: <b>341-306-307-6</b><br />
             </p>
             <ol>
               <li>Transfer the total amount via bank transfer (ATM / iBanking).</li>

@@ -7,10 +7,10 @@ export default class AlertPopup extends Component {
   render() {
     var styles = {
       dialogStyles: {
-        width: '25%',
+        width: '50%',
         height: 'auto',
         marginTop: '0',
-        marginLeft: '-12.5%',
+        marginLeft: '-25%',
         top: '100px',
         textAlign: 'center'
       },

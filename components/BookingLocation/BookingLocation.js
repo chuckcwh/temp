@@ -61,7 +61,14 @@ export default class BookingLocation extends Component {
           <input type="text" id="client_contactNumber" name="client_contactNumber" valueLink={linkState(this, 'client_contactNumber')} placeholder="Contact Number*" maxLength="8" required />
         </div>
         <div className="BookingLocationBodySection">
-          <div>Patient Details</div>
+          <div>
+            Patient Details (
+            <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
+            <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
+              <span></span><span>Are you the patient?</span>
+            </label>
+            &nbsp;)
+          </div>
           <div>
             <input type="text" id="patient_firstName" name="patient_firstName" valueLink={linkState(this, 'patient_firstName')} placeholder="First Name*" maxLength="50" required />
             <input type="text" id="patient_lastName" name="patient_lastName" valueLink={linkState(this, 'patient_lastName')} placeholder="Last Name*" maxLength="50" required />
@@ -181,6 +188,20 @@ export default class BookingLocation extends Component {
         console.error('Failed to login as you already have a non-customer account.');
       }
     });
+  }
+
+  _onCheckedPatient(event) {
+    if (event.target.checked === true) {
+      this.setState({
+        patient_firstName: this.state.client_firstName,
+        patient_lastName: this.state.client_lastName
+      });
+    } else {
+      this.setState({
+        patient_firstName: undefined,
+        patient_lastName: undefined
+      });
+    }
   }
 
   _onNext(event) {

@@ -160,7 +160,7 @@ export default class BookingComplete extends Component {
           </div>
           {identity}
           <div>
-            TOTAL AMOUNT : SGD {this.state.bookingAmt}
+            ESTIMATED AMOUNT : SGD {this.state.bookingAmt}
           </div>
           <div>
             For inquiries on your order, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 9733 6938, Mon-Fri (9.00am - 6.00pm).

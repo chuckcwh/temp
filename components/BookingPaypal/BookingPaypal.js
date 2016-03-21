@@ -109,14 +109,14 @@ export default class BookingPaypal extends Component {
         if (err) {
           return console.error(Util.host + '/api/makePaypalWebPayment', status, err.toString());
         }
-        if (res.body && res.body.status) {
+        if (res.body && res.body.status === 1) {
           console.log(res.body.url);
           console.log(res.body.payment_id);
           this.setState({
             redirecting: true
           });
           console.log('Redirecting to ' + res.body.url);
-          window.location = res.body.url;
+          // window.location = res.body.url;
         } else {
           console.error('Failed to create paypal payment.');
         }

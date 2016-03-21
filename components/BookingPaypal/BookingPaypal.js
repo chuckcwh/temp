@@ -93,6 +93,8 @@ export default class BookingPaypal extends Component {
       pending: true
     });
 
+    var url = (window.location.href.indexOf('?') > -1 ? window.location.href.slice(0, window.location.href.indexOf('?')+1) : window.location.href) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail;
+
     this.serverRequest2 = request
       .post(Util.host + '/api/makePaypalWebPayment')
       .auth(Util.authKey, Util.authSecret)
@@ -100,8 +102,8 @@ export default class BookingPaypal extends Component {
         amount: this.props.booking.case.price,
         type: 'case',
         cid: this.props.booking.case.id,
-        returnUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail,
-        cancelUrl: window.location.href.slice(0, window.location.href.indexOf('?')) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail
+        returnUrl: url,
+        cancelUrl: url
       })
       .end((err, res) => {
         if (err) {
@@ -119,6 +121,7 @@ export default class BookingPaypal extends Component {
           console.error('Failed to create paypal payment.');
         }
       });
+    // console.log(url);
   }
 
 }

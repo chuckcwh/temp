@@ -101,6 +101,12 @@ export default class BookingApp extends Component {
     this.serverRequest2 && this.serverRequest2.abort();
   }
 
+  componentWillReceiveProps(props) {
+    if (props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(props.path)) {
+      Location.replace('');
+    }
+  }
+
   render() {
     // console.log('rendered ' + this.props.path + ' ' + this.state.postStatus);
     var component;

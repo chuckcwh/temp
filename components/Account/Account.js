@@ -89,7 +89,7 @@ export default class Account extends Component {
           Please fill up all required fields.
         </AlertPopup>
         <AlertPopup ref={(c) => this._noBookingAlertPopup = c}>
-          Sorry, we can't find your booking.
+          Sorry, we are not able to find your booking.
         </AlertPopup>
       </div>
     );

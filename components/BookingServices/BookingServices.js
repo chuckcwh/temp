@@ -61,13 +61,13 @@ export default class BookingServices extends Component {
                   <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Nursing') ? 'active' : '')} href="/about" onClick={this._onClickFilter.bind(this, 'Home Nursing')}>Home Nursing<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
                 <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home TCM') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home TCM')}>Home TCM<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
-                </li>
-                <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Care')}>Home Care<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Social Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Social Care')}>Home Social Care<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
                 <li className="BookingServicesNav-item">
                   <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Medical') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Medical')}>Home Medical<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                </li>
+                <li className="BookingServicesNav-item">
+                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home TCM') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home TCM')}>Home TCM<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
               </ul>
             </Container>

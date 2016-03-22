@@ -13,7 +13,7 @@ export default class BookingDateTime extends Component {
         <div className="BookingDateTimeNav-wrapper">
           <Container>
             <ul className="BookingDateTimeNav">
-              <BookingDateTimeNavItem path={this.props.path} active={'booking3a'} link={'booking3a'} name={'Select Service Date'} />
+              <BookingDateTimeNavItem path={this.props.path} active={'booking3a'} link={'booking3a'} name={'Select Service Dates'} />
               <BookingDateTimeNavItem path={this.props.path} active={'booking3b'} link={'booking3b'} name={'Select Timeslots'} />
               <BookingDateTimeNavItem path={this.props.path} active={'booking3c'} link={'booking3c'} name={'Select Sessions'} />
             </ul>

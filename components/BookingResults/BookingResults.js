@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import assign from 'object-assign';
 import request from 'superagent';
 import moment from 'moment';
 import linkState from 'react-link-state';
@@ -59,7 +60,7 @@ export default class BookingResults extends Component {
                 }
               }
             }
-            sessions[i] = Object.assign(session, {date: timeslot.date});
+            sessions[i] = assign(session, {date: timeslot.date});
             if (session.time) {
               checkedData['session'+i] = true;
               sum += parseFloat(sessions[i]['price']);
@@ -67,7 +68,7 @@ export default class BookingResults extends Component {
               session.disabled = true;
             }
           }
-          var state = Object.assign({
+          var state = assign({
             slots: res.body.timeSlots,
             sessions: sessions
           }, checkedData);

@@ -225,6 +225,19 @@ textarea {
   border: 1px solid $border-color;
   margin-top: 20px;
   padding: 15px;
+
+  &::-webkit-input-placeholder {
+    color: #ddd;  
+  }
+  &:-moz-placeholder {  
+    color: #ddd;  
+  }
+  &::-moz-placeholder {  
+    color: #ddd;  
+  }
+  &:-ms-input-placeholder {  
+    color: #ddd;  
+  }
 }
 
 .select {

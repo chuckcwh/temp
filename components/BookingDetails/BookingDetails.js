@@ -24,7 +24,7 @@ export default class BookingDetails extends Component {
   }
 
   render() {
-    var userDetails, patientDetails, addressDetails, paymentButton;
+    var userDetails, patientDetails, addressDetails, caregiverSection, paymentButton;
     if (this.state.editingUser) {
       userDetails = (
         <div>
@@ -145,6 +145,10 @@ export default class BookingDetails extends Component {
             <div className="TableRowItem1">Date of Birth</div>
             <div className="TableRowItem3">{moment(this.props.booking.patient_dob, 'YYYY-MM-DD').format('ll')}</div>
           </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Additional Notes</div>
+            <div className="TableRowItem3">{this.props.booking.case.notes}</div>
+          </div>
         </div>
       );
     }
@@ -185,6 +189,30 @@ export default class BookingDetails extends Component {
         </div>
       );  
     }
+    // show caregiver section only if case has been paid
+    if (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid) {
+      caregiverSection = (
+        <div className="BookingDetailsBodySection">
+          <div className="BookingDetailsBodySectionTitle">
+            <h3>Caregiver Details</h3>
+          </div>
+          <div>
+            <div className="TableRow">
+              <div className="TableRowItem1">Name</div>
+              <div className="TableRowItem3">{this.props.booking.case.quotes[0].fullName}</div>
+            </div>
+            <div className="TableRow">
+              <div className="TableRowItem1">Email</div>
+              <div className="TableRowItem3">{this.props.booking.case.quotes[0].user.email}</div>
+            </div>
+            <div className="TableRow">
+              <div className="TableRowItem1">Contact Number</div>
+              <div className="TableRowItem3">{this.props.booking.case.quotes[0].user.mobilePhone}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
     if ((this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
@@ -196,7 +224,9 @@ export default class BookingDetails extends Component {
     var bookingStatus = '';
     if (this.props.booking.case.status === 'Accepting Quotes') {
       bookingStatus = 'Pending Confirmation';
-    } else if (this.props.booking.case.status === 'Closed') {
+    } else if (this.props.booking.case.status === 'Closed' && this.props.booking.case.isPaid) {
+      bookingStatus = 'Paid & Confirmed';
+    } else if (this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) {
       bookingStatus = 'Awaiting Payment for Confirmation';
     } else {
       bookingStatus = this.props.booking.case.status;
@@ -225,10 +255,11 @@ export default class BookingDetails extends Component {
                     </div>
                   </div>
                 </div>
+                {caregiverSection}
                 <div className="BookingDetailsBodySection">
                   <div className="BookingDetailsBodySectionTitle">
                     <h3>Contact Person Details</h3>
-                    <a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
+                    <a href="#" className={(this.state.editingUser || this.props.booking.case.isPaid) ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
                   </div>
                   <Loader className="spinner" loaded={!this.state.updatingUser ? true : false}>
                     {userDetails}

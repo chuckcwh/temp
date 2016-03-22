@@ -185,7 +185,7 @@ export default class BookingLocation extends Component {
         this.setState({
           error: true
         });
-        console.error('Failed to login as you already have a non-customer account.');
+        console.error('Failed to login as you do not have a caregiver account.');
       }
     });
   }

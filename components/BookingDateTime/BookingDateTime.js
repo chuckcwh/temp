@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
 import './BookingDateTime.scss';
 import Container from '../Container';
 import Link from '../Link';

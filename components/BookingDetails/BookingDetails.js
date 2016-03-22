@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import linkState from 'react-link-state';
 import request from 'superagent';
-import classNames from 'classNames';
 import moment from 'moment';
 import Loader from 'react-loader';
 import './BookingDetails.scss';

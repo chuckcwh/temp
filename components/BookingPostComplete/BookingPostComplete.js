@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
 import Loader from 'react-loader';
 import './BookingPostComplete.scss';
 import Container from '../Container';

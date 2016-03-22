@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import request from 'superagent';
-import classNames from 'classNames';
 import Loader from 'react-loader';
 import './BookingComplete.scss';
 import Container from '../Container';

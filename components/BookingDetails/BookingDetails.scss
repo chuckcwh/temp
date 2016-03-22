@@ -7,122 +7,142 @@
   min-height: 300px;
 
   .BookingDetailsWrapper {
-    display: flex;
-    flex-direction: row;
     padding-top: 50px;
     padding-bottom: 100px;
 
-    @media (max-width: $screen-sm-min) {
-      flex-direction: column;
-    }
-  }
+    .BookingDetailsBody {
+      font-size: 21px;
 
-  .BookingDetailsBody {
-    flex: 10;
-    font-size: 21px;
+      .BookingDetailsBodyColumnWrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
 
-    input[type=radio] {
-      margin-top: 20px;
-    }
+        .BookingDetailsBodyColumn {
+          flex: 1;
+        }
 
-    textarea {
-      width: 100%;
-    }
+        .BookingDetailsBodyColumn + .BookingDetailsBodyColumn {
+          margin-left: 20px;
 
-    .select {
-      display: inline-block;
-    }
+          .TableRowHeader {
+            color: $brand-color;
+            font-style: italic;
+          }
 
-    .BookingDetailsBodyActions {
-      float: right;
+          @media (max-width: $screen-sm-min) {
+            margin-left: 0;
+          }
+        }
 
-      span + span {
-        margin-left: 5px;
-      }
-    }
-
-    .BookingDetailsBodySection {
-      position: relative;
-      min-height: 150px;
-      padding: 20px 0;
-      // border-top: 1px solid $border-color;
-
-      &:first-child {
-        border: 0;
-      }
-
-      h3 {
-        font-weight: normal;
-        font-size: 28px;
-        border-bottom: 1px solid $border-color;
-      }
-
-      .BookingDetailsBodySectionTitle {
-        position: relative;
-
-        a {
-          position: absolute;
-          right: 0;
-          bottom: 0;
+        @media (max-width: $screen-sm-min) {
+          flex-direction: column;
         }
       }
 
-      .datepicker__input {
-        font: inherit;
-        @mixin border-radius 0;
-        @mixin box-shadow none;
+      input[type=radio] {
+        margin-top: 20px;
       }
 
-      form a {
-        margin: 5px 5px 0 0; 
-      }
-    }
-
-    .BookingDetailsItem {
-      display: inline-block;
-      color: $text-color;
-      width: 100%;
-
-      @media (min-width: $screen-sm-min) {
-        width: 50%;
+      textarea {
+        width: 100%;
       }
 
-      @media (min-width: $screen-lg-min) {
-        width: calc(100% / 3);
+      .select {
+        display: inline-block;
       }
 
-      .BookingDetailsRadio {
-        // margin-right: 5px;
+      .BookingDetailsBodyActions {
+        float: right;
+
+        span + span {
+          margin-left: 5px;
+        }
       }
 
-      .BookingDetailsRadioLabel {
-        // cursor: pointer;
+      .BookingDetailsBodySection {
+        position: relative;
+        min-height: 150px;
+        padding: 20px 0;
+        // border-top: 1px solid $border-color;
+
+        &:first-child {
+          border: 0;
+        }
+
+        h3 {
+          font-weight: normal;
+          font-size: 28px;
+          border-bottom: 1px solid $border-color;
+        }
+
+        .BookingDetailsBodySectionTitle {
+          position: relative;
+
+          a {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+          }
+        }
+
+        .datepicker__input {
+          font: inherit;
+          @mixin border-radius 0;
+          @mixin box-shadow none;
+        }
+
+        form a {
+          margin: 5px 5px 0 0; 
+        }
       }
-    }
 
-    .PatientAddress {
-      display: flex;
+      .BookingDetailsItem {
+        display: inline-block;
+        color: $text-color;
+        width: 100%;
 
-      .PatientAddressLeft {
-        flex: 1 0;
+        @media (min-width: $screen-sm-min) {
+          width: 50%;
+        }
+
+        @media (min-width: $screen-lg-min) {
+          width: calc(100% / 3);
+        }
+
+        .BookingDetailsRadio {
+          // margin-right: 5px;
+        }
+
+        .BookingDetailsRadioLabel {
+          // cursor: pointer;
+        }
       }
 
-      .PatientAddressRight {
-        flex: 1 0;
+      .PatientAddress {
+        display: flex;
+
+        .PatientAddressLeft {
+          flex: 1 0;
+        }
+
+        .PatientAddressRight {
+          flex: 1 0;
+        }
+
+        @media (max-width: $screen-sm-min) {
+          flex-flow: row wrap;
+        }
       }
 
-      @media (max-width: $screen-sm-min) {
-        flex-flow: row wrap;
-      }
-    }
+      .BookingDetailsFooter {
+        a {
+          margin: 5px;
+        }
 
-    .BookingDetailsFooter {
-      span + span {
-        margin-left: 5px;
-      }
-
-      @media (max-width: $screen-sm-min) {
-        text-align: center;
+        @media (max-width: $screen-sm-min) {
+          text-align: center;
+        }
       }
     }
   }

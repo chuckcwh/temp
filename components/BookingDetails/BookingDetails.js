@@ -23,7 +23,7 @@ export default class BookingDetails extends Component {
   }
 
   render() {
-    var userDetails, patientDetails, addressDetails, caregiverSection, paymentButton;
+    var userDetails, patientDetails, addressDetails, sessionDetails, caregiverSection, paymentButton;
     if (this.state.editingUser) {
       userDetails = (
         <div>
@@ -188,6 +188,26 @@ export default class BookingDetails extends Component {
         </div>
       );  
     }
+    sessionDetails = (
+      <div>
+        <div className="TableRow TableRowHeader">
+          <div className="TableRowItem1">Date</div>
+          <div className="TableRowItem1">Session</div>
+          <div className="TableRowItem1">{(this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs</div>
+        </div>
+        {
+          this.props.booking.case.dates.map(session => {
+            return (
+              <div className="TableRow" key={session.id}>
+                <div className="TableRowItem1">{moment(session.dateTimeStart).format('D MMM')}</div>
+                <div className="TableRowItem1">{session.estTime}</div>
+                <div className="TableRowItem1">$ {session.price}</div>
+              </div>
+            );
+          })
+        }
+      </div>
+    );
     // show caregiver section only if case has been paid
     if (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid) {
       caregiverSection = (
@@ -254,31 +274,44 @@ export default class BookingDetails extends Component {
                     </div>
                   </div>
                 </div>
-                {caregiverSection}
-                <div className="BookingDetailsBodySection">
-                  <div className="BookingDetailsBodySectionTitle">
-                    <h3>Contact Person Details</h3>
-                    <a href="#" className={(this.state.editingUser || this.props.booking.case.isPaid) ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
+                <div className="BookingDetailsBodyColumnWrapper">
+                  <div className="BookingDetailsBodyColumn">
+                    <div className="BookingDetailsBodySection">
+                      <div className="BookingDetailsBodySectionTitle">
+                        <h3>Contact Person Details</h3>
+                        <a href="#" className={(this.state.editingUser || this.props.booking.case.isPaid) ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
+                      </div>
+                      <Loader className="spinner" loaded={!this.state.updatingUser ? true : false}>
+                        {userDetails}
+                      </Loader>
+                    </div>
+                    <div className="BookingDetailsBodySection">
+                      <div className="BookingDetailsBodySectionTitle">
+                        <h3>Patient Details</h3>
+                        {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
+                      </div>
+                      {patientDetails}
+                    </div>
+                    <div className="BookingDetailsBodySection">
+                      <div className="BookingDetailsBodySectionTitle">
+                        <h3>Patient Location / Address</h3>
+                        {/*<a href="#" className={this.state.editingAddress ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'address')}><img src={require('../pencil.png')} /></a>*/}
+                      </div>
+                      <Loader className="spinner" loaded={!this.state.updatingAddress ? true : false}>
+                        {addressDetails}
+                      </Loader>
+                    </div>
                   </div>
-                  <Loader className="spinner" loaded={!this.state.updatingUser ? true : false}>
-                    {userDetails}
-                  </Loader>
-                </div>
-                <div className="BookingDetailsBodySection">
-                  <div className="BookingDetailsBodySectionTitle">
-                    <h3>Patient Details</h3>
-                    {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
+                  <div className="BookingDetailsBodyColumn">
+                    {caregiverSection}
+                    <div className="BookingDetailsBodySection">
+                      <div className="BookingDetailsBodySectionTitle">
+                        <h3>Session Details</h3>
+                        {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
+                      </div>
+                      {sessionDetails}
+                    </div>
                   </div>
-                  {patientDetails}
-                </div>
-                <div className="BookingDetailsBodySection">
-                  <div className="BookingDetailsBodySectionTitle">
-                    <h3>Patient Location / Address</h3>
-                    {/*<a href="#" className={this.state.editingAddress ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'address')}><img src={require('../pencil.png')} /></a>*/}
-                  </div>
-                  <Loader className="spinner" loaded={!this.state.updatingAddress ? true : false}>
-                    {addressDetails}
-                  </Loader>
                 </div>
                 <div className="BookingDetailsFooter">
                   <span>

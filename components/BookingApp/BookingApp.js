@@ -91,6 +91,24 @@ export default class BookingApp extends Component {
           }
         });
     }
+
+    // if "uid" query parameter exists, login automatically
+    if (this.props.location && this.props.location.query && this.props.location.query.uid && this.props.location.query.token) {
+      this.serverRequest3 = request
+        .get(Util.host + '/api/getUser')
+        .auth(this.props.location.query.uid, this.props.location.query.token)
+        .end((err, res) => {
+          if (err) {
+            return console.error(Util.host + '/api/getUser', status, err.toString());
+          }
+          if (res.body && res.body.status === 1) {
+            console.log(res.body.user);
+            BookingActions.setUser(res.body.user);
+          } else {
+            console.error('Failed to get user data.');
+          }
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -98,6 +116,7 @@ export default class BookingApp extends Component {
 
     this.serverRequest1 && this.serverRequest1.abort();
     this.serverRequest2 && this.serverRequest2.abort();
+    this.serverRequest3 && this.serverRequest3.abort();
   }
 
   componentWillReceiveProps(props) {

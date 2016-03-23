@@ -20,6 +20,7 @@ export default class BookingLocationUser extends Component {
       editingUser: false,
       editingPatient: false,
       editingAddress: false,
+      savingPatient: false,
 
       patients: undefined,
       patientId: undefined
@@ -255,7 +256,7 @@ export default class BookingLocationUser extends Component {
             <h3>Patient Details</h3>
             {/*<a href="#" className={this.state.editingPatient || !this.state.patientId ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
           </div>
-          <Loader className="spinner" loaded={this.state.patients ? true : false}>
+          <Loader className="spinner" loaded={(this.state.patients && !this.state.savingPatient) ? true : false}>
             {patientDetails}
           </Loader>
           <div style={{marginTop: '40px'}}>
@@ -420,6 +421,9 @@ export default class BookingLocationUser extends Component {
   _onClickSavePatient(event) {
     if (this._patientDetailsForm.checkValidity()) {
       event.preventDefault();
+      this.setState({
+        savingPatient: true
+      });
       this.serverRequest = request
         .post(Util.host + '/api/createPatient')
         .auth(this.props.user.id, this.props.user.token)
@@ -445,7 +449,14 @@ export default class BookingLocationUser extends Component {
               this.state.patients.forEach((patient, index) => {
                 if (patient.id === patientId) {
                   this.setState({
-                    patientId: index
+                    patientId: index,
+                    savingPatient: false,
+                    fullName: undefined,
+                    gender: undefined,
+                    dob: undefined,
+                    address: undefined,
+                    postalCode: undefined,
+                    unitNumber: undefined
                   });
                 }
               });

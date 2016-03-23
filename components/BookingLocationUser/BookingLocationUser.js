@@ -489,7 +489,7 @@ export default class BookingLocationUser extends Component {
     this.serverRequest = request
       .get(Util.host + '/api/getPatients')
       .query({
-        cid: user.client.id
+        cid: user.clients[0].id
       })
       .auth(user.id, user.token)
       .end((err, res) => {

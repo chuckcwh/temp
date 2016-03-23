@@ -1,6 +1,6 @@
 export default {
   title: 'eBeecare',
-  description: 'eBeeCare - Finding the Right Person, Right Proficiency, Right Price',
+  description: 'eBeeCare - Homecare booking platform to help you book and manage healthcare services for loved ones in an easy way.',
   googleAnalyticsId: 'UA-73367021-1',
 };
 

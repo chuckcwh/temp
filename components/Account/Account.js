@@ -52,10 +52,14 @@ export default class Account extends Component {
           <div className="Account-find Account-container-item">
             <Loader className="spinner" loaded={(!(this.props.booking && this.props.booking.id) && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
               <form ref={(c) => this._accountManageBookingForm = c}>
-                <h3>Have Booking ID?</h3>
+                <h3>Have Guest Booking ID?</h3>
                 <input className="BookingIdInput" type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />
                 <input className="EmailInput" type="email" valueLink={linkState(this, 'email')} placeholder="Enter Email*" required />
-                <div className="Account-container-item-middle"></div>
+                <div className="Account-container-item-middle">
+                  <div className="LoginInsteadContainer">
+                    Have account? <a href="https://app.ebeecare.com/login/" className="LoginInsteadLink">Login instead</a>
+                  </div>
+                </div>
                 <button className="btn btn-primary" onClick={this._onClickFindBooking.bind(this)}>Find Booking</button>
               </form>
             </Loader>

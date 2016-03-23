@@ -47,6 +47,14 @@
         .Account-container-item-middle {
           height: 95px;
 
+          .LoginInsteadContainer {
+            padding: 10px 0;
+
+            .LoginInsteadLink {
+              color: $secondary-color;
+            }
+          }
+
           .ForgotPasswordContainer {
             padding: 10px 0;
 

@@ -30,8 +30,9 @@ export default class BookingResults extends Component {
       .get(Util.host + '/api/getAvailableSchedule')
       .query({
         service: this.props.booking.service,
-        dateStart: this.props.booking.range.start.format('YYYY-MM-DD'),
-        dateEnd: this.props.booking.range.end.format('YYYY-MM-DD'),
+        'dates[]': this.props.booking.dates.map(date => {
+          return moment(date).format('YYYY-MM-DD');
+        }),
         preferredPostalCode: this.props.booking.location.postalCode,
         'preferredTimes[]': this.props.booking.timeslots   // hack to send PHP style arrays
       })

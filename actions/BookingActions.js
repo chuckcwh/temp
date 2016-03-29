@@ -34,12 +34,12 @@ var BookingActions = {
   },
 
   /**
-   * @param  {string} dates { dateStart, dateEnd }
+   * @param  {string} dates List of date objects
    */
   setDates: function(dates) {
     AppDispatcher.dispatch({
       actionType: BookingConstants.BOOKING_SET_DATES,
-      range: dates
+      dates: dates
     });
   },
 

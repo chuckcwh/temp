@@ -130,7 +130,7 @@ AppDispatcher.register(function(action) {
       break;
 
     case BookingConstants.BOOKING_SET_DATES:
-      _booking.range = action.range;
+      _booking.dates = action.dates;
       BookingStore.emitChange();
       break;
 

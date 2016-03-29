@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import DateRangePicker from 'react-daterange-picker';
+import DayPicker from 'react-day-picker';
+import some from 'lodash.some';
+import remove from 'lodash.remove';
+import moment from 'moment';
 import './BookingDate.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
@@ -10,34 +13,85 @@ export default class BookingDate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      range: this.props.booking && this.props.booking.range  // { start: Moment, end: Moment }
+      selectedDates: this.props.booking && this.props.booking.dates || []
     };
   }
 
   render() {
-    var minimumDate = new Date();
-    minimumDate.setDate(minimumDate.getDate() + 3);
+    var selectedDates;
+    if (this.state.selectedDates.length) {
+      selectedDates = (
+        <h3>Selected Dates:</h3>
+      );
+    }
     return (
       <div className="BookingDate">
         <div className="text-center">
+          {/*
           <DateRangePicker numberOfCalendars={2} selectionType="range" singleDateRange={true} minimumDate={minimumDate} value={this.state.range} onSelect={this._handleSelect.bind(this)} />
+          */}
+          <DayPicker
+            numberOfMonths={2}
+            modifiers={{
+              selected: day => {
+                return this.state.selectedDates && some(this.state.selectedDates, item => this._isSameDay(item, day));
+              },
+              disabled: this._isDisabled
+            }}
+            onDayClick={this._onSelectDay.bind(this)}
+          />
         </div>
         <div className="text-center">
-          <form id="BookingDateForm">
-            <input className="btn-inline" type="text" id="startDate" name="startDate" value={this.state.range && this.state.range.start && this.state.range.start.format('ll')} required readOnly />
-            <div className="BookingDateTo"><i>to</i></div>
-            <input className="btn-inline" type="text" id="endDate" name="endDate" value={this.state.range && this.state.range.end && this.state.range.end.format('ll')} required readOnly />
-          </form>
+          {selectedDates}
+          {
+            this.state.selectedDates && this.state.selectedDates.map((day, k) => {
+              return (
+                <div key={day.getTime()}>{moment(day).format('DD MMM YYYY, dddd')}</div>
+              );
+            })
+          }
         </div>
         <p></p>
         <div className="text-center">
           <a href="/booking3b" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
         <AlertPopup ref={(c) => this._alertPopup = c}>
-          Please select a date range.
+          Please select at least one day.
         </AlertPopup>
       </div>
     );
+  }
+
+  _isSameDay(d1, d2) {
+    d1.setHours(0, 0, 0, 0);
+    d2.setHours(0, 0, 0, 0);
+
+    return d1.getTime() === d2.getTime();
+  }
+
+  _isDisabled(day) {
+    let today = new Date();
+    today.setDate(today.getDate() + 3);
+    return day < today;
+  }
+
+  _onSelectDay(e, day) {
+    if (!this._isDisabled(day)) {
+      let days = this.state.selectedDates;
+
+      if (some(days, item => this._isSameDay(item, day))) {
+        remove(days, item => this._isSameDay(item, day));
+      } else {
+        days.push(day);
+        days.sort((a, b) => {
+          return a.getTime() - b.getTime();
+        });
+      }
+
+      this.setState({
+        selectedDates: days
+      });
+    }
   }
 
   _handleSelect(range) {
@@ -47,12 +101,11 @@ export default class BookingDate extends Component {
   }
 
   _onNext(event) {
-    var form = document.getElementById('BookingDateForm');
-    if (form.checkValidity()) {
+    if (this.state.selectedDates.length) {
       Link.handleClick(event);
 
       // this.props.booking.range = this.state.range;
-      BookingActions.setDates(this.state.range);
+      BookingActions.setDates(this.state.selectedDates);
       BookingActions.setLast('booking3a');
     } else {
       event.preventDefault();

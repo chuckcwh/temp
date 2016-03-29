@@ -1,6 +1,6 @@
 @import '../variables.scss';
 
-@import 'react-daterange-picker/dist/css/react-calendar.css';
+@import 'react-day-picker/lib/style.css';
 
 .BookingDate {
   flex: 10;
@@ -25,40 +25,13 @@
     text-align: center;
   }
 
-  .DateRangePicker {
-    font-size: 18px;
-
-    .DateRangePicker__Month {
-      color: #969696;
+  .DayPicker {
+    .DayPicker-Day.DayPicker-Day--today {
+      color: $secondary-color;
     }
 
-    .DateRangePicker__MonthHeader {
-      color: $text-color;
-      font-size: 18px;
-    }
-
-    .DateRangePicker__WeekdayHeading {
-      color: $text-color;
-      font-weight: 600;
-    }
-
-    .DateRangePicker__WeekdayHeading abbr[title] {
-      color: $text-color;
-    }
-
-    .DateRangePicker__WeekdayHeading, .DateRangePicker__Date {
-      // color: $text-color;
-      font-size: 16px;
-    }
-
-    .DateRangePicker__CalendarHighlight {
-      border-color: $secondary-color;
-    }
-
-    .DateRangePicker__CalendarSelection {
-      // color: #000000;
+    .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
       background-color: $secondary-color;
-      border-color: $secondary-color;
     }
   }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import './BookingSidebar.scss';
 import Link from '../Link';
 
@@ -9,15 +10,16 @@ export default class BookingSidebar extends Component {
   }
 
   render() {
-    var service, location, dateRange, timeslots, sum;
+    var service, location, dates, timeslots, sum;
     if (this.props.allServicesHash && this.props.booking && this.props.booking.service) {
       service = this.props.allServicesHash[this.props.booking.service].name;
     }
     if (this.props.booking && this.props.booking.location && this.props.booking.location.postalCode) {
       location = (<span>{this.props.booking.location.address}<br/>{this.props.booking.location.unitNumber}</span>);
     }
-    if (this.props.booking && this.props.booking.range) {
-      dateRange = this.props.booking.range.start.format('DD-MM-YYYY') + ' - ' + this.props.booking.range.end.format('DD-MM-YYYY');
+    if (this.props.booking && this.props.booking.dates) {
+      dates = this.props.booking.dates;
+      // dates = this.props.booking.range.start.format('DD-MM-YYYY') + ' - ' + this.props.booking.range.end.format('DD-MM-YYYY');
     }
     if (this.props.booking && this.props.booking.timeslots) {
       timeslots = this.props.booking.timeslots;
@@ -43,7 +45,15 @@ export default class BookingSidebar extends Component {
           </a>
           <a href="/booking3a" onClick={Link.handleClick}>
             <div className="BookingSidebarDates">
-              <div className="BookingSidebarItem">{dateRange}</div>
+              <div className="BookingSidebarItem">
+              {
+                dates && dates.map(date => {
+                  return (
+                    <div key={date.getTime()}>{moment(date).format('DD MMM YYYY, dddd')}</div>
+                  );
+                })
+              }
+              </div>
             </div>
           </a>
           <a href="/booking3b" onClick={Link.handleClick}>

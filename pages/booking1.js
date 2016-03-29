@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import BookingNavigation from '../components/BookingNavigation/BookingNavigation';
-import BookingServices from '../components/BookingServices/BookingServices';
+import BookingApp from '../components/BookingApp/BookingApp';
 
 export default class extends Component {
 
   render() {
     return (
-      <div>
-        <div>
-          <BookingNavigation path={this.props.path} />
-          <BookingServices />
-        </div>
-      </div>
+      <BookingApp location={this.props.location} path={this.props.path} />
     );
   }
 

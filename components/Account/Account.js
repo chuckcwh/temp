@@ -50,7 +50,7 @@ export default class Account extends Component {
           </div>
           */}
           <div className="Account-find Account-container-item">
-            <Loader className="spinner" loaded={(!(this.props.booking && this.props.booking.id) && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
+            <Loader className="spinner" loaded={(!(this.props.booking && this.props.booking.id) && this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
               <form ref={(c) => this._accountManageBookingForm = c}>
                 <h3>Have Guest Booking ID?</h3>
                 <input className="BookingIdInput" type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />

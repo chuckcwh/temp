@@ -10,7 +10,7 @@ export default class BookingNavigationItem extends Component {
     if (BookingStore.isNavigationAllowed(this.props.link)) {
       return (
         <li className="BookingNavigationItem">
-          <a className={classNames('BookingNavigation-link', (this.props.path.indexOf('/'+this.props.active)==0) ? 'active' : '')} href={'/'+this.props.link} onClick={Link.handleClick}>
+          <a className={classNames('BookingNavigation-link', (this.props.path && this.props.path.indexOf('/'+this.props.active)==0) ? 'active' : '')} href={'/'+this.props.link} onClick={Link.handleClick}>
             <div className="BookingNavigationItem-icon">{this.props.icon}</div>
             <span className="BookingNavigationItem-text">{this.props.text}</span>
           </a>
@@ -19,7 +19,7 @@ export default class BookingNavigationItem extends Component {
     } else {
       return (
         <li className="BookingNavigationItem">
-          <span className={classNames('BookingNavigation-link', (this.props.path.indexOf('/'+this.props.active)==0) ? 'active' : '')}>
+          <span className={classNames('BookingNavigation-link', (this.props.path && this.props.path.indexOf('/'+this.props.active)==0) ? 'active' : '')}>
             <div className="BookingNavigationItem-icon">{this.props.icon}</div>
             <span className="BookingNavigationItem-text">{this.props.text}</span>
           </span>

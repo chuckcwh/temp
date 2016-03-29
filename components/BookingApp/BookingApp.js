@@ -120,7 +120,7 @@ export default class BookingApp extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(props.path)) {
+    if (props.path && props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(props.path)) {
       Location.replace('');
     }
   }

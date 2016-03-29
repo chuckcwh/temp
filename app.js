@@ -2,7 +2,7 @@ import 'babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
-import Location from './lib/Location';
+import Location from './core/Location';
 import Layout from './components/Layout';
 
 const routes = {}; // Auto-generated on build. See tools/lib/routes-loader.js
@@ -26,12 +26,11 @@ function run() {
 }
 
 if (canUseDOM) {
-// Run the application when both DOM is ready
-// and page content is loaded
-  if (window.addEventListener) {
-    window.addEventListener('DOMContentLoaded', run);
+  // Run the application when both DOM is ready and page content is loaded
+  if (['complete', 'loaded', 'interactive'].includes(document.readyState) && document.body) {
+    run();
   } else {
-    window.attachEvent('onload', run);
+    document.addEventListener('DOMContentLoaded', run, false);
   }
 }
 

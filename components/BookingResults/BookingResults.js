@@ -9,8 +9,8 @@ import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import ConfirmPopup from '../ConfirmPopup';
 import BookingActions from '../../actions/BookingActions';
-import Location from '../../lib/Location';
-import Util from '../../lib/Util';
+import Location from '../../core/Location';
+import Util from '../../core/Util';
 
 export default class BookingResults extends Component {
 

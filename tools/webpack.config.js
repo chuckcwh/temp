@@ -1,3 +1,9 @@
+/**
+ * React Static Boilerplate
+ * https://github.com/koistya/react-static-boilerplate
+ * Copyright (c) Konstantin Tarkus (@koistya) | MIT license
+ */
+
 import path from 'path';
 import webpack from 'webpack';
 import merge from 'lodash.merge';
@@ -19,7 +25,7 @@ const JS_LOADER = {
   test: /\.jsx?$/,
   include: [
     path.resolve(__dirname, '../components'),
-    path.resolve(__dirname, '../lib'),
+    path.resolve(__dirname, '../core'),
     path.resolve(__dirname, '../pages'),
     path.resolve(__dirname, '../app.js'),
     path.resolve(__dirname, '../config.js'),
@@ -67,26 +73,20 @@ const config = {
         test: /\.txt$/,
         loader: 'raw-loader',
       }, {
-        test: /\.css$/,
-        loader: 'css-loader',
-      }, {
-        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
         loader: 'url-loader?limit=10000',
       }, {
-        test: /\.(otf|eot|ttf|wav|mp3)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(eot|ttf|wav|mp3)$/,
         loader: 'file-loader',
       },
     ],
   },
-  postcss: function plugins() {
+  postcss: function plugins(bundler) {
     return [
-      require('postcss-import')({
-        onImport: files => files.forEach(this.addDependency),
-      }),
-      require('postcss-mixins')(),
+      require('postcss-import')({ addDependencyTo: bundler }),
       require('precss')(),
       require('autoprefixer')({
-        browsers: AUTOPREFIXER_BROWSERS
+        browsers: AUTOPREFIXER_BROWSERS,
       }),
     ];
   },
@@ -109,8 +109,8 @@ const appConfig = merge({}, config, {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
-          warnings: VERBOSE
-        }
+          warnings: VERBOSE,
+        },
       }),
       new webpack.optimize.AggressiveMergingPlugin(),
     ]),

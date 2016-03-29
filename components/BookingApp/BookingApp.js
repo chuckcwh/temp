@@ -24,14 +24,14 @@ import BookingDetails from '../BookingDetails';
 import Account from '../Account';
 import BookingActions from '../../actions/BookingActions';
 import BookingStore from '../../stores/BookingStore';
-import Location from '../../lib/Location';
-import Util from '../../lib/Util';
+import Location from '../../core/Location';
+import Util from '../../core/Util';
 
 export default class BookingApp extends Component {
 
   constructor(props) {
     super(props);
-    if (this.props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(this.props.path)) {
+    if (this.props.path && this.props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(this.props.path)) {
       Location.replace('');
     } else {
       this.state = BookingStore.getState();

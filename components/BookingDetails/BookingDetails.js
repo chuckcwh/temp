@@ -7,8 +7,8 @@ import './BookingDetails.scss';
 import Container from '../Container';
 import Link from '../Link';
 import BookingActions from '../../actions/BookingActions';
-import Location from '../../lib/Location';
-import Util from '../../lib/Util';
+import Location from '../../core/Location';
+import Util from '../../core/Util';
 
 export default class BookingDetails extends Component {
 

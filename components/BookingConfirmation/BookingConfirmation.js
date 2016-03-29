@@ -8,7 +8,7 @@ import './BookingConfirmation.scss';
 import Container from '../Container';
 import Link from '../Link';
 import BookingActions from '../../actions/BookingActions';
-import Util from '../../lib/Util';
+import Util from '../../core/Util';
 
 export default class BookingConfirmation extends Component {
 

@@ -5,7 +5,7 @@ import './BookingComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
 import BookingActions from '../../actions/BookingActions';
-import Util from '../../lib/Util';
+import Util from '../../core/Util';
 
 export default class BookingComplete extends Component {
 

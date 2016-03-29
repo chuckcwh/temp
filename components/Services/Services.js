@@ -9,8 +9,8 @@ import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
-import Location from '../../lib/Location';
-import Util from '../../lib/Util';
+import Location from '../../core/Location';
+import Util from '../../core/Util';
 
 const ALL_SERVICES = 'All Services';
 

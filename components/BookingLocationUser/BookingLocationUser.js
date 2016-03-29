@@ -10,7 +10,7 @@ import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
-import Util from '../../lib/Util';
+import Util from '../../core/Util';
 
 export default class BookingLocationUser extends Component {
 

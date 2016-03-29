@@ -7,7 +7,7 @@ import './BookingBankTransfer.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
-import Util from '../../lib/Util';
+import Util from '../../core/Util';
 
 export default class BookingBankTransfer extends Component {
 

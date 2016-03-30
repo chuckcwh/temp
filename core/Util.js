@@ -4,7 +4,7 @@ const util = {
   authSecret: 'secret0nlyWeilsonKnowsShhh852~',
 
   getCookies: () => {
-    if (typeof document !== undefined) {
+    if (typeof document !== 'undefined' && document && document.cookie) {
       var pairs = document.cookie.split(';');
       var cookies = {};
       for (var i = 0; i < pairs.length; i++) {

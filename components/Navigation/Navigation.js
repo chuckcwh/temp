@@ -5,6 +5,7 @@ import './Navigation.scss';
 import Container from '../Container';
 import Logo from '../Logo';
 import Link from '../Link';
+import Util from '../../core/Util';
 
 export default class Navigation extends Component {
 
@@ -16,6 +17,20 @@ export default class Navigation extends Component {
   }
 
   render() {
+    var accountLink;
+    if (Util.getCookies()['sessionid']) {
+      accountLink = (
+        <li className="Navigation-item">
+          <a className="Navigation-link" href="https://app.ebeecare.com/login/">Dashboard</a>
+        </li>
+      );
+    } else {
+      accountLink = (
+        <li className="Navigation-item">
+          <a className="Navigation-link" href="https://app.ebeecare.com/login/">Login</a>
+        </li>
+      );
+    }
     return (
       <div className="NavWrapper">
         <Menu id={"mobile-menu"} width={150} isOpen={this.state.visible} right>
@@ -37,9 +52,7 @@ export default class Navigation extends Component {
           <li className="Navigation-item">
             <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
           </li>
-          <li className="Navigation-item">
-            <a className="Navigation-link" href="https://app.ebeecare.com/login/">Dashboard</a>
-          </li>
+          {accountLink}
         </Menu>
         <Container>
           <div className="Navigation-wrapper">
@@ -63,9 +76,7 @@ export default class Navigation extends Component {
               <li className="Navigation-item">
                 <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
               </li>
-              <li className="Navigation-item">
-                <a className="Navigation-link" href="https://app.ebeecare.com/login/">Dashboard</a>
-              </li>
+              {accountLink}
             </ul>
           </div>
         </Container>

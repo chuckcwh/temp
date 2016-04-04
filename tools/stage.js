@@ -1,11 +1,14 @@
+import { join, dirname } from 'path';
 import GitRepo from 'git-repository';
 import task from './lib/task';
+import fs from './lib/fs';
 
 // TODO: Update deployment URL
 const remote = {
   name: 'github',
   url: 'git@github.com:ebeecare/staging.ebeecare.com.git',
   branch: 'gh-pages',
+  cname: 'staging.ebeecare.com',
 };
 
 /**
@@ -28,6 +31,12 @@ export default task(async function stage() {
   // generates optimized and minimized bundles
   process.argv.push('release');
   await require('./build')();
+
+  if (remote.cname) {
+    const file = join(__dirname, '../build', 'CNAME');
+    await fs.mkdir(dirname(file));
+    await fs.writeFile(file, remote.cname);
+  }
 
   // Push the contents of the build folder to the remote server via Git
   await repo.add('--all .');

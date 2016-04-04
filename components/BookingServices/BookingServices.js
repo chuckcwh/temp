@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classNames';
 import FaSpinner from 'react-icons/lib/fa/spinner';
 import Loader from 'react-loader';
+// import Popup from 'react-popup';
 import './BookingServices.scss';
 import Container from '../Container';
 import Link from '../Link';
@@ -97,9 +98,7 @@ export default class BookingServices extends Component {
             </Container>
           </div>
         </Loader>
-        <AlertPopup ref={(c) => this._alertPopup = c}>
-          Please select a service.
-        </AlertPopup>
+        <AlertPopup ref={(c) => this._alertPopup = c} />
       </div>
     );
   }
@@ -126,7 +125,8 @@ export default class BookingServices extends Component {
     } else {
       event.preventDefault();
       // alert('Please select a service');
-      this._alertPopup.show();
+      // this._alertPopup.show();
+      this._alertPopup.alert('Please select a service.');
     }
   }
 

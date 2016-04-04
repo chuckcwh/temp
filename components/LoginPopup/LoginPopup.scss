@@ -1,5 +1,10 @@
 @import '../variables.scss';
 
+.mm-popup .mm-popup__box {
+  width: 370px;
+  margin-left: -185px;
+}
+
 .LoginPopup {
   &-footer {
     text-align: center;
@@ -20,6 +25,7 @@
         font-weight: normal;
         font-size: 24px;
         margin: 0 0 24px 0;
+        text-align: left;
       }
 
       input {

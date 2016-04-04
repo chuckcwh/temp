@@ -113,9 +113,7 @@ export default class BookingLocation extends Component {
             {this.props.children}
           </div>
         </Container>
-        <AlertPopup ref={(c) => this._alertPopup = c}>
-          Please fill up all required fields.
-        </AlertPopup>
+        <AlertPopup ref={(c) => this._alertPopup = c} />
         <LoginPopup ref={(c) => this._loginPopup = c} />
       </div>
     );
@@ -233,7 +231,7 @@ export default class BookingLocation extends Component {
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
-      this._alertPopup.show();
+      this._alertPopup.alert('Please fill up all required fields.');
     }
   }
 

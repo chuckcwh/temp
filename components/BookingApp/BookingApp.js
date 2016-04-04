@@ -76,7 +76,7 @@ export default class BookingApp extends Component {
             return console.error(Util.host + '/api/getBooking', status, err.toString());
           }
           if (res.body && res.body.booking && res.body.status) {
-            // console.log(res.body.booking);
+            console.log(res.body.booking);
             if (res.body.booking && res.body.booking.case && res.body.booking.case.isPaid) {
               // if booking has already been completed
               BookingActions.setPostStatus('success');

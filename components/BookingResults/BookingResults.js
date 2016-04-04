@@ -132,9 +132,7 @@ export default class BookingResults extends Component {
             <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>BOOK NOW</a>
           </div>
         </Loader>
-        <AlertPopup ref={(c) => this._alertPopup = c}>
-          Please select at least one session.
-        </AlertPopup>
+        <AlertPopup ref={(c) => this._alertPopup = c} />
         <ConfirmPopup ref={(c) => this._confirmPopup = c}>
           <div>
             <form ref={(c) => this._agreeForm = c}>
@@ -145,9 +143,7 @@ export default class BookingResults extends Component {
             </form>
           </div>
         </ConfirmPopup>
-        <AlertPopup ref={(c) => this._rejectPopup = c}>
-          To continue, please accept our Terms of Service and Privacy Policy.
-        </AlertPopup>
+        <AlertPopup ref={(c) => this._rejectPopup = c} />
       </div>
     );
   }
@@ -162,7 +158,7 @@ export default class BookingResults extends Component {
 
     if (sessions.length === 0) {
       // alert('Please choose at least one session.');
-      this._alertPopup.show();
+      this._alertPopup.alert('Please select at least one session.');
       return event.preventDefault();
     }
     
@@ -177,7 +173,7 @@ export default class BookingResults extends Component {
         // console.log(this.state);
         BookingActions.setLast('booking3c');
       } else {
-        this._rejectPopup.show();
+        this._rejectPopup.alert('To continue, please accept our Terms of Service and Privacy Policy.');
       }
     });
       

@@ -43,9 +43,7 @@ export default class BookingTime extends Component {
         <div className="text-center">
           <a href="/booking3c" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
-        <AlertPopup ref={(c) => this._alertPopup = c}>
-          Please select at least one timeslot.
-        </AlertPopup>
+        <AlertPopup ref={(c) => this._alertPopup = c} />
       </div>
     );
   }
@@ -60,7 +58,7 @@ export default class BookingTime extends Component {
 
     if (timeslots.length === 0) {
       // alert('Please choose at least one timeslot.');
-      this._alertPopup.show();
+      this._alertPopup.alert('Please select at least one timeslot.');
       return event.preventDefault();
     }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import request from 'superagent';
-import SkyLight from 'react-skylight';
+import Popup from 'react-popup';
 import './LoginPopup.scss';
 import Link from '../Link';
 import Util from '../../core/Util';
@@ -24,44 +24,14 @@ export default class LoginPopup extends Component {
   }
 
   render() {
-    var styles = {
-      dialogStyles: {
-        width: '340px',
-        marginLeft: '-170px'
-      },
-      title: {
-        display: 'none'
-      },
-      closeButtonStyle: {
-        color: '#f78d00',
-        textDecoration: 'none'
-      }
-    };
-
     return (
-      <SkyLight 
-        dialogStyles={styles.dialogStyles} 
-        titleStyle={styles.title} 
-        closeButtonStyle={styles.closeButtonStyle} 
-        afterOpen={this._executeAfterModalOpen.bind(this)}
-        hideOnOverlayClicked 
-        ref={(c) => this._loginPopup = c}>
-        <Loader className="spinner" loaded={this.state.pending ? false : true}>
-          <div className="LoginPopup">
-            <div className="Account-login Account-container-item">
-              <form id="AccountLoginForm" ref={(c) => this._accountLoginForm = c} autoComplete="off">
-                <h3>eBeeCare Login</h3>
-                <input className="EmailInput" type="email" name="email" ref={(c) => this._startInput = c} valueLink={linkState(this, 'email')} placeholder="Enter Email" required />
-                <input className="PasswordInput" type="password" name="password" valueLink={linkState(this, 'password')} placeholder="Enter Password" required />
-                <div className="Account-container-item-middle">
-                  <div className={this.state.error ? '' : 'hidden'}><span className="error">Failed to login.</span></div>
-                </div>
-                <button className="btn btn-primary" onClick={this._onClickLogin.bind(this)}>Login</button>
-              </form>
-            </div>
-          </div>
-        </Loader>
-      </SkyLight>
+      <Popup
+        btnClass="btn btn-primary btn-small"
+        closeHtml={
+          <span role="button">×</span>
+        }
+        wildClasses={true}>
+      </Popup>
     );
   }
 
@@ -91,7 +61,7 @@ export default class LoginPopup extends Component {
               error: undefined
             });
 
-            this._loginPopup.hide();
+            Popup.close();
             
             this._success(user);
           } else {
@@ -110,12 +80,32 @@ export default class LoginPopup extends Component {
   }
 
   _executeAfterModalOpen() {
-    this._startInput.focus();
+    this._startInput && this._startInput.focus();
   }
 
   show(success) {
     this._success = success || () => {};
-    this._loginPopup.show();
+    // this._loginPopup.show();
+    Popup.create({
+      title: '',
+      content: (
+        <Loader className="spinner" loaded={this.state.pending ? false : true}>
+          <div className="LoginPopup">
+            <div className="Account-login Account-container-item">
+              <form id="AccountLoginForm" ref={(c) => this._accountLoginForm = c} autoComplete="off">
+                <h3>eBeeCare Login</h3>
+                <input className="EmailInput" type="email" name="email" ref={(c) => this._startInput = c} valueLink={linkState(this, 'email')} placeholder="Enter Email" required />
+                <input className="PasswordInput" type="password" name="password" valueLink={linkState(this, 'password')} placeholder="Enter Password" required />
+                <div className="Account-container-item-middle">
+                  <div className={this.state.error ? '' : 'hidden'}><span className="error">Failed to login.</span></div>
+                </div>
+                <button className="btn btn-primary" onClick={this._onClickLogin.bind(this)}>Login</button>
+              </form>
+            </div>
+          </div>
+        </Loader>
+      )
+    });
   }
 
 }

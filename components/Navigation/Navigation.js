@@ -18,16 +18,17 @@ export default class Navigation extends Component {
 
   render() {
     var accountLink;
+    var accountHref = ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://app.ebeecare.com' : 'http://dev.ebeecare.com');
     if (Util.getCookies()['sessionid']) {
       accountLink = (
         <li className="Navigation-item">
-          <a className="Navigation-link" href="https://app.ebeecare.com/login/">Dashboard</a>
+          <a className="Navigation-link" href={accountHref}>Dashboard</a>
         </li>
       );
     } else {
       accountLink = (
         <li className="Navigation-item">
-          <a className="Navigation-link" href="https://app.ebeecare.com/login/">Login</a>
+          <a className="Navigation-link" href={accountHref}>Login</a>
         </li>
       );
     }

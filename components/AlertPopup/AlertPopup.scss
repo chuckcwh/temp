@@ -1,3 +1,5 @@
+@import '../variables.scss';
+
 .AlertPopup {
 	.PopupDialog {
     box-sizing: border-box;
@@ -7,6 +9,11 @@
     margin-top: 0;
     top: 100px;
     text-align: center;
+
+    @media (max-width: $screen-sm-min) {
+      width: 80%;
+      margin-left: -40%;
+    }
   }
 
   &-footer {

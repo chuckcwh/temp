@@ -37,6 +37,11 @@
   input[type=checkbox]:not(old) + label {
     margin-left: 0;
   }
+
+  @media (max-width: $screen-sm-min) {
+    width: 100%;
+    margin-left: -50%;
+  }
 }
 
 .PopupTitle {

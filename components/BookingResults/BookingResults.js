@@ -18,7 +18,8 @@ export default class BookingResults extends Component {
     super(props);
     this.state = {
       sessions: undefined,
-      slots: undefined
+      slots: undefined,
+      agree: false
     };
   }
 
@@ -136,7 +137,7 @@ export default class BookingResults extends Component {
         <ConfirmPopup ref={(c) => this._confirmPopup = c}>
           <div>
             <form ref={(c) => this._agreeForm = c}>
-              <input className="AgreeCheckbox" type="checkbox" id="agree" name="agree" value={false} required />
+              <input className="AgreeCheckbox" type="checkbox" id="agree" name="agree" checked={this.state.agree} onChange={this._onCheckedAgree.bind(this)} required />
               <label className="AgreeCheckboxLabel" htmlFor="agree">
                 <span></span><span>By making this booking, I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>.</span>
               </label>
@@ -146,6 +147,12 @@ export default class BookingResults extends Component {
         <AlertPopup ref={(c) => this._rejectPopup = c} />
       </div>
     );
+  }
+
+  _onCheckedAgree(event) {
+    this.setState({
+      agree: event.target.checked
+    });
   }
 
   _onNext(event) {
@@ -161,6 +168,8 @@ export default class BookingResults extends Component {
       this._alertPopup.show('Please select at least one session.');
       return event.preventDefault();
     }
+
+    this.setState({ agree: false });
     
     // if (confirm('Would you like to confirm the sessions?')) {
     this._confirmPopup.show(() => {

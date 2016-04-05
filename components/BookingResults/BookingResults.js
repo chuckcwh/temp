@@ -158,7 +158,7 @@ export default class BookingResults extends Component {
 
     if (sessions.length === 0) {
       // alert('Please choose at least one session.');
-      this._alertPopup.alert('Please select at least one session.');
+      this._alertPopup.show('Please select at least one session.');
       return event.preventDefault();
     }
     
@@ -173,7 +173,7 @@ export default class BookingResults extends Component {
         // console.log(this.state);
         BookingActions.setLast('booking3c');
       } else {
-        this._rejectPopup.alert('To continue, please accept our Terms of Service and Privacy Policy.');
+        this._rejectPopup.show('To continue, please accept our Terms of Service and Privacy Policy.');
       }
     });
       

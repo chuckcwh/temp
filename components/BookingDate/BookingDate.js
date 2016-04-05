@@ -108,7 +108,7 @@ export default class BookingDate extends Component {
     } else {
       event.preventDefault();
       // alert('Please select a date range.');
-      this._alertPopup.alert('Please select at least one day.');
+      this._alertPopup.show('Please select at least one day.');
     }
   }
 

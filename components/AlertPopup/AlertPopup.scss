@@ -1,4 +1,14 @@
 .AlertPopup {
+	.PopupDialog {
+    box-sizing: border-box;
+    width: 25%;
+    margin-left: -12.5%;
+    height: auto;
+    margin-top: 0;
+    top: 100px;
+    text-align: center;
+  }
+
   &-footer {
     text-align: center;
     margin: 20px 0;

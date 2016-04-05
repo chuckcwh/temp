@@ -231,7 +231,7 @@ export default class BookingLocation extends Component {
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
-      this._alertPopup.alert('Please fill up all required fields.');
+      this._alertPopup.show('Please fill up all required fields.');
     }
   }
 

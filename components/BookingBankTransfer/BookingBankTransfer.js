@@ -92,7 +92,7 @@ export default class BookingBankTransfer extends Component {
         });
     } else {
       event.preventDefault();
-      this._alertPopup.alert('Please fill up your bank transfer reference number.');
+      this._alertPopup.show('Please fill up your bank transfer reference number.');
     }
   }
 

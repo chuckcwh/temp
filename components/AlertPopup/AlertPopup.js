@@ -1,31 +1,38 @@
 import React, { Component } from 'react';
-import Popup from 'react-popup';
+import Popup from '../Popup';
 import './AlertPopup.scss';
 
 export default class AlertPopup extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: undefined
+    };
+  }
+
   render() {
     return (
-      <Popup
-        btnClass="btn btn-primary btn-small"
-        closeHtml={
-          <span role="button">×</span>
-        }
-        defaultOk="OK"
-        wildClasses={true} />
+      <div className="AlertPopup">
+        <Popup ref={(c) => this._alertPopup = c} title="Oops">
+          {this.state.message}
+          {this.props.children}
+          <div className="AlertPopup-footer">
+            <a className="btn btn-primary btn-small" href="#" onClick={this._onClickClose.bind(this)}>OK</a>
+          </div>
+        </Popup>
+      </div>
     );
   }
 
-  alert(message) {
-    Popup.alert(message, 'Oops...');
+  _onClickClose(event) {
+    if (this.state.message) this.setState({ message: undefined });
+    this._alertPopup.hide();
   }
 
-  // _onClickClose(event) {
-  //   this._alertDialog.hide();
-  // }
-
-  // show() {
-  //   this._alertDialog.show();
-  // }
+  show(message) {
+    if (message) this.setState({ message: message });
+    this._alertPopup.show();
+  }
 
 }

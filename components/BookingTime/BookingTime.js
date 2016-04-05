@@ -58,7 +58,7 @@ export default class BookingTime extends Component {
 
     if (timeslots.length === 0) {
       // alert('Please choose at least one timeslot.');
-      this._alertPopup.alert('Please select at least one timeslot.');
+      this._alertPopup.show('Please select at least one timeslot.');
       return event.preventDefault();
     }
 

@@ -1,14 +1,16 @@
 @import '../variables.scss';
 
-.mm-popup .mm-popup__box {
-  width: 370px;
-  margin-left: -185px;
-}
-
 .LoginPopup {
-  &-footer {
-    text-align: center;
-    margin: 20px 0;
+  .PopupDialog {
+    box-sizing: border-box;
+    height: 440px;
+    margin-top: -220px;
+    width: 370px;
+    margin-left: -185px;
+
+    .PopupTitle {
+      display: none;
+    }
   }
 
   .Account-container-item {

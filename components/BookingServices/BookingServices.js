@@ -125,8 +125,7 @@ export default class BookingServices extends Component {
     } else {
       event.preventDefault();
       // alert('Please select a service');
-      // this._alertPopup.show();
-      this._alertPopup.alert('Please select a service.');
+      this._alertPopup.show('Please select a service.');
     }
   }
 

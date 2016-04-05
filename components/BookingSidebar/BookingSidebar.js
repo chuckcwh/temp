@@ -10,9 +10,12 @@ export default class BookingSidebar extends Component {
   }
 
   render() {
-    var service, location, dates, timeslots, sum;
+    var service, patient, location, dates, timeslots, sum;
     if (this.props.allServicesHash && this.props.booking && this.props.booking.service) {
       service = this.props.allServicesHash[this.props.booking.service].name;
+    }
+    if (this.props.patient && this.props.patient.fullName) {
+      patient = this.props.patient.fullName;
     }
     if (this.props.booking && this.props.booking.location && this.props.booking.location.postalCode) {
       location = (<span>{this.props.booking.location.address}<br/>{this.props.booking.location.unitNumber}</span>);
@@ -40,7 +43,10 @@ export default class BookingSidebar extends Component {
           </a>
           <a href="/booking2" onClick={Link.handleClick}>
             <div className="BookingSidebarLocation">
-              <div className="BookingSidebarItem">{location}</div>
+              <div className="BookingSidebarItem">
+                <div>{patient}</div>
+                <div>{location}</div>
+              </div>
             </div>
           </a>
           <a href="/booking3a" onClick={Link.handleClick}>

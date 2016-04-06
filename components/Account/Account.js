@@ -69,7 +69,7 @@ export default class Account extends Component {
     } else if (this.props.type === 'forgot-password') {
       components = (
         <div className="Account-container">
-          <div className="Account-login Account-container-item">
+          <div className="Account-forgot Account-container-item">
             <form ref={(c) => this._accountForgotPasswordForm = c}>
               <h3>Forgot Password?</h3>
               <input className="EmailInput" type="email" placeholder="Enter Email*" />

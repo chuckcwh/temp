@@ -89,12 +89,8 @@ export default class Account extends Component {
         <Container>
           {components}
         </Container>
-        <AlertPopup ref={(c) => this._alertPopup = c}>
-          Please fill up all required fields.
-        </AlertPopup>
-        <AlertPopup ref={(c) => this._noBookingAlertPopup = c}>
-          Sorry, we are not able to find your booking.
-        </AlertPopup>
+        <AlertPopup ref={(c) => this._alertPopup = c} />
+        <AlertPopup ref={(c) => this._noBookingAlertPopup = c} />
       </div>
     );
   }
@@ -122,12 +118,12 @@ export default class Account extends Component {
             }
           } else {
             console.error('Failed to obtain booking data.');
-            this._noBookingAlertPopup.show();
+            this._noBookingAlertPopup.show('Sorry, we are not able to find your booking.');
           }
         });
     } else {
       event.preventDefault();
-      this._alertPopup.show();
+      this._alertPopup.show('Please fill up all required fields.');
     }
   }
 

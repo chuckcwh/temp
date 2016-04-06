@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Container from '../components/Container/Container';
 import Account from '../components/Account/Account';
 import BookingDetails from '../components/BookingDetails/BookingDetails';
 import BookingStore from '../stores/BookingStore';
@@ -19,8 +18,6 @@ export default class extends Component {
 
   componentWillUnmount() {
     BookingStore.removeChangeListener(this._onChange.bind(this));
-
-    this.serverRequest1 && this.serverRequest1.abort();
   }
   
   render() {

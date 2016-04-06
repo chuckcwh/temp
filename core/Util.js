@@ -3,6 +3,8 @@ const util = {
   authKey: 'secret',
   authSecret: 'secret0nlyWeilsonKnowsShhh852~',
 
+  backend: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://app.ebeecare.com' : 'http://dev.ebeecare.com'),
+
   getCookies: () => {
     if (typeof document !== 'undefined' && document && document.cookie) {
       var pairs = document.cookie.split(';');

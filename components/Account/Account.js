@@ -6,6 +6,8 @@ import './Account.scss';
 import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
+import VerifyBookingPopup from '../VerifyBookingPopup';
+import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
 import BookingActions from '../../actions/BookingActions';
 import Util from '../../core/Util';
 
@@ -14,13 +16,77 @@ export default class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bid: undefined,
-      email: undefined
+      bid: this.props.bid || undefined,
+      email: this.props.email || undefined,
+      pin: undefined,
+      resend: false,
+      resent: false
     };
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      bid: props.bid || this.state.bid,
+      email: props.email || this.state.email
+    });
+    if (props.booking && props.booking.id && !props.booking.isHPVerified) {
+      this._verifyBookingPopup.show(props.booking, () => {
+        this.serverRequest2 = request
+          .get(Util.host + '/api/getBooking')
+          .query({
+            bid: this.state.bid,
+            email: this.state.email
+          })
+          .auth(Util.authKey, Util.authSecret)
+          .end((err, res) => {
+            if (err) {
+              return console.error(Util.host + '/api/getBooking', status, err.toString());
+            }
+            if (res.body && res.body.booking && res.body.status) {
+              console.log(res.body.booking);
+              if (res.body.booking) {
+                BookingActions.setBooking(res.body.booking);
+              }
+            } else {
+              console.error('Failed to obtain booking data.');
+              this._alertPopup.show('Sorry, we are not able to find your booking.');
+            }
+          });
+      });
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.booking && this.props.booking.id && !this.props.booking.isHPVerified) {
+      this._verifyBookingPopup.show(this.props.booking, () => {
+        this.serverRequest2 = request
+          .get(Util.host + '/api/getBooking')
+          .query({
+            bid: this.state.bid,
+            email: this.state.email
+          })
+          .auth(Util.authKey, Util.authSecret)
+          .end((err, res) => {
+            if (err) {
+              return console.error(Util.host + '/api/getBooking', status, err.toString());
+            }
+            if (res.body && res.body.booking && res.body.status) {
+              console.log(res.body.booking);
+              if (res.body.booking) {
+                BookingActions.setBooking(res.body.booking);
+              }
+            } else {
+              console.error('Failed to obtain booking data.');
+              this._alertPopup.show('Sorry, we are not able to find your booking.');
+            }
+          });
+      });
+    }
   }
 
   componentWillUnmount() {
     this.serverRequest1 && this.serverRequest1.abort();
+    this.serverRequest2 && this.serverRequest2.abort();
   }
 
   render() {
@@ -90,6 +156,7 @@ export default class Account extends Component {
           {components}
         </Container>
         <AlertPopup ref={(c) => this._alertPopup = c} />
+        <VerifyBookingPopup ref={(c) => this._verifyBookingPopup = c} />
       </div>
     );
   }
@@ -111,8 +178,7 @@ export default class Account extends Component {
           }
           if (res.body && res.body.booking && res.body.status) {
             console.log(res.body.booking);
-            // if booking has already been completed
-            if (res.body.booking && res.body.booking.case) {
+            if (res.body.booking) {
               BookingActions.setBooking(res.body.booking);
             }
           } else {

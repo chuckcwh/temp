@@ -14,7 +14,7 @@ export default class AlertPopup extends Component {
   render() {
     return (
       <div className="AlertPopup">
-        <Popup ref={(c) => this._alertPopup = c} title="Oops">
+        <Popup ref={(c) => this._alertPopup = c} title="Alert">
           {this.state.message}
           {this.props.children}
           <div className="AlertPopup-footer">

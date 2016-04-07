@@ -4,7 +4,9 @@ import Loader from 'react-loader';
 import './BookingComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
+import VerifyBookingPopup from '../VerifyBookingPopup';
 import BookingActions from '../../actions/BookingActions';
+import Location from '../../core/Location';
 import Util from '../../core/Util';
 
 export default class BookingComplete extends Component {
@@ -13,9 +15,11 @@ export default class BookingComplete extends Component {
     super(props);
     this.state = {
       bookingStatus: undefined,
+      booking: undefined,
       bookingId: undefined,
       bookingAmt: undefined,
-      caseId: undefined
+      caseId: undefined,
+      bookingVerified: false
     };
   }
 
@@ -113,7 +117,15 @@ export default class BookingComplete extends Component {
             this.setState({
               bookingStatus: res.body.status,
               bookingId: res.body.booking.id,
-              bookingAmt: res.body.booking.case.price
+              bookingAmt: res.body.booking.case.price,
+              booking: res.body.booking
+            });
+
+            // Show Verify Booking Popup
+            this._verifyBookingPopup.show(this.state.booking, () => {
+              this.setState({
+                bookingVerified: true
+              });
             });
           } else {
             console.error('Failed to create booking.');
@@ -133,9 +145,30 @@ export default class BookingComplete extends Component {
 
     if (this.state.bookingStatus) {
       if (this.state.bookingId) {
+        var bookingLink, activateText;
+        if (this.state.bookingVerified) {
+          bookingLink = (
+            <div>
+              <a href={'/booking-manage?bid=' + this.state.bookingId + '&email=' + this.state.booking.client_contactEmail} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</a>
+            </div>
+          );
+        } else {
+          bookingLink = (
+            <div>
+              <a href="#" className="btn btn-primary" onClick={this._onClickActivateBooking.bind(this)} style={{'color': '#fff'}}>Activate Booking</a>
+            </div>
+          );
+          activateText = (
+            <div>
+              You will need to <b>activate</b> your booking for it to go live.
+            </div>
+          );
+        }
         identity = (
           <div>
             <b>BOOKING ID : {this.state.bookingId}</b>
+            {bookingLink}
+            {activateText}
           </div>
         );
       } else if (this.state.caseId) {
@@ -194,8 +227,24 @@ export default class BookingComplete extends Component {
         <Container>
           {component}
         </Container>
+        <VerifyBookingPopup ref={(c) => this._verifyBookingPopup = c} />
       </div>
     );
+  }
+
+  _onClickActivateBooking(event) {
+    // Show Verify Booking Popup
+    this._verifyBookingPopup.show(this.state.booking, () => {
+      this.setState({
+        bookingVerified: true
+      });
+    });
+  }
+
+  _onClickViewBooking(event) {
+    event.preventDefault();
+
+    Location.replace({ pathname: '/booking-manage', query: { bid: this.state.bookingId, email: this.state.bookingEmail } });
   }
 
 }

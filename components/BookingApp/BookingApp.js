@@ -58,7 +58,7 @@ export default class BookingApp extends Component {
         });
     }
 
-    // if "bid" query parameter exists, must be booking confirmation
+    // if "bid" query parameter exists, must be booking manage/confirmation
     if (this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) {
       if (this.props.location.query.token) {
         BookingActions.setPostStatus('payment-paypal');
@@ -222,13 +222,13 @@ export default class BookingApp extends Component {
         component = 
           <BookingPostComplete booking={this.state.booking} />
       } else if (this.props.location && this.props.path === '/booking-manage') {
-        if (this.state.booking && this.state.booking.id) {
+        if (this.state.booking && this.state.booking.id && this.state.booking.isHPVerified) {
           component = (
             <BookingDetails location={this.props.location} booking={this.state.booking} />
           );
         } else {
           component = (
-            <Account type="login" location={this.props.location} booking={this.props.booking} />
+            <Account type="login" location={this.props.location} booking={this.state.booking} bid={this.state.booking && this.state.booking.id} email={this.props.location && this.props.location.query && this.props.location.query.email} />
           );
         }
       }

@@ -51,17 +51,21 @@ class Popup extends Component {
  }
 
   render() {
-    var overlay;
+    var overlay, closeButton;
 
     if (this.props.showOverlay) {
       overlay = (<div onClick={() => this.onOverlayClicked()} className={classNames('PopupOverlay', (this.state.isVisible ? 'visible' : ''))}></div>);
+    }
+
+    if (!this.props.hideCloseButton) {
+      closeButton = (<a onClick={() => this.hide()} role="button" className="PopupCloseButton">&times;</a>);
     }
 
     return (
       <section className="Popup">
         {overlay}
         <div className={classNames('PopupDialog', (this.state.isVisible ? 'visible' : ''))}>
-          <a onClick={() => this.hide()} role="button" className="PopupCloseButton">&times;</a>
+          {closeButton}
           <h2 className="PopupTitle">{this.props.title}</h2>
           {this.props.children}
         </div>

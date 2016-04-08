@@ -19,7 +19,6 @@ function getCookies() {
       if (pair[0]) pair[0] = pair[0].trim();
       cookies[pair[0]] = unescape(pair[1]);
     }
-    console.log(cookies);
     return cookies;
   } else {
     return {};

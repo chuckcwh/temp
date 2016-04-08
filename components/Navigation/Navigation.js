@@ -17,21 +17,11 @@ export default class Navigation extends Component {
   }
 
   render() {
-    var accountLink;
-    var accountHref = ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://app.ebeecare.com' : 'http://dev.ebeecare.com');
-    var partnersHref = ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://www.ebeepartners.com' : 'http://staging.ebeepartners.com');
-    if (Util.getCookies()['sessionid']) {
-      accountLink = (
-        <li className="Navigation-item">
-          <a className="Navigation-link" href={accountHref}>Dashboard</a>
-        </li>
-      );
+    var accountText;
+    if (Util.isLoggedInBackend()) {
+      accountText = 'Dashboard';
     } else {
-      accountLink = (
-        <li className="Navigation-item">
-          <a className="Navigation-link" href={accountHref}>Login</a>
-        </li>
-      );
+      accountText = 'Login';
     }
     return (
       <div className="NavWrapper">
@@ -49,12 +39,14 @@ export default class Navigation extends Component {
             <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>Services</a>
           </li>
           <li className="Navigation-item">
-            <a className="Navigation-link" href={partnersHref}>Become a Partner</a>
+            <a className="Navigation-link" href={Util.partners}>Become a Partner</a>
           </li>
           <li className="Navigation-item">
             <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
           </li>
-          {accountLink}
+          <li className="Navigation-item">
+            <a className="Navigation-link" href={Util.backend}>{accountText}</a>
+          </li>
         </Menu>
         <Container>
           <div className="Navigation-wrapper">
@@ -73,12 +65,14 @@ export default class Navigation extends Component {
                 <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>Services</a>
               </li>
               <li className="Navigation-item">
-                <a className="Navigation-link" href={partnersHref}>Become a Partner</a>
+                <a className="Navigation-link" href={Util.partners}>Become a Partner</a>
               </li>
               <li className="Navigation-item">
                 <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
               </li>
-              {accountLink}
+              <li className="Navigation-item">
+                <a className="Navigation-link" href={Util.backend}>{accountText}</a>
+              </li>
             </ul>
           </div>
         </Container>

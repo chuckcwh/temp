@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import './BookingPayment.scss';
 import Container from '../Container';
 import Link from '../Link';

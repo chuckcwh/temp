@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import './BookingDateTimeNavItem.scss';
 import Link from '../Link';
 import BookingStore from '../../stores/BookingStore';

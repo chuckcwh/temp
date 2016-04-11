@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import request from 'superagent';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import './BookingBankTransfer.scss';

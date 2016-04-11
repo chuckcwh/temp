@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import { slide as Menu } from 'react-burger-menu';
 import './Navigation.scss';
 import Container from '../Container';

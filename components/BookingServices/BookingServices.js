@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import FaSpinner from 'react-icons/lib/fa/spinner';
 import Loader from 'react-loader';
 // import Popup from 'react-popup';

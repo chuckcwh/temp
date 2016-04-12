@@ -1,9 +1,3 @@
-/**
- * React Static Boilerplate
- * https://github.com/koistya/react-static-boilerplate
- * Copyright (c) Konstantin Tarkus (@koistya) | MIT license
- */
-
 import path from 'path';
 import webpack from 'webpack';
 import merge from 'lodash.merge';
@@ -74,6 +68,9 @@ const config = {
         test: /\.txt$/,
         loader: 'raw-loader',
       }, {
+        test: /\.css$/,
+        loader: 'css-loader',
+      }, {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
         loader: 'url-loader?limit=10000',
       }, {
@@ -100,7 +97,7 @@ const appConfig = merge({}, config, {
     './app.js',
   ],
   output: {
-    filename: 'app.js',
+    filename: 'app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
   devtool: DEBUG ? 'cheap-module-eval-source-map' : false,

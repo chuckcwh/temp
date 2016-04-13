@@ -65,10 +65,10 @@ export default class Services extends Component {
                   <a className={classNames('ServicesNav-link', (this.state.filter === ALL_SERVICES) ? 'active' : '')} href="/" onClick={this._onClickFilter.bind(this, ALL_SERVICES)}>All Services<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
                 <li className="ServicesNav-item">
-                  <a className={classNames('ServicesNav-link', (this.state.filter === 'Home Nursing') ? 'active' : '')} href="/about" onClick={this._onClickFilter.bind(this, 'Home Nursing')}>Home Nursing<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                  <a className={classNames('ServicesNav-link', (this.state.filter === 'Home Social Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Social Care')}>Home Social Care<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
                 <li className="ServicesNav-item">
-                  <a className={classNames('ServicesNav-link', (this.state.filter === 'Home Social Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Social Care')}>Home Social Care<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                  <a className={classNames('ServicesNav-link', (this.state.filter === 'Home Nursing') ? 'active' : '')} href="/about" onClick={this._onClickFilter.bind(this, 'Home Nursing')}>Home Nursing Care<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
                 <li className="ServicesNav-item">
                   <a className={classNames('ServicesNav-link', (this.state.filter === 'Home Medical') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Medical')}>Home Medical<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>

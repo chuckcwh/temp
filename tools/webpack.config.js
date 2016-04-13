@@ -1,6 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import merge from 'lodash.merge';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const DEBUG = !process.argv.includes('release');
 const VERBOSE = process.argv.includes('verbose');
@@ -68,9 +69,6 @@ const config = {
         test: /\.txt$/,
         loader: 'raw-loader',
       }, {
-        test: /\.css$/,
-        loader: 'css-loader',
-      }, {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
         loader: 'url-loader?limit=10000',
       }, {
@@ -104,6 +102,7 @@ const appConfig = merge({}, config, {
   plugins: [
     ...config.plugins,
     ...(DEBUG ? [] : [
+      new ExtractTextPlugin('main.css'),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -142,8 +141,12 @@ const appConfig = merge({}, config, {
       }) : JS_LOADER,
       ...config.module.loaders,
       {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('style', 'css'),
+      },
+      {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'postcss-loader'],
+        loader: ExtractTextPlugin.extract('style', 'css!postcss'),
       },
     ],
   },
@@ -167,12 +170,17 @@ const pagesConfig = merge({}, config, {
   },
   externals: /^[a-z][a-z\.\-\/0-9]*$/i,
   plugins: config.plugins.concat([
+    new ExtractTextPlugin('main.node.css'),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
   ]),
   module: {
     loaders: [
       JS_LOADER,
       ...config.module.loaders,
+      {
+        test: /\.css$/,
+        loaders: ['css-loader'],
+      },
       {
         test: /\.scss$/,
         loaders: ['css-loader', 'postcss-loader'],

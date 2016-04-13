@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DayPicker from 'react-day-picker';
+import DayPicker, { DateUtils } from 'react-day-picker';
 import some from 'lodash.some';
 import remove from 'lodash.remove';
 import moment from 'moment';
@@ -34,7 +34,7 @@ export default class BookingDate extends Component {
             numberOfMonths={2}
             modifiers={{
               selected: day => {
-                return this.state.selectedDates && some(this.state.selectedDates, item => this._isSameDay(item, day));
+                return this.state.selectedDates && some(this.state.selectedDates, item => DateUtils.isSameDay(item, day));
               },
               disabled: this._isDisabled
             }}
@@ -60,25 +60,18 @@ export default class BookingDate extends Component {
     );
   }
 
-  _isSameDay(d1, d2) {
-    d1.setHours(0, 0, 0, 0);
-    d2.setHours(0, 0, 0, 0);
-
-    return d1.getTime() === d2.getTime();
-  }
-
   _isDisabled(day) {
-    let today = new Date();
-    today.setDate(today.getDate() + 3);
-    return day < today;
+    var d = DateUtils.clone(day);
+    d.setDate(d.getDate() - 4);
+    return DateUtils.isPastDay(d);
   }
 
   _onSelectDay(e, day) {
     if (!this._isDisabled(day)) {
       let days = this.state.selectedDates;
 
-      if (some(days, item => this._isSameDay(item, day))) {
-        remove(days, item => this._isSameDay(item, day));
+      if (some(days, item => DateUtils.isSameDay(item, day))) {
+        remove(days, item => DateUtils.isSameDay(item, day));
       } else {
         days.push(day);
         days.sort((a, b) => {

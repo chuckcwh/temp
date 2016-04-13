@@ -105,20 +105,14 @@
   .BookingServicesBody {
     margin-top: 50px;
     margin-bottom: 100px;
+    column-count: 3;
+
 
     .BookingServicesItem {
       display: inline-block;
       color: $text-color;
       font-size: 15px;
       width: 100%;
-
-      @media (min-width: $screen-sm-min) {
-        width: 50%;
-      }
-
-      @media (min-width: $screen-lg-min) {
-        width: calc(100% / 3);
-      }
 
       .BookingServicesRadio {
         // margin-right: 5px;
@@ -127,6 +121,14 @@
       .BookingServicesRadioLabel {
         // cursor: pointer;
       }
+    }
+
+    @media (max-width: $screen-lg-min) {
+      column-count: 2;
+    }
+
+    @media (max-width: $screen-sm-min) {
+      column-count: 1;
     }
   }
 

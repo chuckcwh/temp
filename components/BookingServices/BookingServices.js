@@ -76,14 +76,24 @@ export default class BookingServices extends Component {
                 <div className="BookingServicesBody">
                 {
                   this.props.allServices && Util.subFilterServices(Util.filterServices(this.props.allServices, this.state.filter)).map(services => {
+                    var header;
+                    if (this.state.filter === Util.ALL_SERVICES) {
+                      header = (
+                        <h3><a href="#" onClick={this._onClickFilter.bind(this, services[0].category)}>{services[0].category}</a> &gt; {services[0].subType}</h3>
+                      );
+                    } else {
+                      header = (
+                        <h3>{services[0].subType}</h3>
+                      );
+                    }
                     return (
                       <div key={services[0].subType}>
-                        <h3>{this.state.filter === Util.ALL_SERVICES ? services[0].category + ' > ' : ''}{services[0].subType}</h3>
                         {
-                          services.map((service) => {
+                          services.map((service, index) => {
                             var id = "BookingServicesRadio" + service.id;
                             return (
                               <div className="BookingServicesItem" key={service.id}>
+                                {index === 0 ? header : ''}
                                 <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === this.state.selectedService} onChange={this._onSelect.bind(this)} required />
                                 <label className="BookingServicesRadioLabel" htmlFor={id}>
                                   <span><span></span></span><span>{service.name}</span>

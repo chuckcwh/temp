@@ -140,11 +140,17 @@ const appConfig = merge({}, config, {
         },
       }) : JS_LOADER,
       ...config.module.loaders,
-      {
+      DEBUG ? {
+        test: /\.css$/,
+        loader: 'css-loader',
+      } : {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('style', 'css'),
       },
-      {
+      DEBUG ? {
+        test: /\.scss$/,
+        loaders: ['style-loader', 'css-loader', 'postcss-loader'],
+      } : {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('style', 'css!postcss'),
       },
@@ -170,7 +176,6 @@ const pagesConfig = merge({}, config, {
   },
   externals: /^[a-z][a-z\.\-\/0-9]*$/i,
   plugins: config.plugins.concat([
-    new ExtractTextPlugin('main.node.css'),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
   ]),
   module: {

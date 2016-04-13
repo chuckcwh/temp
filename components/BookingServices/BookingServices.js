@@ -7,15 +7,14 @@ import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
-
-const ALL_SERVICES = 'All Services';
+import Util from '../../core/Util';
 
 export default class BookingServices extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      filter: ALL_SERVICES,
+      filter: Util.ALL_SERVICES,
       selectedService: undefined
     };
     if (this.props.booking && this.props.booking.service) {
@@ -55,7 +54,7 @@ export default class BookingServices extends Component {
             <Container>
               <ul className="BookingServicesNav">
                 <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === ALL_SERVICES) ? 'active' : '')} href="/" onClick={this._onClickFilter.bind(this, ALL_SERVICES)}>All Services<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                  <a className={classNames('BookingServicesNav-link', (this.state.filter === Util.ALL_SERVICES) ? 'active' : '')} href="/" onClick={this._onClickFilter.bind(this, Util.ALL_SERVICES)}>All Services<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
                 <li className="BookingServicesNav-item">
                   <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Social Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Social Care')}>Home Social Care<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
@@ -126,15 +125,6 @@ export default class BookingServices extends Component {
       // alert('Please select a service');
       this._alertPopup.show('Please select a service.');
     }
-  }
-
-  _filterServices(services, filter) {
-    return services.filter(function(service) {
-      if (filter === ALL_SERVICES) return true;
-      return service.category === filter;
-    }).sort(function(a, b) {
-      return a.name.localeCompare(b.name);
-    });
   }
 
 }

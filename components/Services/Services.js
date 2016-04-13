@@ -11,15 +11,13 @@ import BookingActions from '../../actions/BookingActions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
-const ALL_SERVICES = 'All Services';
-
 export default class Services extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       services: undefined,
-      filter: ALL_SERVICES,
+      filter: Util.ALL_SERVICES,
       selectedService: undefined
     };
   }
@@ -62,7 +60,7 @@ export default class Services extends Component {
             <Container>
               <ul className="ServicesNav">
                 <li className="ServicesNav-item">
-                  <a className={classNames('ServicesNav-link', (this.state.filter === ALL_SERVICES) ? 'active' : '')} href="/" onClick={this._onClickFilter.bind(this, ALL_SERVICES)}>All Services<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                  <a className={classNames('ServicesNav-link', (this.state.filter === Util.ALL_SERVICES) ? 'active' : '')} href="/" onClick={this._onClickFilter.bind(this, Util.ALL_SERVICES)}>All Services<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
                 </li>
                 <li className="ServicesNav-item">
                   <a className={classNames('ServicesNav-link', (this.state.filter === 'Home Social Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Social Care')}>Home Social Care<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
@@ -83,10 +81,10 @@ export default class Services extends Component {
             <Container>
               <div className="ServicesBody">
                 {
-                  this.state.services && this._subFilterServices(this._filterServices(this.state.services, this.state.filter)).map((services) => {
+                  this.state.services && Util.subFilterServices(Util.filterServices(this.state.services, this.state.filter)).map((services) => {
                     return (
                       <div key={services[0].subType}>
-                        <h3>{this.state.filter === ALL_SERVICES ? services[0].category + ' > ' : ''}{services[0].subType}</h3>
+                        <h3>{this.state.filter === Util.ALL_SERVICES ? services[0].category + ' > ' : ''}{services[0].subType}</h3>
                         <Accordion activeItems={-1}>
                           {
                             services.map((service) => {
@@ -127,30 +125,6 @@ export default class Services extends Component {
     this.setState({
       selectedService: parseInt(event.target.value)
     });
-  }
-
-  _filterServices(services, filter) {
-    return services.filter(function(service) {
-      if (filter === ALL_SERVICES) return true;
-      return service.category === filter;
-    }).sort(function(a, b) {
-      return a.name.localeCompare(b.name);
-    });
-  }
-
-  _subFilterServices(services) {
-    var hash = {}, arr = [];
-    services.forEach(service => {
-      if (hash[service.subType]) {
-        hash[service.subType].push(service);
-      } else {
-        hash[service.subType] = [service];
-      }
-    });
-    for (var subType in hash) {
-      arr.push(hash[subType]);
-    }
-    return arr;
   }
 
   _onClickBook(service, event) {

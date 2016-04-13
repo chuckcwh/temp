@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import Loader from 'react-loader';
-// import Popup from 'react-popup';
 import './BookingServices.scss';
 import Container from '../Container';
 import Link from '../Link';
@@ -73,23 +72,32 @@ export default class BookingServices extends Component {
           </div>
           <div>
             <Container>
-              <div className="BookingServicesBody">
-                <form ref={(c) => this._bookingServicesForm = c}>
+              <form ref={(c) => this._bookingServicesForm = c}>
+                <div className="BookingServicesBody">
                 {
-                  this.props.allServices && this._filterServices(this.props.allServices, this.state.filter).map(service => {
-                    var id = "BookingServicesRadio" + service.id;
+                  this.props.allServices && Util.subFilterServices(Util.filterServices(this.props.allServices, this.state.filter)).map(services => {
                     return (
-                      <div className="BookingServicesItem" key={service.id}>
-                        <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === this.state.selectedService} onChange={this._onSelect.bind(this)} required />
-                        <label className="BookingServicesRadioLabel" htmlFor={id}>
-                          <span><span></span></span><span>{service.name}</span>
-                        </label>
+                      <div key={services[0].subType}>
+                        <h3>{this.state.filter === Util.ALL_SERVICES ? services[0].category + ' > ' : ''}{services[0].subType}</h3>
+                        {
+                          services.map((service) => {
+                            var id = "BookingServicesRadio" + service.id;
+                            return (
+                              <div className="BookingServicesItem" key={service.id}>
+                                <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === this.state.selectedService} onChange={this._onSelect.bind(this)} required />
+                                <label className="BookingServicesRadioLabel" htmlFor={id}>
+                                  <span><span></span></span><span>{service.name}</span>
+                                </label>
+                              </div>
+                            );
+                          })
+                        }
                       </div>
                     );
                   })
                 }
-                </form>
-              </div>
+                </div>
+              </form>
               <div className="BookingServicesFooter">
                 <a href="/booking2" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
               </div>

@@ -176,7 +176,7 @@ export default class BookingComplete extends Component {
           <div>
             <b>CASE ID : {this.state.caseId}</b>
             <div>
-              <a href={Util.backend + '/cases/' + this.state.caseId}>View Case</a>
+              <a href={Util.backend + '/case/' + this.state.caseId}>View Case</a>
             </div>
           </div>
         );

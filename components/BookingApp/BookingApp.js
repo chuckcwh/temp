@@ -195,7 +195,7 @@ export default class BookingApp extends Component {
         component = 
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus}>
+            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
               <BookingPaypal location={this.props.location} booking={this.state.booking} />
               <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
             </BookingPayment>
@@ -204,7 +204,7 @@ export default class BookingApp extends Component {
         component = 
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus}>
+            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
               <BookingBankTransfer booking={this.state.booking} />
               <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
             </BookingPayment>
@@ -213,7 +213,7 @@ export default class BookingApp extends Component {
         component = 
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus}>
+            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
               <BookingCredits booking={this.state.booking} />
               <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
             </BookingPayment>

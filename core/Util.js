@@ -67,7 +67,7 @@ const util = {
 
   ALL_SERVICES: ALL_SERVICES,
   filterServices: filterServices,
-  subFilterServices, subFilterServices
+  subFilterServices: subFilterServices
 };
 
 export default util;

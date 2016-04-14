@@ -5,6 +5,17 @@
 .Actions {
   background-color: $brand-color;
 
+  .Actions-statistics {
+    padding-top: 60px;
+
+    h1 {
+      color: #fff;
+      font-weight: 100;
+      font-size: 60px;
+      margin: 0;
+    }
+  }
+
   .Actions-list {
     display: flex;
     flex-direction: row;

@@ -68,6 +68,20 @@
       font-weight: bold;
     }
 
+    &-highlight {
+      background-color: $secondary-color;
+      color: #fff;
+      // border: 1px solid $secondary-color;
+      // border-radius: 5px;
+
+      &:hover {
+        // border: 1px solid $brand-color;
+        border: none;
+        background-color: $brand-color;
+        color: #fff;
+      }
+    }
+
     @media (max-width: $screen-sm-min) {
       font-size: 18px;
     }

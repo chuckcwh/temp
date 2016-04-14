@@ -62,7 +62,7 @@ export default class BookingDate extends Component {
 
   _isDisabled(day) {
     var d = DateUtils.clone(day);
-    d.setDate(d.getDate() - 4);
+    d.setDate(d.getDate() - 1);
     return DateUtils.isPastDay(d);
   }
 

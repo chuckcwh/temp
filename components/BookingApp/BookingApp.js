@@ -83,7 +83,6 @@ export default class BookingApp extends Component {
             } else if (res.body.booking && res.body.booking.case && res.body.booking.case.status === 'Accepting Quotes') {
               // if booking is still pending service providers
               Location.replace({ pathname: '/booking-manage', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
-              // Location.replace({ pathname: '/manage-booking', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
             }
             BookingActions.setBooking(res.body.booking);
           } else {

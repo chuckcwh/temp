@@ -49,7 +49,7 @@ export default class BookingPostComplete extends Component {
             For further inquiries, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 9733 6938, Mon-Fri (9.00am - 6.00pm).
           </div>
           <div className="BookingPostCompleteFooter">
-            <a href="/manage-booking" className="btn btn-primary" onClick={Link.handleClick}>Manage Booking</a>
+            <a href="/booking-manage" className="btn btn-primary" onClick={Link.handleClick}>Manage Booking</a>
             <a href="/" className="btn btn-primary" onClick={Link.handleClick}>Back To Homepage</a>
           </div>
         </div>

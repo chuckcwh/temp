@@ -34,7 +34,7 @@ export default class BookingPostComplete extends Component {
       component = (
         <div className="BookingPostCompleteBody">
           <div className="BookingPostCompleteHeader">
-            THANK YOU
+            THANK YOU FOR YOUR PAYMENT
           </div>
           <div>
             {message}

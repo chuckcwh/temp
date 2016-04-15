@@ -74,10 +74,11 @@ export default class BookingPaypal extends Component {
               <img className="BookingPaypalLogo" src={require('../visamaster.png')} />
             </div>
             <p><b>Your Total Amount is SGD {this.props.booking && this.props.booking.case && this.props.booking.case.price}</b></p>
-            <p>Please confirm your booking by clicking the "Confirm Booking" button below.<br/>You will be redirected to Paypal to complete your payment.</p>
+            <p>There will be an additional 3% transaction charge.</p>
+            <p>Please initiate your payment by clicking the "Pay Now" button below.<br/>You will be redirected to Paypal to complete your payment.</p>
             <p></p>
             <div className="BookingPaypalFooter">
-              <a href="#" className="btn btn-primary" onClick={this._onConfirm.bind(this)}>CONFIRM BOOKING</a>
+              <a href="#" className="btn btn-primary" onClick={this._onConfirm.bind(this)}>PAY NOW</a>
             </div>
           </Loader>
         </div>

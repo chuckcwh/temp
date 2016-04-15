@@ -27,7 +27,7 @@ export default class Features extends Component {
     if (this.state.sessionsCount) {
       sessionsCountText = (
         <h1 className="text-center">
-          {this.state.sessionsCount} appointments booked<br />and counting!
+          <span className="lead">{this.state.sessionsCount}</span><br />APPOINTMENTS BOOKED!
         </h1>
       );
     }

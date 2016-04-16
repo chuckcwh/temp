@@ -195,7 +195,7 @@ export default class BookingComplete extends Component {
             ESTIMATED AMOUNT : SGD {this.state.bookingAmt}
           </div>
           <div>
-            For inquiries on your order, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 6873 0132, Mon-Fri (9.00am - 6.00pm).
+            For inquiries on your order, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
           </div>
           <div className="BookingCompleteFooter">
             <a href="/booking1" className="btn btn-primary" onClick={Link.handleClick}>Make Another Booking</a>
@@ -210,7 +210,7 @@ export default class BookingComplete extends Component {
             TECHNICAL ERROR
           </div>
           <div>
-            Oops, there was an error creating your booking. Please contact us at <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or 6873 0132 immediately.
+            Oops, there was an error creating your booking. Please contact us at <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or 6514 9729 immediately.
           </div>
         </div>
       );

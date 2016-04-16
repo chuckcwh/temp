@@ -49,7 +49,7 @@ export default class Features extends Component {
               <img src={require('./actions-2.png')} />
               <div className="Actions-item-title">Call Ebeecare Hotline</div>
               <div>
-                <a href="#" className="btn Actions-item-button" onClick={(e) => {e.preventDefault()}}>6873 0132</a>
+                <a href="#" className="btn Actions-item-button" onClick={(e) => {e.preventDefault()}}>6514 9729</a>
               </div>
             </div>
           </div>

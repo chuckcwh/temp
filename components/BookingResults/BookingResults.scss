@@ -47,9 +47,31 @@
           }
 
           span:nth-child(3) {
-            width: 100px;
+            width: 150px;
+          }
+
+          .strike-through {
+            color: $brand-color;
           }
         }
+      }
+    }
+  }
+
+  .BookingPromoSection {
+    div {
+      text-align: left;
+
+      input {
+        margin-right: 0;
+      }
+
+      button.btn {
+        margin-top: 10px;
+      }
+
+      @media (max-width: $screen-sm-min) {
+        text-align: center;
       }
     }
   }

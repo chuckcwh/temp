@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import { slide as Menu } from 'react-burger-menu';
 import './Navigation.scss';
 import Container from '../Container';
@@ -25,7 +25,7 @@ export default class Navigation extends Component {
     }
     return (
       <div className="NavWrapper">
-        <Menu id={"mobile-menu"} width={150} isOpen={this.state.visible} right>
+        <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
           <li className="Navigation-item">
             <a className={classNames('Navigation-link', (this.props.path === '/') ? 'active' : '')} href="/" onClick={Link.handleClick}>Home</a>
           </li>
@@ -39,7 +39,7 @@ export default class Navigation extends Component {
             <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>Services</a>
           </li>
           <li className="Navigation-item">
-            <a className="Navigation-link" href={Util.partners}>Become a Partner</a>
+            <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>Become a Partner</a>
           </li>
           <li className="Navigation-item">
             <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
@@ -65,7 +65,7 @@ export default class Navigation extends Component {
                 <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>Services</a>
               </li>
               <li className="Navigation-item">
-                <a className="Navigation-link" href={Util.partners}>Become a Partner</a>
+                <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>Become a Partner</a>
               </li>
               <li className="Navigation-item">
                 <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>

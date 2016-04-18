@@ -233,7 +233,7 @@ export default class BookingDetails extends Component {
       );
     }
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
-    if ((this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
+    if ((this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid && this.props.booking.case.transactions && !this.props.booking.case.transactions.length) && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
         <a href="#" className="btn btn-primary" onClick={this._onClickPay.bind(this)}>GO TO PAYMENT</a>
       );

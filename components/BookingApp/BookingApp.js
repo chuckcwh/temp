@@ -83,7 +83,6 @@ export default class BookingApp extends Component {
             } else if (res.body.booking && res.body.booking.case && res.body.booking.case.status === 'Accepting Quotes') {
               // if booking is still pending service providers
               Location.replace({ pathname: '/booking-manage', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
-              // Location.replace({ pathname: '/manage-booking', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
             }
             BookingActions.setBooking(res.body.booking);
           } else {
@@ -195,7 +194,7 @@ export default class BookingApp extends Component {
         component = 
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus}>
+            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
               <BookingPaypal location={this.props.location} booking={this.state.booking} />
               <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
             </BookingPayment>
@@ -204,7 +203,7 @@ export default class BookingApp extends Component {
         component = 
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus}>
+            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
               <BookingBankTransfer booking={this.state.booking} />
               <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
             </BookingPayment>
@@ -213,7 +212,7 @@ export default class BookingApp extends Component {
         component = 
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus}>
+            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
               <BookingCredits booking={this.state.booking} />
               <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
             </BookingPayment>

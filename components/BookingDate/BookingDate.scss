@@ -34,6 +34,10 @@
       background-color: $secondary-color;
     }
 
+    .DayPicker-Day:focus {
+      outline: none;
+    }
+
     .DayPicker-Month + .DayPicker-Month {
       @media (max-width: $screen-sm-min) {
         margin-top: 1rem;

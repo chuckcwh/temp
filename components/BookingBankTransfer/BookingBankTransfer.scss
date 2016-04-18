@@ -1,5 +1,7 @@
 @import '../variables.scss';
 
+@import 'react-datetime/css/react-datetime.css';
+
 .BookingBankTransfer {
   position: relative;
   flex: 10;
@@ -8,5 +10,13 @@
 
   .BookingBankTransferLogo {
     margin: 0 10px;
+  }
+
+  .rdt {
+    display: inline-block;
+
+    .rdtPicker .rdtDay {
+    	cursor: pointer;
+    }
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import linkState from 'react-link-state';
 import request from 'superagent';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Loader from 'react-loader';

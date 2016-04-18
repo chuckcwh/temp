@@ -1,14 +1,42 @@
 import React, { Component } from 'react';
+import request from 'superagent';
 import './Actions.scss';
 import Container from '../Container';
 import Link from '../Link';
+import Util from '../../core/Util';
 
 export default class Features extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      sessionsCount: undefined
+    }
+  }
+
+  componentDidMount() {
+    this._startCounter();
+  }
+
+  componentWillUnmount() {
+    this.serverRequest1 && this.serverRequest1.abort();
+  }
+
   render() {
+    var sessionsCountText;
+    if (this.state.sessionsCount) {
+      sessionsCountText = (
+        <h1 className="text-center">
+          <span className="lead">{this.state.sessionsCount}</span><br />APPOINTMENTS BOOKED!
+        </h1>
+      );
+    }
     return (
       <div className="Actions">
         <Container>
+          <div className="Actions-statistics">
+            {sessionsCountText}
+          </div>
           <div className="Actions-list">
             <div className="Actions-item">
               <img src={require('./actions-1.png')} />
@@ -28,6 +56,31 @@ export default class Features extends Component {
         </Container>
       </div>
     );
+  }
+
+  _startCounter() {
+    if (typeof window !== 'undefined') {
+      window.setInterval(this._getStatistics.bind(this), 5000);
+    }
+  }
+
+  _getStatistics() {
+    this.serverRequest1 = request
+      .get(Util.host + '/api/getTotalSessionsCount')
+      .auth(Util.authKey, Util.authSecret)
+      .end((err, res) => {
+        if (err) {
+          return console.error(Util.host + '/api/getTotalSessionsCount', err.toString());
+        }
+        // console.log(res.body);
+        if (res.body && res.body.status) {
+          this.setState({
+            sessionsCount: res.body.count
+          });
+        } else {
+          console.error('Failed to obtain statistics data.');
+        }
+      });
   }
 
 }

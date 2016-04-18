@@ -1,12 +1,7 @@
-/**
- * React Static Boilerplate
- * https://github.com/koistya/react-static-boilerplate
- * Copyright (c) Konstantin Tarkus (@koistya) | MIT license
- */
-
 import path from 'path';
 import webpack from 'webpack';
 import merge from 'lodash.merge';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const DEBUG = !process.argv.includes('release');
 const VERBOSE = process.argv.includes('verbose');
@@ -26,6 +21,7 @@ const JS_LOADER = {
   include: [
     path.resolve(__dirname, '../components'),
     path.resolve(__dirname, '../core'),
+    path.resolve(__dirname, '../dispatcher'),
     path.resolve(__dirname, '../pages'),
     path.resolve(__dirname, '../app.js'),
     path.resolve(__dirname, '../config.js'),
@@ -99,13 +95,14 @@ const appConfig = merge({}, config, {
     './app.js',
   ],
   output: {
-    filename: 'app.js',
+    filename: 'app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
   devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
   plugins: [
     ...config.plugins,
     ...(DEBUG ? [] : [
+      new ExtractTextPlugin('main.css'),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -143,9 +140,19 @@ const appConfig = merge({}, config, {
         },
       }) : JS_LOADER,
       ...config.module.loaders,
-      {
+      DEBUG ? {
+        test: /\.css$/,
+        loader: 'css-loader',
+      } : {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('style', 'css'),
+      },
+      DEBUG ? {
         test: /\.scss$/,
         loaders: ['style-loader', 'css-loader', 'postcss-loader'],
+      } : {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('style', 'css!postcss'),
       },
     ],
   },
@@ -175,6 +182,10 @@ const pagesConfig = merge({}, config, {
     loaders: [
       JS_LOADER,
       ...config.module.loaders,
+      {
+        test: /\.css$/,
+        loaders: ['css-loader'],
+      },
       {
         test: /\.scss$/,
         loaders: ['css-loader', 'postcss-loader'],

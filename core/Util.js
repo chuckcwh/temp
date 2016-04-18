@@ -57,7 +57,7 @@ const util = {
   authSecret: 'secret0nlyWeilsonKnowsShhh852~',
 
   backend: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://app.ebeecare.com' : 'http://dev.ebeecare.com'),
-  partners: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://www.ebeecare.com' : 'http://staging.ebeepartners.com'),
+  partners: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://www.ebeepartners.com' : 'http://staging.ebeepartners.com'),
 
   isProduction: isProduction,
 

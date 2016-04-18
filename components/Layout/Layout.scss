@@ -243,6 +243,11 @@ textarea {
   }
 }
 
+input:disabled, textarea:disabled {
+  color: #969696;
+  background-color: #f3f3f3;
+}
+
 .select {
   position: relative;
   margin: 20px 20px 0 0;
@@ -354,6 +359,14 @@ textarea {
 
 .inline {
   display: inline-block;
+}
+
+.strike-through {
+  text-decoration: line-through;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .hidden {

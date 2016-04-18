@@ -154,6 +154,11 @@ AppDispatcher.register(function(action) {
       BookingStore.emitChange();
       break;
 
+    case BookingConstants.BOOKING_SET_PROMO:
+      _booking.promoCode = action.promoCode;
+      BookingStore.emitChange();
+      break;
+
     case BookingConstants.BOOKING_SET_BOOKING:
       _booking = action.booking;
       BookingStore.emitChange();

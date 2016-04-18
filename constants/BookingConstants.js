@@ -14,5 +14,6 @@ module.exports = keyMirror({
   BOOKING_SET_USER: null,
   BOOKING_SET_PATIENT: null,
   BOOKING_DESTROY: null,
-  BOOKING_SET_POST_STATUS: null
+  BOOKING_SET_POST_STATUS: null,
+  BOOKING_SET_PROMO: null
 });

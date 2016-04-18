@@ -42,7 +42,7 @@ export default class BookingBankTransfer extends Component {
               Account Number: <b>341-306-307-6</b><br />
             </p>
             <ol>
-              <li>Transfer the total amount via bank transfer (ATM / iBanking).</li>
+              <li>Transfer the total amount via bank transfer (ATM / iBanking). If you are using internet banking, please set your booking ID <b>{this.props.booking.id}</b> as transaction reference for faster verification.</li>
               <li>Take note of the <b>reference number</b> of the bank transfer.</li>
               <li>Fill in the input boxes below with the <b>estimated time of transfer</b> and <b>reference number</b>.</li>
               <li>It will take around 1 working day to verify your payment. We will notify you via email.</li>

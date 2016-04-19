@@ -5,7 +5,7 @@ import Container from '../Container';
 import Link from '../Link';
 import Util from '../../core/Util';
 
-export default class Features extends Component {
+export default class Actions extends Component {
 
   constructor(props) {
     super(props);
@@ -60,7 +60,12 @@ export default class Features extends Component {
 
   _startCounter() {
     if (typeof window !== 'undefined') {
-      window.setInterval(this._getStatistics.bind(this), 5000);
+      if (window.location.hostname.indexOf('localhost') > -1) {
+        // just retrieve once only during development, to prevent annoying multiple GET requests
+        this._getStatistics();
+      } else {
+        window.setInterval(this._getStatistics.bind(this), 5000);
+      }
     }
   }
 

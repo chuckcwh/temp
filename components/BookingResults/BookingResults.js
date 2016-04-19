@@ -19,9 +19,9 @@ export default class BookingResults extends Component {
     this.state = {
       sessions: undefined,
       slots: undefined,
-      promoCode: undefined,
-      showPromoButton: false,
-      disablePromo: false,
+      promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code,
+      showPromoButton: (this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code && this.props.booking.promoCode.code.length) ? true : false,
+      disablePromo: (this.props.booking && this.props.booking.promoCode) ? true : false,
       agree: false
     };
   }

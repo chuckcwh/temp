@@ -48,7 +48,7 @@ export default class BookingComplete extends Component {
             postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
             unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber
           }],
-          promoCode: this.props.booking.promoCode
+          promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code
         })
         .end((err, res) => {
           if (err) {
@@ -105,7 +105,7 @@ export default class BookingComplete extends Component {
               unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber
             }]
           },
-          promoCode: this.props.booking.promoCode
+          promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code
         })
         .end((err, res) => {
           if (err) {

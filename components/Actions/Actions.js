@@ -5,7 +5,7 @@ import Container from '../Container';
 import Link from '../Link';
 import Util from '../../core/Util';
 
-export default class Features extends Component {
+export default class Actions extends Component {
 
   constructor(props) {
     super(props);

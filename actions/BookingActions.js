@@ -74,6 +74,16 @@ var BookingActions = {
   },
 
   /**
+   * @param  {string} promoCode The promo code
+   */
+  setPromoCode: function(promoCode) {
+    AppDispatcher.dispatch({
+      actionType: BookingConstants.BOOKING_SET_PROMO,
+      promoCode: promoCode
+    });
+  },
+
+  /**
    * @param  {string} booker The booker object containing contact and patient details
    */
   setBooker: function(booker) {

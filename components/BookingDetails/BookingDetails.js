@@ -201,7 +201,7 @@ export default class BookingDetails extends Component {
               <div className="TableRow" key={session.id}>
                 <div className="TableRowItem1">{moment(session.dateTimeStart).format('D MMM')}</div>
                 <div className="TableRowItem1">{session.estTime}</div>
-                <div className="TableRowItem1">$ {session.price}</div>
+                <div className="TableRowItem1">$ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}</div>
               </div>
             );
           })

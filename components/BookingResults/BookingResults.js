@@ -19,6 +19,9 @@ export default class BookingResults extends Component {
     this.state = {
       sessions: undefined,
       slots: undefined,
+      promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code,
+      showPromoButton: (this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code && this.props.booking.promoCode.code.length) ? true : false,
+      disablePromo: (this.props.booking && this.props.booking.promoCode) ? true : false,
       agree: false
     };
   }
@@ -27,7 +30,7 @@ export default class BookingResults extends Component {
     // Reset sum displayed on sidebar
     BookingActions.setSum();
 
-    this.serverRequest = request
+    this.serverRequest1 = request
       .get(Util.host + '/api/getAvailableSchedule')
       .query({
         service: this.props.booking.service,
@@ -65,7 +68,7 @@ export default class BookingResults extends Component {
             sessions[i] = assign(session, {date: timeslot.date});
             if (session.time) {
               checkedData['session'+i] = true;
-              sum += parseFloat(sessions[i]['price']);
+              sum += Util.calcRate(sessions[i], this.props.booking.promoCode, this.props.booking.service);
             } else {
               session.disabled = true;
             }
@@ -83,7 +86,7 @@ export default class BookingResults extends Component {
   }
 
   componentWillUnmount() {
-    this.serverRequest && this.serverRequest.abort();
+    this.serverRequest1 && this.serverRequest1.abort();
   }
 
   render() {
@@ -94,15 +97,20 @@ export default class BookingResults extends Component {
       return e => {
         checkedLink(key).requestChange(e.target.checked);
 
-        var sum = 0;
-        for (var i = 0; i < this.state.sessions.length; i++) {
-          if (this.state['session'+i]) {
-            sum += parseFloat(this.state.sessions[i].price);
-          }
-        }
-        // this.props.booking.sum = this.state.sum;
-        BookingActions.setSum(sum);
+        this._updateSum();
       };
+    }
+    var promoButton;
+    if (this.state.showPromoButton) {
+      if (this.props.booking.promoCode) {
+        promoButton = (
+          <button className="btn btn-primary btn-small" onClick={this._onRemovePromo.bind(this)}>Remove</button>
+        );
+      } else {
+        promoButton = (
+          <button className="btn btn-primary btn-small" onClick={this._onApplyPromo.bind(this)}>Apply</button>
+        );
+      }
     }
     return (
       <div className="BookingResults">
@@ -110,6 +118,27 @@ export default class BookingResults extends Component {
           <div>
           {
             this.state.sessions && this.state.sessions.map((session, index) => {
+              var promo, rate, discountedRate, priceText;
+              promo = this.props.booking.promoCode;
+              rate = session.price;
+              if (promo) {
+                discountedRate = Util.calcRate(session, this.props.booking.promoCode, this.props.booking.service).toFixed(2);
+                if (discountedRate == rate) {
+                  // empty discountedRate if there is actually no discount
+                  discountedRate = null;
+                }
+              }
+              if (promo && discountedRate) {
+                priceText = (
+                  <span>
+                    <span className="strike-through nowrap">$ {rate}</span><span className="nowrap"> $ {discountedRate}</span>
+                  </span>
+                );
+              } else {
+                priceText = (
+                  <span className="nowrap">$ {rate}</span>
+                );
+              }
               return (
                 <div className="BookingResultsItem" key={index}>
                   <input className="BookingResultsCheckbox" type="checkbox" id={index} name="time" checked={checkedLink('session'+index).value} disabled={session.disabled} onChange={handleChange('session'+index)} />
@@ -119,7 +148,7 @@ export default class BookingResults extends Component {
                       <div className="BookingResultsCheckboxLabelMeta">
                         <span>{session ? moment(session.date, 'YYYY-MM-DD').format('DD MMM') : ''}</span>
                         <span>{session.time ? session.time : 'Not Available'}</span>
-                        <span>{session.time ? ('$ ' + session.price) : ''}</span>
+                        <span>{session.time ? priceText : ''}</span>
                       </div>
                     </div>
                   </label>
@@ -128,6 +157,16 @@ export default class BookingResults extends Component {
             })
           }
           </div>
+          <form ref={(c) => this._promoForm = c} autoComplete="off">
+            <div className="BookingPromoSection">
+              <div>
+                <input type="text" id="promoCode" name="promoCode" value={this.state.promoCode} onChange={this._onKeyPromo.bind(this)} placeholder="Promotion Code (Optional)" maxLength="50" disabled={this.state.disablePromo} required />
+              </div>
+              <div>
+                {promoButton}
+              </div>
+            </div>
+          </form>
           <p></p>
           <div className="text-center">
             <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>BOOK NOW</a>
@@ -147,6 +186,69 @@ export default class BookingResults extends Component {
         <AlertPopup ref={(c) => this._rejectPopup = c} />
       </div>
     );
+  }
+
+  _onKeyPromo(event) {
+    if (event.target.value && event.target.value.length) {
+      this.setState({
+        promoCode: event.target.value,
+        showPromoButton: true
+      });
+    } else {
+      this.setState({
+        promoCode: event.target.value,
+        showPromoButton: false
+      });
+    }
+  }
+
+  _onApplyPromo(event) {
+    if (this._promoForm.checkValidity()) {
+      event.preventDefault();
+
+      this.serverRequest2 = request
+        .get(Util.host + '/api/checkPromocode')
+        .query({
+          code: this.state.promoCode
+        })
+        .auth(Util.authKey, Util.authSecret)
+        .end((err, res) => {
+          if (err) {
+            return console.error(Util.host + '/api/checkPromocode', status, err.toString());
+          }
+          // console.log(res.body);
+          if (res.body && res.body.status === 1 && res.body.promoCode && res.body.promoCode.status === 'Active') {
+            // console.log(res.body.timeSlots);
+            this.setState({
+              promoCode: res.body.promoCode.code,
+              disablePromo: true
+            });
+            BookingActions.setPromoCode(res.body.promoCode);
+
+            this._updateSum();
+          } else {
+            this._alertPopup.show('Your promotion code is not valid.');
+            console.error('Failed to obtain promo code data.');
+
+            this.setState({promoCode: undefined});
+          }
+        });
+    } else {
+      this._alertPopup.show('Please enter your promotion code.');
+
+      this.setState({promoCode: undefined});
+    }
+  }
+
+  _onRemovePromo(event) {
+    event.preventDefault();
+    this.setState({
+      promoCode: undefined,
+      disablePromo: false
+    });
+    BookingActions.setPromoCode();
+
+    this._updateSum();
   }
 
   _onCheckedAgree(event) {
@@ -189,6 +291,17 @@ export default class BookingResults extends Component {
     // } else {
     event.preventDefault();
     // }
+  }
+
+  _updateSum() {
+    var sum = 0;
+    for (var i = 0; i < this.state.sessions.length; i++) {
+      if (this.state['session'+i]) {
+        sum += Util.calcRate(this.state.sessions[i], this.props.booking.promoCode, this.props.booking.service);
+      }
+    }
+    // this.props.booking.sum = this.state.sum;
+    BookingActions.setSum(sum);
   }
 
 }

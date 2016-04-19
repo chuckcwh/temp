@@ -60,7 +60,12 @@ export default class Actions extends Component {
 
   _startCounter() {
     if (typeof window !== 'undefined') {
-      window.setInterval(this._getStatistics.bind(this), 5000);
+      if (window.location.hostname.indexOf('localhost') > -1) {
+        // just retrieve once only during development, to prevent annoying multiple GET requests
+        this._getStatistics();
+      } else {
+        window.setInterval(this._getStatistics.bind(this), 5000);
+      }
     }
   }
 

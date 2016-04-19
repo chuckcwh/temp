@@ -122,7 +122,7 @@ export default class BookingResults extends Component {
               promo = this.props.booking.promoCode;
               rate = session.price;
               if (promo) {
-                discountedRate = Util.calcRate(session, this.props.booking.promoCode, this.props.booking.service);
+                discountedRate = Util.calcRate(session, this.props.booking.promoCode, this.props.booking.service).toFixed(2);
               }
               if (promo && discountedRate) {
                 priceText = (

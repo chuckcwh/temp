@@ -144,7 +144,7 @@ export default class BookingResults extends Component {
                       <div className="BookingResultsCheckboxLabelMeta">
                         <span>{session ? moment(session.date, 'YYYY-MM-DD').format('DD MMM') : ''}</span>
                         <span>{session.time ? session.time : 'Not Available'}</span>
-                        <span>{priceText}</span>
+                        <span>{session.time ? priceText : ''}</span>
                       </div>
                     </div>
                   </label>

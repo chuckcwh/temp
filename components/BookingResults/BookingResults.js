@@ -153,7 +153,7 @@ export default class BookingResults extends Component {
             })
           }
           </div>
-          <form ref={(c) => this._promoForm = c}>
+          <form ref={(c) => this._promoForm = c} autoComplete="off">
             <div className="BookingPromoSection">
               <div>
                 <input type="text" id="promoCode" name="promoCode" value={this.state.promoCode} onChange={this._onKeyPromo.bind(this)} placeholder="Promotion Code (Optional)" maxLength="50" disabled={this.state.disablePromo} required />

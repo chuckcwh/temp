@@ -8,6 +8,7 @@ import Loader from 'react-loader';
 import './BookingLocationUser.scss';
 import Container from '../Container';
 import Link from '../Link';
+import DayPickerPopup from '../DayPickerPopup';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 import Util from '../../core/Util';
@@ -118,8 +119,10 @@ export default class BookingLocationUser extends Component {
             <div>
               <input type="text" id="patient_firstName" name="patient_firstName" valueLink={linkState(this, 'patient_firstName')} placeholder="First Name*" maxLength="50" required />
               <input type="text" id="patient_lastName" name="patient_lastName" valueLink={linkState(this, 'patient_lastName')} placeholder="Last Name*" maxLength="50" required />
-              <DatePicker selected={this.state.patient_dob} maxDate={moment()} dateFormat="YYYY-MM-DD" showYearDropdown onChange={this._onSelectDob.bind(this)} placeholderText="Date of Birth* (Y-M-D)" />
-              <input type="text" value={this.state.patient_dob} required style={{'display':'none'}} />
+              <div className="DateInput">
+                <input type="text" id="patient_dob" name="patient_dob" value={this.state.patient_dob_temp ? this.state.patient_dob_temp : (this.state.patient_dob ? moment(this.state.patient_dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeDob.bind(this)} onBlur={this._onBlurDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
+                <span onClick={() => this._dayPickerPopup.show()}></span>
+              </div>
               <div className="radio radio-inline">
                 <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.state.patient_gender==='Male'} onChange={this._onSelectGender.bind(this, 'patient_gender')} value="Male" required />
                 <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
@@ -195,7 +198,10 @@ export default class BookingLocationUser extends Component {
         <form ref={(c) => this._patientDetailsForm = c}>
           <div>
             <input type="text" id="fullName" name="fullName" valueLink={linkState(this, 'fullName')} placeholder="Full Name*" maxLength="50" required />
-            <DatePicker selected={this.state.dob} maxDate={moment()} dateFormat="YYYY-MM-DD" showYearDropdown onChange={this._onSelectNewDob.bind(this)} placeholderText="Date of Birth* (Y-M-D)" />
+            <div className="DateInput">
+              <input type="text" id="dob" name="dob" value={this.state.dob_temp ? this.state.dob_temp : (this.state.dob ? moment(this.state.dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeNewDob.bind(this)} onBlur={this._onBlurNewDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
+              <span onClick={() => this._dayPickerPopup2.show()}></span>
+            </div>
             <div className="radio radio-inline">
               <input type="radio" id="gender_male" name="gender" checked={this.state.gender==='Male'} onChange={this._onSelectGender.bind(this, 'gender')} value="Male" required />
               <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
@@ -282,6 +288,8 @@ export default class BookingLocationUser extends Component {
           </div>
         </Container>
         <AlertPopup ref={(c) => this._alertPopup = c} />
+        <DayPickerPopup ref={(c) => this._dayPickerPopup = c} value={this.state.patient_dob} title="Date of Birth" onDayClick={this._onSelectDob.bind(this)} />
+        <DayPickerPopup ref={(c) => this._dayPickerPopup2 = c} value={this.state.dob} title="Date of Birth" onDayClick={this._onSelectNewDob.bind(this)} />
       </div>
     );
   }
@@ -356,15 +364,47 @@ export default class BookingLocationUser extends Component {
     });
   }
 
-  _onSelectDob(date) {
+  _onSelectDob(event, date) {
     this.setState({
       patient_dob: date
     });
   }
 
-  _onSelectNewDob(date) {
+  _onChangeDob(event) {
+    this.setState({
+      patient_dob_temp: event.target.value
+    });
+  }
+
+  _onBlurDob(event) {
+    // validate date (especially for manual keyboard input)
+    var d = moment(event.target.value, 'YYYY-MM-DD');
+    var valid = d.isValid() && d.isBefore(new Date(), 'day');
+    this.setState({
+      patient_dob: valid ? d.toDate() : '',
+      patient_dob_temp: undefined
+    });
+  }
+
+  _onSelectNewDob(event, date) {
     this.setState({
       dob: date
+    });
+  }
+
+  _onChangeNewDob(event) {
+    this.setState({
+      dob_temp: event.target.value
+    });
+  }
+
+  _onBlurNewDob(event) {
+    // validate date (especially for manual keyboard input)
+    var d = moment(event.target.value, 'YYYY-MM-DD');
+    var valid = d.isValid() && d.isBefore(new Date(), 'day');
+    this.setState({
+      dob: valid ? d.toDate() : '',
+      dob_temp: undefined
     });
   }
 

@@ -21,6 +21,7 @@ var orders = [
   'booking3a',
   'booking3b',
   'booking3c',
+  'booking4',
   'booking-confirmation',
   'booking-payment'
 ];

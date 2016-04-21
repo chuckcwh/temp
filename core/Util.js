@@ -2,6 +2,15 @@ import moment from 'moment';
 
 const ALL_SERVICES = 'All Services';
 
+const SERVICES_CATEGORY_ORDER = [
+  ALL_SERVICES,
+  'Social Care',
+  'Nursing Care',
+  'Medical',
+  'TCM',
+  'Mother Care'
+];
+
 function isProduction() {
   return (typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1);
 }
@@ -94,6 +103,7 @@ const util = {
   getCookies: getCookies,
 
   ALL_SERVICES: ALL_SERVICES,
+  SERVICES_CATEGORY_ORDER: SERVICES_CATEGORY_ORDER,
   filterServices: filterServices,
   subFilterServices: subFilterServices,
 

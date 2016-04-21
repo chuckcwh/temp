@@ -52,21 +52,15 @@ export default class BookingServices extends Component {
           <div className="BookingServicesNav-wrapper">
             <Container>
               <ul className="BookingServicesNav">
-                <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === Util.ALL_SERVICES) ? 'active' : '')} href="/" onClick={this._onClickFilter.bind(this, Util.ALL_SERVICES)}>All Services<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
-                </li>
-                <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Social Care') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Social Care')}>Home Social Care<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
-                </li>
-                <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Nursing') ? 'active' : '')} href="/about" onClick={this._onClickFilter.bind(this, 'Home Nursing')}>Home Nursing Care<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
-                </li>
-                <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home Medical') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home Medical')}>Home Medical<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
-                </li>
-                <li className="BookingServicesNav-item">
-                  <a className={classNames('BookingServicesNav-link', (this.state.filter === 'Home TCM') ? 'active' : '')} href="/faq" onClick={this._onClickFilter.bind(this, 'Home TCM')}>Home TCM<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
-                </li>
+              {
+                Util.SERVICES_CATEGORY_ORDER.map(category => {
+                  return (
+                    <li className="BookingServicesNav-item" key={category}>
+                      <a className={classNames('BookingServicesNav-link', (this.state.filter === category) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, category)}>{category}<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                    </li>
+                  );
+                })
+              }
               </ul>
             </Container>
           </div>

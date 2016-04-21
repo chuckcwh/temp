@@ -87,7 +87,7 @@ export default class BookingServices extends Component {
                             var id = "BookingServicesRadio" + service.id;
                             return (
                               <div className="BookingServicesItem" key={service.id}>
-                                {index === 0 ? header : ''}
+                                {index === 0 ? header : undefined}
                                 <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === this.state.selectedService} onChange={this._onSelect.bind(this)} required />
                                 <label className="BookingServicesRadioLabel" htmlFor={id}>
                                   <span><span></span></span><span>{service.name}</span>

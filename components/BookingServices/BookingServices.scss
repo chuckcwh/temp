@@ -112,18 +112,24 @@
       font-weight: 600;
     }
 
-    .BookingServicesItem {
-      display: inline-block;
-      color: $text-color;
-      font-size: 15px;
-      width: 100%;
+    .BookingServicesSection {
+      -webkit-column-break-inside: avoid;
+      -moz-column-break-inside: avoid;
+      column-break-inside: avoid;
 
-      .BookingServicesRadio {
-        // margin-right: 5px;
-      }
-
-      .BookingServicesRadioLabel {
+      .BookingServicesItem {
+        display: inline-block;
+        color: $text-color;
+        font-size: 15px;
         width: 100%;
+
+        .BookingServicesRadio {
+          // margin-right: 5px;
+        }
+
+        .BookingServicesRadioLabel {
+          width: 100%;
+        }
       }
     }
 

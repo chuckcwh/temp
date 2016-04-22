@@ -56,6 +56,12 @@
           bottom: 0;
         }
       }
+
+      .PatientDetailsLabel2 {
+        @media (max-width: $screen-sm-min) {
+          display: block;
+        }
+      }
     }
 
     .BookingLocationBodyEditSection {
@@ -89,7 +95,7 @@
       }
 
       form a {
-        margin: 5px 5px 0 0; 
+        margin: 5px 5px 0 0;
       }
     }
 

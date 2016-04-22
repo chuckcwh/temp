@@ -63,12 +63,14 @@ export default class BookingLocation extends Component {
         </div>
         <div className="BookingLocationBodySection">
           <div>
-            Patient Details (
-            <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
-            <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
-              <span></span><span>Are you the patient?</span>
-            </label>
-            &nbsp;)
+            <span className="PatientDetailsLabel1">Patient Details</span>
+            <span className="PatientDetailsLabel2"> (
+              <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
+              <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
+                <span></span><span>Are you the patient?</span>
+              </label>
+              &nbsp;)
+            </span>
           </div>
           <div>
             <input type="text" id="patient_firstName" name="patient_firstName" valueLink={linkState(this, 'patient_firstName')} placeholder="First Name*" maxLength="50" required />

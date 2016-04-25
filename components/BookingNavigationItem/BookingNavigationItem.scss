@@ -6,9 +6,9 @@
 
   .BookingNavigation-link {
     display: inline-block;
-    padding: 0.5em 1em;
+    padding: 0.5em;
     color: #fff;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 600;
     text-decoration: none;
 
@@ -28,7 +28,7 @@
 
     .BookingNavigationItem-text {
       vertical-align: middle;
-      margin-left: 25px;
+      margin-left: 10px;
 
       @media (max-width: $screen-sm-min) {
         margin-left: 10px;

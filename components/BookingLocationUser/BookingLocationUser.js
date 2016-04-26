@@ -472,7 +472,7 @@ export default class BookingLocationUser extends Component {
         .send({
           fullName: this.state.fullName,
           gender: this.state.gender,
-          dob: this.state.dob.format('YYYY-MM-DD'),
+          dob: moment(this.state.dob).format('YYYY-MM-DD'),
           addresses: [{
             address: this.state.address,
             postalCode: this.state.postalCode,

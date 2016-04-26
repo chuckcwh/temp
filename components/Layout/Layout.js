@@ -17,7 +17,7 @@ class Layout extends Component {
         <div className="Body">
           {this.props.children}
         </div>
-        <Footer />
+        <Footer path={this.props.path} />
       </div>
     );
   }

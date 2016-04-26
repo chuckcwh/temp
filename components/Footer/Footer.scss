@@ -26,6 +26,59 @@
     .Footer-item {
       padding: 0 0.5em;
 
+      .Footer-nav {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        justify-content: flex-end;
+        align-items: center;
+        text-align: left;
+
+        .Footer-nav-item {
+          padding: 0 0.5em;
+          width: 100%;
+
+          .Footer-nav-link {
+            display: inline-block;
+            float: left;
+            padding: 0.5em 0;
+            color: #ffffff;
+            font-size: 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            cursor: pointer;
+
+            &:hover {
+              color: $text-color;
+              text-decoration: none;
+            }
+
+            &.active {
+              color: $secondary-color;
+              font-weight: bold;
+              cursor: default;
+            }
+
+            &-highlight {
+              background-color: $secondary-color;
+              color: #fff;
+
+              &:hover {
+                border: none;
+                background-color: $brand-color;
+                color: #fff;
+              }
+            }
+
+            @media (max-width: $screen-sm-min) {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+
       .Footer-maps-button {
         display: flex;
         max-height: 32px;

@@ -199,6 +199,12 @@ export default class BookingLocationUser extends Component {
       patientDetails = (
         <form ref={(c) => this._patientDetailsForm = c}>
           <div>
+            <div>
+              <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
+              <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
+                <span></span><span>Are you the patient?</span>
+              </label>
+            </div>
             <input type="text" id="fullName" name="fullName" valueLink={linkState(this, 'fullName')} placeholder="Full Name*" maxLength="50" required />
             <div className="DateInput">
               <input type="text" id="dob" name="dob" value={this.state.dob_temp ? this.state.dob_temp : (this.state.dob ? moment(this.state.dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeNewDob.bind(this)} onBlur={this._onBlurNewDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
@@ -511,6 +517,18 @@ export default class BookingLocationUser extends Component {
       event.preventDefault();
       // alert('Please fill up all required fields.');
       this._alertPopup.show('Please fill up all required fields.');
+    }
+  }
+
+  _onCheckedPatient(event) {
+    if (event.target.checked === true) {
+      this.setState({
+        fullName: this.props.user.first_name + ' ' + this.props.user.last_name
+      });
+    } else {
+      this.setState({
+        fullName: undefined
+      });
     }
   }
 

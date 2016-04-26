@@ -33,7 +33,7 @@ export default class Navigation extends Component {
             <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>SERVICES</a>
           </li>
           <li className="Navigation-item">
-            <a className="Navigation-link" href="http://smarteredu.org/smarteredu/institution/smarter-edx/eBeecare/">eBeeACADEMY</a>
+            <a className={classNames('Navigation-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
           </li>
           <li className="Navigation-item">
             <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>BECOME A PARTNER</a>
@@ -56,7 +56,7 @@ export default class Navigation extends Component {
                 <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>SERVICES</a>
               </li>
               <li className="Navigation-item">
-                <a className="Navigation-link" href="http://smarteredu.org/smarteredu/institution/smarter-edx/eBeecare/">eBeeACADEMY</a>
+                <a className={classNames('Navigation-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
               </li>
               <li className="Navigation-item">
                 <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>BECOME A PARTNER</a>

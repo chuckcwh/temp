@@ -19,30 +19,27 @@ export default class Navigation extends Component {
   render() {
     var accountText;
     if (Util.isLoggedInBackend()) {
-      accountText = 'Dashboard';
+      accountText = 'DASHBOARD';
     } else {
-      accountText = 'Login';
+      accountText = 'LOGIN';
     }
     return (
       <div className="NavWrapper">
         <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
           <li className="Navigation-item">
-            <a className={classNames('Navigation-link', (this.props.path === '/') ? 'active' : '')} href="/" onClick={Link.handleClick}>Home</a>
+            <a className={classNames('Navigation-link', (this.props.path === '/about') ? 'active' : '')} href="/about" onClick={Link.handleClick}>ABOUT</a>
           </li>
           <li className="Navigation-item">
-            <a className={classNames('Navigation-link', (this.props.path === '/about') ? 'active' : '')} href="/about" onClick={Link.handleClick}>About</a>
+            <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>SERVICES</a>
           </li>
           <li className="Navigation-item">
-            <a className={classNames('Navigation-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
+            <a className="Navigation-link" href="http://smarteredu.org/smarteredu/institution/smarter-edx/eBeecare/">eBeeACADEMY</a>
           </li>
           <li className="Navigation-item">
-            <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>Services</a>
+            <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>BECOME A PARTNER</a>
           </li>
           <li className="Navigation-item">
-            <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>Become a Partner</a>
-          </li>
-          <li className="Navigation-item">
-            <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
+            <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>MANAGE BOOKING</a>
           </li>
           <li className="Navigation-item">
             <a className="Navigation-link" href={Util.backend}>{accountText}</a>
@@ -53,22 +50,19 @@ export default class Navigation extends Component {
             <Logo />
             <ul className={classNames('Navigation', this.state.visible ? 'visible' : '')} role="menu">
               <li className="Navigation-item">
-                <a className={classNames('Navigation-link', (this.props.path === '/') ? 'active' : '')} href="/" onClick={Link.handleClick}>Home</a>
+                <a className={classNames('Navigation-link', (this.props.path === '/about') ? 'active' : '')} href="/about" onClick={Link.handleClick}>ABOUT</a>
               </li>
               <li className="Navigation-item">
-                <a className={classNames('Navigation-link', (this.props.path === '/about') ? 'active' : '')} href="/about" onClick={Link.handleClick}>About</a>
+                <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>SERVICES</a>
               </li>
               <li className="Navigation-item">
-                <a className={classNames('Navigation-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
+                <a className="Navigation-link" href="http://smarteredu.org/smarteredu/institution/smarter-edx/eBeecare/">eBeeACADEMY</a>
               </li>
               <li className="Navigation-item">
-                <a className={classNames('Navigation-link', (this.props.path === '/services') ? 'active' : '')} href="/services" onClick={Link.handleClick}>Services</a>
+                <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>BECOME A PARTNER</a>
               </li>
               <li className="Navigation-item">
-                <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>Become a Partner</a>
-              </li>
-              <li className="Navigation-item">
-                <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>Manage Booking</a>
+                <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>MANAGE BOOKING</a>
               </li>
               <li className="Navigation-item">
                 <a className="Navigation-link" href={Util.backend}>{accountText}</a>

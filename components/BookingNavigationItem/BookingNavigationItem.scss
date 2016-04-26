@@ -6,11 +6,16 @@
 
   .BookingNavigation-link {
     display: inline-block;
-    padding: 0.5em;
+    padding: 0.5em 1em;
     color: #fff;
-    font-size: 20px;
+    font-size: 28px;
     font-weight: 600;
     text-decoration: none;
+
+    @media (max-width: $screen-md-min) {
+      padding: 0.5em;
+      font-size: 20px;
+    }
 
     .BookingNavigationItem-icon {
       display: inline-block;
@@ -28,7 +33,11 @@
 
     .BookingNavigationItem-text {
       vertical-align: middle;
-      margin-left: 10px;
+      margin-left: 25px;
+
+      @media (max-width: $screen-md-min) {
+        margin-left: 10px;
+      }     
 
       @media (max-width: $screen-sm-min) {
         margin-left: 10px;

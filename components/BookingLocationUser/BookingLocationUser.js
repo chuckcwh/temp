@@ -123,13 +123,15 @@ export default class BookingLocationUser extends Component {
                 <input type="text" id="patient_dob" name="patient_dob" value={this.state.patient_dob_temp ? this.state.patient_dob_temp : (this.state.patient_dob ? moment(this.state.patient_dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeDob.bind(this)} onBlur={this._onBlurDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
                 <span onClick={() => this._dayPickerPopup.show()}></span>
               </div>
-              <div className="radio radio-inline">
-                <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.state.patient_gender==='Male'} onChange={this._onSelectGender.bind(this, 'patient_gender')} value="Male" required />
-                <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
-              </div>
-              <div className="radio radio-inline">
-                <input type="radio" id="patient_gender_female" name="patient_gender" checked={this.state.patient_gender==='Female'} onChange={this._onSelectGender.bind(this, 'patient_gender')} value="Female" required />
-                <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
+              <div>
+                <div className="radio radio-inline">
+                  <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.state.patient_gender==='Male'} onChange={this._onSelectGender.bind(this, 'patient_gender')} value="Male" required />
+                  <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
+                </div>
+                <div className="radio radio-inline">
+                  <input type="radio" id="patient_gender_female" name="patient_gender" checked={this.state.patient_gender==='Female'} onChange={this._onSelectGender.bind(this, 'patient_gender')} value="Female" required />
+                  <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
+                </div>
               </div>
             </div>
             <div style={{marginTop: '40px'}}>
@@ -202,13 +204,15 @@ export default class BookingLocationUser extends Component {
               <input type="text" id="dob" name="dob" value={this.state.dob_temp ? this.state.dob_temp : (this.state.dob ? moment(this.state.dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeNewDob.bind(this)} onBlur={this._onBlurNewDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
               <span onClick={() => this._dayPickerPopup2.show()}></span>
             </div>
-            <div className="radio radio-inline">
-              <input type="radio" id="gender_male" name="gender" checked={this.state.gender==='Male'} onChange={this._onSelectGender.bind(this, 'gender')} value="Male" required />
-              <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
-            </div>
-            <div className="radio radio-inline">
-              <input type="radio" id="gender_female" name="gender" checked={this.state.gender==='Female'} onChange={this._onSelectGender.bind(this, 'gender')} value="Female" required />
-              <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
+            <div>
+              <div className="radio radio-inline">
+                <input type="radio" id="gender_male" name="gender" checked={this.state.gender==='Male'} onChange={this._onSelectGender.bind(this, 'gender')} value="Male" required />
+                <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
+              </div>
+              <div className="radio radio-inline">
+                <input type="radio" id="gender_female" name="gender" checked={this.state.gender==='Female'} onChange={this._onSelectGender.bind(this, 'gender')} value="Female" required />
+                <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
+              </div>
             </div>
           </div>
           <div>
@@ -468,7 +472,7 @@ export default class BookingLocationUser extends Component {
         .send({
           fullName: this.state.fullName,
           gender: this.state.gender,
-          dob: this.state.dob.format('YYYY-MM-DD'),
+          dob: moment(this.state.dob).format('YYYY-MM-DD'),
           addresses: [{
             address: this.state.address,
             postalCode: this.state.postalCode,

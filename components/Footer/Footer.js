@@ -28,7 +28,7 @@ class Footer extends Component {
             <div className="Footer-item">
               <ul className="Footer-nav">
                 <li className="Footer-nav-item">
-                  <a className={classNames('Footer-nav-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
+                  <a className="Navigation-link" href="http://smarteredu.org/smarteredu/institution/smarter-edx/eBeecare/">Learn@eBeeACADEMY</a>
                 </li>
               </ul>
               <div className="Footer-tel">6514 9729</div>

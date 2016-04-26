@@ -1,11 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import classNames from 'classnames';
 import FaFacebook from 'react-icons/lib/fa/facebook';
 import FaTwitter from 'react-icons/lib/fa/twitter';
 import FaInstagram from 'react-icons/lib/fa/instagram';
 import './Footer.scss';
 import Container from '../Container';
-import Link from '../Link';
 
 class Footer extends Component {
 
@@ -26,11 +24,6 @@ class Footer extends Component {
               </a>
             </div>
             <div className="Footer-item">
-              <ul className="Footer-nav">
-                <li className="Footer-nav-item">
-                  <a className={classNames('Footer-nav-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
-                </li>
-              </ul>
               <div className="Footer-tel">6514 9729</div>
               <div><a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a></div>
             </div>

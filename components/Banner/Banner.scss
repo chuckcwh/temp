@@ -2,16 +2,10 @@
 @import '../mixins.scss';
 
 .Banner {
+  height: 500px;
+
   .Banner-item {
     height: 500px;
-    background-color: $body-bg;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-
-    @media (max-width: $screen-sm-min) {
-      background-position: -550px 0px;
-    }
   }
 
   .Banner-item-text-wrapper {
@@ -76,8 +70,48 @@
       }
     }
   }
-}
 
-#Banner-item-1 {
-  background-image: url(banner-1.jpg);
+  .Banner-bg {
+    position: absolute;
+    height: 500px;
+    width: 100%;
+    background-color: $body-bg;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &-enter {
+      opacity: 0.01;
+    }
+
+    &-enter&-enter-active {
+      opacity: 1;
+      transition: opacity 1000ms ease-in;
+    }
+
+    &-leave {
+      opacity: 1;
+    }
+
+    &-leave&-leave-active {
+      opacity: 0.01;
+      transition: opacity 1000ms ease-in;
+    }
+  }
+
+  .Banner-bg-0 {
+    background-image: url(banner-1.jpg);
+
+    @media (max-width: $screen-sm-min) {
+      background-position: -550px 0px;
+    }
+  }
+
+  .Banner-bg-1 {
+    background-image: url(banner-2.jpg);
+
+    @media (max-width: $screen-sm-min) {
+      background-position: -300px 0px;
+    }
+  }
 }

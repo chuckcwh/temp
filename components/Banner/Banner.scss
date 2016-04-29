@@ -2,10 +2,29 @@
 @import '../mixins.scss';
 
 .Banner {
+  position: relative;
   height: 500px;
 
+  .SliderWrapper {
+    .slick-slide {
+      position: relative;
+    }
+
+    .slick-dots {
+      bottom: 0;
+
+      & li button:before {
+        color: white;
+      }
+    }
+  }
+
   .Banner-item {
-    height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50px;
   }
 
   .Banner-item-text-wrapper {
@@ -32,37 +51,37 @@
 
   #Banner-item-1 {
     .Banner-item-text-1 {
-      top: 140px;
+      top: 90px;
       font-size: 25px;
     }
 
     .Banner-item-text-2 {
-      top: 200px;
+      top: 150px;
       font-weight: bold;
       font-size: 60px;
       text-transform: uppercase;
     }
 
     .Banner-item-text-3 {
-      top: 272px;
+      top: 300px;
       font-size: 37px;
     }
 
     .Banner-item-text-4 {
-      top: 340px;
+      top: 360px;
     }
 
     @media (max-width: $screen-sm-min) {
       .Banner-item-text-1 {
-        top: 70px;
+        top: 50px;
       }
 
       .Banner-item-text-2 {
-        top: 140px;
+        top: 120px;
       }
 
       .Banner-item-text-3 {
-        top: 300px;
+        top: 320px;
       }
 
       .Banner-item-text-4 {
@@ -72,13 +91,27 @@
   }
 
   .Banner-bg {
-    position: absolute;
+    // position: absolute;
     height: 500px;
-    width: 100%;
+    // width: 100%;
     background-color: $body-bg;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+
+    &-text {
+      position: absolute;
+      width: 100%;
+      top: 245px;
+      text-align: center;
+      color: #ffffff;
+      font-size: 37px;
+      @mixin text-shadow 1px 1px 1px rgba(0, 0, 0, 0.5);
+
+      @media (max-width: $screen-sm-min) {
+        top: 275px;
+      }
+    }
 
     &-enter {
       opacity: 0.01;
@@ -111,7 +144,7 @@
     background-image: url(banner-2.jpg);
 
     @media (max-width: $screen-sm-min) {
-      background-position: -300px 0px;
+      background-position: 0px 0px;
     }
   }
 }

@@ -534,7 +534,7 @@ export default class BookingLocationUser extends Component {
 
   _onNext(event) {
     if (this.state.patientId) {
-      Link.handleClick(event);
+      Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       var booker =  {
         additionalInfo: this.state.additionalInfo

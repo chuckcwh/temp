@@ -10,7 +10,7 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <Banner />
+        <Banner location={this.props.location} />
         <Features />
         <Actions />
         <Testimonials />

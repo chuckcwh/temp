@@ -62,7 +62,7 @@ export default class BookingTime extends Component {
       return event.preventDefault();
     }
 
-    Link.handleClick(event);
+    Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
     // this.props.booking.timeslots = timeslots;
     BookingActions.setTimeslots(timeslots);

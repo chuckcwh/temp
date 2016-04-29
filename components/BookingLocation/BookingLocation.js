@@ -227,7 +227,7 @@ export default class BookingLocation extends Component {
 
   _onNext(event) {
     if (this._bookingLocationForm.checkValidity()) {
-      Link.handleClick(event);
+      Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       var user =  {
         client_contactEmail: this.state.client_contactEmail,

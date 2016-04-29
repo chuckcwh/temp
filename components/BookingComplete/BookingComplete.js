@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import request from 'superagent';
 import Loader from 'react-loader';
+import moment from 'moment';
 import './BookingComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
@@ -91,8 +92,9 @@ export default class BookingComplete extends Component {
             patient_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
             patient_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_firstName,
             patient_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_lastName,
-            patient_dob: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob.format('YYYY-MM-DD'),
-            patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender
+            patient_dob: moment(this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob).format('YYYY-MM-DD'),
+            patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender,
+            organization: this.props.location && this.props.location.query && this.props.location.query.organization || undefined
           },
           case: {
             sid: this.props.booking && this.props.booking.service,
@@ -183,7 +185,7 @@ export default class BookingComplete extends Component {
           </div>
         );
       }
-      
+
       component = (
         <div className="BookingCompleteBody">
           <div className="BookingCompleteHeader">

@@ -272,12 +272,12 @@ export default class BookingResults extends Component {
     }
 
     this.setState({ agree: false });
-    
+
     // if (confirm('Would you like to confirm the sessions?')) {
     this._confirmPopup.show(() => {
       if (this._agreeForm.checkValidity()) {
         // Link.handleClick(event);
-        Location.push({ pathname: '/booking4' });
+        Location.push({ pathname: '/booking4', query: this.props.location && this.props.location.query });
 
         // console.log(sessions);
         BookingActions.setSessions(sessions);
@@ -287,7 +287,7 @@ export default class BookingResults extends Component {
         this._rejectPopup.show('To continue, please accept our Terms of Service and Privacy Policy.');
       }
     });
-      
+
     // } else {
     event.preventDefault();
     // }

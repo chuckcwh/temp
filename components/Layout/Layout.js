@@ -11,15 +11,25 @@ class Layout extends Component {
   };
 
   render() {
-    return (
-      <div className="Layout">
-        <Navigation path={this.props.path} pullRight={true} />
-        <div className="Body">
-          {this.props.children}
+    if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
+      return (
+        <div className="Layout">
+          <div className="Body">
+            {this.props.children}
+          </div>
         </div>
-        <Footer path={this.props.path} />
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="Layout">
+          <Navigation path={this.props.path} pullRight={true} />
+          <div className="Body">
+            {this.props.children}
+          </div>
+          <Footer path={this.props.path} />
+        </div>
+      );
+    }
   }
 
 }

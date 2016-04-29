@@ -41,7 +41,36 @@ class Link extends Component {
       const link = event.currentTarget;
       Location.push({
         pathname: this.props && this.props.to || (link.pathname + link.search),
-        state: this.props && this.props.state || null
+        state: this.props && this.props.state || null,
+        query: this.props && this.props.query || null
+      });
+    }
+  };
+
+  static handleClickQuery = (query, event) => {
+    let allowTransition = true;
+    let clickResult;
+
+    if (this.props && this.props.onClick) {
+      clickResult = this.props.onClick(event);
+    }
+
+    if (isModifiedEvent(event) || !isLeftClickEvent(event)) {
+      return;
+    }
+
+    if (clickResult === false || event.defaultPrevented === true) {
+      allowTransition = false;
+    }
+
+    event.preventDefault();
+
+    if (allowTransition) {
+      const link = event.currentTarget;
+      Location.push({
+        pathname: this.props && this.props.to || (link.pathname + link.search),
+        state: this.props && this.props.state || null,
+        query: this.props && this.props.query || (query) || null
       });
     }
   };

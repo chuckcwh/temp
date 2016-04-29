@@ -129,7 +129,7 @@ export default class BookingServices extends Component {
 
   _onNext(event) {
     if (this._bookingServicesForm.checkValidity()) {
-      Link.handleClick(event);
+      Link.handleClickQuery(this.props.location && this.props.location.query, event);
       BookingActions.setService(this.state.selectedService);
       BookingActions.setLast('booking1');
     } else {

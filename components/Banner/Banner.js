@@ -25,7 +25,7 @@ export default class Banner extends Component {
     return (
       <div className="Banner">
         <div className="SliderWrapper">
-          <Slider dots={true} infinite={true} speed={1000} autoplay={true} autoplaySpeed={10000} slidesToShow={1} slidesToScroll={1}>
+          <Slider dots={true} infinite={true} speed={1000} autoplay={true} autoplaySpeed={10000} slidesToShow={1} slidesToScroll={1} arrows={false}>
             <div className={classNames('Banner-bg', 'Banner-bg-0')}>
               <div className="Banner-bg-text">GERIATRIC CARE</div>
             </div>

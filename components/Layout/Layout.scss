@@ -200,16 +200,16 @@ input[type=text], input[type=email], input[type=password] {
   }
 
   &::-webkit-input-placeholder {
-    color: #ddd;  
+    color: #ddd;
   }
-  &:-moz-placeholder {  
-    color: #ddd;  
+  &:-moz-placeholder {
+    color: #ddd;
   }
-  &::-moz-placeholder {  
-    color: #ddd;  
+  &::-moz-placeholder {
+    color: #ddd;
   }
-  &:-ms-input-placeholder {  
-    color: #ddd;  
+  &:-ms-input-placeholder {
+    color: #ddd;
   }
 
   &:disabled {
@@ -253,16 +253,16 @@ textarea {
   padding: 15px;
 
   &::-webkit-input-placeholder {
-    color: #ddd;  
+    color: #ddd;
   }
-  &:-moz-placeholder {  
-    color: #ddd;  
+  &:-moz-placeholder {
+    color: #ddd;
   }
-  &::-moz-placeholder {  
-    color: #ddd;  
+  &::-moz-placeholder {
+    color: #ddd;
   }
-  &:-ms-input-placeholder {  
-    color: #ddd;  
+  &:-ms-input-placeholder {
+    color: #ddd;
   }
 }
 
@@ -282,7 +282,7 @@ input:disabled, textarea:disabled {
     width: 260px;
     padding: 15px;
     margin: 0;
-    
+
     border: 1px solid $border-color;
     @mixin border-radius 0;
 
@@ -366,6 +366,8 @@ input:disabled, textarea:disabled {
   margin: 0 auto;
 
   .Body {
+    overflow: hidden;
+
     @media (max-width: $screen-sm-min) {
       margin-top: 57px;
     }

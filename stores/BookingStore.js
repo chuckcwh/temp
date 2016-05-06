@@ -21,6 +21,7 @@ var orders = [
   'booking3a',
   'booking3b',
   'booking3c',
+  'booking4',
   'booking-confirmation',
   'booking-payment'
 ];
@@ -151,6 +152,11 @@ AppDispatcher.register(function(action) {
 
     case BookingConstants.BOOKING_SET_SUM:
       _booking.sum = action.sum;
+      BookingStore.emitChange();
+      break;
+
+    case BookingConstants.BOOKING_SET_PROMO:
+      _booking.promoCode = action.promoCode;
       BookingStore.emitChange();
       break;
 

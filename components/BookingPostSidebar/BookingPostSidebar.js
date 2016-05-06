@@ -41,7 +41,7 @@ export default class BookingPostSidebar extends Component {
                 return (
                   <div key={session.id}>
                     <span className="BookingPostSidebarItemLeft">{moment(session.dateTimeStart).format('D MMM')}</span>
-                    <span className="BookingPostSidebarItemRight">$ {session.price}</span>
+                    <span className="BookingPostSidebarItemRight">$ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}</span>
                   </div>
                 );
               })

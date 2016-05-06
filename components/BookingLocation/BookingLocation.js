@@ -7,6 +7,7 @@ import './BookingLocation.scss';
 import Container from '../Container';
 import Link from '../Link';
 import LoginPopup from '../LoginPopup';
+import DayPickerPopup from '../DayPickerPopup';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
 
@@ -24,6 +25,7 @@ export default class BookingLocation extends Component {
       patient_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_firstName,
       patient_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_lastName,
       patient_dob: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob,
+      patient_dob_temp: undefined,
       patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender,
       additionalInfo: this.props.booking && this.props.booking.booker && this.props.booking.booker.additionalInfo,
       postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
@@ -61,18 +63,22 @@ export default class BookingLocation extends Component {
         </div>
         <div className="BookingLocationBodySection">
           <div>
-            Patient Details (
-            <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
-            <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
-              <span></span><span>Are you the patient?</span>
-            </label>
-            &nbsp;)
+            <span className="PatientDetailsLabel1">Patient Details</span>
+            <span className="PatientDetailsLabel2"> (
+              <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
+              <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
+                <span></span><span>Are you the patient?</span>
+              </label>
+              &nbsp;)
+            </span>
           </div>
           <div>
             <input type="text" id="patient_firstName" name="patient_firstName" valueLink={linkState(this, 'patient_firstName')} placeholder="First Name*" maxLength="50" required />
             <input type="text" id="patient_lastName" name="patient_lastName" valueLink={linkState(this, 'patient_lastName')} placeholder="Last Name*" maxLength="50" required />
-            <DatePicker selected={this.state.patient_dob} maxDate={moment()} dateFormat="YYYY-MM-DD" showYearDropdown onChange={this._onSelectDob.bind(this)} placeholderText="Date of Birth* (Y-M-D)" />
-            <input type="text" value={this.state.patient_dob} required style={{'display':'none'}} />
+            <div className="DateInput">
+              <input type="text" id="patient_dob" name="patient_dob" value={this.state.patient_dob_temp ? this.state.patient_dob_temp : (this.state.patient_dob ? moment(this.state.patient_dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeDob.bind(this)} onBlur={this._onBlurDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
+              <span onClick={() => this._dayPickerPopup.show()}></span>
+            </div>
             <div className="radio radio-inline">
               <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.state.patient_gender==='Male'} onChange={this._onSelectGender.bind(this)} value="Male" required />
               <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
@@ -115,13 +121,30 @@ export default class BookingLocation extends Component {
         </Container>
         <AlertPopup ref={(c) => this._alertPopup = c} />
         <LoginPopup ref={(c) => this._loginPopup = c} />
+        <DayPickerPopup ref={(c) => this._dayPickerPopup = c} value={this.state.patient_dob} title="Date of Birth" onDayClick={this._onSelectDob.bind(this)} />
       </div>
     );
   }
 
-  _onSelectDob(date) {
+  _onSelectDob(event, date) {
     this.setState({
       patient_dob: date
+    });
+  }
+
+  _onChangeDob(event) {
+    this.setState({
+      patient_dob_temp: event.target.value
+    });
+  }
+
+  _onBlurDob(event) {
+    // validate date (especially for manual keyboard input)
+    var d = moment(event.target.value, 'YYYY-MM-DD');
+    var valid = d.isValid() && d.isBefore(new Date(), 'day');
+    this.setState({
+      patient_dob: valid ? d.toDate() : '',
+      patient_dob_temp: undefined
     });
   }
 
@@ -204,7 +227,7 @@ export default class BookingLocation extends Component {
 
   _onNext(event) {
     if (this._bookingLocationForm.checkValidity()) {
-      Link.handleClick(event);
+      Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       var user =  {
         client_contactEmail: this.state.client_contactEmail,

@@ -129,61 +129,61 @@ export default class BookingApp extends Component {
     var component;
     if (this.state) {
       if (this.props.location && this.props.path === '/booking1') {
-        component = 
+        component =
           <div>
             <BookingNavigation path={this.props.path} />
             <BookingServices location={this.props.location} allServices={this.state.allServices} booking={this.state.booking} />
           </div>;
       } else if (this.props.location && this.props.path === '/booking2') {
         if (this.state.user) {
-          component = 
+          component =
             <div>
               <BookingNavigation path={this.props.path} />
-              <BookingLocationUser allServicesHash={this.state.allServicesHash} booking={this.state.booking} user={this.state.user} patient={this.state.patient}>
+              <BookingLocationUser allServicesHash={this.state.allServicesHash} booking={this.state.booking} user={this.state.user} patient={this.state.patient} location={this.props.location}>
                 <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
               </BookingLocationUser>
             </div>;
         } else {
-          component = 
+          component =
             <div>
               <BookingNavigation path={this.props.path} />
-              <BookingLocation allServicesHash={this.state.allServicesHash} booking={this.state.booking}>
+              <BookingLocation allServicesHash={this.state.allServicesHash} booking={this.state.booking} location={this.props.location}>
                 <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
               </BookingLocation>
             </div>;
         }
       } else if (this.props.location && (this.props.path === '/booking3' || this.props.path === '/booking3a')) {
-        component = 
+        component =
           <div>
             <BookingNavigation path={this.props.path} />
             <BookingDateTime booking={this.state.booking} path={this.props.path}>
-              <BookingDate booking={this.state.booking} />
+              <BookingDate booking={this.state.booking} location={this.props.location} />
               <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
             </BookingDateTime>
           </div>;
       } else if (this.props.location && this.props.path === '/booking3b') {
-        component = 
+        component =
           <div>
             <BookingNavigation path={this.props.path} />
             <BookingDateTime booking={this.state.booking} path={this.props.path}>
-              <BookingTime booking={this.state.booking} />
+              <BookingTime booking={this.state.booking} location={this.props.location} />
               <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
             </BookingDateTime>
           </div>;
       } else if (this.props.location && this.props.path === '/booking3c') {
-        component = 
+        component =
           <div>
             <BookingNavigation path={this.props.path} />
             <BookingDateTime booking={this.state.booking} path={this.props.path}>
-              <BookingResults booking={this.state.booking} />
+              <BookingResults booking={this.state.booking} location={this.props.location} />
               <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
             </BookingDateTime>
           </div>;
       } else if (this.props.location && this.props.path === '/booking4') {
-        component = 
-          <BookingComplete booking={this.state.booking} user={this.state.user} patient={this.state.patient} />;
+        component =
+          <BookingComplete booking={this.state.booking} user={this.state.user} patient={this.state.patient} location={this.props.location} />;
       } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'confirmation') {
-        component = 
+        component =
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
             <BookingConfirmation location={this.props.location} booking={this.state.booking}>
@@ -191,7 +191,7 @@ export default class BookingApp extends Component {
             </BookingConfirmation>
           </div>;
       } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'payment-paypal') {
-        component = 
+        component =
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
             <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
@@ -200,7 +200,7 @@ export default class BookingApp extends Component {
             </BookingPayment>
           </div>;
       } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'payment-bank') {
-        component = 
+        component =
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
             <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
@@ -209,7 +209,7 @@ export default class BookingApp extends Component {
             </BookingPayment>
           </div>;
       } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'payment-credits') {
-        component = 
+        component =
           <div>
             <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
             <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
@@ -218,7 +218,7 @@ export default class BookingApp extends Component {
             </BookingPayment>
           </div>;
       } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'success') {
-        component = 
+        component =
           <BookingPostComplete booking={this.state.booking} />
       } else if (this.props.location && this.props.path === '/booking-manage') {
         if (this.state.booking && this.state.booking.id && this.state.booking.isHPVerified) {

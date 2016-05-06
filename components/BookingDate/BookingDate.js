@@ -93,7 +93,7 @@ export default class BookingDate extends Component {
 
   _onNext(event) {
     if (this.state.selectedDates.length) {
-      Link.handleClick(event);
+      Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       // this.props.booking.range = this.state.range;
       BookingActions.setDates(this.state.selectedDates);

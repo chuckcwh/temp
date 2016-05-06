@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import request from 'superagent';
 import Loader from 'react-loader';
+import moment from 'moment';
 import './BookingComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
@@ -47,7 +48,8 @@ export default class BookingComplete extends Component {
             address: this.props.booking && this.props.booking.location && this.props.booking.location.address,
             postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
             unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber
-          }]
+          }],
+          promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code
         })
         .end((err, res) => {
           if (err) {
@@ -90,8 +92,9 @@ export default class BookingComplete extends Component {
             patient_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
             patient_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_firstName,
             patient_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_lastName,
-            patient_dob: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob.format('YYYY-MM-DD'),
-            patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender
+            patient_dob: moment(this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob).format('YYYY-MM-DD'),
+            patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender,
+            organization: this.props.location && this.props.location.query && this.props.location.query.organization || undefined
           },
           case: {
             sid: this.props.booking && this.props.booking.service,
@@ -103,7 +106,8 @@ export default class BookingComplete extends Component {
               postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
               unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber
             }]
-          }
+          },
+          promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code
         })
         .end((err, res) => {
           if (err) {
@@ -181,7 +185,7 @@ export default class BookingComplete extends Component {
           </div>
         );
       }
-      
+
       component = (
         <div className="BookingCompleteBody">
           <div className="BookingCompleteHeader">
@@ -192,7 +196,7 @@ export default class BookingComplete extends Component {
           </div>
           {identity}
           <div>
-            ESTIMATED AMOUNT : SGD {this.state.bookingAmt}
+            ESTIMATED AMOUNT : SGD {parseFloat(this.state.bookingAmt).toFixed(2)}
           </div>
           <div>
             For inquiries on your order, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).

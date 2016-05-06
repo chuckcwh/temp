@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const ALL_SERVICES = 'All Services';
 
 const SERVICES_CATEGORY_ORDER = [
@@ -60,6 +62,32 @@ function subFilterServices(services) {
   return arr;
 }
 
+function calcRate(session, promo, sid) {
+  if (promo && promo.discountedRate) {
+    // verify promo is applicable to session
+    var isPromoApplicable = 
+      promo.services.some(elem => elem === sid) && 
+      promo.dates.some(elem => 
+        elem.type === 'Scheduled' && 
+        elem.status === 'Active' && 
+        moment(session.date) >= moment(elem.dateTimeStart.substr(0, 10)) && 
+        moment(session.date) <= moment(elem.dateTimeEnd.substr(0, 10))
+      ) && 
+      !promo.dates.some(elem => 
+        elem.type === 'Void' && 
+        elem.status === 'Active' && 
+        !moment(session.date).isSame(moment(elem.dateTimeStart.substr(0, 10)))
+      );
+    if (isPromoApplicable) {
+      return parseFloat(session.price) * (100 - parseFloat(promo.discountedRate)) / 100;
+    } else {
+      return parseFloat(session.price);  
+    }
+  } else {
+    return parseFloat(session.price);
+  }
+}
+
 const util = {
   host: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://api.ebeecare.com' : 'http://dev.ebeecare.com'),
   authKey: 'secret',
@@ -77,7 +105,9 @@ const util = {
   ALL_SERVICES: ALL_SERVICES,
   SERVICES_CATEGORY_ORDER: SERVICES_CATEGORY_ORDER,
   filterServices: filterServices,
-  subFilterServices: subFilterServices
+  subFilterServices: subFilterServices,
+
+  calcRate: calcRate
 };
 
 export default util;

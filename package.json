@@ -38,6 +38,7 @@
     "postcss": "^5.0.10",
     "postcss-import": "^7.0.0",
     "postcss-loader": "^0.6.0",
+    "postcss-media-minmax": "^2.1.2",
     "postcss-mixins": "^4.0.0",
     "precss": "^1.2.3",
     "raw-loader": "^0.5.1",

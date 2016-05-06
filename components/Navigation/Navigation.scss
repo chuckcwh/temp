@@ -95,7 +95,7 @@
   right: 18.5px;
   top: 18.5px;
 
-  @media (min-width: calc($screen-sm-min - 1)) {
+  @media (width > $screen-sm-min) {
     display: none;
   }
 }

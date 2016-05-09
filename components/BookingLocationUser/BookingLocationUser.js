@@ -197,7 +197,7 @@ export default class BookingLocationUser extends Component {
     } else {
       // Add patient details
       patientDetails = (
-        <form ref={(c) => this._patientDetailsForm = c}>
+        <form ref={(c) => this._patientDetailsForm = c} onSubmit={this._onClickSavePatient.bind(this)}>
           <div>
             <div>
               <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
@@ -234,7 +234,7 @@ export default class BookingLocationUser extends Component {
             </div>
             <p className="small">This information will only be used to contact you regarding your booking.</p>
           </div>
-          <button className="btn btn-primary" onClick={this._onClickSavePatient.bind(this)}>Save Patient</button>
+          <button className="btn btn-primary" type="submit">Save Patient</button>
         </form>
       );
     }
@@ -469,6 +469,7 @@ export default class BookingLocationUser extends Component {
   _onClickSavePatient(event) {
     if (this._patientDetailsForm.checkValidity()) {
       event.preventDefault();
+      
       this.setState({
         savingPatient: true
       });

@@ -225,7 +225,7 @@ export default class BookingLocationUser extends Component {
             <div style={{marginTop: '40px'}}>Patient Location / Address</div>
             <div className="PatientAddress">
               <div className="PatientAddressLeft inline">
-                <input type="text" id="postalCode" name="postalCode" value={this.state.postalCode} onChange={this._onChangePostalCode.bind(this)} placeholder="Enter Postal Code*" required />
+                <input type="text" id="postalCode" name="postalCode" value={this.state.postalCode} onChange={this._onChangePostalCode.bind(this)} placeholder="Enter Postal Code*" pattern="[0-9]{6}" required />
                 <input type="text" id="unitNumber" name="unitNumber" valueLink={linkState(this, 'unitNumber')} placeholder="Enter Unit Number" />
               </div>
               <div className="PatientAddressRight inline">
@@ -469,7 +469,7 @@ export default class BookingLocationUser extends Component {
   _onClickSavePatient(event) {
     if (this._patientDetailsForm.checkValidity()) {
       event.preventDefault();
-      
+
       this.setState({
         savingPatient: true
       });

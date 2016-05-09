@@ -10,6 +10,7 @@ import LoginPopup from '../LoginPopup';
 import DayPickerPopup from '../DayPickerPopup';
 import AlertPopup from '../AlertPopup';
 import BookingActions from '../../actions/BookingActions';
+import Location from '../../core/Location';
 
 export default class BookingLocation extends Component {
 
@@ -37,7 +38,7 @@ export default class BookingLocation extends Component {
   render() {
     var component, userDetails, patientDetails;
     component = (
-      <form ref={(c) => this._bookingLocationForm = c}>
+      <form ref={(c) => this._bookingLocationForm = c} onSubmit={this._onNext.bind(this)}>
         <div className="BookingLocationBodySection">
           <span>I&apos;m an existing customer</span>
           <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this._onClickLogin.bind(this)}>LOGIN</a>
@@ -59,7 +60,7 @@ export default class BookingLocation extends Component {
           <input type="text" id="client_firstName" name="client_firstName" valueLink={linkState(this, 'client_firstName')} placeholder="First Name*" maxLength="50" required />
           <input type="text" id="client_lastName" name="client_lastName" valueLink={linkState(this, 'client_lastName')} placeholder="Last Name*" maxLength="50" required />
           <input type="email" id="client_contactEmail" name="client_contactEmail" valueLink={linkState(this, 'client_contactEmail')} placeholder="Email*" maxLength="50" required />
-          <input type="text" id="client_contactNumber" name="client_contactNumber" valueLink={linkState(this, 'client_contactNumber')} placeholder="Contact Number*" maxLength="8" required />
+          <input type="text" id="client_contactNumber" name="client_contactNumber" valueLink={linkState(this, 'client_contactNumber')} placeholder="Mobile Number*" pattern="[8,9]{1}[0-9]{7}" required />
         </div>
         <div className="BookingLocationBodySection">
           <div>
@@ -105,7 +106,7 @@ export default class BookingLocation extends Component {
             </div>
           </div>
           <p className="small">This information will only be used to contact you regarding your booking.</p>
-          <a href="/booking3a" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
+          <button className="btn btn-primary" type="submit">NEXT</button>
         </div>
       </form>
     );
@@ -227,7 +228,7 @@ export default class BookingLocation extends Component {
 
   _onNext(event) {
     if (this._bookingLocationForm.checkValidity()) {
-      Link.handleClickQuery(this.props.location && this.props.location.query, event);
+      event.preventDefault();
 
       var user =  {
         client_contactEmail: this.state.client_contactEmail,
@@ -251,6 +252,8 @@ export default class BookingLocation extends Component {
       BookingActions.setBooker(user);
       BookingActions.setLocation(location);
       BookingActions.setLast('booking2');
+
+      Location.push({ pathname: '/booking3a', query: this.props.location.query });
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');

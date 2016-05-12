@@ -130,6 +130,12 @@ export default class BookingComplete extends Component {
               this.setState({
                 bookingVerified: true
               });
+
+              // Notify parent window if it's embedded widget
+              if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
+                window.parent.EbeecareEmbedLink && window.location.replace(window.parent.EbeecareEmbedLink);
+                window.parent.soe && window.parent.soe.toggleLightBox && window.parent.soe.toggleLightBox('getso');
+              }
             });
           } else {
             console.error('Failed to create booking.');

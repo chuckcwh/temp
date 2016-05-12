@@ -133,9 +133,9 @@ class BookingComplete extends Component {
                 bookingVerified: true
               });
 
-              // Notify parent window if it's embedded widget
+              // Notify parent window of booking completion for embedded widget
               if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
-                window.parent.postMessage('closeebkwidget', '*');
+                window.parent.postMessage('completedBooking', '*');
               }
             });
           } else {
@@ -152,12 +152,18 @@ class BookingComplete extends Component {
   render() {
     if (!this.state.booking) return null;
 
-    var component, identity;
+    var component, identity, footer;
 
     if (this.state.bookingStatus) {
       if (this.state.bookingId) {
         var bookingLink, activateText;
-        if (this.state.bookingVerified) {
+        if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
+          bookingLink = (
+            <div>
+              <a href="#" className="btn btn-primary" style={{'color': '#fff'}} onClick={this._onClickClose.bind(this)}>Close Window</a>
+            </div>
+          );
+        } else if (this.state.bookingVerified) {
           bookingLink = (
             <div>
               <a href={'/booking-manage?bid=' + this.state.bookingId + '&email=' + this.state.booking.client_contactEmail} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</a>
@@ -193,6 +199,15 @@ class BookingComplete extends Component {
         );
       }
 
+      if (!(this.props.location && this.props.location.query && this.props.location.query.widget == 'true')) {
+        footer = (
+          <div className="BookingCompleteFooter">
+            <a href="/booking1" className="btn btn-primary" onClick={Link.handleClick}>Make Another Booking</a>
+            <a href="/" className="btn btn-primary" onClick={Link.handleClick}>Back To Homepage</a>
+          </div>
+        );
+      }
+
       component = (
         <div className="BookingCompleteBody">
           <div className="BookingCompleteHeader">
@@ -208,10 +223,7 @@ class BookingComplete extends Component {
           <div>
             For inquiries on your order, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
           </div>
-          <div className="BookingCompleteFooter">
-            <a href="/booking1" className="btn btn-primary" onClick={Link.handleClick}>Make Another Booking</a>
-            <a href="/" className="btn btn-primary" onClick={Link.handleClick}>Back To Homepage</a>
-          </div>
+          {footer}
         </div>
       );
     } else if (this.state.bookingStatus < 1) {
@@ -256,6 +268,10 @@ class BookingComplete extends Component {
     event.preventDefault();
 
     Location.replace({ pathname: '/booking-manage', query: { bid: this.state.bookingId, email: this.state.bookingEmail } });
+  }
+
+  _onClickClose(event) {
+    window.parent.postMessage('closeebkwidget', '*');
   }
 
 }

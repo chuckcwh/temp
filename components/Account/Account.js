@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import linkState from 'react-link-state';
 import request from 'superagent';
@@ -8,10 +9,10 @@ import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setBooking, setLastPage } from '../../actions';
 import Util from '../../core/Util';
 
-export default class Account extends Component {
+class Account extends Component {
 
   constructor(props) {
     super(props);
@@ -45,7 +46,7 @@ export default class Account extends Component {
             if (res.body && res.body.booking && res.body.status) {
               console.log(res.body.booking);
               if (res.body.booking) {
-                BookingActions.setBooking(res.body.booking);
+                this.props.setBooking(res.body.booking);
               }
             } else {
               console.error('Failed to obtain booking data.');
@@ -73,7 +74,7 @@ export default class Account extends Component {
             if (res.body && res.body.booking && res.body.status) {
               console.log(res.body.booking);
               if (res.body.booking) {
-                BookingActions.setBooking(res.body.booking);
+                this.props.setBooking(res.body.booking);
               }
             } else {
               console.error('Failed to obtain booking data.');
@@ -179,7 +180,7 @@ export default class Account extends Component {
           if (res.body && res.body.booking && res.body.status) {
             console.log(res.body.booking);
             if (res.body.booking) {
-              BookingActions.setBooking(res.body.booking);
+              this.props.setBooking(res.body.booking);
             }
           } else {
             console.error('Failed to obtain booking data.');
@@ -193,3 +194,26 @@ export default class Account extends Component {
   }
 
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    booking: state.booking,
+    user: state.user,
+    patient: state.patient
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setBooking: (booking) => {
+      dispatch(setBooking(booking));
+    },
+    setLastPage: (page) => {
+      dispatch(setLastPage(page));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Account);

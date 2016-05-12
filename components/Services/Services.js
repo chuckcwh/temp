@@ -7,7 +7,6 @@ import './Services.scss';
 import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 

@@ -1,33 +1,34 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import './BookingPostComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
-import BookingActions from '../../actions/BookingActions';
 
-export default class BookingPostComplete extends Component {
+class BookingPostComplete extends Component {
 
   constructor(props) {
     super(props);
   }
 
   render() {
+    const { booking } = this.props;
     var component, message, bookingId, bookingAmt;
 
-    if (this.props.booking && this.props.booking.case && this.props.booking.case.transactions && this.props.booking.case.transactions.length) {
-      var transaction = this.props.booking.case.transactions[0];
+    if (booking && booking.case && booking.case.transactions && booking.case.transactions.length) {
+      var transaction = booking.case.transactions[0];
       if (transaction)
       message = (
         <span>Your payment via {transaction.method} is {transaction.status}. Look out for our email on your booking summary.</span>
       );
     }
 
-    if (this.props.booking && this.props.booking.id) {
-      bookingId = this.props.booking.id;
+    if (booking && booking.id) {
+      bookingId = booking.id;
     }
-    
-    if (this.props.booking && this.props.booking.case && this.props.booking.case.price) {
-      bookingAmt = this.props.booking.case.price;
+
+    if (booking && booking.case && booking.case.price) {
+      bookingAmt = booking.case.price;
     }
 
     // if (this.state.bookingStatus) {
@@ -85,3 +86,11 @@ export default class BookingPostComplete extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    booking: state.booking
+  }
+}
+
+export default connect(mapStateToProps, {})(BookingPostComplete);

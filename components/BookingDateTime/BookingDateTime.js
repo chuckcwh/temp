@@ -4,7 +4,7 @@ import Container from '../Container';
 import Link from '../Link';
 import BookingDateTimeNavItem from '../BookingDateTimeNavItem';
 
-export default class BookingDateTime extends Component {
+class BookingDateTime extends Component {
 
   render() {
     return (
@@ -12,9 +12,9 @@ export default class BookingDateTime extends Component {
         <div className="BookingDateTimeNav-wrapper">
           <Container>
             <ul className="BookingDateTimeNav">
-              <BookingDateTimeNavItem path={this.props.path} active={'booking3a'} link={'booking3a'} name={'Select Service Dates'} />
-              <BookingDateTimeNavItem path={this.props.path} active={'booking3b'} link={'booking3b'} name={'Select Timeslots'} />
-              <BookingDateTimeNavItem path={this.props.path} active={'booking3c'} name={'Select Sessions'} />
+              <BookingDateTimeNavItem active={'booking3a'} link={'booking3a'} name={'Select Service Dates'} />
+              <BookingDateTimeNavItem active={'booking3b'} link={'booking3b'} name={'Select Timeslots'} />
+              <BookingDateTimeNavItem active={'booking3c'} name={'Select Sessions'} />
             </ul>
           </Container>
         </div>
@@ -30,3 +30,5 @@ export default class BookingDateTime extends Component {
   }
 
 }
+
+export default BookingDateTime;

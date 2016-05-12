@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import assign from 'object-assign';
 import request from 'superagent';
 import moment from 'moment';
@@ -8,37 +9,39 @@ import './BookingResults.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import ConfirmPopup from '../ConfirmPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
-export default class BookingResults extends Component {
+class BookingResults extends Component {
 
   constructor(props) {
     super(props);
+    const { order } = props;
     this.state = {
       sessions: undefined,
       slots: undefined,
-      promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code,
-      showPromoButton: (this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code && this.props.booking.promoCode.code.length) ? true : false,
-      disablePromo: (this.props.booking && this.props.booking.promoCode) ? true : false,
+      promoCode: order && order.promoCode && order.promoCode.code,
+      showPromoButton: (order && order.promoCode && order.promoCode.code && order.promoCode.code.length) ? true : false,
+      disablePromo: (order && order.promoCode) ? true : false,
       agree: false
     };
   }
 
   componentDidMount() {
+    const { order } = this.props;
     // Reset sum displayed on sidebar
-    BookingActions.setSum();
+    this.props.setOrderSum(null);
 
     this.serverRequest1 = request
       .get(Util.host + '/api/getAvailableSchedule')
       .query({
-        service: this.props.booking.service,
-        'dates[]': this.props.booking.dates.map(date => {
+        service: order.service,
+        'dates[]': order.dates.map(date => {
           return moment(date).format('YYYY-MM-DD');
         }),
-        preferredPostalCode: this.props.booking.location.postalCode,
-        'preferredTimes[]': this.props.booking.timeslots   // hack to send PHP style arrays
+        preferredPostalCode: order.location.postalCode,
+        'preferredTimes[]': order.timeslots   // hack to send PHP style arrays
       })
       .auth(Util.authKey, Util.authSecret)
       .end((err, res) => {
@@ -68,7 +71,7 @@ export default class BookingResults extends Component {
             sessions[i] = assign(session, {date: timeslot.date});
             if (session.time) {
               checkedData['session'+i] = true;
-              sum += Util.calcRate(sessions[i], this.props.booking.promoCode, this.props.booking.service);
+              sum += Util.calcRate(sessions[i], order.promoCode, order.service);
             } else {
               session.disabled = true;
             }
@@ -78,7 +81,7 @@ export default class BookingResults extends Component {
             sessions: sessions
           }, checkedData);
           this.setState(state);
-          BookingActions.setSum(sum);
+          this.props.setOrderSum(sum);
         } else {
           console.error('Failed to obtain timeslots data.');
         }
@@ -102,7 +105,7 @@ export default class BookingResults extends Component {
     }
     var promoButton;
     if (this.state.showPromoButton) {
-      if (this.props.booking.promoCode) {
+      if (this.props.order.promoCode) {
         promoButton = (
           <button className="btn btn-primary btn-small" onClick={this._onRemovePromo.bind(this)}>Remove</button>
         );
@@ -119,10 +122,10 @@ export default class BookingResults extends Component {
           {
             this.state.sessions && this.state.sessions.map((session, index) => {
               var promo, rate, discountedRate, priceText;
-              promo = this.props.booking.promoCode;
+              promo = this.props.order.promoCode;
               rate = session.price;
               if (promo) {
-                discountedRate = Util.calcRate(session, this.props.booking.promoCode, this.props.booking.service).toFixed(2);
+                discountedRate = Util.calcRate(session, this.props.order.promoCode, this.props.order.service).toFixed(2);
                 if (discountedRate == rate) {
                   // empty discountedRate if there is actually no discount
                   discountedRate = null;
@@ -223,7 +226,7 @@ export default class BookingResults extends Component {
               promoCode: res.body.promoCode.code,
               disablePromo: true
             });
-            BookingActions.setPromoCode(res.body.promoCode);
+            this.props.setOrderPromoCode(res.body.promoCode);
 
             this._updateSum();
           } else {
@@ -246,7 +249,7 @@ export default class BookingResults extends Component {
       promoCode: undefined,
       disablePromo: false
     });
-    BookingActions.setPromoCode();
+    this.props.setOrderPromoCode();
 
     this._updateSum();
   }
@@ -280,9 +283,9 @@ export default class BookingResults extends Component {
         Location.push({ pathname: '/booking4', query: this.props.location && this.props.location.query });
 
         // console.log(sessions);
-        BookingActions.setSessions(sessions);
+        this.props.setOrderSessions(sessions);
         // console.log(this.state);
-        BookingActions.setLast('booking3c');
+        this.props.setLastPage('booking3c');
       } else {
         this._rejectPopup.show('To continue, please accept our Terms of Service and Privacy Policy.');
       }
@@ -297,11 +300,36 @@ export default class BookingResults extends Component {
     var sum = 0;
     for (var i = 0; i < this.state.sessions.length; i++) {
       if (this.state['session'+i]) {
-        sum += Util.calcRate(this.state.sessions[i], this.props.booking.promoCode, this.props.booking.service);
+        sum += Util.calcRate(this.state.sessions[i], this.props.order.promoCode, this.props.order.service);
       }
     }
-    // this.props.booking.sum = this.state.sum;
-    BookingActions.setSum(sum);
+    this.props.setOrderSum(sum);
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    order: state.order
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setOrderSum: (sum) => {
+      dispatch(setOrderSum(sum));
+    },
+    setOrderPromoCode: (promoCode) => {
+      dispatch(setOrderPromoCode(promoCode));
+    },
+    setOrderSessions: (sessions) => {
+      dispatch(setOrderSessions(sessions));
+    },
+    setLastPage: (page) => {
+      dispatch(setLastPage(page));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingResults);

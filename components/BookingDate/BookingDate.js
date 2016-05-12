@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import DayPicker, { DateUtils } from 'react-day-picker';
-import some from 'lodash.some';
-import remove from 'lodash.remove';
+import some from 'lodash/some';
+import remove from 'lodash/remove';
 import moment from 'moment';
 import './BookingDate.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setOrderDates, setLastPage } from '../../actions';
 
-export default class BookingDate extends Component {
+class BookingDate extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      selectedDates: this.props.booking && this.props.booking.dates || []
+      selectedDates: this.props.order && this.props.order.dates || []
     };
   }
 
@@ -96,8 +97,8 @@ export default class BookingDate extends Component {
       Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       // this.props.booking.range = this.state.range;
-      BookingActions.setDates(this.state.selectedDates);
-      BookingActions.setLast('booking3a');
+      this.props.setOrderDates(this.state.selectedDates);
+      this.props.setLastPage('booking3a');
     } else {
       event.preventDefault();
       // alert('Please select a date range.');
@@ -106,3 +107,23 @@ export default class BookingDate extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    order: state.order
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setOrderDates: (dates) => {
+      dispatch(setOrderDates(dates));
+    },
+    setLastPage: (page) => {
+      dispatch(setLastPage(page));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingDate);

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 import './BookingPayment.scss';
 import Container from '../Container';
 import Link from '../Link';
-import BookingActions from '../../actions/BookingActions';
+import { setPostStatus } from '../../actions';
 
-export default class BookingPayment extends Component {
+class BookingPayment extends Component {
 
   render() {
+    const { location, booking, postStatus } = this.props;
     var bankTransferItem;
-    var dates = this.props.booking && this.props.booking.case && this.props.booking.case.dates;
+    var dates = booking && booking.case && booking.case.dates;
     if (dates) {
       var earliestDate;
       for (var i = 0; i < dates.length; i++) {
@@ -26,7 +28,7 @@ export default class BookingPayment extends Component {
       if (earliestDate > new Date()) {
         bankTransferItem = (
           <li className="BookingPaymentNav-item">
-            <a className={classNames('BookingPaymentNav-link', (this.props.path === '/booking-confirmation' && this.props.postStatus === 'payment-bank') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'bank')}>Bank Transfer<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
+            <a className={classNames('BookingPaymentNav-link', (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-bank') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'bank')}>Bank Transfer<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
           </li>
         );
       }
@@ -37,7 +39,7 @@ export default class BookingPayment extends Component {
           <Container>
             <ul className="BookingPaymentNav">
               <li className="BookingPaymentNav-item">
-                <a className={classNames('BookingPaymentNav-link', (this.props.path === '/booking-confirmation' && this.props.postStatus === 'payment-paypal') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'paypal')}>Paypal (Credit/Debit)<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
+                <a className={classNames('BookingPaymentNav-link', (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-paypal') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'paypal')}>Paypal (Credit/Debit)<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
               </li>
               {bankTransferItem}
               {/*<li className="BookingPaymentNav-item">
@@ -60,7 +62,25 @@ export default class BookingPayment extends Component {
   _onClick(paymentType, event) {
     event.preventDefault();
 
-    BookingActions.setPostStatus('payment-' + paymentType);
+    this.props.setPostStatus('payment-' + paymentType);
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    booking: state.booking,
+    postStatus: state.postStatus
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setPostStatus: (status) => {
+      dispatch(setPostStatus(status));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingPayment);

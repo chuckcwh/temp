@@ -1,37 +1,36 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Loader from 'react-loader';
 import './BookingServices.scss';
 import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setOrderService, setLastPage } from '../../actions';
 import Util from '../../core/Util';
 
-export default class BookingServices extends Component {
+class BookingServices extends Component {
 
   constructor(props) {
     super(props);
+    const { allServices, order, location } = this.props;
     this.state = {
       filter: Util.ALL_SERVICES,
       selectedService: undefined
     };
-    if (this.props.booking && this.props.booking.service) {
-      this.state.selectedService = this.props.booking.service;
-    } else if (this.props.allServices && this.props.location.query && this.props.location.query.sid) {
-      for (var i = 0; i < this.props.allServices.length; i++) {
-        if (parseInt(this.props.allServices[i].id) === parseInt(this.props.location.query.sid)) {
-          this.state.selectedService = this.props.allServices[i].id;
-          break;
-        }
+    if (order && order.service) {
+      this.state.selectedService = order.service;
+    } else if (allServices && location.query && location.query.sid) {
+      if (allServices[location.query.sid]) {
+        this.state.selectedService = location.query.sid;
       }
     }
   }
 
   componentWillReceiveProps(props) {
-    if (props.booking && props.booking.service) {
+    if (props.order && props.order.service) {
       this.setState({
-        selectedService: props.booking.service
+        selectedService: props.order.service
       });
     } else if (props.allServices && props.location.query && props.location.query.sid) {
       for (var i = 0; i < props.allServices.length; i++) {
@@ -46,9 +45,12 @@ export default class BookingServices extends Component {
   }
 
   render() {
+    const { allServices } = this.props;
+    const { filter, selectedService } = this.state;
+
     return (
       <div className="BookingServices">
-        <Loader className="spinner" loaded={this.props.allServices ? true : false}>
+        <Loader className="spinner" loaded={allServices ? true : false}>
           <div className="BookingServicesNav-wrapper">
             <Container>
               <ul className="BookingServicesNav">
@@ -56,7 +58,7 @@ export default class BookingServices extends Component {
                 Util.SERVICES_CATEGORY_ORDER.map(category => {
                   return (
                     <li className="BookingServicesNav-item" key={category}>
-                      <a className={classNames('BookingServicesNav-link', (this.state.filter === category) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, category)}>{category}<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                      <a className={classNames('BookingServicesNav-link', (filter === category) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, category)}>{category}<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
                     </li>
                   );
                 })
@@ -69,9 +71,9 @@ export default class BookingServices extends Component {
               <form ref={(c) => this._bookingServicesForm = c}>
                 <div className="BookingServicesBody">
                 {
-                  this.props.allServices && Util.subFilterServices(Util.filterServices(this.props.allServices, this.state.filter)).map(services => {
+                  allServices && Util.subFilterServices(Util.filterServices(allServices, filter)).map(services => {
                     var header;
-                    if (this.state.filter === Util.ALL_SERVICES) {
+                    if (filter === Util.ALL_SERVICES) {
                       header = (
                         <h3><a href="#" onClick={this._onClickFilter.bind(this, services[0].category)}>{services[0].category}</a> &gt; {services[0].subType}</h3>
                       );
@@ -88,7 +90,7 @@ export default class BookingServices extends Component {
                             var id = "BookingServicesRadio" + service.id;
                             return (
                               <div className="BookingServicesItem" key={service.id}>
-                                <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === this.state.selectedService} onChange={this._onSelect.bind(this)} required />
+                                <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === selectedService} onChange={this._onSelect.bind(this)} required />
                                 <label className="BookingServicesRadioLabel" htmlFor={id}>
                                   <span><span></span></span><span>{service.name}</span>
                                 </label>
@@ -130,8 +132,9 @@ export default class BookingServices extends Component {
   _onNext(event) {
     if (this._bookingServicesForm.checkValidity()) {
       Link.handleClickQuery(this.props.location && this.props.location.query, event);
-      BookingActions.setService(this.state.selectedService);
-      BookingActions.setLast('booking1');
+
+      this.props.setOrderService(this.state.selectedService);
+      this.props.setLastPage('booking1');
     } else {
       event.preventDefault();
       // alert('Please select a service');
@@ -140,3 +143,24 @@ export default class BookingServices extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    order: state.order,
+    allServices: state.allServices
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setOrderService: (service) => {
+      dispatch(setOrderService(service));
+    },
+    setLastPage: (page) => {
+      dispatch(setLastPage(page));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingServices);

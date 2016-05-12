@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import './BookingTime.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setOrderTimeslots, setLastPage } from '../../actions';
 
-export default class BookingTime extends Component {
+class BookingTime extends Component {
 
   constructor(props) {
     super(props);
+    const { order } = this.props;
     this.state = {
-      Morning: this.props.booking && this.props.booking.timeslots && this.props.booking.timeslots.indexOf('Morning')>-1,
-      Afternoon: this.props.booking && this.props.booking.timeslots && this.props.booking.timeslots.indexOf('Afternoon')>-1,
-      Evening: this.props.booking && this.props.booking.timeslots && this.props.booking.timeslots.indexOf('Evening')>-1
+      Morning: order && order.timeslots && order.timeslots.indexOf('Morning')>-1,
+      Afternoon: order && order.timeslots && order.timeslots.indexOf('Afternoon')>-1,
+      Evening: order && order.timeslots && order.timeslots.indexOf('Evening')>-1
     };
   }
 
@@ -64,9 +66,28 @@ export default class BookingTime extends Component {
 
     Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
-    // this.props.booking.timeslots = timeslots;
-    BookingActions.setTimeslots(timeslots);
-    BookingActions.setLast('booking3b');
+    this.props.setOrderTimeslots(timeslots);
+    this.props.setLastPage('booking3b');
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    order: state.order
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setOrderTimeslots: (timeslots) => {
+      dispatch(setOrderTimeslots(timeslots));
+    },
+    setLastPage: (page) => {
+      dispatch(setLastPage(page));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingTime);

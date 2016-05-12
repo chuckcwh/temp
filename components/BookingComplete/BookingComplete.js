@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import request from 'superagent';
 import Loader from 'react-loader';
 import moment from 'moment';
@@ -6,11 +7,11 @@ import './BookingComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import BookingActions from '../../actions/BookingActions';
+import { destroyOrder } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
-export default class BookingComplete extends Component {
+class BookingComplete extends Component {
 
   constructor(props) {
     super(props);
@@ -25,31 +26,32 @@ export default class BookingComplete extends Component {
   }
 
   componentDidMount() {
-    if (this.props.user && this.props.patient) {
+    const { order, location, user } = this.props;
+    if (user && order && order.patient) {
       var dates = [];
-      for (var i = 0; i < this.props.booking.sessions.length; i++) {
+      for (var i = 0; i < order.sessions.length; i++) {
         dates.push({
           type: 'Schedule',
-          dateTimeStart: this.props.booking.sessions[i].date + ' 00:00:00',
-          estTime: this.props.booking.sessions[i].time,
-          price: this.props.booking.sessions[i].price
+          dateTimeStart: order.sessions[i].date + ' 00:00:00',
+          estTime: order.sessions[i].time,
+          price: order.sessions[i].price
         });
       }
       this.serverRequest = request
         .post(Util.host + '/api/createCase')
-        .auth(this.props.user.id, this.props.user.token)
+        .auth(user.id, user.token)
         .send({
-          notes: this.props.booking && this.props.booking.booker && this.props.booking.booker.additionalInfo,
-          price: this.props.booking && this.props.booking.sum && this.props.booking.sum.toFixed(2),
-          pid: this.props.patient.id,
-          sid: this.props.booking && this.props.booking.service,
+          notes: order && order.booker && order.booker.additionalInfo,
+          price: order && order.sum && order.sum.toFixed(2),
+          pid: order && order.patient && order.patient.id,
+          sid: order && order.service,
           dates: dates,
           addresses: [{
-            address: this.props.booking && this.props.booking.location && this.props.booking.location.address,
-            postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
-            unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber
+            address: order && order.location && order.location.address,
+            postalCode: order && order.location && order.location.postalCode,
+            unitNumber: order && order.location && order.location.unitNumber
           }],
-          promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code
+          promoCode: order && order.promoCode && order.promoCode.code
         })
         .end((err, res) => {
           if (err) {
@@ -57,8 +59,8 @@ export default class BookingComplete extends Component {
           }
           // console.log(res.body);
           if (res.body && res.body.case) {
-            // Destroy booking
-            BookingActions.destroyBooking();
+            // Destroy order
+            this.props.destroyOrder();
 
             this.setState({
               bookingStatus: res.body.status,
@@ -69,14 +71,14 @@ export default class BookingComplete extends Component {
             console.error('Failed to create case.');
           }
         });
-    } else if (this.props.booking) {
+    } else if (order && order.service && order.sessions && order.booker) {
       var dates = [];
-      for (var i = 0; i < this.props.booking.sessions.length; i++) {
+      for (var i = 0; i < order.sessions.length; i++) {
         dates.push({
           type: 'Schedule',
-          dateTimeStart: this.props.booking.sessions[i].date + ' 00:00:00',
-          estTime: this.props.booking.sessions[i].time,
-          price: this.props.booking.sessions[i].price
+          dateTimeStart: order.sessions[i].date + ' 00:00:00',
+          estTime: order.sessions[i].time,
+          price: order.sessions[i].price
         });
       }
       this.serverRequest = request
@@ -84,30 +86,30 @@ export default class BookingComplete extends Component {
         .auth(Util.authKey, Util.authSecret)
         .send({
           booking: {
-            client_contactEmail: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactEmail,
-            client_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
-            client_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_firstName,
-            client_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_lastName,
-            patient_contactEmail: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactEmail,
-            patient_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
-            patient_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_firstName,
-            patient_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_lastName,
-            patient_dob: moment(this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob).format('YYYY-MM-DD'),
-            patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender,
-            organization: this.props.location && this.props.location.query && this.props.location.query.organization || undefined
+            client_contactEmail: order && order.booker && order.booker.client_contactEmail,
+            client_contactNumber: order && order.booker && order.booker.client_contactNumber,
+            client_firstName: order && order.booker && order.booker.client_firstName,
+            client_lastName: order && order.booker && order.booker.client_lastName,
+            patient_contactEmail: order && order.booker && order.booker.client_contactEmail,
+            patient_contactNumber: order && order.booker && order.booker.client_contactNumber,
+            patient_firstName: order && order.booker && order.booker.patient_firstName,
+            patient_lastName: order && order.booker && order.booker.patient_lastName,
+            patient_dob: moment(order && order.booker && order.booker.patient_dob).format('YYYY-MM-DD'),
+            patient_gender: order && order.booker && order.booker.patient_gender,
+            organization: location && location.query && location.query.organization || undefined
           },
           case: {
-            sid: this.props.booking && this.props.booking.service,
-            notes: this.props.booking && this.props.booking.booker && this.props.booking.booker.additionalInfo,
-            price: this.props.booking && this.props.booking.sum && this.props.booking.sum.toFixed(2),
+            sid: order && order.service,
+            notes: order && order.booker && order.booker.additionalInfo,
+            price: order && order.sum && order.sum.toFixed(2),
             dates: dates,
             addresses: [{
-              address: this.props.booking && this.props.booking.location && this.props.booking.location.address,
-              postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
-              unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber
+              address: order && order.location && order.location.address,
+              postalCode: order && order.location && order.location.postalCode,
+              unitNumber: order && order.location && order.location.unitNumber
             }]
           },
-          promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code
+          promoCode: order && order.promoCode && order.promoCode.code
         })
         .end((err, res) => {
           if (err) {
@@ -115,8 +117,8 @@ export default class BookingComplete extends Component {
           }
           // console.log(res.body);
           if (res.body && res.body.booking && res.body.booking.case) {
-            // Destroy booking
-            BookingActions.destroyBooking();
+            // Destroy order
+            this.props.destroyOrder();
 
             this.setState({
               bookingStatus: res.body.status,
@@ -149,7 +151,7 @@ export default class BookingComplete extends Component {
   }
 
   render() {
-    if (!this.props.booking) return null;
+    if (!this.state.booking) return null;
 
     var component, identity;
 
@@ -258,3 +260,21 @@ export default class BookingComplete extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    order: state.order,
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    destroyOrder: () => {
+      dispatch(destroyOrder());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingComplete);

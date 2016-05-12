@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import request from 'superagent';
 import moment from 'moment';
@@ -6,7 +7,7 @@ import Loader from 'react-loader';
 import './BookingDetails.scss';
 import Container from '../Container';
 import Link from '../Link';
-import BookingActions from '../../actions/BookingActions';
+import { setBooking, setPostStatus } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
@@ -183,10 +184,10 @@ export default class BookingDetails extends Component {
     } else {
       addressDetails = (
         <div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses[0].address}</div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses[0].unitNumber}</div>
+          <div>{this.props.booking.case && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}</div>
+          <div>{this.props.booking.case && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</div>
         </div>
-      );  
+      );
     }
     sessionDetails = (
       <div>
@@ -238,7 +239,7 @@ export default class BookingDetails extends Component {
         <a href="#" className="btn btn-primary" onClick={this._onClickPay.bind(this)}>GO TO PAYMENT</a>
       );
     }
-    
+
     // set booking status
     var bookingStatus = '';
     if (this.props.booking.case.status === 'Accepting Quotes') {
@@ -402,7 +403,7 @@ export default class BookingDetails extends Component {
                   editingUser: false,
                   updatingUser: false
                 });
-                BookingActions.setBooking(res.body.booking);
+                this.props.setBooking(res.body.booking);
               } else {
                 console.error('Failed to edit booking.');
               }
@@ -442,7 +443,7 @@ export default class BookingDetails extends Component {
                   editingAddress: false,
                   updatingAddress: false
                 });
-                BookingActions.setBooking(res.body.booking);
+                this.props.setBooking(res.body.booking);
               } else {
                 console.error('Failed to edit booking.');
               }
@@ -503,7 +504,7 @@ export default class BookingDetails extends Component {
   _onClickManageBooking(event) {
     Link.handleClick(event);
 
-    BookingActions.destroyBooking();
+    this.props.setBooking(null);
   }
 
   _onClickPay(event) {
@@ -511,7 +512,27 @@ export default class BookingDetails extends Component {
     event.preventDefault();
     Location.push({ pathname: '/booking-confirmation', query: this.props.location.query });
 
-    BookingActions.setPostStatus('confirmation');
+    this.props.setPostStatus('confirmation');
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    booking: state.booking
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setBooking: (booking) => {
+      dispatch(setBooking(booking));
+    },
+    setPostStatus: (status) => {
+      dispatch(setPostStatus(status));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingDetails);

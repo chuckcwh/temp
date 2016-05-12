@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import './BookingPostSidebar.scss';
 
-export default class BookingPostSidebar extends Component {
+class BookingPostSidebar extends Component {
 
   constructor(props) {
     super(props);
@@ -10,11 +11,11 @@ export default class BookingPostSidebar extends Component {
 
   render() {
     var service, location, sessions, sum;
-    if (this.props.allServicesHash && this.props.booking && this.props.booking.case && this.props.booking.case.service) {
-      service = this.props.allServicesHash[this.props.booking.case.service].name;
+    if (this.props.allServices && this.props.booking && this.props.booking.case && this.props.booking.case.service) {
+      service = this.props.allServices[this.props.booking.case.service].name;
     }
-    if (this.props.booking && this.props.booking.case) {
-      location = (<span>{this.props.booking.case.addresses[0].address}<br/>{this.props.booking.case.addresses[0].unitNumber}</span>);
+    if (this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0]) {
+      location = (<span>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}<br/>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</span>);
     }
     if (this.props.booking && this.props.booking.case) {
       sessions = this.props.booking.case.dates;
@@ -63,3 +64,11 @@ export default class BookingPostSidebar extends Component {
   }
 
 }
+const mapStateToProps = (state) => {
+  return {
+    allServices: state.allServices,
+    booking: state.booking
+  }
+}
+
+export default connect(mapStateToProps, {})(BookingPostSidebar);

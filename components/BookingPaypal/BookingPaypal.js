@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import request from 'superagent';
 import Loader from 'react-loader';
 import './BookingPaypal.scss';
 import Link from '../Link';
-import BookingActions from '../../actions/BookingActions';
+import { setPostStatus } from '../../actions';
 import Util from '../../core/Util';
 
-export default class BookingPaypal extends Component {
+class BookingPaypal extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      paymentId: this.props.location.query['paymentId'],
+      paymentId: this.props.location && this.props.location.query && this.props.location.query['paymentId'],
       pending: false,
       redirecting: false
     };
@@ -36,7 +37,7 @@ export default class BookingPaypal extends Component {
           console.log(res.body);
           if (res.body && res.body.status) {
             // console.log(res.body.items);
-            BookingActions.setPostStatus('success');
+            this.props.setPostStatus('success');
           } else {
             console.error('Failed to execute paypal payment.');
           }
@@ -97,15 +98,16 @@ export default class BookingPaypal extends Component {
     var url;
     if (typeof window !== 'undefined') {
       url = (window.location.href.indexOf('?') > -1 ? window.location.href.slice(0, window.location.href.indexOf('?')+1) : window.location.href) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail;
+      url = url.replace('#', '');
     }
 
     this.serverRequest2 = request
       .post(Util.host + '/api/makePaypalWebPayment')
       .auth(Util.authKey, Util.authSecret)
       .send({
-        amount: this.props.booking.case.price,
+        amount: this.props.booking && this.props.booking.case && this.props.booking.case.price,
         type: 'case',
-        cid: this.props.booking.case.id,
+        cid: this.props.booking && this.props.booking.case && this.props.booking.case.id,
         returnUrl: url,
         cancelUrl: url
       })
@@ -131,3 +133,20 @@ export default class BookingPaypal extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    booking: state.booking
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setPostStatus: (status) => {
+      dispatch(setPostStatus(status));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingPaypal);

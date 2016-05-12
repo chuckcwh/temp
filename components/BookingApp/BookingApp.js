@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import request from 'superagent';
 import './BookingApp.scss';
 import Container from '../Container';
@@ -22,26 +23,22 @@ import BookingSidebar from '../BookingSidebar';
 import BookingPostSidebar from '../BookingPostSidebar';
 import BookingDetails from '../BookingDetails';
 import Account from '../Account';
-import BookingActions from '../../actions/BookingActions';
-import BookingStore from '../../stores/BookingStore';
+import { setServices, setPostStatus, setBooking, setUser } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
-export default class BookingApp extends Component {
+class BookingApp extends Component {
 
   constructor(props) {
     super(props);
-    if (this.props.path && this.props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(this.props.path)) {
+    const { location, lastPage } = props;
+    if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1 && !Util.isNavigationAllowed(location.pathname, lastPage)) {
       Location.replace('');
-    } else {
-      this.state = BookingStore.getState();
     }
   }
 
   componentDidMount() {
-    BookingStore.addChangeListener(this._onChange.bind(this));
-
-    if (!BookingStore.getServices()) {
+    if (!this.props.allServices) {
       this.serverRequest1 = request
         .get(Util.host + '/api/getServices')
         .auth(Util.authKey, Util.authSecret)
@@ -51,7 +48,7 @@ export default class BookingApp extends Component {
           }
           if (res.body && res.body.services && Array.isArray(res.body.services)) {
             // console.log(res.body.services);
-            BookingActions.setServices(res.body.services);
+            this.props.setServices(res.body.services);
           } else {
             console.error('Failed to obtain services data.');
           }
@@ -61,7 +58,7 @@ export default class BookingApp extends Component {
     // if "bid" query parameter exists, must be booking manage/confirmation
     if (this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) {
       if (this.props.location.query.token) {
-        BookingActions.setPostStatus('payment-paypal');
+        this.props.setPostStatus('payment-paypal');
       }
 
       this.serverRequest2 = request
@@ -79,12 +76,12 @@ export default class BookingApp extends Component {
             console.log(res.body.booking);
             if (res.body.booking && res.body.booking.case && res.body.booking.case.isPaid) {
               // if booking has already been completed
-              BookingActions.setPostStatus('success');
+              this.props.setPostStatus('success');
             } else if (res.body.booking && res.body.booking.case && res.body.booking.case.status === 'Accepting Quotes') {
               // if booking is still pending service providers
               Location.replace({ pathname: '/booking-manage', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
             }
-            BookingActions.setBooking(res.body.booking);
+            this.props.setBooking(res.body.booking);
           } else {
             console.error('Failed to obtain booking data.');
           }
@@ -102,7 +99,7 @@ export default class BookingApp extends Component {
           }
           if (res.body && res.body.status === 1) {
             console.log(res.body.user);
-            BookingActions.setUser(res.body.user);
+            this.props.setUser(res.body.user);
           } else {
             console.error('Failed to get user data.');
           }
@@ -111,125 +108,122 @@ export default class BookingApp extends Component {
   }
 
   componentWillUnmount() {
-    BookingStore.removeChangeListener(this._onChange.bind(this));
-
     this.serverRequest1 && this.serverRequest1.abort();
     this.serverRequest2 && this.serverRequest2.abort();
     this.serverRequest3 && this.serverRequest3.abort();
   }
 
   componentWillReceiveProps(props) {
-    if (props.path && props.path.indexOf('booking-confirmation') === -1 && !BookingStore.isNavigationAllowed(props.path)) {
+    const { location, lastPage } = props;
+    if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1 && !Util.isNavigationAllowed(location.pathname, lastPage)) {
       Location.replace('');
     }
   }
 
   render() {
-    // console.log('rendered ' + this.props.path + ' ' + this.state.postStatus);
+    const { location, postStatus, user } = this.props;
     var component;
-    if (this.state) {
-      if (this.props.location && this.props.path === '/booking1') {
+    if (location && location.pathname === '/booking1') {
+      component =
+        <div>
+          <BookingNavigation />
+          <BookingServices />
+        </div>;
+    } else if (location && location.pathname === '/booking2') {
+      if (user) {
         component =
           <div>
-            <BookingNavigation path={this.props.path} />
-            <BookingServices location={this.props.location} allServices={this.state.allServices} booking={this.state.booking} />
+            <BookingNavigation />
+            <BookingLocationUser>
+              <BookingSidebar />
+            </BookingLocationUser>
           </div>;
-      } else if (this.props.location && this.props.path === '/booking2') {
-        if (this.state.user) {
-          component =
-            <div>
-              <BookingNavigation path={this.props.path} />
-              <BookingLocationUser allServicesHash={this.state.allServicesHash} booking={this.state.booking} user={this.state.user} patient={this.state.patient} location={this.props.location}>
-                <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
-              </BookingLocationUser>
-            </div>;
-        } else {
-          component =
-            <div>
-              <BookingNavigation path={this.props.path} />
-              <BookingLocation allServicesHash={this.state.allServicesHash} booking={this.state.booking} location={this.props.location}>
-                <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
-              </BookingLocation>
-            </div>;
-        }
-      } else if (this.props.location && (this.props.path === '/booking3' || this.props.path === '/booking3a')) {
+      } else {
         component =
           <div>
-            <BookingNavigation path={this.props.path} />
-            <BookingDateTime booking={this.state.booking} path={this.props.path}>
-              <BookingDate booking={this.state.booking} location={this.props.location} />
-              <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
-            </BookingDateTime>
+            <BookingNavigation />
+            <BookingLocation>
+              <BookingSidebar />
+            </BookingLocation>
           </div>;
-      } else if (this.props.location && this.props.path === '/booking3b') {
-        component =
-          <div>
-            <BookingNavigation path={this.props.path} />
-            <BookingDateTime booking={this.state.booking} path={this.props.path}>
-              <BookingTime booking={this.state.booking} location={this.props.location} />
-              <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
-            </BookingDateTime>
-          </div>;
-      } else if (this.props.location && this.props.path === '/booking3c') {
-        component =
-          <div>
-            <BookingNavigation path={this.props.path} />
-            <BookingDateTime booking={this.state.booking} path={this.props.path}>
-              <BookingResults booking={this.state.booking} location={this.props.location} />
-              <BookingSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} patient={this.state.patient} />
-            </BookingDateTime>
-          </div>;
-      } else if (this.props.location && this.props.path === '/booking4') {
-        component =
-          <BookingComplete booking={this.state.booking} user={this.state.user} patient={this.state.patient} location={this.props.location} />;
-      } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'confirmation') {
-        component =
-          <div>
-            <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingConfirmation location={this.props.location} booking={this.state.booking}>
-              <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
-            </BookingConfirmation>
-          </div>;
-      } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'payment-paypal') {
-        component =
-          <div>
-            <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
-              <BookingPaypal location={this.props.location} booking={this.state.booking} />
-              <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
-            </BookingPayment>
-          </div>;
-      } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'payment-bank') {
-        component =
-          <div>
-            <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
-              <BookingBankTransfer booking={this.state.booking} />
-              <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
-            </BookingPayment>
-          </div>;
-      } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'payment-credits') {
-        component =
-          <div>
-            <BookingPostNavigation path={this.props.path} postStatus={this.state.postStatus} />
-            <BookingPayment path={this.props.path} postStatus={this.state.postStatus} booking={this.state.booking}>
-              <BookingCredits booking={this.state.booking} />
-              <BookingPostSidebar allServicesHash={this.state.allServicesHash} booking={this.state.booking} />
-            </BookingPayment>
-          </div>;
-      } else if (this.props.location && this.props.path === '/booking-confirmation' && this.state.postStatus === 'success') {
-        component =
-          <BookingPostComplete booking={this.state.booking} />
-      } else if (this.props.location && this.props.path === '/booking-manage') {
-        if (this.state.booking && this.state.booking.id && this.state.booking.isHPVerified) {
-          component = (
-            <BookingDetails location={this.props.location} booking={this.state.booking} />
-          );
-        } else {
-          component = (
-            <Account type="login" location={this.props.location} booking={this.state.booking} bid={this.state.booking && this.state.booking.id} email={this.props.location && this.props.location.query && this.props.location.query.email} />
-          );
-        }
+      }
+    } else if (location && (location.pathname === '/booking3' || location.pathname === '/booking3a')) {
+      component =
+        <div>
+          <BookingNavigation />
+          <BookingDateTime>
+            <BookingDate />
+            <BookingSidebar />
+          </BookingDateTime>
+        </div>;
+    } else if (location && location.pathname === '/booking3b') {
+      component =
+        <div>
+          <BookingNavigation />
+          <BookingDateTime>
+            <BookingTime />
+            <BookingSidebar />
+          </BookingDateTime>
+        </div>;
+    } else if (location && location.pathname === '/booking3c') {
+      component =
+        <div>
+          <BookingNavigation />
+          <BookingDateTime>
+            <BookingResults />
+            <BookingSidebar />
+          </BookingDateTime>
+        </div>;
+    } else if (location && location.pathname === '/booking4') {
+      component =
+        <BookingComplete />;
+    } else if (location && location.pathname === '/booking-confirmation' && postStatus === 'confirmation') {
+      component =
+        <div>
+          <BookingPostNavigation />
+          <BookingConfirmation>
+            <BookingPostSidebar />
+          </BookingConfirmation>
+        </div>;
+    } else if (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-paypal') {
+      component =
+        <div>
+          <BookingPostNavigation />
+          <BookingPayment>
+            <BookingPaypal />
+            <BookingPostSidebar />
+          </BookingPayment>
+        </div>;
+    } else if (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-bank') {
+      component =
+        <div>
+          <BookingPostNavigation />
+          <BookingPayment>
+            <BookingBankTransfer />
+            <BookingPostSidebar />
+          </BookingPayment>
+        </div>;
+    } else if (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-credits') {
+      component =
+        <div>
+          <BookingPostNavigation />
+          <BookingPayment>
+            <BookingCredits />
+            <BookingPostSidebar />
+          </BookingPayment>
+        </div>;
+    } else if (location && location.pathname === '/booking-confirmation' && postStatus === 'success') {
+      component =
+        <BookingPostComplete />
+    } else if (location && location.pathname === '/booking-manage') {
+      if (this.props.booking && this.props.booking.id && this.props.booking.isHPVerified) {
+        component = (
+          <BookingDetails />
+        );
+      } else {
+        component = (
+          <Account type="login" bid={this.props.booking && this.props.booking.id} email={this.props.location && this.props.location.query && this.props.location.query.email} />
+        );
       }
     }
     return (
@@ -238,13 +232,34 @@ export default class BookingApp extends Component {
       </div>
     );
   }
-
-  /**
-   * Event handler for 'change' events coming from the BookingStore
-   */
-  _onChange() {
-    this.setState(BookingStore.getState());
-    // console.log(this.state);
-  }
-
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    booking: state.booking,
+    allServices: state.allServices,
+    postStatus: state.postStatus,
+    user: state.user,
+    lastPage: state.lastPage
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setServices: (services) => {
+      dispatch(setServices(services));
+    },
+    setPostStatus: (status) => {
+      dispatch(setPostStatus(status));
+    },
+    setBooking: (booking) => {
+      dispatch(setBooking(booking));
+    },
+    setUser: (user) => {
+      dispatch(setUser(user));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingApp);

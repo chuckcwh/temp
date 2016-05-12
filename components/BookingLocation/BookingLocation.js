@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import request from 'superagent';
 import DatePicker from 'react-datepicker';
@@ -9,29 +10,30 @@ import Link from '../Link';
 import LoginPopup from '../LoginPopup';
 import DayPickerPopup from '../DayPickerPopup';
 import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setOrderBooker, setOrderLocation, setUser, setLastPage } from '../../actions';
 import Location from '../../core/Location';
 
-export default class BookingLocation extends Component {
+class BookingLocation extends Component {
 
   constructor(props) {
     super(props);
+    const { order } = this.props;
     this.state = {
-      client_contactEmail: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactEmail,
-      client_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
-      client_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_firstName,
-      client_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_lastName,
-      patient_contactEmail: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactEmail,
-      patient_contactNumber: this.props.booking && this.props.booking.booker && this.props.booking.booker.client_contactNumber,
-      patient_firstName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_firstName,
-      patient_lastName: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_lastName,
-      patient_dob: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_dob,
+      client_contactEmail: order && order.booker && order.booker.client_contactEmail,
+      client_contactNumber: order && order.booker && order.booker.client_contactNumber,
+      client_firstName: order && order.booker && order.booker.client_firstName,
+      client_lastName: order && order.booker && order.booker.client_lastName,
+      patient_contactEmail: order && order.booker && order.booker.client_contactEmail,
+      patient_contactNumber: order && order.booker && order.booker.client_contactNumber,
+      patient_firstName: order && order.booker && order.booker.patient_firstName,
+      patient_lastName: order && order.booker && order.booker.patient_lastName,
+      patient_dob: order && order.booker && order.booker.patient_dob,
       patient_dob_temp: undefined,
-      patient_gender: this.props.booking && this.props.booking.booker && this.props.booking.booker.patient_gender,
-      additionalInfo: this.props.booking && this.props.booking.booker && this.props.booking.booker.additionalInfo,
-      postalCode: this.props.booking && this.props.booking.location && this.props.booking.location.postalCode,
-      address: this.props.booking && this.props.booking.location && this.props.booking.location.address,
-      unitNumber: this.props.booking && this.props.booking.location && this.props.booking.location.unitNumber
+      patient_gender: order && order.booker && order.booker.patient_gender,
+      additionalInfo: order && order.booker && order.booker.additionalInfo,
+      postalCode: order && order.location && order.location.postalCode,
+      address: order && order.location && order.location.address,
+      unitNumber: order && order.location && order.location.unitNumber
     };
   }
 
@@ -202,7 +204,7 @@ export default class BookingLocation extends Component {
 
     this._loginPopup.show((user) => {
       if (user.type === 'Client') {
-        BookingActions.setUser(user);
+        this.props.setUser(user);
       } else {
         this.setState({
           error: true
@@ -249,9 +251,9 @@ export default class BookingLocation extends Component {
         address: this.state.address,
         unitNumber: this.state.unitNumber
       };
-      BookingActions.setBooker(user);
-      BookingActions.setLocation(location);
-      BookingActions.setLast('booking2');
+      this.props.setOrderBooker(user);
+      this.props.setOrderLocation(location);
+      this.props.setLastPage('booking2');
 
       Location.push({ pathname: '/booking3a', query: this.props.location.query });
     } else {
@@ -262,3 +264,29 @@ export default class BookingLocation extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    order: state.order
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setOrderBooker: (booker) => {
+      dispatch(setOrderBooker(booker));
+    },
+    setOrderLocation: (location) => {
+      dispatch(setOrderLocation(location));
+    },
+    setUser: (user) => {
+      dispatch(setUser(user));
+    },
+    setLastPage: (page) => {
+      dispatch(setLastPage(page));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingLocation);

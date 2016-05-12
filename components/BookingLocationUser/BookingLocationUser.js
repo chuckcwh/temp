@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import request from 'superagent';
 import classNames from 'classnames';
@@ -10,10 +11,10 @@ import Container from '../Container';
 import Link from '../Link';
 import DayPickerPopup from '../DayPickerPopup';
 import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setOrderBooker, setOrderLocation, setOrderPatient, setLastPage } from '../../actions';
 import Util from '../../core/Util';
 
-export default class BookingLocationUser extends Component {
+class BookingLocationUser extends Component {
 
   constructor(props) {
     super(props);
@@ -30,9 +31,9 @@ export default class BookingLocationUser extends Component {
 
   componentDidMount() {
     this._getPatients(this.props.user, (patients) => {
-      if (this.props.patient) {
+      if (this.props.order && this.props.order.patient) {
         patients.forEach((patient, index) => {
-          if (patient.id === this.props.patient.id) {
+          if (patient.id === this.props.order.patient.id) {
             this.setState({
               patientId: index,
               patients: patients
@@ -546,10 +547,10 @@ export default class BookingLocationUser extends Component {
         address: this.state.patients[this.state.patientId].addresses[0].address,
         unitNumber: this.state.patients[this.state.patientId].addresses[0].unitNumber
       };
-      BookingActions.setBooker(booker);
-      BookingActions.setLocation(location);
-      BookingActions.setPatient(this.state.patients[this.state.patientId]);
-      BookingActions.setLast('booking2');
+      this.props.setOrderBooker(booker);
+      this.props.setOrderLocation(location);
+      this.props.setOrderPatient(this.state.patients[this.state.patientId]);
+      this.props.setLastPage('booking2');
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
@@ -571,7 +572,7 @@ export default class BookingLocationUser extends Component {
         }
         if (res.body && res.body.status === 1) {
           console.log(res.body);
-          // BookingActions.setUser(user);
+          // this.props.setUser(user);
           this.setState({
             patients: res.body.patients
           });
@@ -583,3 +584,30 @@ export default class BookingLocationUser extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    order: state.order,
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setOrderBooker: (booker) => {
+      dispatch(setOrderBooker(booker));
+    },
+    setOrderLocation: (location) => {
+      dispatch(setOrderLocation(location));
+    },
+    setOrderPatient: (patient) => {
+      dispatch(setOrderPatient(patient));
+    },
+    setLastPage: (page) => {
+      dispatch(setLastPage(page));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingLocationUser);

@@ -5,7 +5,7 @@ export default class extends Component {
 
   render() {
     return (
-      <BookingApp location={this.props.location} path={this.props.path} />
+      <BookingApp />
     );
   }
 

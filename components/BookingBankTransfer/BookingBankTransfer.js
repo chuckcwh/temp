@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import request from 'superagent';
 import classNames from 'classnames';
 import linkState from 'react-link-state';
@@ -8,10 +9,10 @@ import Datetime from 'react-datetime';
 import './BookingBankTransfer.scss';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setBooking, setPostStatus } from '../../actions';
 import Util from '../../core/Util';
 
-export default class BookingBankTransfer extends Component {
+class BookingBankTransfer extends Component {
 
   constructor(props) {
     super(props);
@@ -105,13 +106,13 @@ export default class BookingBankTransfer extends Component {
                 }
                 if (res.body && res.body.booking && res.body.status) {
                   console.log(res.body.booking);
-                  BookingActions.setBooking(res.body.booking);
+                  this.props.setBooking(res.body.booking);
                 } else {
                   console.error('Failed to obtain booking data.');
                 }
               });
 
-            BookingActions.setPostStatus('success');
+            this.props.setPostStatus('success');
           } else {
             this.setState({
               pending: false,
@@ -127,3 +128,22 @@ export default class BookingBankTransfer extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    booking: state.booking
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setBooking: (booking) => {
+      dispatch(setBooking(booking));
+    },
+    setPostStatus: (status) => {
+      dispatch(setPostStatus(status));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingBankTransfer);

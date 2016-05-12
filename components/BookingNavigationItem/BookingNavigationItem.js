@@ -12,7 +12,7 @@ class BookingNavigationItem extends Component {
     if (link && isNavigationAllowed(link, lastPage)) {
       return (
         <li className="BookingNavigationItem">
-          <a className={classNames('BookingNavigation-link', (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? 'active' : '')} href={'/' + link} onClick={Link.handleClick}>
+          <a className={classNames('BookingNavigation-link', (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? 'active' : '')} href={'/' + link} onClick={Link.handleClickQuery.bind(this, this.props.location && this.props.location.query)}>
             <div className="BookingNavigationItem-icon">{icon}</div>
             <span className="BookingNavigationItem-text">{text}</span>
           </a>

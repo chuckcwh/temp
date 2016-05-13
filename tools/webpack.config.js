@@ -23,6 +23,7 @@ const JS_LOADER = {
     path.resolve(__dirname, '../components'),
     path.resolve(__dirname, '../core'),
     path.resolve(__dirname, '../dispatcher'),
+    path.resolve(__dirname, '../middleware'),
     path.resolve(__dirname, '../pages'),
     path.resolve(__dirname, '../reducers'),
     path.resolve(__dirname, '../app.js'),

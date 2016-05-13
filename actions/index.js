@@ -1,3 +1,40 @@
+import { CALL_API, Schemas } from '../middleware/api'
+
+export const SERVICES_REQUEST = 'SERVICES_REQUEST'
+export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
+export const SERVICES_FAILURE = 'SERVICES_FAILURE'
+
+function fetchServices() {
+  return {
+    [CALL_API]: {
+      types: [ SERVICES_REQUEST, SERVICES_SUCCESS, SERVICES_FAILURE ],
+      endpoint: 'getServices',
+      schema: Schemas.SERVICE_ARRAY,
+      root: 'services',
+      auth: 'app'
+    }
+  }
+}
+
+function shouldFetchServices(state) {
+  const services = state.allServices
+  if (!services.items) {
+    return true
+  }
+  if (services.isFetching) {
+    return false
+  }
+  return services.didInvalidate
+}
+
+export function fetchServicesIfNeeded() {
+  return (dispatch, getState) => {
+    if (shouldFetchServices(getState())) {
+      return dispatch(fetchServices())
+    }
+  }
+}
+
 /**
  * @param  {string} router The router
  */
@@ -154,5 +191,14 @@ export const setOrderPatient = (patient) => {
 export const destroyOrder = () => {
   return {
     type: 'ORDER_DESTROY'
+  }
+}
+
+export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE'
+
+// Resets the currently visible error message.
+export function resetErrorMessage() {
+  return {
+    type: RESET_ERROR_MESSAGE
   }
 }

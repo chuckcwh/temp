@@ -15,7 +15,7 @@ export default class Actions extends Component {
   }
 
   componentDidMount() {
-    this._startCounter();
+    // this._startCounter();
   }
 
   componentWillUnmount() {

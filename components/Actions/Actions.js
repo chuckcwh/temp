@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import request from 'superagent';
+import { connect } from 'react-redux';
 import './Actions.scss';
 import Container from '../Container';
 import Link from '../Link';
+import { getTotalSessionsCount } from '../../actions';
 import Util from '../../core/Util';
 
-export default class Actions extends Component {
+class Actions extends Component {
 
   constructor(props) {
     super(props);
@@ -18,16 +19,12 @@ export default class Actions extends Component {
     this._startCounter();
   }
 
-  componentWillUnmount() {
-    this.serverRequest1 && this.serverRequest1.abort();
-  }
-
   render() {
     var sessionsCountText;
-    if (this.state.sessionsCount) {
+    if (this.props.totalSessionsCount) {
       sessionsCountText = (
         <h1 className="text-center">
-          <span className="lead">{this.state.sessionsCount}</span><br />APPOINTMENTS BOOKED!
+          <span className="lead">{this.props.totalSessionsCount}</span><br />APPOINTMENTS BOOKED!
         </h1>
       );
     }
@@ -70,22 +67,26 @@ export default class Actions extends Component {
   }
 
   _getStatistics() {
-    this.serverRequest1 = request
-      .get(Util.host + '/api/getTotalSessionsCount')
-      .auth(Util.authKey, Util.authSecret)
-      .end((err, res) => {
-        if (err) {
-          return console.error(Util.host + '/api/getTotalSessionsCount', err.toString());
-        }
-        // console.log(res.body);
-        if (res.body && res.body.status) {
-          this.setState({
-            sessionsCount: res.body.count
-          });
-        } else {
-          console.error('Failed to obtain statistics data.');
-        }
-      });
+    this.props.getTotalSessionsCount().then((res) => {
+      if (res.response && res.response.status < 1) {
+        console.error('Failed to obtain statistics data.');
+      }
+    });
   }
 
 }
+const mapStateToProps = (state) => {
+  return {
+    totalSessionsCount: state.totalSessionsCount.data
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getTotalSessionsCount: () => {
+      return dispatch(getTotalSessionsCount());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Actions);

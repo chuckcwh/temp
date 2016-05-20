@@ -1,25 +1,25 @@
-import { Schema, arrayOf, normalize } from 'normalizr'
-import 'isomorphic-fetch'
+import { client } from 'http-otro'
+import { fetch } from 'isomorphic-fetch'
 import Util from '../core/Util'
 
 const API_ROOT = Util.host + '/api/'
 
-// Fetches an API response and normalizes the result JSON according to schema.
+// Fetches an API response.
 // This makes every API response have the same shape, regardless of how nested it was.
-function callApi(store, endpoint, schema, root, auth) {
+function callApi(store, endpoint, method, data, auth) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
-  let params = undefined;
+  let headers;
   if (auth === 'app') {
-    params = {
-      headers: { 'Authorization': 'Basic ' + window.btoa(Util.authKey + ':' + Util.authSecret) }
-    };
+    headers = { 'Authorization': 'Basic ' + window.btoa(Util.authKey + ':' + Util.authSecret) }
   } else if (auth === 'user') {
-    params = {
-      headers: { 'Authorization': 'Basic ' + window.btoa(store.user.id + ':' + store.user.token) }
-    };
+    headers = { 'Authorization': 'Basic ' + window.btoa(store.getState().user.data.id + ':' + store.getState().user.data.token) }
   }
+  let request = client({
+    host: Util.host,
+    headers
+  })
 
-  return fetch(fullUrl, params)
+  return (request[method])('/api/' + endpoint, data)
     .then(response =>
       response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
@@ -27,19 +27,15 @@ function callApi(store, endpoint, schema, root, auth) {
         return Promise.reject(json)
       }
 
+      // return Object.assign({},
+      //   normalize(json[root], schema),
+      //   { receivedAt: Date.now() }
+      // )
       return Object.assign({},
-        normalize(json[root], schema),
+        json,
         { receivedAt: Date.now() }
       )
     })
-}
-
-const serviceSchema = new Schema('services')
-
-// Schemas for Github API responses.
-export const Schemas = {
-  SERVICE: serviceSchema,
-  SERVICE_ARRAY: arrayOf(serviceSchema)
 }
 
 // Action key that carries API call info interpreted by this Redux middleware.
@@ -54,7 +50,7 @@ export default store => next => action => {
   }
 
   let { endpoint } = callAPI
-  const { schema, root, auth, types } = callAPI
+  const { method, auth, types } = callAPI
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState())
@@ -62,9 +58,6 @@ export default store => next => action => {
 
   if (typeof endpoint !== 'string') {
     throw new Error('Specify a string endpoint URL.')
-  }
-  if (!schema) {
-    throw new Error('Specify one of the exported Schemas.')
   }
   if (!Array.isArray(types) || types.length !== 3) {
     throw new Error('Expected an array of three action types.')
@@ -82,7 +75,7 @@ export default store => next => action => {
   const [ requestType, successType, failureType ] = types
   next(actionWith({ type: requestType }))
 
-  return callApi(store, endpoint, schema, root, auth).then(
+  return callApi(store, endpoint, method, action['data'], auth).then(
     response => next(actionWith({
       response,
       type: successType

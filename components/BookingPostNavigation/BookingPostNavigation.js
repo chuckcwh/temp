@@ -50,7 +50,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setPostStatus: (status) => {
-      dispatch(setPostStatus(status));
+      return dispatch(setPostStatus(status));
     }
   }
 }

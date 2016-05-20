@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import request from 'superagent';
 import Loader from 'react-loader';
 import moment from 'moment';
 import './BookingComplete.scss';
 import Container from '../Container';
 import Link from '../Link';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import { destroyOrder } from '../../actions';
+import { createBooking, createCase, getBooking, destroyOrder, showVerifyBookingPopup } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
@@ -37,40 +36,32 @@ class BookingComplete extends Component {
           price: order.sessions[i].price
         });
       }
-      this.serverRequest = request
-        .post(Util.host + '/api/createCase')
-        .auth(user.id, user.token)
-        .send({
-          notes: order && order.booker && order.booker.additionalInfo,
-          price: order && order.sum && order.sum.toFixed(2),
-          pid: order && order.patient && order.patient.id,
-          sid: order && order.service,
-          dates: dates,
-          addresses: [{
-            address: order && order.location && order.location.address,
-            postalCode: order && order.location && order.location.postalCode,
-            unitNumber: order && order.location && order.location.unitNumber
-          }],
-          promoCode: order && order.promoCode && order.promoCode.code
-        })
-        .end((err, res) => {
-          if (err) {
-            return console.error(Util.host + '/api/createCase', err.toString());
-          }
-          // console.log(res.body);
-          if (res.body && res.body.case) {
-            // Destroy order
-            this.props.destroyOrder();
+      this.props.createCase({
+        notes: order && order.booker && order.booker.additionalInfo,
+        price: order && order.sum && order.sum.toFixed(2),
+        pid: order && order.patient && order.patient.id,
+        sid: order && order.service,
+        dates: dates,
+        addresses: [{
+          address: order && order.location && order.location.address,
+          postalCode: order && order.location && order.location.postalCode,
+          unitNumber: order && order.location && order.location.unitNumber
+        }],
+        promoCode: order && order.promoCode && order.promoCode.code
+      }).then((res) => {
+        if (res.response && res.response.case) {
+          // Destroy order
+          this.props.destroyOrder();
 
-            this.setState({
-              bookingStatus: res.body.status,
-              bookingAmt: res.body.case.price,
-              caseId: res.body.case.id
-            });
-          } else {
-            console.error('Failed to create case.');
-          }
-        });
+          this.setState({
+            bookingStatus: res.response.status,
+            bookingAmt: res.response.case.price,
+            caseId: res.response.case.id
+          });
+        } else {
+          console.error('Failed to create case.');
+        }
+      });
     } else if (order && order.service && order.sessions && order.booker) {
       var dates = [];
       for (var i = 0; i < order.sessions.length; i++) {
@@ -81,77 +72,53 @@ class BookingComplete extends Component {
           price: order.sessions[i].price
         });
       }
-      this.serverRequest = request
-        .post(Util.host + '/api/createBooking')
-        .auth(Util.authKey, Util.authSecret)
-        .send({
-          booking: {
-            client_contactEmail: order && order.booker && order.booker.client_contactEmail,
-            client_contactNumber: order && order.booker && order.booker.client_contactNumber,
-            client_firstName: order && order.booker && order.booker.client_firstName,
-            client_lastName: order && order.booker && order.booker.client_lastName,
-            patient_contactEmail: order && order.booker && order.booker.client_contactEmail,
-            patient_contactNumber: order && order.booker && order.booker.client_contactNumber,
-            patient_firstName: order && order.booker && order.booker.patient_firstName,
-            patient_lastName: order && order.booker && order.booker.patient_lastName,
-            patient_dob: moment(order && order.booker && order.booker.patient_dob).format('YYYY-MM-DD'),
-            patient_gender: order && order.booker && order.booker.patient_gender,
-            organization: location && location.query && location.query.organization || undefined
-          },
-          case: {
-            sid: order && order.service,
-            notes: order && order.booker && order.booker.additionalInfo,
-            price: order && order.sum && order.sum.toFixed(2),
-            dates: dates,
-            addresses: [{
-              address: order && order.location && order.location.address,
-              postalCode: order && order.location && order.location.postalCode,
-              unitNumber: order && order.location && order.location.unitNumber
-            }]
-          },
-          promoCode: order && order.promoCode && order.promoCode.code
-        })
-        .end((err, res) => {
-          if (err) {
-            return console.error(Util.host + '/api/createBooking', err.toString());
-          }
-          // console.log(res.body);
-          if (res.body && res.body.booking && res.body.booking.case) {
-            // Destroy order
-            this.props.destroyOrder();
+      this.props.createBooking({
+        booking: {
+          client_contactEmail: order && order.booker && order.booker.client_contactEmail,
+          client_contactNumber: order && order.booker && order.booker.client_contactNumber,
+          client_firstName: order && order.booker && order.booker.client_firstName,
+          client_lastName: order && order.booker && order.booker.client_lastName,
+          patient_contactEmail: order && order.booker && order.booker.client_contactEmail,
+          patient_contactNumber: order && order.booker && order.booker.client_contactNumber,
+          patient_firstName: order && order.booker && order.booker.patient_firstName,
+          patient_lastName: order && order.booker && order.booker.patient_lastName,
+          patient_dob: moment(order && order.booker && order.booker.patient_dob).format('YYYY-MM-DD'),
+          patient_gender: order && order.booker && order.booker.patient_gender,
+          organization: location && location.query && location.query.organization || undefined
+        },
+        case: {
+          sid: order && order.service,
+          notes: order && order.booker && order.booker.additionalInfo,
+          price: order && order.sum && order.sum.toFixed(2),
+          dates: dates,
+          addresses: [{
+            address: order && order.location && order.location.address,
+            postalCode: order && order.location && order.location.postalCode,
+            unitNumber: order && order.location && order.location.unitNumber
+          }]
+        },
+        promoCode: order && order.promoCode && order.promoCode.code
+      }).then((res) => {
+        if (res.response && res.response.booking && res.response.booking.case) {
+          // Destroy order
+          this.props.destroyOrder();
 
-            this.setState({
-              bookingStatus: res.body.status,
-              bookingId: res.body.booking.id,
-              bookingAmt: res.body.booking.case.price,
-              booking: res.body.booking
-            });
+          this.setState({
+            bookingStatus: res.response.status,
+            bookingId: res.response.booking.id,
+            bookingAmt: res.response.booking.case.price,
+            booking: res.response.booking
+          });
 
-            // Show Verify Booking Popup
-            this._verifyBookingPopup.show(this.state.booking, () => {
-              this.setState({
-                bookingVerified: true
-              });
-
-              // Notify parent window of booking completion for embedded widget
-              if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
-                window.parent.postMessage('completedBooking', '*');
-              }
-            });
-          } else {
-            console.error('Failed to create booking.');
-          }
-        });
+          this.props.showVerifyBookingPopup(res.response.booking.id);
+        } else {
+          console.error('Failed to create booking.');
+        }
+      });
     }
   }
 
-  componentWillUnmount() {
-    this.serverRequest && this.serverRequest.abort();
-  }
-
   render() {
-    if (!this.state.booking) return null;
-
     var component, identity, footer;
 
     if (this.state.bookingStatus) {
@@ -166,7 +133,7 @@ class BookingComplete extends Component {
         } else if (this.state.bookingVerified) {
           bookingLink = (
             <div>
-              <a href={'/booking-manage?bid=' + this.state.bookingId + '&email=' + this.state.booking.client_contactEmail} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</a>
+              <a href={'/booking-manage' + this.state.bookingId + '&email=' + this.state.booking.client_contactEmail} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</a>
             </div>
           );
         } else {
@@ -250,18 +217,29 @@ class BookingComplete extends Component {
         <Container>
           {component}
         </Container>
-        <VerifyBookingPopup ref={(c) => this._verifyBookingPopup = c} />
+        <VerifyBookingPopup onVerified={this._onVerified.bind(this)} />
       </div>
     );
   }
 
-  _onClickActivateBooking(event) {
-    // Show Verify Booking Popup
-    this._verifyBookingPopup.show(this.state.booking, () => {
+  _onVerified() {
+    this.props.getBooking({
+      bid: this.state.bookingId,
+      email: this.state.bookingEmail
+    }).then(() => {
       this.setState({
         bookingVerified: true
       });
+
+      // Notify parent window of booking completion for embedded widget
+      if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
+        window.parent.postMessage('completedBooking', '*');
+      }
     });
+  }
+
+  _onClickActivateBooking(event) {
+    this.props.showVerifyBookingPopup(this.state.bookingId);
   }
 
   _onClickViewBooking(event) {
@@ -280,14 +258,26 @@ const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
     order: state.order,
-    user: state.user
+    user: state.user.data
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    createBooking: (booking) => {
+      return dispatch(createBooking(booking));
+    },
+    createCase: (caze) => {
+      return dispatch(createCase(caze));
+    },
+    getBooking: (params) => {
+      return dispatch(getBooking(params));
+    },
     destroyOrder: () => {
-      dispatch(destroyOrder());
+      return dispatch(destroyOrder());
+    },
+    showVerifyBookingPopup: (bookingId) => {
+      return dispatch(showVerifyBookingPopup(bookingId));
     }
   }
 }

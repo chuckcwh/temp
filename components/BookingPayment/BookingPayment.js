@@ -70,7 +70,7 @@ class BookingPayment extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
-    booking: state.booking,
+    booking: state.booking.items,
     postStatus: state.postStatus
   }
 }
@@ -78,7 +78,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setPostStatus: (status) => {
-      dispatch(setPostStatus(status));
+      return dispatch(setPostStatus(status));
     }
   }
 }

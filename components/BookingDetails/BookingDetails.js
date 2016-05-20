@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import linkState from 'react-link-state';
-import request from 'superagent';
 import moment from 'moment';
 import Loader from 'react-loader';
 import './BookingDetails.scss';
 import Container from '../Container';
 import Link from '../Link';
-import { setBooking, setPostStatus } from '../../actions';
+import { editBooking, clearBooking, setPostStatus } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
@@ -147,7 +146,7 @@ export default class BookingDetails extends Component {
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Additional Notes</div>
-            <div className="TableRowItem3">{this.props.booking.case.notes}</div>
+            <div className="TableRowItem3">{this.props.booking.case && this.props.booking.case.notes}</div>
           </div>
         </div>
       );
@@ -194,7 +193,7 @@ export default class BookingDetails extends Component {
         <div className="TableRow TableRowHeader">
           <div className="TableRowItem1">Date</div>
           <div className="TableRowItem1">Session</div>
-          <div className="TableRowItem1">{(this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs</div>
+          <div className="TableRowItem1">{(this.props.booking.case && this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs</div>
         </div>
         {
           this.props.booking.case.dates.map(session => {
@@ -255,7 +254,7 @@ export default class BookingDetails extends Component {
     return (
       <div className="BookingDetails">
         <Container>
-          <Loader className="spinner" loaded={this.props.booking.id ? true : false}>
+          <Loader className="spinner" loaded={this.props.bookingFetching ? false : true}>
             <div className="BookingDetailsWrapper">
               <div className="BookingDetailsBody">
                 <div className="BookingDetailsBodyActions">
@@ -263,7 +262,7 @@ export default class BookingDetails extends Component {
                     {paymentButton}
                   </span>
                   <span className="BookingDetailsFooter">
-                    <a href="/booking-manage" className="btn btn-primary" onClick={this._onClickManageBooking.bind(this)}>ANOTHER BOOKING</a>
+                    <a href="/booking-manage" className="btn btn-primary" onClick={this._onClickManageBooking.bind(this)}>VIEW ANOTHER</a>
                   </span>
                 </div>
                 <h2>Booking ID: #{this.state.booking.id}</h2>
@@ -319,7 +318,7 @@ export default class BookingDetails extends Component {
                     {paymentButton}
                   </span>
                   <span>
-                    <a href="/booking-manage" className="btn btn-primary" onClick={this._onClickManageBooking.bind(this)}>ANOTHER BOOKING</a>
+                    <a href="/booking-manage" className="btn btn-primary" onClick={this._onClickManageBooking.bind(this)}>VIEW ANOTHER</a>
                   </span>
                 </div>
               </div>
@@ -381,33 +380,24 @@ export default class BookingDetails extends Component {
       case 'user':
         if (this._userDetailsForm.checkValidity()) {
           this.setState({updatingUser: true});
-          this.serverRequest = request
-            .post(Util.host + '/api/editBooking')
-            .auth(Util.authKey, Util.authSecret)
-            .send({
-              bid: this.props.booking && this.props.booking.id,
-              token: this.props.booking && this.props.booking.token,
-              booking: {
-                client_firstName: this.state.client_firstName,
-                client_lastName: this.state.client_lastName,
-                client_contactNumber: this.state.client_contactNumber
-              }
-            })
-            .end((err, res) => {
-              if (err) {
-                return console.error(Util.host + '/api/editBooking', err.toString());
-              }
-              // console.log(res.body);
-              if (res.body && res.body.status === 1) {
-                this.setState({
-                  editingUser: false,
-                  updatingUser: false
-                });
-                this.props.setBooking(res.body.booking);
-              } else {
-                console.error('Failed to edit booking.');
-              }
-            });
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            booking: {
+              client_firstName: this.state.client_firstName,
+              client_lastName: this.state.client_lastName,
+              client_contactNumber: this.state.client_contactNumber
+            }
+          }).then((res) => {
+            if (res.response.status === 1) {
+              this.setState({
+                editingUser: false,
+                updatingUser: false
+              });
+            } else {
+              console.error('Failed to edit booking.');
+            }
+          });
         }
         break;
       case 'patient':
@@ -418,36 +408,27 @@ export default class BookingDetails extends Component {
       case 'address':
         if (this._addressDetailsForm.checkValidity()) {
           this.setState({updatingAddress: true});
-          this.serverRequest = request
-            .post(Util.host + '/api/editBooking')
-            .auth(Util.authKey, Util.authSecret)
-            .send({
-              bid: this.props.booking && this.props.booking.id,
-              token: this.props.booking && this.props.booking.token,
-              case: {
-                addresses: [{
-                  id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
-                  address: this.state.address,
-                  postalCode: this.state.postalCode,
-                  unitNumber: this.state.unitNumber
-                }]
-              }
-            })
-            .end((err, res) => {
-              if (err) {
-                return console.error(Util.host + '/api/editBooking', err.toString());
-              }
-              // console.log(res.body);
-              if (res.body && res.body.status === 1) {
-                this.setState({
-                  editingAddress: false,
-                  updatingAddress: false
-                });
-                this.props.setBooking(res.body.booking);
-              } else {
-                console.error('Failed to edit booking.');
-              }
-            });
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            case: {
+              addresses: [{
+                id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
+                address: this.state.address,
+                postalCode: this.state.postalCode,
+                unitNumber: this.state.unitNumber
+              }]
+            }
+          }).then((res) => {
+            if (res.response.status === 1) {
+              this.setState({
+                editingAddress: false,
+                updatingAddress: false
+              });
+            } else {
+              console.error('Failed to edit booking.');
+            }
+          });
         }
         break;
     }
@@ -504,7 +485,7 @@ export default class BookingDetails extends Component {
   _onClickManageBooking(event) {
     Link.handleClick(event);
 
-    this.props.setBooking(null);
+    this.props.clearBooking();
   }
 
   _onClickPay(event) {
@@ -520,17 +501,21 @@ export default class BookingDetails extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
-    booking: state.booking
+    booking: state.booking.items,
+    bookingFetching: state.booking.isFetching
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setBooking: (booking) => {
-      dispatch(setBooking(booking));
+    editBooking: (booking) => {
+      return dispatch(editBooking(booking));
+    },
+    clearBooking: () => {
+      return dispatch(clearBooking());
     },
     setPostStatus: (status) => {
-      dispatch(setPostStatus(status));
+      return dispatch(setPostStatus(status));
     }
   }
 }

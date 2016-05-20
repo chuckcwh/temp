@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import request from 'superagent';
 import Loader from 'react-loader';
 import './BookingPaypal.scss';
 import Link from '../Link';
-import { setPostStatus } from '../../actions';
+import { createPaypalTransaction, executePaypalTransaction, setPostStatus } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingPaypal extends Component {
@@ -24,30 +23,17 @@ class BookingPaypal extends Component {
         pending: true
       });
       // Execute paypal payment since this is returned from Paypal
-      this.serverRequest1 = request
-        .post(Util.host + '/api/verifyPaypalTransaction')
-        .auth(Util.authKey, Util.authSecret)
-        .send({
-          ppid: this.state.paymentId
-        })
-        .end((err, res) => {
-          if (err) {
-            return console.error(Util.host + '/api/verifyPaypalTransaction', status, err.toString());
-          }
-          console.log(res.body);
-          if (res.body && res.body.status) {
-            // console.log(res.body.items);
-            this.props.setPostStatus('success');
-          } else {
-            console.error('Failed to execute paypal payment.');
-          }
-        });
+      this.props.executePaypalTransaction({
+        ppid: this.state.paymentId
+      }).then((res) => {
+        if (res.response && res.response.status === 1) {
+          // console.log(res.response.items);
+          this.props.setPostStatus('success');
+        } else {
+          console.error('Failed to execute paypal payment.');
+        }
+      });
     }
-  }
-
-  componentWillUnmount() {
-    this.serverRequest1 && this.serverRequest1.abort();
-    this.serverRequest2 && this.serverRequest2.abort();
   }
 
   render() {
@@ -101,35 +87,27 @@ class BookingPaypal extends Component {
       url = url.replace('#', '');
     }
 
-    this.serverRequest2 = request
-      .post(Util.host + '/api/makePaypalWebPayment')
-      .auth(Util.authKey, Util.authSecret)
-      .send({
-        amount: this.props.booking && this.props.booking.case && this.props.booking.case.price,
-        type: 'case',
-        cid: this.props.booking && this.props.booking.case && this.props.booking.case.id,
-        returnUrl: url,
-        cancelUrl: url
-      })
-      .end((err, res) => {
-        if (err) {
-          return console.error(Util.host + '/api/makePaypalWebPayment', status, err.toString());
+    this.props.createPaypalTransaction({
+      amount: this.props.booking && this.props.booking.case && this.props.booking.case.price,
+      type: 'case',
+      cid: this.props.booking && this.props.booking.case && this.props.booking.case.id,
+      returnUrl: url,
+      cancelUrl: url
+    }).then((res) => {
+      if (res.response && res.response.status === 1) {
+        console.log(res.response.url);
+        console.log(res.response.payment_id);
+        this.setState({
+          redirecting: true
+        });
+        console.log('Redirecting to ' + res.response.url);
+        if (typeof window !== 'undefined') {
+          window.location = res.response.url;
         }
-        if (res.body && res.body.status === 1) {
-          console.log(res.body.url);
-          console.log(res.body.payment_id);
-          this.setState({
-            redirecting: true
-          });
-          console.log('Redirecting to ' + res.body.url);
-          if (typeof window !== 'undefined') {
-            window.location = res.body.url;
-          }
-        } else {
-          console.error('Failed to create paypal payment.');
-        }
-      });
-    // console.log(url);
+      } else {
+        console.error('Failed to create paypal payment.');
+      }
+    });
   }
 
 }
@@ -137,14 +115,20 @@ class BookingPaypal extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
-    booking: state.booking
+    booking: state.booking.items
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    createPaypalTransaction: (params) => {
+      return dispatch(createPaypalTransaction(params));
+    },
+    executePaypalTransaction: (params) => {
+      return dispatch(executePaypalTransaction(params));
+    },
     setPostStatus: (status) => {
-      dispatch(setPostStatus(status));
+      return dispatch(setPostStatus(status));
     }
   }
 }

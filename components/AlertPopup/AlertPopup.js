@@ -1,38 +1,44 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Popup from '../Popup';
 import './AlertPopup.scss';
+import { hideAlertPopup } from '../../actions';
 
-export default class AlertPopup extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      message: undefined
-    };
-  }
+class AlertPopup extends Component {
 
   render() {
     return (
       <div className="AlertPopup">
-        <Popup ref={(c) => this._alertPopup = c} title="Alert">
-          {this.state.message}
+        <Popup title="Alert" isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)}>
+          {this.props.message}
           {this.props.children}
           <div className="AlertPopup-footer">
-            <a className="btn btn-primary btn-small" href="#" onClick={this._onClickClose.bind(this)}>OK</a>
+            <a className="btn btn-primary btn-small" href="#" onClick={this._closePopup.bind(this)}>OK</a>
           </div>
         </Popup>
       </div>
     );
   }
 
-  _onClickClose(event) {
-    if (this.state.message) this.setState({ message: undefined });
-    this._alertPopup.hide();
-  }
-
-  show(message) {
-    if (message) this.setState({ message: message });
-    this._alertPopup.show();
+  _closePopup() {
+    this.props.hideAlertPopup();
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    visible: state.modal.alert && state.modal.alert.visible,
+    message: state.modal.alert && state.modal.alert.message
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    hideAlertPopup: () => {
+      return dispatch(hideAlertPopup());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AlertPopup);

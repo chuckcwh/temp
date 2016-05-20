@@ -7,10 +7,6 @@ import Link from '../Link';
 
 class BookingPostComplete extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { booking } = this.props;
     var component, message, bookingId, bookingAmt;
@@ -19,7 +15,7 @@ class BookingPostComplete extends Component {
       var transaction = booking.case.transactions[0];
       if (transaction)
       message = (
-        <span>Your payment via {transaction.method} is {transaction.status}. Look out for our email on your booking summary.</span>
+        <span>Your payment via {transaction.method} is {transaction.status}. Check your booking summary in our email.</span>
       );
     }
 
@@ -77,7 +73,7 @@ class BookingPostComplete extends Component {
     return (
       <div className="BookingPostComplete">
         <Container>
-          <Loader className="spinner" loaded={this.props.booking ? true : false}>
+          <Loader className="spinner" loaded={this.props.bookingFetching ? false : true}>
             {component}
           </Loader>
         </Container>
@@ -89,8 +85,9 @@ class BookingPostComplete extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    booking: state.booking
+    booking: state.booking.items,
+    bookingFetching: state.booking.isFetching
   }
 }
 
-export default connect(mapStateToProps, {})(BookingPostComplete);
+export default connect(mapStateToProps)(BookingPostComplete);

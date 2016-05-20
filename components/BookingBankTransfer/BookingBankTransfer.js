@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import request from 'superagent';
 import classNames from 'classnames';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
@@ -8,8 +7,7 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 import './BookingBankTransfer.scss';
 import Link from '../Link';
-import AlertPopup from '../AlertPopup';
-import { setBooking, setPostStatus } from '../../actions';
+import { getBooking, createBankTransferTransaction, setPostStatus, showAlertPopup } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingBankTransfer extends Component {
@@ -50,14 +48,12 @@ class BookingBankTransfer extends Component {
             </ol>
             <Datetime closeOnSelect={true} onChange={this._onSelectTransferTime.bind(this)} value={this.state.transferTime} strictParsing={true} inputProps={{'placeholder': 'Transfer Time*', 'required': 'required'}} />
             <input type="text" id="ref" name="ref" valueLink={linkState(this, 'ref')} placeholder="Reference Number*" required />
-            <p></p>
-            <p></p>
+            <br /><br /><br /><br /><br /><br /><br /><br />
             <div>
               <a href="#" className="btn btn-primary" onClick={this._onConfirm.bind(this)}>CONFIRM PAYMENT</a>
             </div>
           </form>
         </Loader>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
       </div>
     );
   }
@@ -72,58 +68,35 @@ class BookingBankTransfer extends Component {
       event.preventDefault();
 
       this.setState({
-        pending: true,
-        ref: undefined
+        pending: true
       });
 
-      this.serverRequest1 = request
-        .post(Util.host + '/api/verifyBankTransaction')
-        .auth(Util.authKey, Util.authSecret)
-        .send({
-          amount: this.props.booking.case.price,
-          type: 'Payment',
-          ref: this.state.ref,
-          sku: 'ebc-case-' + this.props.booking.case.id,
-          transactionDate: this.state.transferTime.format('YYYY-MM-DD HH:mm:ss')
-        })
-        .end((err, res) => {
-          if (err) {
-            return console.error(Util.host + '/api/verifyBankTransaction', status, err.toString());
-          }
-          if (res.body && res.body.status === 1) {
-            console.log(res.body);
+      this.props.createBankTransferTransaction({
+        amount: this.props.booking.case.price,
+        type: 'Payment',
+        ref: this.state.ref,
+        sku: 'ebc-case-' + this.props.booking.case.id,
+        transactionDate: this.state.transferTime.format('YYYY-MM-DD HH:mm:ss')
+      }).then((res) => {
+        if (res.response && res.response.status === 1) {
+          this.props.getBooking({
+            bid: this.props.booking.id,
+            email: this.props.booking.client_contactEmail
+          });
 
-            this.serverRequest2 = request
-              .get(Util.host + '/api/getBooking')
-              .query({
-                bid: this.props.booking.id,
-                email: this.props.booking.client_contactEmail
-              })
-              .auth(Util.authKey, Util.authSecret)
-              .end((err, res) => {
-                if (err) {
-                  return console.error(Util.host + '/api/getBooking', status, err.toString());
-                }
-                if (res.body && res.body.booking && res.body.status) {
-                  console.log(res.body.booking);
-                  this.props.setBooking(res.body.booking);
-                } else {
-                  console.error('Failed to obtain booking data.');
-                }
-              });
-
-            this.props.setPostStatus('success');
-          } else {
-            this.setState({
-              pending: false,
-              error: true
-            });
-            console.error('Failed to verify bank transfer payment.');
-          }
-        });
+          this.props.setPostStatus('success');
+        } else {
+          this.setState({
+            pending: false,
+            error: true,
+            ref: undefined
+          });
+          console.error('Failed to verify bank transfer payment.');
+        }
+      });
     } else {
       event.preventDefault();
-      this._alertPopup.show('Please fill up all required fields.');
+      this.props.showAlertPopup('Please fill up all required fields.');
     }
   }
 
@@ -131,17 +104,23 @@ class BookingBankTransfer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    booking: state.booking
+    booking: state.booking.items
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setBooking: (booking) => {
-      dispatch(setBooking(booking));
+    getBooking: (params) => {
+      return dispatch(getBooking(params));
+    },
+    createBankTransferTransaction: (params) => {
+      return dispatch(createBankTransferTransaction(params));
     },
     setPostStatus: (status) => {
-      dispatch(setPostStatus(status));
+      return dispatch(setPostStatus(status));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
     }
   }
 }

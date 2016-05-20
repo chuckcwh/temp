@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import linkState from 'react-link-state';
-import request from 'superagent';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import './BookingLocation.scss';
 import Container from '../Container';
 import Link from '../Link';
-import LoginPopup from '../LoginPopup';
 import DayPickerPopup from '../DayPickerPopup';
-import AlertPopup from '../AlertPopup';
-import { setOrderBooker, setOrderLocation, setUser, setLastPage } from '../../actions';
+import { setOrderBooker, setOrderLocation, setLastPage, showLoginPopup, showDayPickerPopup, showAlertPopup } from '../../actions';
 import Location from '../../core/Location';
 
 class BookingLocation extends Component {
@@ -80,7 +77,7 @@ class BookingLocation extends Component {
             <input type="text" id="patient_lastName" name="patient_lastName" valueLink={linkState(this, 'patient_lastName')} placeholder="Last Name*" maxLength="50" required />
             <div className="DateInput">
               <input type="text" id="patient_dob" name="patient_dob" value={this.state.patient_dob_temp ? this.state.patient_dob_temp : (this.state.patient_dob ? moment(this.state.patient_dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeDob.bind(this)} onBlur={this._onBlurDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
-              <span onClick={() => this._dayPickerPopup.show()}></span>
+              <span onClick={() => this.props.showDayPickerPopup(this.state.patient_dob)}></span>
             </div>
             <div className="radio radio-inline">
               <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.state.patient_gender==='Male'} onChange={this._onSelectGender.bind(this)} value="Male" required />
@@ -122,9 +119,7 @@ class BookingLocation extends Component {
             {this.props.children}
           </div>
         </Container>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
-        <LoginPopup ref={(c) => this._loginPopup = c} />
-        <DayPickerPopup ref={(c) => this._dayPickerPopup = c} value={this.state.patient_dob} title="Date of Birth" onDayClick={this._onSelectDob.bind(this)} />
+        <DayPickerPopup title="Date of Birth" onDayClick={this._onSelectDob.bind(this)} />
       </div>
     );
   }
@@ -202,16 +197,7 @@ class BookingLocation extends Component {
   _onClickLogin(event) {
     event.preventDefault();
 
-    this._loginPopup.show((user) => {
-      if (user.type === 'Client') {
-        this.props.setUser(user);
-      } else {
-        this.setState({
-          error: true
-        });
-        console.error('Failed to login as you do not have a caregiver account.');
-      }
-    });
+    this.props.showLoginPopup();
   }
 
   _onCheckedPatient(event) {
@@ -249,7 +235,7 @@ class BookingLocation extends Component {
       var location = {
         postalCode: this.state.postalCode,
         address: this.state.address,
-        unitNumber: this.state.unitNumber
+        unitNumber: this.state.unitNumber || undefined
       };
       this.props.setOrderBooker(user);
       this.props.setOrderLocation(location);
@@ -259,7 +245,7 @@ class BookingLocation extends Component {
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
-      this._alertPopup.show('Please fill up all required fields.');
+      this.props.showAlertPopup('Please fill up all required fields.');
     }
   }
 
@@ -275,16 +261,22 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setOrderBooker: (booker) => {
-      dispatch(setOrderBooker(booker));
+      return dispatch(setOrderBooker(booker));
     },
     setOrderLocation: (location) => {
-      dispatch(setOrderLocation(location));
-    },
-    setUser: (user) => {
-      dispatch(setUser(user));
+      return dispatch(setOrderLocation(location));
     },
     setLastPage: (page) => {
-      dispatch(setLastPage(page));
+      return dispatch(setLastPage(page));
+    },
+    showLoginPopup: () => {
+      return dispatch(showLoginPopup());
+    },
+    showDayPickerPopup: (value) => {
+      return dispatch(showDayPickerPopup(value));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
     }
   }
 }

@@ -2,14 +2,22 @@ import 'babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import Location from './core/Location';
 import Layout from './components/Layout';
 import { setRouter } from './actions';
 import bookingApp from './reducers';
+import api from './middleware/api';
 
-let store = createStore(bookingApp);
+let store = createStore(
+  bookingApp,
+  applyMiddleware(
+    thunkMiddleware,
+    api
+  )
+);
 
 const routes = {}; // Auto-generated on build. See tools/lib/routes-loader.js
 

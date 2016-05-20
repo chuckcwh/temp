@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import linkState from 'react-link-state';
-import request from 'superagent';
 import classNames from 'classnames';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
@@ -10,8 +9,7 @@ import './BookingLocationUser.scss';
 import Container from '../Container';
 import Link from '../Link';
 import DayPickerPopup from '../DayPickerPopup';
-import AlertPopup from '../AlertPopup';
-import { setOrderBooker, setOrderLocation, setOrderPatient, setLastPage } from '../../actions';
+import { getPatients, createPatient, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingLocationUser extends Component {
@@ -24,32 +22,16 @@ class BookingLocationUser extends Component {
       editingAddress: false,
       savingPatient: false,
 
-      patients: undefined,
       patientId: undefined
     };
   }
 
   componentDidMount() {
-    this._getPatients(this.props.user, (patients) => {
-      if (this.props.order && this.props.order.patient) {
-        patients.forEach((patient, index) => {
-          if (patient.id === this.props.order.patient.id) {
-            this.setState({
-              patientId: index,
-              patients: patients
-            });
-          }
-        });
-      } else {
-        this.setState({
-          patients: patients
-        });
+    this._getPatients(this.props.user, () => {
+      if (this.props.order && this.props.order.patient && this.props.order.patient.id && this.props.patients && this.props.patients[this.props.order.patient.id]) {
+        this.setState({ patientId: this.props.order.patient.id });
       }
     });
-  }
-
-  componentWillUnmount() {
-    this.serverRequest && this.serverRequest.abort();
   }
 
   render() {
@@ -113,7 +95,7 @@ class BookingLocationUser extends Component {
         </div>
       );
     }
-    if (this.state.patients && this.state.patientId) {
+    if (this.props.patients && this.state.patientId) {
       if (this.state.editingPatient) {
         patientDetails = (
           <div>
@@ -122,7 +104,8 @@ class BookingLocationUser extends Component {
               <input type="text" id="patient_lastName" name="patient_lastName" valueLink={linkState(this, 'patient_lastName')} placeholder="Last Name*" maxLength="50" required />
               <div className="DateInput">
                 <input type="text" id="patient_dob" name="patient_dob" value={this.state.patient_dob_temp ? this.state.patient_dob_temp : (this.state.patient_dob ? moment(this.state.patient_dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeDob.bind(this)} onBlur={this._onBlurDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
-                <span onClick={() => this._dayPickerPopup.show()}></span>
+                <span onClick={() => this.props.showDayPickerPopup(this.state.patient_dob)}></span>
+                <DayPickerPopup title="Date of Birth" onDayClick={this._onSelectDob.bind(this)} />
               </div>
               <div>
                 <div className="radio radio-inline">
@@ -146,24 +129,24 @@ class BookingLocationUser extends Component {
           <div>
             <div className="TableRow">
               <div className="TableRowItem1">Full Name</div>
-              <div className="TableRowItem3">{this.state.patients[this.state.patientId].fullName}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].fullName}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Gender</div>
-              <div className="TableRowItem3">{this.state.patients[this.state.patientId].gender}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].gender}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Date of Birth</div>
-              <div className="TableRowItem3">{moment(this.state.patients[this.state.patientId].dob).format('ll')}</div>
+              <div className="TableRowItem3">{moment(this.props.patients[this.state.patientId].dob).format('ll')}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Age</div>
-              <div className="TableRowItem3">{moment().diff(moment(this.state.patients[this.state.patientId].dob), 'years')}</div>
+              <div className="TableRowItem3">{moment().diff(moment(this.props.patients[this.state.patientId].dob), 'years')}</div>
             </div>
             <div className="TableRow">
-              <div className="TableRowItem1">Language{this.state.patients[this.state.patientId].languages.length > 1 ? 's' : ''}</div>
+              <div className="TableRowItem1">Language{this.props.patients[this.state.patientId].languages.length > 1 ? 's' : ''}</div>
               <div className="TableRowItem3">{
-                this.state.patients[this.state.patientId].languages.map((language, index) => {
+                this.props.patients[this.state.patientId].languages.map((language, index) => {
                   return (index > 0) ? (
                     <span key={language.id}>, {language.name}</span>
                   ) : (
@@ -174,23 +157,23 @@ class BookingLocationUser extends Component {
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Race</div>
-              <div className="TableRowItem3">{this.state.patients[this.state.patientId].race}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].race}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Religion</div>
-              <div className="TableRowItem3">{this.state.patients[this.state.patientId].religion}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].religion}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Address</div>
-              <div className="TableRowItem3">{this.state.patients[this.state.patientId].addresses[0].address}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].addresses[0].address}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Unit Number</div>
-              <div className="TableRowItem3">{this.state.patients[this.state.patientId].addresses[0].unitNumber}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].addresses[0].unitNumber}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Postal Code</div>
-              <div className="TableRowItem3">{this.state.patients[this.state.patientId].addresses[0].postalCode}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].addresses[0].postalCode}</div>
             </div>
           </div>
         );
@@ -198,45 +181,48 @@ class BookingLocationUser extends Component {
     } else {
       // Add patient details
       patientDetails = (
-        <form ref={(c) => this._patientDetailsForm = c} onSubmit={this._onClickSavePatient.bind(this)}>
-          <div>
+        <div>
+          <form ref={(c) => this._patientDetailsForm = c} onSubmit={this._onClickSavePatient.bind(this)}>
             <div>
-              <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
-              <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
-                <span></span><span>Are you the patient?</span>
-              </label>
-            </div>
-            <input type="text" id="fullName" name="fullName" valueLink={linkState(this, 'fullName')} placeholder="Full Name*" maxLength="50" required />
-            <div className="DateInput">
-              <input type="text" id="dob" name="dob" value={this.state.dob_temp ? this.state.dob_temp : (this.state.dob ? moment(this.state.dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeNewDob.bind(this)} onBlur={this._onBlurNewDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
-              <span onClick={() => this._dayPickerPopup2.show()}></span>
+              <div>
+                <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
+                <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
+                  <span></span><span>Are you the patient?</span>
+                </label>
+              </div>
+              <input type="text" id="fullName" name="fullName" valueLink={linkState(this, 'fullName')} placeholder="Full Name*" maxLength="50" required />
+              <div className="DateInput">
+                <input type="text" id="dob" name="dob" value={this.state.dob_temp ? this.state.dob_temp : (this.state.dob ? moment(this.state.dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeNewDob.bind(this)} onBlur={this._onBlurNewDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
+                <span onClick={() => this.props.showDayPickerPopup(this.state.dob)}></span>
+              </div>
+              <div>
+                <div className="radio radio-inline">
+                  <input type="radio" id="gender_male" name="gender" checked={this.state.gender==='Male'} onChange={this._onSelectGender.bind(this, 'gender')} value="Male" required />
+                  <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
+                </div>
+                <div className="radio radio-inline">
+                  <input type="radio" id="gender_female" name="gender" checked={this.state.gender==='Female'} onChange={this._onSelectGender.bind(this, 'gender')} value="Female" required />
+                  <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
+                </div>
+              </div>
             </div>
             <div>
-              <div className="radio radio-inline">
-                <input type="radio" id="gender_male" name="gender" checked={this.state.gender==='Male'} onChange={this._onSelectGender.bind(this, 'gender')} value="Male" required />
-                <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
+              <div style={{marginTop: '40px'}}>Patient Location / Address</div>
+              <div className="PatientAddress">
+                <div className="PatientAddressLeft inline">
+                  <input type="text" id="postalCode" name="postalCode" value={this.state.postalCode} onChange={this._onChangePostalCode.bind(this)} placeholder="Enter Postal Code*" pattern="[0-9]{6}" required />
+                  <input type="text" id="unitNumber" name="unitNumber" valueLink={linkState(this, 'unitNumber')} placeholder="Enter Unit Number" />
+                </div>
+                <div className="PatientAddressRight inline">
+                  <textarea id="address" name="address" valueLink={linkState(this, 'address')} placeholder="Enter Address*" required />
+                </div>
               </div>
-              <div className="radio radio-inline">
-                <input type="radio" id="gender_female" name="gender" checked={this.state.gender==='Female'} onChange={this._onSelectGender.bind(this, 'gender')} value="Female" required />
-                <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
-              </div>
+              <p className="small">This information will only be used to contact you regarding your booking.</p>
             </div>
-          </div>
-          <div>
-            <div style={{marginTop: '40px'}}>Patient Location / Address</div>
-            <div className="PatientAddress">
-              <div className="PatientAddressLeft inline">
-                <input type="text" id="postalCode" name="postalCode" value={this.state.postalCode} onChange={this._onChangePostalCode.bind(this)} placeholder="Enter Postal Code*" pattern="[0-9]{6}" required />
-                <input type="text" id="unitNumber" name="unitNumber" valueLink={linkState(this, 'unitNumber')} placeholder="Enter Unit Number" />
-              </div>
-              <div className="PatientAddressRight inline">
-                <textarea id="address" name="address" valueLink={linkState(this, 'address')} placeholder="Enter Address*" required />
-              </div>
-            </div>
-            <p className="small">This information will only be used to contact you regarding your booking.</p>
-          </div>
-          <button className="btn btn-primary" type="submit">Save Patient</button>
-        </form>
+            <button className="btn btn-primary" type="submit">Save Patient</button>
+          </form>
+          <DayPickerPopup title="Date of Birth" onDayClick={this._onSelectNewDob.bind(this)} />
+        </div>
       );
     }
     component = (
@@ -260,8 +246,8 @@ class BookingLocationUser extends Component {
               <select name="patientId" value={this.state.patientId} onChange={this._onChangePatient.bind(this)}>
                 <option>Select Patient</option>
                 {
-                  this.state.patients && this.state.patients.map((patient, index) => {
-                    return <option key={patient.id} value={index}>{patient.fullName}</option>
+                  this.props.patientIds && this.props.patientIds.map((index) => {
+                    return <option key={this.props.patients[index].id} value={index}>{this.props.patients[index].fullName}</option>
                   })
                 }
               </select>
@@ -273,7 +259,7 @@ class BookingLocationUser extends Component {
             <h3>Patient Details</h3>
             {/*<a href="#" className={this.state.editingPatient || !this.state.patientId ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
           </div>
-          <Loader className="spinner" loaded={(this.state.patients && !this.state.savingPatient) ? true : false}>
+          <Loader className="spinner" loaded={(this.props.patients && !this.state.savingPatient) ? true : false}>
             {patientDetails}
           </Loader>
           <div style={{marginTop: '40px'}}>
@@ -298,9 +284,6 @@ class BookingLocationUser extends Component {
             {this.props.children}
           </div>
         </Container>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
-        <DayPickerPopup ref={(c) => this._dayPickerPopup = c} value={this.state.patient_dob} title="Date of Birth" onDayClick={this._onSelectDob.bind(this)} />
-        <DayPickerPopup ref={(c) => this._dayPickerPopup2 = c} value={this.state.dob} title="Date of Birth" onDayClick={this._onSelectNewDob.bind(this)} />
       </div>
     );
   }
@@ -313,6 +296,7 @@ class BookingLocationUser extends Component {
         this.setState({
           first_name: this.props.user.first_name,
           last_name: this.props.user.last_name,
+
           mobilePhone: this.props.user.mobilePhone,
 
           editingUser: true
@@ -369,7 +353,7 @@ class BookingLocationUser extends Component {
 
   _onChangePatient(event) {
     // console.log(event.target.value);
-    var patient = this.state.patients[event.target.value];
+    var patient = this.props.patients[event.target.value];
     this.setState({
       patientId: event.target.value
     });
@@ -474,51 +458,40 @@ class BookingLocationUser extends Component {
       this.setState({
         savingPatient: true
       });
-      this.serverRequest = request
-        .post(Util.host + '/api/createPatient')
-        .auth(this.props.user.id, this.props.user.token)
-        .send({
-          fullName: this.state.fullName,
-          gender: this.state.gender,
-          dob: moment(this.state.dob).format('YYYY-MM-DD'),
-          addresses: [{
-            address: this.state.address,
-            postalCode: this.state.postalCode,
-            unitNumber: this.state.unitNumber
-          }]
-        })
-        .end((err, res) => {
-          if (err) {
-            return console.error(Util.host + '/api/createPatient', err.toString());
-          }
-          // console.log(res.body);
-          if (res.body && res.body.patient) {
-            var patientId = res.body.patient.id;
-            this._getPatients(this.props.user, () => {
-              var selectPatient;
-              this.state.patients.forEach((patient, index) => {
-                if (patient.id === patientId) {
-                  this.setState({
-                    patientId: index,
-                    savingPatient: false,
-                    fullName: undefined,
-                    gender: undefined,
-                    dob: undefined,
-                    address: undefined,
-                    postalCode: undefined,
-                    unitNumber: undefined
-                  });
-                }
+      this.props.createPatient({
+        fullName: this.state.fullName,
+        gender: this.state.gender,
+        dob: moment(this.state.dob).format('YYYY-MM-DD'),
+        addresses: [{
+          address: this.state.address,
+          postalCode: this.state.postalCode,
+          unitNumber: this.state.unitNumber
+        }]
+      }).then((res) => {
+        if (res.response && res.response.patient) {
+          var patientId = res.response.patient.id;
+          this._getPatients(this.props.user, () => {
+            if (this.props.patients[patientId]) {
+              this.setState({
+                patientId: patientId,
+                savingPatient: false,
+                fullName: undefined,
+                gender: undefined,
+                dob: undefined,
+                address: undefined,
+                postalCode: undefined,
+                unitNumber: undefined
               });
-            });
-          } else {
-            console.error('Failed to create patient.');
-          }
-        });
+            }
+          });
+        } else {
+          console.error('Failed to create patient.');
+        }
+      });
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
-      this._alertPopup.show('Please fill up all required fields.');
+      this.props.showAlertPopup('Please fill up all required fields.');
     }
   }
 
@@ -535,7 +508,7 @@ class BookingLocationUser extends Component {
   }
 
   _onNext(event) {
-    if (this.state.patientId) {
+    if (this.props.patients && this.state.patientId) {
       Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       var booker =  {
@@ -543,13 +516,13 @@ class BookingLocationUser extends Component {
       };
       // console.log(booker);
       var location = {
-        postalCode: this.state.patients[this.state.patientId].addresses[0].postalCode,
-        address: this.state.patients[this.state.patientId].addresses[0].address,
-        unitNumber: this.state.patients[this.state.patientId].addresses[0].unitNumber
+        postalCode: this.props.patients[this.state.patientId].addresses[0].postalCode,
+        address: this.props.patients[this.state.patientId].addresses[0].address,
+        unitNumber: this.props.patients[this.state.patientId].addresses[0].unitNumber
       };
       this.props.setOrderBooker(booker);
       this.props.setOrderLocation(location);
-      this.props.setOrderPatient(this.state.patients[this.state.patientId]);
+      this.props.setOrderPatient(this.props.patients[this.state.patientId]);
       this.props.setLastPage('booking2');
     } else {
       event.preventDefault();
@@ -560,27 +533,15 @@ class BookingLocationUser extends Component {
 
   _getPatients(user, cb) {
     cb = cb || () => {};
-    this.serverRequest = request
-      .get(Util.host + '/api/getPatients')
-      .query({
-        cid: user.clients[0].id
-      })
-      .auth(user.id, user.token)
-      .end((err, res) => {
-        if (err) {
-          return console.error(Util.host + '/api/getPatients', err.toString());
-        }
-        if (res.body && res.body.status === 1) {
-          console.log(res.body);
-          // this.props.setUser(user);
-          this.setState({
-            patients: res.body.patients
-          });
-          return cb(res.body.patients);
-        } else {
-          console.error('Failed to obtain patients data.');
-        }
-      });
+    this.props.getPatients({
+      cid: user.clients[0].id
+    }).then((res) => {
+      if (res.response && res.response.status === 1) {
+        return cb();
+      } else {
+        console.error('Failed to obtain patients data.');
+      }
+    });
   }
 
 }
@@ -589,23 +550,37 @@ const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
     order: state.order,
-    user: state.user
+    user: state.user.data,
+    patients: state.patients.data,
+    patientIds: state.patients.ids
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getPatients: (params) => {
+      return dispatch(getPatients(params));
+    },
+    createPatient: (patient) => {
+      return dispatch(createPatient(patient));
+    },
     setOrderBooker: (booker) => {
-      dispatch(setOrderBooker(booker));
+      return dispatch(setOrderBooker(booker));
     },
     setOrderLocation: (location) => {
-      dispatch(setOrderLocation(location));
+      return dispatch(setOrderLocation(location));
     },
     setOrderPatient: (patient) => {
-      dispatch(setOrderPatient(patient));
+      return dispatch(setOrderPatient(patient));
     },
     setLastPage: (page) => {
-      dispatch(setLastPage(page));
+      return dispatch(setLastPage(page));
+    },
+    showDayPickerPopup: (value) => {
+      return dispatch(showDayPickerPopup(value));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
     }
   }
 }

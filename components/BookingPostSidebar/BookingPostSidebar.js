@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import './BookingPostSidebar.scss';
+import { fetchServices } from '../../actions';
 
 class BookingPostSidebar extends Component {
 
-  constructor(props) {
-    super(props);
+  componentDidMount() {
+    this.props.fetchServices();
   }
 
   render() {
@@ -64,11 +65,21 @@ class BookingPostSidebar extends Component {
   }
 
 }
+
 const mapStateToProps = (state) => {
   return {
-    allServices: state.allServices,
-    booking: state.booking
+    allServices: state.allServices.items,
+    booking: state.booking.items,
+    bookingFetching: state.booking.isFetching
   }
 }
 
-export default connect(mapStateToProps, {})(BookingPostSidebar);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchServices: () => {
+      return dispatch(fetchServices());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingPostSidebar);

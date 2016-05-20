@@ -5,8 +5,7 @@ import Loader from 'react-loader';
 import './BookingServices.scss';
 import Container from '../Container';
 import Link from '../Link';
-import AlertPopup from '../AlertPopup';
-import { setOrderService, setLastPage } from '../../actions';
+import { fetchServices, setOrderService, setLastPage, showAlertPopup } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingServices extends Component {
@@ -21,36 +20,36 @@ class BookingServices extends Component {
     if (order && order.service) {
       this.state.selectedService = order.service;
     } else if (allServices && location.query && location.query.sid) {
-      if (allServices[location.query.sid]) {
-        this.state.selectedService = location.query.sid;
+      if (allServices[parseInt(location.query.sid)]) {
+        this.state.selectedService = parseInt(location.query.sid);
       }
     }
   }
 
   componentWillReceiveProps(props) {
-    if (props.order && props.order.service) {
+    const { allServices, order, location } = props;
+    if (order && order.service) {
       this.setState({
-        selectedService: props.order.service
+        selectedService: order.service
       });
-    } else if (props.allServices && props.location.query && props.location.query.sid) {
-      for (var i = 0; i < props.allServices.length; i++) {
-        if (parseInt(props.allServices[i].id) === parseInt(props.location.query.sid)) {
-          this.setState({
-            selectedService: props.allServices[i].id
-          });
-          break;
-        }
+    } else if (allServices && location.query && location.query.sid) {
+      if (allServices[parseInt(location.query.sid)]) {
+        this.setState({ selectedService: parseInt(location.query.sid) });
       }
     }
   }
 
+  componentDidMount() {
+    this.props.fetchServices();
+  }
+
   render() {
-    const { allServices } = this.props;
+    const { allServices, allServicesFetching } = this.props;
     const { filter, selectedService } = this.state;
 
     return (
       <div className="BookingServices">
-        <Loader className="spinner" loaded={allServices ? true : false}>
+        <Loader className="spinner" loaded={allServicesFetching ? false : true}>
           <div className="BookingServicesNav-wrapper">
             <Container>
               <ul className="BookingServicesNav">
@@ -110,7 +109,6 @@ class BookingServices extends Component {
             </Container>
           </div>
         </Loader>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
       </div>
     );
   }
@@ -138,7 +136,7 @@ class BookingServices extends Component {
     } else {
       event.preventDefault();
       // alert('Please select a service');
-      this._alertPopup.show('Please select a service.');
+      this.props.showAlertPopup('Please select a service.');
     }
   }
 
@@ -148,17 +146,24 @@ const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
     order: state.order,
-    allServices: state.allServices
+    allServices: state.allServices.items,
+    allServicesFetching: state.allServices.isFetching
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchServices: () => {
+      return dispatch(fetchServices());
+    },
     setOrderService: (service) => {
-      dispatch(setOrderService(service));
+      return dispatch(setOrderService(service));
     },
     setLastPage: (page) => {
-      dispatch(setLastPage(page));
+      return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
     }
   }
 }

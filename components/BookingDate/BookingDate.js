@@ -6,8 +6,7 @@ import remove from 'lodash/remove';
 import moment from 'moment';
 import './BookingDate.scss';
 import Link from '../Link';
-import AlertPopup from '../AlertPopup';
-import { setOrderDates, setLastPage } from '../../actions';
+import { setOrderDates, setLastPage, showAlertPopup } from '../../actions';
 
 class BookingDate extends Component {
 
@@ -56,7 +55,6 @@ class BookingDate extends Component {
         <div className="text-center">
           <a href="/booking3b" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
       </div>
     );
   }
@@ -102,7 +100,7 @@ class BookingDate extends Component {
     } else {
       event.preventDefault();
       // alert('Please select a date range.');
-      this._alertPopup.show('Please select at least one day.');
+      this.props.showAlertPopup('Please select at least one day.');
     }
   }
 
@@ -118,10 +116,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setOrderDates: (dates) => {
-      dispatch(setOrderDates(dates));
+      return dispatch(setOrderDates(dates));
     },
     setLastPage: (page) => {
-      dispatch(setLastPage(page));
+      return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
     }
   }
 }

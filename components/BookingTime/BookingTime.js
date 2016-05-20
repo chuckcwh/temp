@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import './BookingTime.scss';
 import Link from '../Link';
-import AlertPopup from '../AlertPopup';
-import { setOrderTimeslots, setLastPage } from '../../actions';
+import { setOrderTimeslots, setLastPage, showAlertPopup } from '../../actions';
 
 class BookingTime extends Component {
 
@@ -45,7 +44,6 @@ class BookingTime extends Component {
         <div className="text-center">
           <a href="/booking3c" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
       </div>
     );
   }
@@ -59,8 +57,7 @@ class BookingTime extends Component {
     }
 
     if (timeslots.length === 0) {
-      // alert('Please choose at least one timeslot.');
-      this._alertPopup.show('Please select at least one timeslot.');
+      this.props.showAlertPopup('Please select at least one timeslot.');
       return event.preventDefault();
     }
 
@@ -82,10 +79,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setOrderTimeslots: (timeslots) => {
-      dispatch(setOrderTimeslots(timeslots));
+      return dispatch(setOrderTimeslots(timeslots));
     },
     setLastPage: (page) => {
-      dispatch(setLastPage(page));
+      return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
     }
   }
 }

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import linkState from 'react-link-state';
-import request from 'superagent';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Loader from 'react-loader';
 import './BookingConfirmation.scss';
 import Container from '../Container';
 import Link from '../Link';
-import { setBooking, setPostStatus } from '../../actions';
+import { editBooking, setPostStatus } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingConfirmation extends Component {
@@ -16,7 +15,6 @@ class BookingConfirmation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      booking: this.props.booking,
       editingUser: false,
       editingPatient: false,
       editingAddress: false
@@ -287,31 +285,23 @@ class BookingConfirmation extends Component {
       case 'user':
         if (this._userDetailsForm.checkValidity()) {
           this.setState({updatingUser: true});
-          this.serverRequest = request
-            .post(Util.host + '/api/editBooking')
-            .auth(Util.authKey, Util.authSecret)
-            .send({
-              bid: this.props.booking && this.props.booking.id,
-              token: this.props.booking && this.props.booking.token,
-              booking: {
-                client_contactNumber: this.state.client_contactNumber
-              }
-            })
-            .end((err, res) => {
-              if (err) {
-                return console.error(Util.host + '/api/editBooking', err.toString());
-              }
-              // console.log(res.body);
-              if (res.body && res.body.status === 1) {
-                this.setState({
-                  editingUser: false,
-                  updatingUser: false
-                });
-                this.props.setBooking(res.body.booking);
-              } else {
-                console.error('Failed to edit booking.');
-              }
-            });
+
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            booking: {
+              client_contactNumber: this.state.client_contactNumber
+            }
+          }).then((res) => {
+            if (res.response && res.response.status === 1) {
+              this.setState({
+                editingUser: false,
+                updatingUser: false
+              });
+            } else {
+              console.error('Failed to edit booking.');
+            }
+          });
         }
         break;
       case 'patient':
@@ -322,36 +312,27 @@ class BookingConfirmation extends Component {
       case 'address':
         if (this._addressDetailsForm.checkValidity()) {
           this.setState({updatingAddress: true});
-          this.serverRequest = request
-            .post(Util.host + '/api/editBooking')
-            .auth(Util.authKey, Util.authSecret)
-            .send({
-              bid: this.props.booking && this.props.booking.id,
-              token: this.props.booking && this.props.booking.token,
-              case: {
-                addresses: [{
-                  id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
-                  address: this.state.address,
-                  postalCode: this.state.postalCode,
-                  unitNumber: this.state.unitNumber
-                }]
-              }
-            })
-            .end((err, res) => {
-              if (err) {
-                return console.error(Util.host + '/api/editBooking', err.toString());
-              }
-              // console.log(res.body);
-              if (res.body && res.body.status === 1) {
-                this.setState({
-                  editingAddress: false,
-                  updatingAddress: false
-                });
-                this.props.setBooking(res.body.booking);
-              } else {
-                console.error('Failed to edit booking.');
-              }
-            });
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            case: {
+              addresses: [{
+                id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
+                address: this.state.address,
+                postalCode: this.state.postalCode,
+                unitNumber: this.state.unitNumber
+              }]
+            }
+          }).then((res) => {
+            if (res.response && res.response.status === 1) {
+              this.setState({
+                editingAddress: false,
+                updatingAddress: false
+              });
+            } else {
+              console.error('Failed to edit booking.');
+            }
+          });
         }
         break;
     }
@@ -415,17 +396,18 @@ class BookingConfirmation extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    booking: state.booking
+    booking: state.booking.items,
+    bookingFetching: state.booking.isFetching
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setBooking: (booking) => {
-      dispatch(setBooking(booking));
+    editBooking: (booking) => {
+      return dispatch(editBooking(booking));
     },
     setPostStatus: (status) => {
-      dispatch(setPostStatus(status));
+      return dispatch(setPostStatus(status));
     }
   }
 }

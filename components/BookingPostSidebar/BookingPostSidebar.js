@@ -11,18 +11,19 @@ class BookingPostSidebar extends Component {
   }
 
   render() {
+    const { allServices, booking } = this.props;
     var service, location, sessions, sum;
-    if (this.props.allServices && this.props.booking && this.props.booking.case && this.props.booking.case.service) {
-      service = this.props.allServices[this.props.booking.case.service].name;
+    if (allServices && booking && booking.case && booking.case.service) {
+      service = allServices[booking.case.service].name;
     }
-    if (this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0]) {
-      location = (<span>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}<br/>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</span>);
+    if (booking && booking.case && booking.case.addresses && booking.case.addresses[0]) {
+      location = (<span>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].address}<br/>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].unitNumber}</span>);
     }
-    if (this.props.booking && this.props.booking.case) {
-      sessions = this.props.booking.case.dates;
+    if (booking && booking.case) {
+      sessions = booking.case.dates;
     }
-    if (this.props.booking && this.props.booking.case) {
-      sum = parseFloat(this.props.booking.case.price);
+    if (booking && booking.case) {
+      sum = parseFloat(booking.case.price);
     }
     return (
       <div className="BookingPostSidebar">

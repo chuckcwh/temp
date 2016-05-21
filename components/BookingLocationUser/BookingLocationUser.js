@@ -230,7 +230,7 @@ class BookingLocationUser extends Component {
         <div className="BookingLocationUserBodyEditSection">
           <div className="BookingLocationUserBodyEditSectionTitle">
             <h3>Contact Person Details</h3>
-            <a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
+            {/*<a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>*/}
           </div>
           {userDetails}
         </div>

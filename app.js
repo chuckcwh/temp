@@ -31,9 +31,11 @@ const route = async (location, callback) => {
 function run() {
   const container = document.getElementById('app');
   Location.listen(location => {
-    // console.log(location);
     store.dispatch(setRouter({ location }));
     route(location, async (component) => ReactDOM.render(component, container, () => {
+      // Scroll to the top
+      window.scrollTo(0, 0);
+
       // Track the page view event via Google Analytics
       window.ga('send', 'pageview');
     }));

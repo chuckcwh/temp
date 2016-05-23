@@ -88,11 +88,15 @@ class BookingServices extends Component {
                           services.map((service, index) => {
                             var id = "BookingServicesRadio" + service.id;
                             return (
-                              <div className="BookingServicesItem" key={service.id}>
+                              <div className={classNames('BookingServicesItem', (service.id === selectedService) ? 'active' : '')} key={service.id}>
                                 <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === selectedService} onChange={this._onSelect.bind(this)} required />
                                 <label className="BookingServicesRadioLabel" htmlFor={id}>
                                   <span><span></span></span><span>{service.name}</span>
                                 </label>
+                                <div className="BookingServicesItemDescription">
+                                  {service.description} ({parseFloat(service.duration)} hours)<br />
+                                  <span className="BookingServicesItemDescription-price">Starting from SGD {service.price} per session</span>
+                                </div>
                               </div>
                             );
                           })

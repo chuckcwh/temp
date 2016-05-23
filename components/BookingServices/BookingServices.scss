@@ -134,6 +134,21 @@
         .BookingServicesRadioLabel {
           width: 100%;
         }
+
+        .BookingServicesItemDescription {
+          display: none;
+          color: #999;
+
+          &-price {
+            font-style: italic;
+          }
+        }
+
+        &.active {
+          .BookingServicesItemDescription {
+            display: block;
+          }
+        }
       }
     }
 

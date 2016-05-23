@@ -79,6 +79,9 @@ class BookingResults extends Component {
       this.setState(state);
       this.props.setOrderSum(sum);
     }
+    if (this.props.order.promoCode !== nextProps.order.promoCode) {
+      this._updateSum(nextProps);
+    }
   }
 
   render() {
@@ -89,7 +92,7 @@ class BookingResults extends Component {
       return e => {
         checkedLink(key).requestChange(e.target.checked);
 
-        this._updateSum();
+        this._updateSum(this.props);
       };
     }
     var promoButton;
@@ -205,8 +208,6 @@ class BookingResults extends Component {
             disablePromo: true
           });
           this.props.setOrderPromoCode(res.response.promoCode);
-
-          this._updateSum();
         } else {
           this.props.showAlertPopup('Your promotion code is not valid.');
           console.error('Failed to obtain promo code data.');
@@ -228,8 +229,6 @@ class BookingResults extends Component {
       disablePromo: false
     });
     this.props.setOrderPromoCode(null);
-
-    this._updateSum();
   }
 
   _onCheckedAgree(event) {
@@ -278,14 +277,14 @@ class BookingResults extends Component {
     event.preventDefault();
   }
 
-  _updateSum() {
+  _updateSum(props) {
     var sum = 0;
     for (var i = 0; i < this.state.sessions.length; i++) {
       if (this.state['session'+i]) {
-        sum += Util.calcRate(this.state.sessions[i], this.props.order.promoCode, this.props.order.service);
+        sum += Util.calcRate(this.state.sessions[i], props.order.promoCode, props.order.service);
       }
     }
-    this.props.setOrderSum(sum);
+    props.setOrderSum(sum);
   }
 
 }

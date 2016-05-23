@@ -252,7 +252,7 @@ class BookingResults extends Component {
       // console.log(sessions);
       this.props.setOrderSessions(sessions);
       // console.log(this.state);
-      this.props.setLastPage('booking3c');
+      Util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
     } else {
       this.props.showAlertPopup('To continue, please accept our Terms of Service and Privacy Policy.');
     }
@@ -293,6 +293,7 @@ class BookingResults extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    lastPage: state.lastPage,
     order: state.order,
     sessions: state.sessions.data,
     sessionsFetching: state.sessions.isFetching

@@ -523,7 +523,7 @@ class BookingLocationUser extends Component {
       this.props.setOrderBooker(booker);
       this.props.setOrderLocation(location);
       this.props.setOrderPatient(this.props.patients[this.state.patientId]);
-      this.props.setLastPage('booking2');
+      Util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
@@ -549,6 +549,7 @@ class BookingLocationUser extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    lastPage: state.lastPage,
     order: state.order,
     user: state.user.data,
     patients: state.patients.data,

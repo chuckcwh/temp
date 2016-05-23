@@ -4,6 +4,7 @@ import linkState from 'react-link-state';
 import './BookingTime.scss';
 import Link from '../Link';
 import { setOrderTimeslots, setLastPage, showAlertPopup } from '../../actions';
+import Util from '../../core/Util';
 
 class BookingTime extends Component {
 
@@ -64,7 +65,7 @@ class BookingTime extends Component {
     Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
     this.props.setOrderTimeslots(timeslots);
-    this.props.setLastPage('booking3b');
+    Util.isNextLastPage('booking3b', this.props.lastPage) && this.props.setLastPage('booking3b');
   }
 
 }
@@ -72,6 +73,7 @@ class BookingTime extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    lastPage: state.lastPage,
     order: state.order
   }
 }

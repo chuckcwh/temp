@@ -42,6 +42,10 @@ export function isNavigationAllowed(path, lastPage) {
   return (PAGE_ORDERS.indexOf(lastPage) + 1) >= PAGE_ORDERS.indexOf(path);
 }
 
+export function isNextLastPage(path, lastPage) {
+  return PAGE_ORDERS.indexOf(lastPage) + 1 === PAGE_ORDERS.indexOf(path);
+}
+
 export function getCookies() {
   if (typeof document !== 'undefined' && document && document.cookie) {
     var pairs = document.cookie.split(';');
@@ -119,6 +123,7 @@ const util = {
 
   isLoggedInBackend: isLoggedInBackend,
   isNavigationAllowed: isNavigationAllowed,
+  isNextLastPage: isNextLastPage,
 
   getCookies: getCookies,
 

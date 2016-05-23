@@ -7,6 +7,7 @@ import moment from 'moment';
 import './BookingDate.scss';
 import Link from '../Link';
 import { setOrderDates, setLastPage, showAlertPopup } from '../../actions';
+import Util from '../../core/Util';
 
 class BookingDate extends Component {
 
@@ -96,7 +97,7 @@ class BookingDate extends Component {
 
       // this.props.booking.range = this.state.range;
       this.props.setOrderDates(this.state.selectedDates);
-      this.props.setLastPage('booking3a');
+      Util.isNextLastPage('booking3a', this.props.lastPage) && this.props.setLastPage('booking3a');
     } else {
       event.preventDefault();
       // alert('Please select a date range.');
@@ -109,6 +110,7 @@ class BookingDate extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    lastPage: state.lastPage,
     order: state.order
   }
 }

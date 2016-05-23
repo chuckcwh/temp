@@ -136,7 +136,7 @@ class BookingServices extends Component {
       Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       this.props.setOrderService(this.state.selectedService);
-      this.props.setLastPage('booking1');
+      Util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
     } else {
       event.preventDefault();
       // alert('Please select a service');
@@ -149,6 +149,7 @@ class BookingServices extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    lastPage: state.lastPage,
     order: state.order,
     allServices: state.allServices.items,
     allServicesFetching: state.allServices.isFetching

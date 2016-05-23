@@ -29,7 +29,7 @@ class BookingSidebar extends Component {
     if (order && order.timeslots) {
       timeslots = order.timeslots;
     }
-    if (order && typeof order.sum === 'number') {
+    if (this.props.location.pathname.indexOf('booking3c') > -1 && order && typeof order.sum === 'number') {
       sum = order.sum;
     }
     return (
@@ -107,6 +107,7 @@ class BookingSidebar extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    location: state.router && state.router.location,
     allServices: state.allServices,
     order: state.order
   }

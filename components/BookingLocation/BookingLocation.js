@@ -9,6 +9,7 @@ import Link from '../Link';
 import DayPickerPopup from '../DayPickerPopup';
 import { setOrderBooker, setOrderLocation, setLastPage, showLoginPopup, showDayPickerPopup, showAlertPopup } from '../../actions';
 import Location from '../../core/Location';
+import Util from '../../core/Util';
 
 class BookingLocation extends Component {
 
@@ -239,7 +240,7 @@ class BookingLocation extends Component {
       };
       this.props.setOrderBooker(user);
       this.props.setOrderLocation(location);
-      this.props.setLastPage('booking2');
+      Util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
 
       Location.push({ pathname: '/booking3a', query: this.props.location.query });
     } else {
@@ -254,6 +255,7 @@ class BookingLocation extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    lastPage: state.lastPage,
     order: state.order
   }
 }

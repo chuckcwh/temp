@@ -62,11 +62,14 @@ class Services extends Component {
                             services.map((service) => {
                               return (
                                 <AccordionItem title={service.name} key={service.id}>
-                                  <div>
-                                    {service.description}
-                                  </div>
-                                  <div>
-                                    <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
+                                  <div className="ServicesItem">
+                                    <div className="ServicesItemDescription">
+                                      {service.description} ({parseFloat(service.duration)} hours)<br />
+                                      <span className="ServicesItemDescription-price">Starting from SGD {service.price} per session</span>
+                                    </div>
+                                    <div>
+                                      <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
+                                    </div>
                                   </div>
                                 </AccordionItem>
                               );

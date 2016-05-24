@@ -13,6 +13,8 @@ function callApi(store, endpoint, method, data, auth) {
     headers = { 'Authorization': 'Basic ' + window.btoa(Util.authKey + ':' + Util.authSecret) }
   } else if (auth === 'user') {
     headers = { 'Authorization': 'Basic ' + window.btoa(store.getState().user.data.id + ':' + store.getState().user.data.token) }
+  } else if (auth === 'userParams') {
+    headers = { 'Authorization': 'Basic ' + window.btoa(data.id + ':' + data.token) }
   }
   let request = client({
     host: Util.host,

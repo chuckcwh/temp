@@ -114,6 +114,12 @@ function fetchAction(route) {
       method: 'get',
       auth: 'user'
     },
+    getUserWithToken: {
+      types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
+      endpoint: 'getUser',
+      method: 'get',
+      auth: 'userParams'
+    },
     getPatients: {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
       endpoint: 'getPatients',
@@ -231,6 +237,10 @@ export function login(params) {
 
 export function getUser() {
   return fetch('getUser');
+}
+
+export function getUserWithToken(params) {
+  return fetch('getUserWithToken', params);
 }
 
 export function destroyUser() {

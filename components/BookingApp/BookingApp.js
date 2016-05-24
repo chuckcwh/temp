@@ -24,7 +24,7 @@ import BookingDetails from '../BookingDetails';
 import Account from '../Account';
 import AlertPopup from '../AlertPopup';
 import LoginPopup from '../LoginPopup';
-import { fetchServicesIfNeeded, getBooking, getUser, setPostStatus } from '../../actions';
+import { fetchServicesIfNeeded, getBooking, getUserWithToken, setPostStatus } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
@@ -66,8 +66,10 @@ class BookingApp extends Component {
 
     // if "uid" query parameter exists, login automatically
     if (this.props.location && this.props.location.query && this.props.location.query.uid && this.props.location.query.token) {
-
-      this.props.getUser().then((res) => {
+      this.props.getUserWithToken({
+        id: this.props.location.query.uid,
+        token: this.props.location.query.token
+      }).then((res) => {
         if (res.response && res.response.status < 1) {
           console.error('Failed to get user data.');
         }
@@ -218,8 +220,8 @@ const mapDispatchToProps = (dispatch) => {
     getBooking: (params) => {
       return dispatch(getBooking(params));
     },
-    getUser: () => {
-      return dispatch(getUser());
+    getUserWithToken: (params) => {
+      return dispatch(getUserWithToken(params));
     },
     setPostStatus: (status) => {
       return dispatch(setPostStatus(status));

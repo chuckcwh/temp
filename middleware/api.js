@@ -1,4 +1,4 @@
-import { client } from 'http-otro'
+import { client } from '../utils/http'
 import { fetch } from 'isomorphic-fetch'
 import Util from '../core/Util'
 

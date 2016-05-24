@@ -33,11 +33,11 @@ class BookingResults extends Component {
 
     this.props.getSessions({
       service: order.service,
-      'dates[]': order.dates.map(date => {
+      dates: order.dates.map(date => {
         return moment(date).format('YYYY-MM-DD');
       }),
       preferredPostalCode: order.location.postalCode,
-      'preferredTimes[]': order.timeslots   // hack to send PHP style arrays
+      preferredTimes: order.timeslots   // hack to send PHP style arrays
     }).then((res) => {
       if (res.response && res.response.status < 1) {
         console.error('Failed to obtain timeslots data.');

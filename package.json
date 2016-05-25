@@ -58,6 +58,7 @@
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.1.1",
     "redux": "^3.5.2",
+    "redux-form": "^5.2.4",
     "redux-thunk": "^2.1.0",
     "style-loader": "^0.12.4",
     "superagent": "^1.8.0",

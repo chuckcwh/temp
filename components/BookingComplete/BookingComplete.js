@@ -133,7 +133,7 @@ class BookingComplete extends Component {
         } else if (this.state.bookingVerified) {
           bookingLink = (
             <div>
-              <a href={'/booking-manage' + this.state.bookingId + '&email=' + this.state.booking.client_contactEmail} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</a>
+              <a href={'/booking-manage?bid=' + this.state.bookingId + '&email=' + this.state.booking.client_contactEmail} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</a>
             </div>
           );
         } else {

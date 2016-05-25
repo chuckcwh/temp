@@ -293,6 +293,75 @@ export function clearBooking() {
   return { type: BOOKING_DESTROY }
 }
 
+export const GEOCODE_REQUEST = 'GEOCODE_REQUEST'
+export const GEOCODE_SUCCESS = 'GEOCODE_SUCCESS'
+export const GEOCODE_FAILURE = 'GEOCODE_FAILURE'
+
+function requestGeocode(postalCode) {
+  return {
+    type: GEOCODE_REQUEST,
+    postalCode
+  }
+}
+
+function receiveGeocode(postalCode, address) {
+  return {
+    type: GEOCODE_SUCCESS,
+    postalCode: postalCode,
+    address: address,
+    receivedAt: Date.now()
+  }
+}
+
+function failedReceiveGeocode(postalCode) {
+  return {
+    type: GEOCODE_FAILURE,
+    postalCode: postalCode,
+    receivedAt: Date.now()
+  }
+}
+
+function geocode(postalCode) {
+  return new Promise((resolve, reject) => {
+    try {
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode( {
+        'address': postalCode,
+        'region': 'SG'
+      }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          var position = results[0].geometry.location;
+          geocoder.geocode({
+            latLng: position
+          }, function(responses) {
+            if (responses && responses.length > 0) {
+              resolve(responses[0].formatted_address);
+            } else {
+              console.error('Invalid postal code.');
+              reject('Invalid postal code.');
+            }
+          });
+        } else {
+          console.error('Invalid postal code.');
+          reject('Invalid postal code.');
+        }
+      });
+    } catch(e) {
+      console.error('Unable to find your address.');
+      reject('Unable to find your address.');
+    }
+  });
+}
+
+export function fetchAddress(postalCode) {
+  return dispatch => {
+    dispatch(requestGeocode(postalCode))
+    return geocode(postalCode)
+      .then(address => dispatch(receiveGeocode(postalCode, address)),
+        () => dispatch(failedReceiveGeocode(postalCode)))
+  }
+}
+
 export const SET_ROUTER = 'SET_ROUTER'
 
 export const setRouter = (router) => {
@@ -421,16 +490,19 @@ export function hideLoginPopup() {
   }
 }
 
-export function showDayPickerPopup(value) {
+export function showDayPickerPopup(value, source) {
   return {
     type: SHOW_MODAL_DAYPICKER,
+    source: source,
     value: value
   }
 }
 
-export function hideDayPickerPopup() {
+export function hideDayPickerPopup(value, source) {
   return {
-    type: HIDE_MODAL_DAYPICKER
+    type: HIDE_MODAL_DAYPICKER,
+    source: source,
+    value: value
   }
 }
 

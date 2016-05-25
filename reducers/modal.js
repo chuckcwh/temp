@@ -42,17 +42,20 @@ const login = (state = false, action) => {
 
 const daypicker = (state = {
   visible: false,
+  source: null,
   value: new Date()
 }, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_DAYPICKER:
       return Object.assign({}, state, {
         visible: true,
+        source: action.source,
         value: action.value
       });
     case ActionTypes.HIDE_MODAL_DAYPICKER:
       return Object.assign({}, state, {
         visible: false,
+        source: null,
         value: new Date()
       });
     default:

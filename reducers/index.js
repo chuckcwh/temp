@@ -1,5 +1,6 @@
 import * as ActionTypes from '../actions';
 import { combineReducers } from 'redux';
+import { reducer as form } from 'redux-form';
 import merge from 'lodash/merge';
 import modal from './modal';
 import order from './order';
@@ -280,7 +281,48 @@ const bookingApp = combineReducers({
   postStatus,
   order,
   modal,
-  errorMessage
+  errorMessage,
+  form: form.normalize({
+    bookingLocationForm: {
+      patient_firstName: (value, previousValue, allValues) => {
+        if (allValues.isPatient) {
+          return allValues.client_firstName;
+        }
+      },
+      patient_lastName: (value, previousValue, allValues) => {
+        if (allValues.isPatient) {
+          return allValues.client_lastName;
+        }
+      }
+    }
+  }).plugin({
+    bookingLocationForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'bookingLocationForm') {
+            return {
+              ...state,
+              patient_dob: {
+                ...state.patient_dob,
+                value: action.value
+              }
+            }
+          }
+        case ActionTypes.GEOCODE_SUCCESS:
+          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+            return {
+              ...state,
+              address: {
+                ...state.address,
+                value: action.address
+              }
+            }
+          }
+        default:
+          return state;
+      }
+    }
+  })
 });
 
 export default bookingApp;

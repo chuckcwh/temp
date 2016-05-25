@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import classNames from 'classnames';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Loader from 'react-loader';
 import './BookingLocationUser.scss';

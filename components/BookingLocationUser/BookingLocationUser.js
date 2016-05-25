@@ -40,15 +40,9 @@ class BookingLocationUser extends Component {
         <div>
           <form ref={(c) => this._userDetailsForm = c}>
             <div className="TableRow">
-              <div className="TableRowItem1">First Name</div>
+              <div className="TableRowItem1">Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="first_name" name="first_name" valueLink={linkState(this, 'first_name')} placeholder="First Name*" maxLength="50" required />
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Last Name</div>
-              <div className="TableRowItem3">
-                <input type="text" id="last_name" name="last_name" valueLink={linkState(this, 'last_name')} placeholder="Last Name*" maxLength="50" required />
+                <input type="text" id="username" name="username" valueLink={linkState(this, 'username')} placeholder="Name*" maxLength="50" required />
               </div>
             </div>
             {/*
@@ -76,12 +70,8 @@ class BookingLocationUser extends Component {
       userDetails = (
         <div>
           <div className="TableRow">
-            <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.user.first_name}</div>
-          </div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.user.last_name}</div>
+            <div className="TableRowItem1">Name</div>
+            <div className="TableRowItem3">{this.props.user.username}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
@@ -293,8 +283,7 @@ class BookingLocationUser extends Component {
     switch (entity) {
       case 'user':
         this.setState({
-          first_name: this.props.user.first_name,
-          last_name: this.props.user.last_name,
+          username: this.props.user.username,
 
           mobilePhone: this.props.user.mobilePhone,
 
@@ -497,7 +486,7 @@ class BookingLocationUser extends Component {
   _onCheckedPatient(event) {
     if (event.target.checked === true) {
       this.setState({
-        fullName: this.props.user.first_name + ' ' + this.props.user.last_name
+        fullName: this.props.user.username
       });
     } else {
       this.setState({

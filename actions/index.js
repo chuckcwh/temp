@@ -17,6 +17,10 @@ export const BOOKING_EDIT_REQUEST = 'BOOKING_EDIT_REQUEST'
 export const BOOKING_EDIT_SUCCESS = 'BOOKING_EDIT_SUCCESS'
 export const BOOKING_EDIT_FAILURE = 'BOOKING_EDIT_FAILURE'
 
+export const BOOKING_SESSION_CANCEL_REQUEST = 'BOOKING_SESSION_CANCEL_REQUEST'
+export const BOOKING_SESSION_CANCEL_SUCCESS = 'BOOKING_SESSION_CANCEL_SUCCESS'
+export const BOOKING_SESSION_CANCEL_FAILURE = 'BOOKING_SESSION_CANCEL_FAILURE'
+
 export const CASE_CREATE_REQUEST = 'CASE_CREATE_REQUEST'
 export const CASE_CREATE_SUCCESS = 'CASE_CREATE_SUCCESS'
 export const CASE_CREATE_FAILURE = 'CASE_CREATE_FAILURE'
@@ -93,6 +97,12 @@ function fetchAction(route) {
     editBooking: {
       types: [ BOOKING_EDIT_REQUEST, BOOKING_EDIT_SUCCESS, BOOKING_EDIT_FAILURE ],
       endpoint: 'editBooking',
+      method: 'post',
+      auth: 'app'
+    },
+    cancelBookingSession: {
+      types: [ BOOKING_SESSION_CANCEL_REQUEST, BOOKING_SESSION_CANCEL_SUCCESS, BOOKING_SESSION_CANCEL_FAILURE ],
+      endpoint: 'cancelCaseSession',
       method: 'post',
       auth: 'app'
     },
@@ -229,6 +239,10 @@ export function editBooking(params) {
 
 export function createCase(params) {
   return fetch('createCase', params);
+}
+
+export function cancelBookingSession(params, booking) {
+  return fetch('cancelBookingSession', params);
 }
 
 export function login(params) {
@@ -466,9 +480,12 @@ export function hideAlertPopup() {
   }
 }
 
-export function showConfirmPopup(message) {
+export function showConfirmPopup(message, accept, cancel) {
   return {
-    type: SHOW_MODAL_CONFIRM
+    type: SHOW_MODAL_CONFIRM,
+    message: message,
+    accept: accept,
+    cancel: cancel
   }
 }
 

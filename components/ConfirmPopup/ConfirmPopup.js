@@ -10,6 +10,7 @@ class ConfirmPopup extends Component {
     return (
       <div className="ConfirmPopup">
         <Popup title="Confirmation" isOpen={this.props.visible} onCloseClicked={this._onClickCancel.bind(this)}>
+          {this.props.message}
           {this.props.children}
           <div className="ConfirmPopup-footer">
             <a className="btn btn-primary btn-small" href="#" onClick={this._onClickOk.bind(this)}>OK</a>
@@ -23,6 +24,7 @@ class ConfirmPopup extends Component {
   _onClickOk(event) {
     this.props.hideConfirmPopup();
     this.props.onConfirmed && this.props.onConfirmed();
+    this.props.accept && this.props.accept();
   }
 
   _onClickCancel(event) {
@@ -37,7 +39,9 @@ ConfirmPopup.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    visible: state.modal.confirm
+    visible: state.modal.confirm.visible,
+    message: state.modal.confirm.message,
+    accept: state.modal.confirm.accept
   }
 }
 

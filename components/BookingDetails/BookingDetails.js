@@ -6,7 +6,9 @@ import Loader from 'react-loader';
 import './BookingDetails.scss';
 import Container from '../Container';
 import Link from '../Link';
-import { editBooking, clearBooking, setPostStatus } from '../../actions';
+import CloseButton from '../CloseButton';
+import ConfirmPopup from '../ConfirmPopup';
+import { getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession, showConfirmPopup } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
@@ -191,17 +193,23 @@ export default class BookingDetails extends Component {
     sessionDetails = (
       <div>
         <div className="TableRow TableRowHeader">
-          <div className="TableRowItem1">Date</div>
-          <div className="TableRowItem1">Session</div>
-          <div className="TableRowItem1">{(this.props.booking.case && this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs</div>
+          <div className="TableRowItem2">Date</div>
+          <div className="TableRowItem2">Session</div>
+          <div className="TableRowItem2">{(this.props.booking.case && this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs</div>
+          <div className="TableRowItem2">Status</div>
+          <div className="TableRowItem1"></div>
         </div>
         {
           this.props.booking.case.dates.map(session => {
             return (
               <div className="TableRow" key={session.id}>
-                <div className="TableRowItem1">{moment(session.dateTimeStart).format('D MMM')}</div>
-                <div className="TableRowItem1">{session.estTime}</div>
-                <div className="TableRowItem1">$ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}</div>
+                <div className="TableRowItem2">{moment(session.dateTimeStart).format('D MMM')}</div>
+                <div className="TableRowItem2">{session.estTime}</div>
+                <div className="TableRowItem2">$ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}</div>
+                <div className="TableRowItem2">{session.status}</div>
+                <div className="TableRowItem1">
+                  {session.status === 'Active' && <CloseButton onCloseClicked={this._onCancelSession.bind(this, session)} />}
+                </div>
               </div>
             );
           })
@@ -334,6 +342,7 @@ export default class BookingDetails extends Component {
             </div>
           </Loader>
         </Container>
+        <ConfirmPopup />
       </div>
     );
   }
@@ -504,6 +513,22 @@ export default class BookingDetails extends Component {
     this.props.setPostStatus('confirmation');
   }
 
+  _onCancelSession(session, event) {
+    return this.props.showConfirmPopup('Are you sure you want to cancel this session?', () => {
+      this.props.cancelBookingSession({
+        dateObjId: session.id,
+        token: this.props.booking.token
+      }, this.props.booking).then((res) => {
+        if (res.response && res.response.status === 1) {
+          this.props.getBooking({
+            bid: this.props.booking.id,
+            email: this.props.booking.client_contactEmail
+          });
+        }
+      });
+    });
+  }
+
 }
 
 const mapStateToProps = (state) => {
@@ -516,6 +541,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getBooking: (params) => {
+      return dispatch(getBooking(params));
+    },
     editBooking: (booking) => {
       return dispatch(editBooking(booking));
     },
@@ -524,6 +552,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     setPostStatus: (status) => {
       return dispatch(setPostStatus(status));
+    },
+    cancelBookingSession: (params) => {
+      return dispatch(cancelBookingSession(params));
+    },
+    showConfirmPopup: (body, accept) => {
+      return dispatch(showConfirmPopup(body, accept));
     }
   }
 }

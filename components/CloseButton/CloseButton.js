@@ -5,7 +5,7 @@ class CloseButton extends Component {
 
   render() {
     return (
-      <a onClick={() => this.onCloseClicked()} role="button" className="CloseButton">&times;</a>
+      <a onClick={() => this.props.onCloseClicked()} role="button" className="CloseButton">&times;</a>
     );
   }
 }

@@ -18,12 +18,27 @@ const alert = (state = { visible: false }, action) => {
   }
 }
 
-const confirm = (state = false, action) => {
+const confirm = (state = {
+  visible: false,
+  message: null,
+  accept: null,
+  cancel: null
+}, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_CONFIRM:
-      return true;
+      return {
+        visible: true,
+        message: action.message,
+        accept: action.accept,
+        cancel: action.cancel
+      };
     case ActionTypes.HIDE_MODAL_CONFIRM:
-      return false;
+      return {
+        visible: false,
+        message: null,
+        accept: null,
+        cancel: null
+      };
     default:
       return state;
   }

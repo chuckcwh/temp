@@ -246,7 +246,7 @@ export default class BookingDetails extends Component {
     } else if (this.props.booking.case.status === 'Closed' && this.props.booking.case.isPaid) {
       bookingStatus = 'Paid & Confirmed';
     } else if (this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) {
-      bookingStatus = 'Awaiting Payment for Confirmation';
+      bookingStatus = 'Awaiting Payment';
     } else {
       bookingStatus = this.props.booking.case.status;
     }

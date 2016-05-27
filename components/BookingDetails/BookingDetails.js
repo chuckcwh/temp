@@ -247,6 +247,14 @@ export default class BookingDetails extends Component {
       bookingStatus = 'Paid & Confirmed';
     } else if (this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) {
       bookingStatus = 'Awaiting Payment';
+
+      if (this.props.booking.case.transactions && this.props.booking.case.transactions.length) {
+        for (var i in this.props.booking.case.transactions) {
+          if (this.props.booking.case.transactions[i].type === 'Payment' && this.props.booking.case.transactions[i].method === 'Bank' && this.props.booking.case.transactions[i].status === 'Pending') {
+            bookingStatus = 'Processing Payment';            
+          }
+        }
+      }
     } else {
       bookingStatus = this.props.booking.case.status;
     }

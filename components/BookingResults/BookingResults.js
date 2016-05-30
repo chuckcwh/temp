@@ -109,7 +109,7 @@ class BookingResults extends Component {
     }
     return (
       <div className="BookingResults">
-        <Loader className="spinner" loaded={this.state.sessionsFetching ? false : true}>
+        <Loader className="spinner" loaded={this.props.sessionsFetching ? false : true}>
           <div>
           {
             this.state.sessions && this.state.sessions.map((session, index) => {

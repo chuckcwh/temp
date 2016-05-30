@@ -80,7 +80,8 @@ function fetchAction(route) {
       types: [ SERVICES_REQUEST, SERVICES_SUCCESS, SERVICES_FAILURE ],
       endpoint: 'getServices',
       method: 'get',
-      auth: 'app'
+      auth: 'app',
+      entity: 'allServices'
     },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
@@ -193,9 +194,9 @@ function fetchAction(route) {
   }[route]
 }
 
-function shouldFetch(state, entity) {
-  const obj = state[entity]
-  if (!obj || !(obj.items)) {
+function shouldFetch(state, action) {
+  const obj = action.entity && state[action.entity]
+  if (!(obj && obj.data)) {
     return true
   }
   if (obj.isFetching) {
@@ -206,7 +207,7 @@ function shouldFetch(state, entity) {
 
 function fetch(route, data) {
   return (dispatch, getState) => {
-    if (shouldFetch(getState(), route)) {
+    if (shouldFetch(getState(), fetchAction(route))) {
       if (data) {
         return dispatch({
           data,

@@ -85,7 +85,7 @@ class BookingPostComplete extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    booking: state.booking.items,
+    booking: state.booking.data,
     bookingFetching: state.booking.isFetching
   }
 }

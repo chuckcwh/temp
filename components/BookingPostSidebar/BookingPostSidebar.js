@@ -69,8 +69,8 @@ class BookingPostSidebar extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allServices: state.allServices.items,
-    booking: state.booking.items,
+    allServices: state.allServices.data,
+    booking: state.booking.data,
     bookingFetching: state.booking.isFetching
   }
 }

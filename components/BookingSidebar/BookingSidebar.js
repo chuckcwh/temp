@@ -13,8 +13,8 @@ class BookingSidebar extends Component {
   render() {
     const { allServices, order } = this.props;
     var service, patientName, location, dates, timeslots, sum;
-    if (allServices && allServices.items && order && order.service) {
-      service = allServices.items[order.service].name;
+    if (allServices && allServices.data && order && order.service) {
+      service = allServices.data[order.service].name;
     }
     if (order && order.patient && order.patient.fullName) {
       patientName = order.patient.fullName;

@@ -53,7 +53,7 @@ class Services extends Component {
             <Container>
               <div className="ServicesBody">
                 {
-                  allServices.items && Util.subFilterServices(Util.filterServices(allServices.items, this.state.filter)).map((services) => {
+                  allServices.data && Util.subFilterServices(Util.filterServices(allServices.data, this.state.filter)).map((services) => {
                     return (
                       <div key={services[0].subType}>
                         <h3>{this.state.filter === Util.ALL_SERVICES ? services[0].category + ' > ' : ''}{services[0].subType}</h3>

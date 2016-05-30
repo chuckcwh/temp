@@ -17,7 +17,7 @@ const router = (state = {}, action) => {
 const allServices = (state = {
   isFetching: false,
   didInvalidate: false,
-  items: null,
+  data: null,
   ids: null
 }, action) => {
   switch (action.type) {
@@ -35,7 +35,7 @@ const allServices = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        items: hash,
+        data: hash,
         ids: ids,
         lastUpdated: action.response && action.response.receivedAt
       })
@@ -47,7 +47,7 @@ const allServices = (state = {
 const booking = (state = {
   isFetching: false,
   didInvalidate: true,
-  items: null
+  data: null
 }, action) => {
   switch (action.type) {
     case ActionTypes.BOOKING_REQUEST:
@@ -61,13 +61,13 @@ const booking = (state = {
     case ActionTypes.BOOKING_EDIT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        items: action.response && action.response.booking,
+        data: action.response && action.response.booking,
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.BOOKING_DESTROY:
       return Object.assign({}, state, {
         isFetching: false,
-        items: null,
+        data: null,
         lastUpdated: undefined
       })
     default:

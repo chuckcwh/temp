@@ -151,7 +151,7 @@ const mapStateToProps = (state) => {
     location: state.router && state.router.location,
     lastPage: state.lastPage,
     order: state.order,
-    allServices: state.allServices.items,
+    allServices: state.allServices.data,
     allServicesFetching: state.allServices.isFetching
   }
 }

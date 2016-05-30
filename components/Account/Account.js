@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import linkState from 'react-link-state';
-import request from 'superagent';
 import './Account.scss';
 import Container from '../Container';
 import Link from '../Link';
-import AlertPopup from '../AlertPopup';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
-import BookingActions from '../../actions/BookingActions';
+import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
 import Util from '../../core/Util';
 
-export default class Account extends Component {
+class Account extends Component {
 
   constructor(props) {
     super(props);
@@ -30,63 +29,14 @@ export default class Account extends Component {
       email: props.email || this.state.email
     });
     if (props.booking && props.booking.id && !props.booking.isHPVerified) {
-      this._verifyBookingPopup.show(props.booking, () => {
-        this.serverRequest2 = request
-          .get(Util.host + '/api/getBooking')
-          .query({
-            bid: this.state.bid,
-            email: this.state.email
-          })
-          .auth(Util.authKey, Util.authSecret)
-          .end((err, res) => {
-            if (err) {
-              return console.error(Util.host + '/api/getBooking', status, err.toString());
-            }
-            if (res.body && res.body.booking && res.body.status) {
-              console.log(res.body.booking);
-              if (res.body.booking) {
-                BookingActions.setBooking(res.body.booking);
-              }
-            } else {
-              console.error('Failed to obtain booking data.');
-              this._alertPopup.show('Sorry, we are not able to find your booking.');
-            }
-          });
-      });
+      this.props.showVerifyBookingPopup(props.booking.id);
     }
   }
 
   componentDidMount() {
     if (this.props.booking && this.props.booking.id && !this.props.booking.isHPVerified) {
-      this._verifyBookingPopup.show(this.props.booking, () => {
-        this.serverRequest2 = request
-          .get(Util.host + '/api/getBooking')
-          .query({
-            bid: this.state.bid,
-            email: this.state.email
-          })
-          .auth(Util.authKey, Util.authSecret)
-          .end((err, res) => {
-            if (err) {
-              return console.error(Util.host + '/api/getBooking', status, err.toString());
-            }
-            if (res.body && res.body.booking && res.body.status) {
-              console.log(res.body.booking);
-              if (res.body.booking) {
-                BookingActions.setBooking(res.body.booking);
-              }
-            } else {
-              console.error('Failed to obtain booking data.');
-              this._alertPopup.show('Sorry, we are not able to find your booking.');
-            }
-          });
-      });
+      this.props.showVerifyBookingPopup(this.props.booking.id);
     }
-  }
-
-  componentWillUnmount() {
-    this.serverRequest1 && this.serverRequest1.abort();
-    this.serverRequest2 && this.serverRequest2.abort();
   }
 
   render() {
@@ -116,7 +66,7 @@ export default class Account extends Component {
           </div>
           */}
           <div className="Account-find Account-container-item">
-            <Loader className="spinner" loaded={(!(this.props.booking && this.props.booking.id) && this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
+            <Loader className="spinner" loaded={(!(this.props.bookingFetching) && this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
               <form ref={(c) => this._accountManageBookingForm = c}>
                 <h3>Have Guest Booking ID?</h3>
                 <input className="BookingIdInput" type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />
@@ -155,41 +105,67 @@ export default class Account extends Component {
         <Container>
           {components}
         </Container>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
-        <VerifyBookingPopup ref={(c) => this._verifyBookingPopup = c} />
+        <VerifyBookingPopup onVerified={this._onVerified.bind(this)} />
       </div>
     );
+  }
+
+  _onVerified() {
+    this.props.getBooking({
+      bid: this.state.bid,
+      email: this.state.email
+    }).then((res) => {
+      if (res.response && res.response.status < 1) {
+        this.props.showAlertPopup('Sorry, we are not able to find your booking.');
+      }
+    });
   }
 
   _onClickFindBooking(event) {
     if (this._accountManageBookingForm.checkValidity()) {
       event.preventDefault();
 
-      this.serverRequest1 = request
-        .get(Util.host + '/api/getBooking')
-        .query({
-          bid: this.state.bid,
-          email: this.state.email
-        })
-        .auth(Util.authKey, Util.authSecret)
-        .end((err, res) => {
-          if (err) {
-            return console.error(Util.host + '/api/getBooking', status, err.toString());
-          }
-          if (res.body && res.body.booking && res.body.status) {
-            console.log(res.body.booking);
-            if (res.body.booking) {
-              BookingActions.setBooking(res.body.booking);
-            }
-          } else {
-            console.error('Failed to obtain booking data.');
-            this._alertPopup.show('Sorry, we are not able to find your booking.');
-          }
-        });
+      this.props.getBooking({
+        bid: this.state.bid,
+        email: this.state.email
+      }).then((res) => {
+        if (res.response && res.response.status < 1) {
+          this.props.showAlertPopup('Sorry, we are not able to find your booking.');
+        }
+      });
     } else {
       event.preventDefault();
-      this._alertPopup.show('Please fill up all required fields.');
+      this.props.showAlertPopup('Please fill up all required fields.');
     }
   }
 
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    booking: state.booking.items,
+    user: state.user,
+    patient: state.patient
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBooking: (params) => {
+      return dispatch(getBooking(params));
+    },
+    setLastPage: (page) => {
+      return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
+    },
+    showVerifyBookingPopup: (bookingId) => {
+      return dispatch(showVerifyBookingPopup(bookingId));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Account);

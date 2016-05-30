@@ -1,34 +1,36 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import './BookingSidebar.scss';
 import Link from '../Link';
 
-export default class BookingSidebar extends Component {
+class BookingSidebar extends Component {
 
   constructor(props) {
     super(props);
   }
 
   render() {
-    var service, patient, location, dates, timeslots, sum;
-    if (this.props.allServicesHash && this.props.booking && this.props.booking.service) {
-      service = this.props.allServicesHash[this.props.booking.service].name;
+    const { allServices, order } = this.props;
+    var service, patientName, location, dates, timeslots, sum;
+    if (allServices && allServices.items && order && order.service) {
+      service = allServices.items[order.service].name;
     }
-    if (this.props.patient && this.props.patient.fullName) {
-      patient = this.props.patient.fullName;
+    if (order && order.patient && order.patient.fullName) {
+      patientName = order.patient.fullName;
     }
-    if (this.props.booking && this.props.booking.location && this.props.booking.location.postalCode) {
-      location = (<span>{this.props.booking.location.address}<br/>{this.props.booking.location.unitNumber}</span>);
+    if (order && order.location && order.location.postalCode) {
+      location = (<span>{order.location.address}<br/>{order.location.unitNumber}</span>);
     }
-    if (this.props.booking && this.props.booking.dates) {
-      dates = this.props.booking.dates;
-      // dates = this.props.booking.range.start.format('DD-MM-YYYY') + ' - ' + this.props.booking.range.end.format('DD-MM-YYYY');
+    if (order && order.dates) {
+      dates = order.dates;
+      // dates = order.range.start.format('DD-MM-YYYY') + ' - ' + order.range.end.format('DD-MM-YYYY');
     }
-    if (this.props.booking && this.props.booking.timeslots) {
-      timeslots = this.props.booking.timeslots;
+    if (order && order.timeslots) {
+      timeslots = order.timeslots;
     }
-    if (this.props.booking && typeof this.props.booking.sum === 'number') {
-      sum = this.props.booking.sum;
+    if (this.props.location.pathname.indexOf('booking3c') > -1 && order && typeof order.sum === 'number') {
+      sum = order.sum;
     }
     return (
       <div className="BookingSidebar">
@@ -44,7 +46,7 @@ export default class BookingSidebar extends Component {
           <a href="/booking2" onClick={Link.handleClick}>
             <div className="BookingSidebarLocation">
               <div className="BookingSidebarItem">
-                <div>{patient}</div>
+                <div>{patientName}</div>
                 <div>{location}</div>
               </div>
             </div>
@@ -102,3 +104,13 @@ export default class BookingSidebar extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    allServices: state.allServices,
+    order: state.order
+  }
+}
+
+export default connect(mapStateToProps)(BookingSidebar);

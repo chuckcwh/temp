@@ -1,8 +1,20 @@
 import moment from 'moment';
 
-const ALL_SERVICES = 'All Services';
+export const PAGE_ORDERS = [
+  '',
+  'booking1',
+  'booking2',
+  'booking3a',
+  'booking3b',
+  'booking3c',
+  'booking4',
+  'booking-confirmation',
+  'booking-payment'
+];
 
-const SERVICES_CATEGORY_ORDER = [
+export const ALL_SERVICES = 'All Services';
+
+export const SERVICES_CATEGORY_ORDER = [
   ALL_SERVICES,
   'Social Care',
   'Nursing Care',
@@ -11,11 +23,11 @@ const SERVICES_CATEGORY_ORDER = [
   'Mother Care'
 ];
 
-function isProduction() {
+export function isProduction() {
   return (typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1);
 }
 
-function isLoggedInBackend() {
+export function isLoggedInBackend() {
   if (isProduction() && getCookies()['sessionid']) {
     return true;
   } else if (!isProduction() && getCookies()['ebeecare_session_dev']) {
@@ -23,7 +35,18 @@ function isLoggedInBackend() {
   } else return false;
 }
 
-function getCookies() {
+export function isNavigationAllowed(path, lastPage) {
+  if (path.charAt(0) === '/') {
+    path = path.substring(1);
+  }
+  return (PAGE_ORDERS.indexOf(lastPage) + 1) >= PAGE_ORDERS.indexOf(path);
+}
+
+export function isNextLastPage(path, lastPage) {
+  return PAGE_ORDERS.indexOf(lastPage) + 1 === PAGE_ORDERS.indexOf(path);
+}
+
+export function getCookies() {
   if (typeof document !== 'undefined' && document && document.cookie) {
     var pairs = document.cookie.split(';');
     var cookies = {};
@@ -38,8 +61,8 @@ function getCookies() {
   }
 }
 
-function filterServices(services, filter) {
-  return services.filter(function(service) {
+export function filterServices(services, filter) {
+  return Object.values(services).filter(function(service) {
     if (filter === ALL_SERVICES) return true;
     return service.category === filter;
   }).sort(function(a, b) {
@@ -47,7 +70,7 @@ function filterServices(services, filter) {
   });
 }
 
-function subFilterServices(services) {
+export function subFilterServices(services) {
   var hash = {}, arr = [];
   services.forEach(service => {
     if (hash[service.subType]) {
@@ -62,26 +85,26 @@ function subFilterServices(services) {
   return arr;
 }
 
-function calcRate(session, promo, sid) {
+export function calcRate(session, promo, sid) {
   if (promo && promo.discountedRate) {
     // verify promo is applicable to session
-    var isPromoApplicable = 
-      promo.services.some(elem => elem === sid) && 
-      promo.dates.some(elem => 
-        elem.type === 'Scheduled' && 
-        elem.status === 'Active' && 
-        moment(session.date) >= moment(elem.dateTimeStart.substr(0, 10)) && 
+    var isPromoApplicable =
+      promo.services.some(elem => elem === sid) &&
+      promo.dates.some(elem =>
+        elem.type === 'Scheduled' &&
+        elem.status === 'Active' &&
+        moment(session.date) >= moment(elem.dateTimeStart.substr(0, 10)) &&
         moment(session.date) <= moment(elem.dateTimeEnd.substr(0, 10))
-      ) && 
-      !promo.dates.some(elem => 
-        elem.type === 'Void' && 
-        elem.status === 'Active' && 
+      ) &&
+      !promo.dates.some(elem =>
+        elem.type === 'Void' &&
+        elem.status === 'Active' &&
         !moment(session.date).isSame(moment(elem.dateTimeStart.substr(0, 10)))
       );
     if (isPromoApplicable) {
       return parseFloat(session.price) * (100 - parseFloat(promo.discountedRate)) / 100;
     } else {
-      return parseFloat(session.price);  
+      return parseFloat(session.price);
     }
   } else {
     return parseFloat(session.price);
@@ -99,6 +122,8 @@ const util = {
   isProduction: isProduction,
 
   isLoggedInBackend: isLoggedInBackend,
+  isNavigationAllowed: isNavigationAllowed,
+  isNextLastPage: isNextLastPage,
 
   getCookies: getCookies,
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-import merge from 'lodash.merge';
+import merge from 'lodash/merge';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const DEBUG = !process.argv.includes('release');
@@ -19,10 +19,14 @@ const AUTOPREFIXER_BROWSERS = [
 const JS_LOADER = {
   test: /\.jsx?$/,
   include: [
+    path.resolve(__dirname, '../actions'),
     path.resolve(__dirname, '../components'),
     path.resolve(__dirname, '../core'),
     path.resolve(__dirname, '../dispatcher'),
+    path.resolve(__dirname, '../middleware'),
     path.resolve(__dirname, '../pages'),
+    path.resolve(__dirname, '../reducers'),
+    path.resolve(__dirname, '../utils'),
     path.resolve(__dirname, '../app.js'),
     path.resolve(__dirname, '../config.js'),
   ],

@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 import './BookingNavigationItem.scss';
 import Link from '../Link';
-import BookingStore from '../../stores/BookingStore';
+import { isNavigationAllowed } from '../../core/Util';
 
-export default class BookingNavigationItem extends Component {
+class BookingNavigationItem extends Component {
 
   render() {
-    if (BookingStore.isNavigationAllowed(this.props.link)) {
+    const { location, lastPage, active, link, icon, text } = this.props;
+    if (link && isNavigationAllowed(link, lastPage)) {
       return (
         <li className="BookingNavigationItem">
-          <a className={classNames('BookingNavigation-link', (this.props.path && this.props.path.indexOf('/'+this.props.active)==0) ? 'active' : '')} href={'/'+this.props.link} onClick={Link.handleClick}>
-            <div className="BookingNavigationItem-icon">{this.props.icon}</div>
-            <span className="BookingNavigationItem-text">{this.props.text}</span>
+          <a className={classNames('BookingNavigation-link', (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? 'active' : '')} href={'/' + link} onClick={Link.handleClickQuery.bind(this, this.props.location && this.props.location.query)}>
+            <div className="BookingNavigationItem-icon">{icon}</div>
+            <span className="BookingNavigationItem-text">{text}</span>
           </a>
         </li>
       );
     } else {
       return (
         <li className="BookingNavigationItem">
-          <span className={classNames('BookingNavigation-link', (this.props.path && this.props.path.indexOf('/'+this.props.active)==0) ? 'active' : '')}>
-            <div className="BookingNavigationItem-icon">{this.props.icon}</div>
-            <span className="BookingNavigationItem-text">{this.props.text}</span>
+          <span className={classNames('BookingNavigation-link', (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? 'active' : '')}>
+            <div className="BookingNavigationItem-icon">{icon}</div>
+            <span className="BookingNavigationItem-text">{text}</span>
           </span>
         </li>
       );
@@ -29,3 +31,12 @@ export default class BookingNavigationItem extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    lastPage: state.lastPage
+  }
+}
+
+export default connect(mapStateToProps, {})(BookingNavigationItem);

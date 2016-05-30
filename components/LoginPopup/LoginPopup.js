@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
-import request from 'superagent';
 import './LoginPopup.scss';
 import Link from '../Link';
 import Popup from '../Popup';
+import { login, hideLoginPopup, destroyUser } from '../../actions';
 import Util from '../../core/Util';
 
-export default class LoginPopup extends Component {
+class LoginPopup extends Component {
 
   constructor(props) {
     super(props);
@@ -15,22 +16,19 @@ export default class LoginPopup extends Component {
       email: undefined,
       password: undefined,
       error: undefined,
-      pending: false
+      pending: false,
+      open: false
     };
-  }
-
-  componentWillUnmount() {
-    this.serverRequest && this.serverRequest.abort();
   }
 
   render() {
     return (
       <div className="LoginPopup">
-        <Popup ref={(c) => this._loginPopup = c} afterOpen={this._executeAfterModalOpen.bind(this)}>
+        <Popup isOpen={this.props.visible} afterOpen={this._executeAfterModalOpen.bind(this)} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
           <Loader className="spinner" loaded={this.state.pending ? false : true}>
             <div className="Account-login Account-container-item">
               <form id="AccountLoginForm" ref={(c) => this._accountLoginForm = c} autoComplete="off">
-                <h3>eBeeCare Login</h3>
+                <h3>eBeeCare Client Login</h3>
                 <input className="EmailInput" type="email" name="email" ref={(c) => this._startInput = c} valueLink={linkState(this, 'email')} placeholder="Enter Email" required />
                 <input className="PasswordInput" type="password" name="password" valueLink={linkState(this, 'password')} placeholder="Enter Password" required />
                 <div className="Account-container-item-middle">
@@ -51,36 +49,36 @@ export default class LoginPopup extends Component {
 
       this.setState({pending: true});
 
-      this.serverRequest = request
-        .post(Util.host + '/api/mlogin')
-        .auth(Util.authKey, Util.authSecret)
-        .send({
-          email: this.state.email,
-          password: this.state.password
-        })
-        .end((err, res) => {
-          this.setState({pending: false});
-          if (err) {
-            return console.error(Util.host + '/api/mlogin', status, err.toString());
-          }
-          if (res.body && res.body.status === 1) {
-            console.log(res.body);
-            var user = res.body.user;
-            
+      this.props.login({
+        email: this.state.email,
+        password: this.state.password
+      }).then((res) => {
+        this.setState({pending: false});
+        if (res.response && res.response.status === 1) {
+          // console.log(res);
+          var user = res.response.user;
+
+          if (user.type === 'Client') {
             this.setState({
               error: undefined
             });
 
-            this._loginPopup.hide();
-            
-            this._success(user);
+            this.props.hideLoginPopup();
+            this.props.onLogin && this.props.onLogin(user);
           } else {
             this.setState({
               error: true
             });
-            console.error('Failed to login.');
+
+            this.props.destroyUser();
           }
-        });
+        } else {
+          this.setState({
+            error: true
+          });
+          console.error('Failed to login.');
+        }
+      });
 
       this.setState({
         email: undefined,
@@ -89,13 +87,38 @@ export default class LoginPopup extends Component {
     }
   }
 
+  _closePopup() {
+    this.props.hideLoginPopup();
+  }
+
   _executeAfterModalOpen() {
     this._startInput && this._startInput.focus();
   }
 
-  show(success) {
-    this._success = success || () => {};
-    this._loginPopup.show();
-  }
-
 }
+
+LoginPopup.propTypes = {
+  onLogin: React.PropTypes.func
+};
+
+const mapStateToProps = (state) => {
+  return {
+    visible: state.modal.login
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (params) => {
+      return dispatch(login(params));
+    },
+    hideLoginPopup: () => {
+      return dispatch(hideLoginPopup());
+    },
+    destroyUser: () => {
+      return dispatch(destroyUser());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPopup);

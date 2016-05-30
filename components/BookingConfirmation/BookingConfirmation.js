@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import linkState from 'react-link-state';
-import request from 'superagent';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Loader from 'react-loader';
 import './BookingConfirmation.scss';
 import Container from '../Container';
 import Link from '../Link';
-import BookingActions from '../../actions/BookingActions';
+import { editBooking, setPostStatus } from '../../actions';
 import Util from '../../core/Util';
 
-export default class BookingConfirmation extends Component {
+class BookingConfirmation extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      booking: this.props.booking,
       editingUser: false,
       editingPatient: false,
       editingAddress: false
@@ -183,10 +182,10 @@ export default class BookingConfirmation extends Component {
     } else {
       addressDetails = (
         <div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses[0].address}</div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses[0].unitNumber}</div>
+          <div>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}</div>
+          <div>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</div>
         </div>
-      );  
+      );
     }
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
     if ((this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
@@ -194,7 +193,7 @@ export default class BookingConfirmation extends Component {
         <a href="#" className="btn btn-primary" onClick={this._onNext.bind(this)}>GO TO PAYMENT</a>
       );
     }
-    
+
     return (
       <div className="BookingConfirmation">
         <Container>
@@ -253,9 +252,9 @@ export default class BookingConfirmation extends Component {
         break;
       case 'address':
         this.setState({
-          postalCode: this.props.booking.case.addresses[0].postalCode,
-          address: this.props.booking.case.addresses[0].address,
-          unitNumber: this.props.booking.case.addresses[0].unitNumber,
+          postalCode: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].postalCode,
+          address: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address,
+          unitNumber: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber,
 
           editingAddress: true
         });
@@ -286,31 +285,23 @@ export default class BookingConfirmation extends Component {
       case 'user':
         if (this._userDetailsForm.checkValidity()) {
           this.setState({updatingUser: true});
-          this.serverRequest = request
-            .post(Util.host + '/api/editBooking')
-            .auth(Util.authKey, Util.authSecret)
-            .send({
-              bid: this.props.booking && this.props.booking.id,
-              token: this.props.booking && this.props.booking.token,
-              booking: {
-                client_contactNumber: this.state.client_contactNumber
-              }
-            })
-            .end((err, res) => {
-              if (err) {
-                return console.error(Util.host + '/api/editBooking', err.toString());
-              }
-              // console.log(res.body);
-              if (res.body && res.body.status === 1) {
-                this.setState({
-                  editingUser: false,
-                  updatingUser: false
-                });
-                BookingActions.setBooking(res.body.booking);
-              } else {
-                console.error('Failed to edit booking.');
-              }
-            });
+
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            booking: {
+              client_contactNumber: this.state.client_contactNumber
+            }
+          }).then((res) => {
+            if (res.response && res.response.status === 1) {
+              this.setState({
+                editingUser: false,
+                updatingUser: false
+              });
+            } else {
+              console.error('Failed to edit booking.');
+            }
+          });
         }
         break;
       case 'patient':
@@ -321,36 +312,27 @@ export default class BookingConfirmation extends Component {
       case 'address':
         if (this._addressDetailsForm.checkValidity()) {
           this.setState({updatingAddress: true});
-          this.serverRequest = request
-            .post(Util.host + '/api/editBooking')
-            .auth(Util.authKey, Util.authSecret)
-            .send({
-              bid: this.props.booking && this.props.booking.id,
-              token: this.props.booking && this.props.booking.token,
-              case: {
-                addresses: [{
-                  id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
-                  address: this.state.address,
-                  postalCode: this.state.postalCode,
-                  unitNumber: this.state.unitNumber
-                }]
-              }
-            })
-            .end((err, res) => {
-              if (err) {
-                return console.error(Util.host + '/api/editBooking', err.toString());
-              }
-              // console.log(res.body);
-              if (res.body && res.body.status === 1) {
-                this.setState({
-                  editingAddress: false,
-                  updatingAddress: false
-                });
-                BookingActions.setBooking(res.body.booking);
-              } else {
-                console.error('Failed to edit booking.');
-              }
-            });
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            case: {
+              addresses: [{
+                id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
+                address: this.state.address,
+                postalCode: this.state.postalCode,
+                unitNumber: this.state.unitNumber
+              }]
+            }
+          }).then((res) => {
+            if (res.response && res.response.status === 1) {
+              this.setState({
+                editingAddress: false,
+                updatingAddress: false
+              });
+            } else {
+              console.error('Failed to edit booking.');
+            }
+          });
         }
         break;
     }
@@ -408,7 +390,26 @@ export default class BookingConfirmation extends Component {
     // Link.handleClick(event);
     event.preventDefault();
 
-    BookingActions.setPostStatus('payment-paypal');
+    this.props.setPostStatus('payment-paypal');
   }
 
 }
+const mapStateToProps = (state) => {
+  return {
+    booking: state.booking.items,
+    bookingFetching: state.booking.isFetching
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    editBooking: (booking) => {
+      return dispatch(editBooking(booking));
+    },
+    setPostStatus: (status) => {
+      return dispatch(setPostStatus(status));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingConfirmation);

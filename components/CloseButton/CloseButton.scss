@@ -1,0 +1,10 @@
+@import '../variables.scss';
+
+.CloseButton {
+  cursor: pointer;
+  font-size: 1.8em;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

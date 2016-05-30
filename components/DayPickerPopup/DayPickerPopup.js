@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import DayPicker, { DateUtils } from 'react-day-picker';
+import moment from 'moment';
 import './DayPickerPopup.scss';
 import Popup from '../Popup';
+import { hideDayPickerPopup } from '../../actions';
 
 const currentYear = (new Date()).getFullYear();
 const fromMonth = new Date(currentYear - 100, 0, 1, 0, 0);
@@ -41,13 +44,7 @@ function YearMonthForm({ date, localeUtils, onChange }) {
   )
 }
 
-export default class DayPickerPopup extends Component {
-
-  static propTypes = {
-    title: React.PropTypes.string,
-
-    onDayClick: React.PropTypes.func
-  };
+class DayPickerPopup extends Component {
 
   constructor(props) {
     super(props);
@@ -59,7 +56,7 @@ export default class DayPickerPopup extends Component {
   render() {
     return (
       <div className="DayPickerPopup">
-        <Popup ref={(c) => this._dayPickerPopup = c} title={this.props.title}>
+        <Popup title={this.props.title} isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
           <div className="YearNavigation">
             <DayPicker
               initialMonth={ this.state.initialMonth }
@@ -69,7 +66,7 @@ export default class DayPickerPopup extends Component {
                 <YearMonthForm onChange={ initialMonth => this.setState({ initialMonth }) } />
               }
               modifiers={this.props.value && Date.parse(this.props.value) !== NaN ? {
-                selected: day => DateUtils.isSameDay(this.props.value, day),
+                selected: day => DateUtils.isSameDay(new Date(this.props.value), day),
                 disabled: day => !DateUtils.isPastDay(day)
               } : {
                 disabled: day => !DateUtils.isPastDay(day)
@@ -82,15 +79,38 @@ export default class DayPickerPopup extends Component {
     );
   }
 
+  _closePopup() {
+    this.props.hideDayPickerPopup();
+  }
+
   _onClickDay(event, day) {
     if (this.props.onDayClick) {
       this.props.onDayClick(event, DateUtils.clone(day));
     }
-    this._dayPickerPopup.hide();
-  }
-
-  show() {
-    this._dayPickerPopup.show();
+    this.props.hideDayPickerPopup(moment(DateUtils.clone(day)).format('YYYY-MM-DD'), this.props.source);
   }
 
 }
+
+DayPickerPopup.propTypes = {
+  onDayClick: React.PropTypes.func,
+  title: React.PropTypes.string
+};
+
+const mapStateToProps = (state) => {
+  return {
+    visible: state.modal.daypicker.visible,
+    value: state.modal.daypicker.value,
+    source: state.modal.daypicker.source
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    hideDayPickerPopup: (day, source) => {
+      return dispatch(hideDayPickerPopup(day, source));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DayPickerPopup);

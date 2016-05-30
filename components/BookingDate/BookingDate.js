@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import DayPicker, { DateUtils } from 'react-day-picker';
-import some from 'lodash.some';
-import remove from 'lodash.remove';
+import some from 'lodash/some';
+import remove from 'lodash/remove';
 import moment from 'moment';
 import './BookingDate.scss';
 import Link from '../Link';
-import AlertPopup from '../AlertPopup';
-import BookingActions from '../../actions/BookingActions';
+import { setOrderDates, setLastPage, showAlertPopup } from '../../actions';
+import Util from '../../core/Util';
 
-export default class BookingDate extends Component {
+class BookingDate extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      selectedDates: this.props.booking && this.props.booking.dates || []
+      selectedDates: this.props.order && this.props.order.dates || []
     };
   }
 
@@ -55,7 +56,6 @@ export default class BookingDate extends Component {
         <div className="text-center">
           <a href="/booking3b" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
         </div>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
       </div>
     );
   }
@@ -96,13 +96,37 @@ export default class BookingDate extends Component {
       Link.handleClickQuery(this.props.location && this.props.location.query, event);
 
       // this.props.booking.range = this.state.range;
-      BookingActions.setDates(this.state.selectedDates);
-      BookingActions.setLast('booking3a');
+      this.props.setOrderDates(this.state.selectedDates);
+      Util.isNextLastPage('booking3a', this.props.lastPage) && this.props.setLastPage('booking3a');
     } else {
       event.preventDefault();
       // alert('Please select a date range.');
-      this._alertPopup.show('Please select at least one day.');
+      this.props.showAlertPopup('Please select at least one day.');
     }
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    lastPage: state.lastPage,
+    order: state.order
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setOrderDates: (dates) => {
+      return dispatch(setOrderDates(dates));
+    },
+    setLastPage: (page) => {
+      return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingDate);

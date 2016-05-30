@@ -71,6 +71,11 @@ a.btn-primary, button.btn-primary {
   }
 }
 
+a.btn-primary:disabled, button.btn-primary:disabled {
+  background-color: #969696;
+  cursor: default;
+}
+
 a.btn-small, button.btn-small {
   width: 150px;
   font-size: 21px;

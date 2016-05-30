@@ -6,44 +6,41 @@ class Popup extends Component {
 
   constructor(props){
     super(props);
-    this.state = { isVisible: false };
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (nextState.isVisible && !this.state.isVisible && this.props.beforeOpen) {
+    if (nextProps.isOpen && !this.props.isOpen && this.props.beforeOpen) {
       this.props.beforeOpen();
     }
 
-    if (!nextState.isVisible && this.state.isVisible && this.props.beforeClose) {
+    if (!nextProps.isOpen && this.props.isOpen && this.props.beforeClose) {
       this.props.beforeClose();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!prevState.isVisible && this.state.isVisible && this.props.afterOpen) {
+    if (!prevProps.isOpen && this.props.isOpen && this.props.afterOpen) {
       this.props.afterOpen();
     }
 
-    if (prevState.isVisible && !this.state.isVisible && this.props.afterClose) {
+    if (prevProps.isOpen && !this.props.isOpen && this.props.afterClose) {
       this.props.afterClose();
     }
   }
 
-  show() {
-    this.setState({isVisible: true});
-  }
-
-  hide() {
-    this.setState({isVisible: false});
+  onCloseClicked() {
+    if (this.props.onCloseClicked) {
+      this.props.onCloseClicked();
+    }
   }
 
   onOverlayClicked() {
-    if (this.props.hideOnOverlayClicked) {
-      this.hide();
-      if (this.props.onOverlayClicked) {
-        this.props.onOverlayClicked();
-      }
-    }
+    // if (this.props.hideOnOverlayClicked) {
+    //   this.hide();
+    //   if (this.props.onOverlayClicked) {
+    //     this.props.onOverlayClicked();
+    //   }
+    // }
 
     if (this.props.onOverlayClicked) {
       this.props.onOverlayClicked();
@@ -54,17 +51,17 @@ class Popup extends Component {
     var overlay, closeButton;
 
     if (this.props.showOverlay) {
-      overlay = (<div onClick={() => this.onOverlayClicked()} className={classNames('PopupOverlay', (this.state.isVisible ? 'visible' : ''))}></div>);
+      overlay = (<div onClick={() => this.onOverlayClicked()} className={classNames('PopupOverlay', (this.props.isOpen ? 'visible' : ''))}></div>);
     }
 
     if (!this.props.hideCloseButton) {
-      closeButton = (<a onClick={() => this.hide()} role="button" className="PopupCloseButton">&times;</a>);
+      closeButton = (<a onClick={() => this.onCloseClicked()} role="button" className="PopupCloseButton">&times;</a>);
     }
 
     return (
       <section className="Popup">
         {overlay}
-        <div className={classNames('PopupDialog', (this.state.isVisible ? 'visible' : ''))}>
+        <div className={classNames('PopupDialog', (this.props.isOpen ? 'visible' : ''))}>
           {closeButton}
           <h2 className="PopupTitle">{this.props.title}</h2>
           {this.props.children}
@@ -77,6 +74,7 @@ class Popup extends Component {
 Popup.displayName = 'Popup';
 
 Popup.propTypes = {
+  isOpen: React.PropTypes.bool.isRequired,
   afterClose: React.PropTypes.func,
   afterOpen: React.PropTypes.func,
   beforeClose: React.PropTypes.func,
@@ -84,6 +82,7 @@ Popup.propTypes = {
   closeButtonStyle: React.PropTypes.object,
   dialogStyles: React.PropTypes.object,
   hideOnOverlayClicked: React.PropTypes.bool,
+  onCloseClicked: React.PropTypes.func,
   onOverlayClicked: React.PropTypes.func,
   overlayStyles: React.PropTypes.object,
   showOverlay: React.PropTypes.bool,

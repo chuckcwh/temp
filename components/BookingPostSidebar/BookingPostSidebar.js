@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import './BookingPostSidebar.scss';
+import { fetchServices } from '../../actions';
 
-export default class BookingPostSidebar extends Component {
+class BookingPostSidebar extends Component {
 
-  constructor(props) {
-    super(props);
+  componentDidMount() {
+    this.props.fetchServices();
   }
 
   render() {
+    const { allServices, booking } = this.props;
     var service, location, sessions, sum;
-    if (this.props.allServicesHash && this.props.booking && this.props.booking.case && this.props.booking.case.service) {
-      service = this.props.allServicesHash[this.props.booking.case.service].name;
+    if (allServices && booking && booking.case && booking.case.service) {
+      service = allServices[booking.case.service].name;
     }
-    if (this.props.booking && this.props.booking.case) {
-      location = (<span>{this.props.booking.case.addresses[0].address}<br/>{this.props.booking.case.addresses[0].unitNumber}</span>);
+    if (booking && booking.case && booking.case.addresses && booking.case.addresses[0]) {
+      location = (<span>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].address}<br/>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].unitNumber}</span>);
     }
-    if (this.props.booking && this.props.booking.case) {
-      sessions = this.props.booking.case.dates;
+    if (booking && booking.case) {
+      sessions = booking.case.dates;
     }
-    if (this.props.booking && this.props.booking.case) {
-      sum = parseFloat(this.props.booking.case.price);
+    if (booking && booking.case) {
+      sum = parseFloat(booking.case.price);
     }
     return (
       <div className="BookingPostSidebar">
@@ -63,3 +66,21 @@ export default class BookingPostSidebar extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    allServices: state.allServices.items,
+    booking: state.booking.items,
+    bookingFetching: state.booking.isFetching
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchServices: () => {
+      return dispatch(fetchServices());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingPostSidebar);

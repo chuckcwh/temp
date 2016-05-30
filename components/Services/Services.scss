@@ -146,25 +146,13 @@
     }
 
     .ServicesItem {
-      display: inline-block;
       color: $text-color;
       font-size: 15px;
-      width: 100%;
 
-      @media (min-width: $screen-sm-min) {
-        width: 50%;
-      }
-
-      @media (min-width: $screen-lg-min) {
-        width: calc(100% / 3);
-      }
-
-      .ServicesRadio {
-        // margin-right: 5px;
-      }
-
-      .ServicesRadioLabel {
-        // cursor: pointer;
+      .ServicesItemDescription {
+        &-price {
+          font-style: italic;
+        }
       }
     }
   }

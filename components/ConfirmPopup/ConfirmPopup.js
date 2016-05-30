@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Popup from '../Popup';
 import './ConfirmPopup.scss';
+import { hideConfirmPopup } from '../../actions';
 
-export default class ConfirmPopup extends Component {
+class ConfirmPopup extends Component {
 
   render() {
     return (
       <div className="ConfirmPopup">
-        <Popup ref={(c) => this._confirmPopup = c} title="Confirmation">
+        <Popup title="Confirmation" isOpen={this.props.visible} onCloseClicked={this._onClickCancel.bind(this)}>
+          {this.props.message}
           {this.props.children}
           <div className="ConfirmPopup-footer">
             <a className="btn btn-primary btn-small" href="#" onClick={this._onClickOk.bind(this)}>OK</a>
@@ -19,17 +22,35 @@ export default class ConfirmPopup extends Component {
   }
 
   _onClickOk(event) {
-    this._confirmPopup.hide();
-    this._ok();
+    this.props.hideConfirmPopup();
+    this.props.onConfirmed && this.props.onConfirmed();
+    this.props.accept && this.props.accept();
   }
 
   _onClickCancel(event) {
-    this._confirmPopup.hide();
-  }
-
-  show(ok) {
-    this._ok = ok || () => {};
-    this._confirmPopup.show();
+    this.props.hideConfirmPopup();
   }
 
 }
+
+ConfirmPopup.propTypes = {
+  onConfirmed: React.PropTypes.func
+};
+
+const mapStateToProps = (state) => {
+  return {
+    visible: state.modal.confirm.visible,
+    message: state.modal.confirm.message,
+    accept: state.modal.confirm.accept
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    hideConfirmPopup: () => {
+      return dispatch(hideConfirmPopup());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConfirmPopup);

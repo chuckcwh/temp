@@ -74,6 +74,10 @@
       text-decoration: none;
     }
 
+    @media (max-width: $screen-md-min) {
+      font-size: 20px;
+    }
+
     @media (max-width: $screen-sm-min) {
       font-size: 18px;
     }
@@ -129,6 +133,21 @@
 
         .BookingServicesRadioLabel {
           width: 100%;
+        }
+
+        .BookingServicesItemDescription {
+          display: none;
+          color: #969696;
+
+          &-price {
+            font-style: italic;
+          }
+        }
+
+        &.active {
+          .BookingServicesItemDescription {
+            display: block;
+          }
         }
       }
     }

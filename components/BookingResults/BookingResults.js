@@ -1,92 +1,87 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import assign from 'object-assign';
-import request from 'superagent';
 import moment from 'moment';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import './BookingResults.scss';
 import Link from '../Link';
-import AlertPopup from '../AlertPopup';
 import ConfirmPopup from '../ConfirmPopup';
-import BookingActions from '../../actions/BookingActions';
+import { getSessions, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage, showAlertPopup, showConfirmPopup } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
-export default class BookingResults extends Component {
+class BookingResults extends Component {
 
   constructor(props) {
     super(props);
+    const { order } = props;
     this.state = {
       sessions: undefined,
       slots: undefined,
-      promoCode: this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code,
-      showPromoButton: (this.props.booking && this.props.booking.promoCode && this.props.booking.promoCode.code && this.props.booking.promoCode.code.length) ? true : false,
-      disablePromo: (this.props.booking && this.props.booking.promoCode) ? true : false,
+      promoCode: order && order.promoCode && order.promoCode.code,
+      showPromoButton: (order && order.promoCode && order.promoCode.code && order.promoCode.code.length) ? true : false,
+      disablePromo: (order && order.promoCode) ? true : false,
       agree: false
     };
   }
 
   componentDidMount() {
+    const { order } = this.props;
     // Reset sum displayed on sidebar
-    BookingActions.setSum();
+    this.props.setOrderSum(null);
 
-    this.serverRequest1 = request
-      .get(Util.host + '/api/getAvailableSchedule')
-      .query({
-        service: this.props.booking.service,
-        'dates[]': this.props.booking.dates.map(date => {
-          return moment(date).format('YYYY-MM-DD');
-        }),
-        preferredPostalCode: this.props.booking.location.postalCode,
-        'preferredTimes[]': this.props.booking.timeslots   // hack to send PHP style arrays
-      })
-      .auth(Util.authKey, Util.authSecret)
-      .end((err, res) => {
-        if (err) {
-          return console.error(Util.host + '/api/getAvailableSchedule', status, err.toString());
-        }
-        if (res.body && res.body.timeSlots && Array.isArray(res.body.timeSlots)) {
-          // console.log(res.body.timeSlots);
-          var sessions = [], checkedData = [], sum = 0;
-          for (var i = 0; i < res.body.timeSlots.length; i++) {
-            var timeslot = res.body.timeSlots[i];
-            var session = {};
-            for (var j = 0; j < timeslot.slots.length; j++) {
-              if (timeslot.slots[j]['selected'] && timeslot.slots[j]['preferred']) {
-                session = timeslot.slots[j];
-                break;
-              }
-            }
-            if (!session.time) {
-              for (var j = 0; j < timeslot.slots.length; j++) {
-                if (timeslot.slots[j]['selected']) {
-                  session = timeslot.slots[j];
-                  break;
-                }
-              }
-            }
-            sessions[i] = assign(session, {date: timeslot.date});
-            if (session.time) {
-              checkedData['session'+i] = true;
-              sum += Util.calcRate(sessions[i], this.props.booking.promoCode, this.props.booking.service);
-            } else {
-              session.disabled = true;
-            }
-          }
-          var state = assign({
-            slots: res.body.timeSlots,
-            sessions: sessions
-          }, checkedData);
-          this.setState(state);
-          BookingActions.setSum(sum);
-        } else {
-          console.error('Failed to obtain timeslots data.');
-        }
-      });
+    this.props.getSessions({
+      service: order.service,
+      dates: order.dates.map(date => {
+        return moment(date).format('YYYY-MM-DD');
+      }),
+      preferredPostalCode: order.location.postalCode,
+      preferredTimes: order.timeslots   // hack to send PHP style arrays
+    }).then((res) => {
+      if (res.response && res.response.status < 1) {
+        console.error('Failed to obtain timeslots data.');
+      }
+    });
   }
 
-  componentWillUnmount() {
-    this.serverRequest1 && this.serverRequest1.abort();
+  componentWillReceiveProps(nextProps) {
+    if (this.props.sessions !== nextProps.sessions) {
+      var sessions = [], checkedData = [], sum = 0;
+      for (var i = 0; i < nextProps.sessions.length; i++) {
+        var timeslot = nextProps.sessions[i];
+        var session = {};
+        for (var j = 0; j < timeslot.slots.length; j++) {
+          if (timeslot.slots[j]['selected'] && timeslot.slots[j]['preferred']) {
+            session = timeslot.slots[j];
+            break;
+          }
+        }
+        if (!session.time) {
+          for (var j = 0; j < timeslot.slots.length; j++) {
+            if (timeslot.slots[j]['selected']) {
+              session = timeslot.slots[j];
+              break;
+            }
+          }
+        }
+        sessions[i] = assign(session, {date: timeslot.date});
+        if (session.time) {
+          checkedData['session'+i] = true;
+          sum += Util.calcRate(sessions[i], this.props.order.promoCode, this.props.order.service);
+        } else {
+          session.disabled = true;
+        }
+      }
+      var state = assign({
+        sessions: sessions
+      }, checkedData);
+      this.setState(state);
+      this.props.setOrderSum(sum);
+    }
+    if (this.props.order.promoCode !== nextProps.order.promoCode) {
+      this._updateSum(nextProps);
+    }
   }
 
   render() {
@@ -97,12 +92,12 @@ export default class BookingResults extends Component {
       return e => {
         checkedLink(key).requestChange(e.target.checked);
 
-        this._updateSum();
+        this._updateSum(this.props);
       };
     }
     var promoButton;
     if (this.state.showPromoButton) {
-      if (this.props.booking.promoCode) {
+      if (this.props.order.promoCode) {
         promoButton = (
           <button className="btn btn-primary btn-small" onClick={this._onRemovePromo.bind(this)}>Remove</button>
         );
@@ -114,15 +109,15 @@ export default class BookingResults extends Component {
     }
     return (
       <div className="BookingResults">
-        <Loader className="spinner" loaded={this.state.sessions ? true : false}>
+        <Loader className="spinner" loaded={this.state.sessionsFetching ? false : true}>
           <div>
           {
             this.state.sessions && this.state.sessions.map((session, index) => {
               var promo, rate, discountedRate, priceText;
-              promo = this.props.booking.promoCode;
+              promo = this.props.order.promoCode;
               rate = session.price;
               if (promo) {
-                discountedRate = Util.calcRate(session, this.props.booking.promoCode, this.props.booking.service).toFixed(2);
+                discountedRate = Util.calcRate(session, this.props.order.promoCode, this.props.order.service).toFixed(2);
                 if (discountedRate == rate) {
                   // empty discountedRate if there is actually no discount
                   discountedRate = null;
@@ -172,8 +167,7 @@ export default class BookingResults extends Component {
             <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>BOOK NOW</a>
           </div>
         </Loader>
-        <AlertPopup ref={(c) => this._alertPopup = c} />
-        <ConfirmPopup ref={(c) => this._confirmPopup = c}>
+        <ConfirmPopup onConfirmed={this._onConfirmed.bind(this)}>
           <div>
             <form ref={(c) => this._agreeForm = c}>
               <input className="AgreeCheckbox" type="checkbox" id="agree" name="agree" checked={this.state.agree} onChange={this._onCheckedAgree.bind(this)} required />
@@ -183,7 +177,6 @@ export default class BookingResults extends Component {
             </form>
           </div>
         </ConfirmPopup>
-        <AlertPopup ref={(c) => this._rejectPopup = c} />
       </div>
     );
   }
@@ -206,35 +199,24 @@ export default class BookingResults extends Component {
     if (this._promoForm.checkValidity()) {
       event.preventDefault();
 
-      this.serverRequest2 = request
-        .get(Util.host + '/api/checkPromocode')
-        .query({
-          code: this.state.promoCode
-        })
-        .auth(Util.authKey, Util.authSecret)
-        .end((err, res) => {
-          if (err) {
-            return console.error(Util.host + '/api/checkPromocode', status, err.toString());
-          }
-          // console.log(res.body);
-          if (res.body && res.body.status === 1 && res.body.promoCode && res.body.promoCode.status === 'Active') {
-            // console.log(res.body.timeSlots);
-            this.setState({
-              promoCode: res.body.promoCode.code,
-              disablePromo: true
-            });
-            BookingActions.setPromoCode(res.body.promoCode);
+      this.props.getPromo({
+        code: this.state.promoCode
+      }).then((res) => {
+        if (res.response && res.response.promoCode && res.response.promoCode.status === 'Active') {
+          this.setState({
+            promoCode: res.response.promoCode.code,
+            disablePromo: true
+          });
+          this.props.setOrderPromoCode(res.response.promoCode);
+        } else {
+          this.props.showAlertPopup('Your promotion code is not valid.');
+          console.error('Failed to obtain promo code data.');
 
-            this._updateSum();
-          } else {
-            this._alertPopup.show('Your promotion code is not valid.');
-            console.error('Failed to obtain promo code data.');
-
-            this.setState({promoCode: undefined});
-          }
-        });
+          this.setState({promoCode: undefined});
+        }
+      });
     } else {
-      this._alertPopup.show('Please enter your promotion code.');
+      this.props.showAlertPopup('Please enter your promotion code.');
 
       this.setState({promoCode: undefined});
     }
@@ -246,15 +228,33 @@ export default class BookingResults extends Component {
       promoCode: undefined,
       disablePromo: false
     });
-    BookingActions.setPromoCode();
-
-    this._updateSum();
+    this.props.setOrderPromoCode(null);
   }
 
   _onCheckedAgree(event) {
     this.setState({
       agree: event.target.checked
     });
+  }
+
+  _onConfirmed() {
+    if (this._agreeForm.checkValidity()) {
+      var sessions = [];
+      for (var i = 0; i < this.state.sessions.length; i++) {
+        if (this.state['session'+i]) {
+          sessions.push(this.state.sessions[i]);
+        }
+      }
+
+      Location.push({ pathname: '/booking4', query: this.props.location && this.props.location.query });
+
+      // console.log(sessions);
+      this.props.setOrderSessions(sessions);
+      // console.log(this.state);
+      Util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
+    } else {
+      this.props.showAlertPopup('To continue, please accept our Terms of Service and Privacy Policy.');
+    }
   }
 
   _onNext(event) {
@@ -266,42 +266,66 @@ export default class BookingResults extends Component {
     }
 
     if (sessions.length === 0) {
-      // alert('Please choose at least one session.');
-      this._alertPopup.show('Please select at least one session.');
+      this.props.showAlertPopup('Please select at least one session.');
       return event.preventDefault();
     }
 
     this.setState({ agree: false });
 
-    // if (confirm('Would you like to confirm the sessions?')) {
-    this._confirmPopup.show(() => {
-      if (this._agreeForm.checkValidity()) {
-        // Link.handleClick(event);
-        Location.push({ pathname: '/booking4', query: this.props.location && this.props.location.query });
+    this.props.showConfirmPopup();
 
-        // console.log(sessions);
-        BookingActions.setSessions(sessions);
-        // console.log(this.state);
-        BookingActions.setLast('booking3c');
-      } else {
-        this._rejectPopup.show('To continue, please accept our Terms of Service and Privacy Policy.');
-      }
-    });
-
-    // } else {
     event.preventDefault();
-    // }
   }
 
-  _updateSum() {
+  _updateSum(props) {
     var sum = 0;
     for (var i = 0; i < this.state.sessions.length; i++) {
       if (this.state['session'+i]) {
-        sum += Util.calcRate(this.state.sessions[i], this.props.booking.promoCode, this.props.booking.service);
+        sum += Util.calcRate(this.state.sessions[i], props.order.promoCode, props.order.service);
       }
     }
-    // this.props.booking.sum = this.state.sum;
-    BookingActions.setSum(sum);
+    props.setOrderSum(sum);
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    location: state.router && state.router.location,
+    lastPage: state.lastPage,
+    order: state.order,
+    sessions: state.sessions.data,
+    sessionsFetching: state.sessions.isFetching
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getSessions: (params) => {
+      return dispatch(getSessions(params));
+    },
+    getPromo: (params) => {
+      return dispatch(getPromo(params));
+    },
+    setOrderSum: (sum) => {
+      return dispatch(setOrderSum(sum));
+    },
+    setOrderPromoCode: (promoCode) => {
+      return dispatch(setOrderPromoCode(promoCode));
+    },
+    setOrderSessions: (sessions) => {
+      return dispatch(setOrderSessions(sessions));
+    },
+    setLastPage: (page) => {
+      return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (message) => {
+      return dispatch(showAlertPopup(message));
+    },
+    showConfirmPopup: () => {
+      return dispatch(showConfirmPopup());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingResults);

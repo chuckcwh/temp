@@ -99,7 +99,7 @@ export function calcRate(session, promo, sid) {
       !promo.dates.some(elem =>
         elem.type === 'Void' &&
         elem.status === 'Active' &&
-        !moment(session.date).isSame(moment(elem.dateTimeStart.substr(0, 10)))
+        moment(session.date).isSame(moment(elem.dateTimeStart.substr(0, 10)))
       );
     if (isPromoApplicable) {
       return parseFloat(session.price) * (100 - parseFloat(promo.discountedRate)) / 100;

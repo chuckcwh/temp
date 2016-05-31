@@ -154,15 +154,15 @@ class BookingLocationUser extends Component {
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Address</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].addresses[0].address}</div>
+              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].address}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Unit Number</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].addresses[0].unitNumber}</div>
+              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].unitNumber}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Postal Code</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].addresses[0].postalCode}</div>
+              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].postalCode}</div>
             </div>
           </div>
         );

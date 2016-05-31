@@ -42,7 +42,7 @@ class BookingLocationUser extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="username" name="username" valueLink={linkState(this, 'username')} placeholder="Name*" maxLength="50" required />
+                <input type="text" id="fullName" name="fullName" valueLink={linkState(this, 'fullName')} placeholder="Name*" maxLength="50" required />
               </div>
             </div>
             {/*
@@ -71,7 +71,7 @@ class BookingLocationUser extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">Name</div>
-            <div className="TableRowItem3">{this.props.user.username}</div>
+            <div className="TableRowItem3">{this.props.user.fullName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
@@ -283,7 +283,7 @@ class BookingLocationUser extends Component {
     switch (entity) {
       case 'user':
         this.setState({
-          username: this.props.user.username,
+          fullName: this.props.user.fullName,
 
           mobilePhone: this.props.user.mobilePhone,
 
@@ -486,7 +486,7 @@ class BookingLocationUser extends Component {
   _onCheckedPatient(event) {
     if (event.target.checked === true) {
       this.setState({
-        fullName: this.props.user.username
+        fullName: this.props.user.fullName
       });
     } else {
       this.setState({

@@ -164,7 +164,7 @@ class BookingResults extends Component {
           </form>
           <p></p>
           <div className="text-center">
-            <a href="/booking4" className="btn btn-primary" onClick={this._onNext.bind(this)}>BOOK NOW</a>
+            <a href="#" className="btn btn-primary" onClick={this._onNext.bind(this)}>{this.props.user ? 'BOOK NOW' : 'NEXT'}</a>
           </div>
         </Loader>
         <ConfirmPopup onConfirmed={this._onConfirmed.bind(this)}>
@@ -246,7 +246,7 @@ class BookingResults extends Component {
         }
       }
 
-      Location.push({ pathname: '/booking4', query: this.props.location && this.props.location.query });
+      Location.push({ pathname: '/booking5', query: this.props.location && this.props.location.query });
 
       // console.log(sessions);
       this.props.setOrderSessions(sessions);
@@ -272,9 +272,25 @@ class BookingResults extends Component {
 
     this.setState({ agree: false });
 
-    this.props.showConfirmPopup();
-
     event.preventDefault();
+
+    if (this.props.user) {
+      this.props.showConfirmPopup();
+    } else {
+      var sessions = [];
+      for (var i = 0; i < this.state.sessions.length; i++) {
+        if (this.state['session'+i]) {
+          sessions.push(this.state.sessions[i]);
+        }
+      }
+
+      Location.push({ pathname: '/booking4', query: this.props.location && this.props.location.query });
+
+      // console.log(sessions);
+      this.props.setOrderSessions(sessions);
+      // console.log(this.state);
+      Util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
+    }
   }
 
   _updateSum(props) {
@@ -293,6 +309,7 @@ const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
     lastPage: state.lastPage,
+    user: state.user.data,
     order: state.order,
     sessions: state.sessions.data,
     sessionsFetching: state.sessions.isFetching

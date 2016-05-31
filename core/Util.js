@@ -8,6 +8,7 @@ export const PAGE_ORDERS = [
   'booking3b',
   'booking3c',
   'booking4',
+  'booking5',
   'booking-confirmation',
   'booking-payment'
 ];
@@ -39,6 +40,7 @@ export function isNavigationAllowed(path, lastPage) {
   if (path.charAt(0) === '/') {
     path = path.substring(1);
   }
+  if (path === 'booking5' && lastPage === 'booking3c') return true;
   return (PAGE_ORDERS.indexOf(lastPage) + 1) >= PAGE_ORDERS.indexOf(path);
 }
 

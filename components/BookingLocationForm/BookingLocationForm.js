@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import './BookingLocationForm.scss';
-import AlertPopup from '../AlertPopup';
 
 class BookingLocationForm extends Component {
 
@@ -15,7 +14,7 @@ class BookingLocationForm extends Component {
 
   render() {
     const { 
-      fields: { client_firstName, client_lastName, client_contactEmail, client_contactNumber, patient_firstName, patient_lastName, patient_dob, patient_gender, additionalInfo, postalCode, unitNumber, address, isPatient }, 
+      fields: { postalCode, unitNumber, address }, 
       invalid,
       handleSubmit, 
       submitFailed,
@@ -30,82 +29,10 @@ class BookingLocationForm extends Component {
           <span>or</span>
           <a href="/booking2" className="btn btn-primary btn-small btn-inline">REGISTER</a>
           */}
+          <p className="small">You can import pre-existing patient information.</p>
         </div>
         <div className="BookingLocationFormSection">
           <div>Continue booking as guest</div>
-          {/*
-          <div className="select">
-            <span></span>
-            <select name="salutation">
-              <option value="">Salutation</option>
-            </select>
-          </div>
-          */}
-          <div className="BookingLocationFormGroup">
-            <input type="text" id="client_firstName" name="client_firstName" placeholder="First Name*" {...client_firstName} />
-            {client_firstName.touched && client_firstName.error && <div className="BookingLocationFormError">{client_firstName.error}</div>}
-          </div>
-          <div className="BookingLocationFormGroup">
-            <input type="text" id="client_lastName" name="client_lastName" placeholder="Last Name*" {...client_lastName} />
-            {client_lastName.touched && client_lastName.error && <div className="BookingLocationFormError">{client_lastName.error}</div>}
-          </div>
-          <div className="BookingLocationFormGroup">
-            <input type="email" id="client_contactEmail" name="client_contactEmail" placeholder="Email*" {...client_contactEmail} />
-            {client_contactEmail.touched && client_contactEmail.error && <div className="BookingLocationFormError">{client_contactEmail.error}</div>}
-          </div>
-          <div className="BookingLocationFormGroup">
-            <input type="text" id="client_contactNumber" name="client_contactNumber" placeholder="Mobile Number*" {...client_contactNumber} />
-            {client_contactNumber.touched && client_contactNumber.error && <div className="BookingLocationFormError">{client_contactNumber.error}</div>}
-          </div>
-        </div>
-        <div className="BookingLocationFormSection">
-          <div>
-            <span className="PatientDetailsLabel1">Patient Details</span>
-            <span className="PatientDetailsLabel2"> (
-              <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" {...isPatient} />
-              <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
-                <span></span><span>Are you the patient?</span>
-              </label>
-              &nbsp;)
-            </span>
-          </div>
-          <div>
-            <div className="BookingLocationFormGroup">
-              <input type="text" id="patient_firstName" name="patient_firstName" placeholder="First Name*" {...patient_firstName} />
-              {patient_firstName.touched && patient_firstName.error && <div className="BookingLocationFormError">{patient_firstName.error}</div>}
-            </div>
-            <div className="BookingLocationFormGroup">
-              <input type="text" id="patient_lastName" name="patient_lastName" placeholder="Last Name*" {...patient_lastName} />
-              {patient_lastName.touched && patient_lastName.error && <div className="BookingLocationFormError">{patient_lastName.error}</div>}
-            </div>
-            <div className="BookingLocationFormGroup">
-              <div className="DateInput">
-                <input type="text" id="patient_dob" name="patient_dob" placeholder="Birth Date* (YYYY-MM-DD)" {...patient_dob} />
-                <span onClick={() => this.props.showDayPickerPopup(patient_dob.value, 'bookingLocationForm')}></span>
-              </div>
-              {patient_dob.touched && patient_dob.error && <div className="BookingLocationFormError">{patient_dob.error}</div>}
-            </div>
-            <div className="BookingLocationFormGroup">
-              <div className="radio radio-inline">
-                <input type="radio" id="patient_gender_male" name="patient_gender" {...patient_gender} value="Male" checked={patient_gender.value === 'Male'} />
-                <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
-              </div>
-              <div className="radio radio-inline">
-                <input type="radio" id="patient_gender_female" name="patient_gender" {...patient_gender} value="Female" checked={patient_gender.value === 'Female'} />
-                <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
-              </div>
-            </div>
-          </div>
-          <div style={{marginTop: '40px'}}>
-            <div>
-              <div>Additional Info:</div>
-              <textarea name="additionalInfo" placeholder="Please provide important notes about patient here." {...additionalInfo} value={additionalInfo.value || ''} />
-              {additionalInfo.touched && additionalInfo.error && <div className="BookingLocationFormError">{additionalInfo.error}</div>}
-            </div>
-          </div>
-        </div>
-        <div className="BookingLocationFormSection">
-          <div>Patient Location / Address</div>
           <div className="PatientAddress">
             <div className="PatientAddressLeft inline">
               <div className="BookingLocationFormGroup">
@@ -124,9 +51,10 @@ class BookingLocationForm extends Component {
               </div>
             </div>
           </div>
-          <p className="small">This information will only be used to contact you regarding your booking.</p>
-          {submitFailed && invalid && <div className="BookingLocationFormError">You have one or more form field errors.</div>}
-          <button className="btn btn-primary" type="submit" disabled={submitting}>NEXT</button>
+          <div style={{padding: '20px 0'}}>
+            {submitFailed && invalid && <div className="BookingLocationFormError">You have one or more form field errors.</div>}
+            <button className="btn btn-primary" type="submit" disabled={submitting}>NEXT</button>
+          </div>
         </div>
       </form>
     );
@@ -142,46 +70,6 @@ class BookingLocationForm extends Component {
 
 const validate = values => {
   const errors = {};
-  if (!values.client_firstName) {
-    errors.client_firstName = 'Required';
-  } else if (values.client_firstName.length > 50) {
-    errors.client_firstName = 'Cannot be more than 50 characters';
-  }
-  if (!values.client_lastName) {
-    errors.client_lastName = 'Required';
-  } else if (values.client_lastName.length > 50) {
-    errors.client_lastName = 'Cannot be more than 50 characters';
-  }
-  if (!values.client_contactEmail) {
-    errors.client_contactEmail = 'Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.client_contactEmail)) {
-    errors.client_contactEmail = 'Invalid email address';
-  } else if (values.client_contactEmail.length > 50) {
-    errors.client_contactEmail = 'Cannot be more than 50 characters';
-  }
-  if (!values.client_contactNumber) {
-    errors.client_contactNumber = 'Required';
-  } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.client_contactNumber)) {
-    errors.client_contactNumber = 'Invalid mobile number (e.g. 98765432)';
-  }
-  if (!values.patient_firstName) {
-    errors.patient_firstName = 'Required';
-  } else if (values.patient_firstName.length > 50) {
-    errors.patient_firstName = 'Cannot be more than 50 characters';
-  }
-  if (!values.patient_lastName) {
-    errors.patient_lastName = 'Required';
-  } else if (values.patient_lastName.length > 50) {
-    errors.patient_lastName = 'Cannot be more than 50 characters';
-  }
-  if (!values.patient_dob) {
-    errors.patient_dob = 'Required';
-  } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.patient_dob)) {
-    errors.patient_dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
-  }
-  if (!values.patient_gender) {
-    errors.patient_gender = 'Required';
-  }
   if (!values.postalCode) {
     errors.postalCode = 'Required';
   } else if (!/^[0-9]{6}$/i.test(values.postalCode)) {
@@ -199,16 +87,14 @@ BookingLocationForm.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  showDayPickerPopup: PropTypes.func.isRequired,
   showLoginPopup: PropTypes.func.isRequired,
-  showAlertPopup: PropTypes.func.isRequired,
   fetchAddress: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired
 }
 
 const reduxFormConfig = {
   form: 'bookingLocationForm',
-  fields: ['client_firstName', 'client_lastName', 'client_contactEmail', 'client_contactNumber', 'patient_firstName', 'patient_lastName', 'patient_dob', 'patient_gender', 'additionalInfo', 'postalCode', 'unitNumber', 'address', 'isPatient'],
+  fields: ['postalCode', 'unitNumber', 'address'],
   validate: validate
 }
 
@@ -216,19 +102,6 @@ const mapStateToProps = (state) => {
   const { order } = state;
   return {
     initialValues: {
-      client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      client_firstName: order && order.booker && order.booker.client_firstName || undefined,
-      client_lastName: order && order.booker && order.booker.client_lastName || undefined,
-      patient_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      patient_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
-      patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
-      patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-      patient_dob_temp: undefined,
-      patient_gender: order && order.booker && order.booker.patient_gender || undefined,
-      additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
-      isPatient: order && order.booker && order.booker.isPatient || undefined,
       postalCode: order && order.location && order.location.postalCode || undefined,
       address: order && order.location && order.location.address || undefined,
       unitNumber: order && order.location && order.location.unitNumber || undefined,

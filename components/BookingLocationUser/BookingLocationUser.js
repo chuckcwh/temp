@@ -7,8 +7,9 @@ import Loader from 'react-loader';
 import './BookingLocationUser.scss';
 import Container from '../Container';
 import Link from '../Link';
+import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
-import { getPatients, createPatient, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup } from '../../actions';
+import { fetchAddress, getPatients, createPatient, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingLocationUser extends Component {
@@ -71,7 +72,7 @@ class BookingLocationUser extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">Name</div>
-            <div className="TableRowItem3">{this.props.user.fullName}</div>
+            <div className="TableRowItem3">{this.props.user && this.props.user.clients && this.props.user.clients[0] && this.props.user.clients[0].fullName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
@@ -171,45 +172,13 @@ class BookingLocationUser extends Component {
       // Add patient details
       patientDetails = (
         <div>
-          <form ref={(c) => this._patientDetailsForm = c} onSubmit={this._onClickSavePatient.bind(this)}>
-            <div>
-              <div>
-                <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" onChange={this._onCheckedPatient.bind(this)} />
-                <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
-                  <span></span><span>Are you the patient?</span>
-                </label>
-              </div>
-              <input type="text" id="fullName" name="fullName" valueLink={linkState(this, 'fullName')} placeholder="Full Name*" maxLength="50" required />
-              <div className="DateInput">
-                <input type="text" id="dob" name="dob" value={this.state.dob_temp ? this.state.dob_temp : (this.state.dob ? moment(this.state.dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeNewDob.bind(this)} onBlur={this._onBlurNewDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
-                <span onClick={() => this.props.showDayPickerPopup(this.state.dob)}></span>
-              </div>
-              <div>
-                <div className="radio radio-inline">
-                  <input type="radio" id="gender_male" name="gender" checked={this.state.gender==='Male'} onChange={this._onSelectGender.bind(this, 'gender')} value="Male" required />
-                  <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
-                </div>
-                <div className="radio radio-inline">
-                  <input type="radio" id="gender_female" name="gender" checked={this.state.gender==='Female'} onChange={this._onSelectGender.bind(this, 'gender')} value="Female" required />
-                  <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div style={{marginTop: '40px'}}>Patient Location / Address</div>
-              <div className="PatientAddress">
-                <div className="PatientAddressLeft inline">
-                  <input type="text" id="postalCode" name="postalCode" value={this.state.postalCode} onChange={this._onChangePostalCode.bind(this)} placeholder="Enter Postal Code*" pattern="[0-9]{6}" required />
-                  <input type="text" id="unitNumber" name="unitNumber" valueLink={linkState(this, 'unitNumber')} placeholder="Enter Unit Number" />
-                </div>
-                <div className="PatientAddressRight inline">
-                  <textarea id="address" name="address" valueLink={linkState(this, 'address')} placeholder="Enter Address*" required />
-                </div>
-              </div>
-              <p className="small">This information will only be used to contact you regarding your booking.</p>
-            </div>
-            <button className="btn btn-primary" type="submit">Save Patient</button>
-          </form>
+          <BookingLocationUserPatientForm
+            showDayPickerPopup={this.props.showDayPickerPopup} 
+            showAlertPopup={this.props.showAlertPopup}
+            fetchAddress={this.props.fetchAddress}
+            user={this.props.user}
+            onFilled={this._onClickSavePatient.bind(this)}
+          />
           <DayPickerPopup title="Date of Birth" onDayClick={this._onSelectNewDob.bind(this)} />
         </div>
       );
@@ -547,6 +516,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAddress: (postalCode) => {
+      return dispatch(fetchAddress(postalCode));
+    },
     getPatients: (params) => {
       return dispatch(getPatients(params));
     },

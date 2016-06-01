@@ -315,6 +315,7 @@ const bookingApp = combineReducers({
               }
             }
           }
+          break;
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
             return {
@@ -325,6 +326,35 @@ const bookingApp = combineReducers({
               }
             }
           }
+          break;
+        default:
+          return state;
+      }
+    },
+    bookingLocationUserPatientForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'bookingLocationUserPatientForm') {
+            return {
+              ...state,
+              dob: {
+                ...state.dob,
+                value: action.value
+              }
+            }
+          }
+          break;
+        case ActionTypes.GEOCODE_SUCCESS:
+          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+            return {
+              ...state,
+              address: {
+                ...state.address,
+                value: action.address
+              }
+            }
+          }
+          break;
         default:
           return state;
       }

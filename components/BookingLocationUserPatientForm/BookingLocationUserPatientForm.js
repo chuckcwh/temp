@@ -24,7 +24,7 @@ class BookingLocationUserPatientForm extends Component {
       <form className="BookingLocationUserPatientForm" onSubmit={handleSubmit(this.props.onFilled)}>
         <div>
           <div>
-            <input className="RememberMeCheckbox" type="checkbox" {...isPatient} />
+            <input className="RememberMeCheckbox" type="checkbox" id="isPatient" {...isPatient} />
             <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
               <span></span><span>Are you the patient?</span>
             </label>

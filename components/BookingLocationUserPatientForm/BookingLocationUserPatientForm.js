@@ -42,11 +42,11 @@ class BookingLocationUserPatientForm extends Component {
           </div>
           <div className="BookingLocationUserPatientFormGroup">
             <div className="radio radio-inline">
-              <input type="radio" id="gender_male" name="gender" value="Male" {...gender} />
+              <input type="radio" id="gender_male" name="gender" {...gender} value="Male" checked={gender.value === 'Male'} />
               <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
             </div>
             <div className="radio radio-inline">
-              <input type="radio" id="gender_female" name="gender" value="Female" {...gender} />
+              <input type="radio" id="gender_female" name="gender" {...gender} value="Female" checked={gender.value === 'Female'} />
               <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
             </div>
             {gender.touched && gender.error && <div className="BookingLocationUserPatientFormError">{gender.error}</div>}

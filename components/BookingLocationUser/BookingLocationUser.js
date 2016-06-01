@@ -537,8 +537,8 @@ const mapDispatchToProps = (dispatch) => {
     setLastPage: (page) => {
       return dispatch(setLastPage(page));
     },
-    showDayPickerPopup: (value) => {
-      return dispatch(showDayPickerPopup(value));
+    showDayPickerPopup: (value, source) => {
+      return dispatch(showDayPickerPopup(value, source));
     },
     showAlertPopup: (message) => {
       return dispatch(showAlertPopup(message));

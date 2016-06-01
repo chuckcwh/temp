@@ -315,6 +315,7 @@ const bookingApp = combineReducers({
               }
             }
           }
+          break;
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
             return {
@@ -325,6 +326,7 @@ const bookingApp = combineReducers({
               }
             }
           }
+          break;
         default:
           return state;
       }

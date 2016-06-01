@@ -30,7 +30,7 @@ class BookingLocationUserPatientForm extends Component {
             </label>
           </div>
           <div className="BookingLocationUserPatientFormGroup">
-            <input type="text" id="fullName" name="fullName" placeholder="Full Name*" {...fullName} />
+            <input type="text" id="fullName" name="fullName" placeholder="Full Name*" {...fullName} disabled={isPatient.value === true} />
             {fullName.touched && fullName.error && <div className="BookingLocationUserPatientFormError">{fullName.error}</div>}
           </div>
           <div className="BookingLocationUserPatientFormGroup">
@@ -123,13 +123,16 @@ BookingLocationUserPatientForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'bookingLocationUserPatientForm',
-  fields: ['fullName', 'dob', 'gender', 'additionalInfo', 'postalCode', 'unitNumber', 'address', 'isPatient'],
+  fields: ['userName', 'fullName', 'dob', 'gender', 'additionalInfo', 'postalCode', 'unitNumber', 'address', 'isPatient'],
   validate: validate
 }
 
 const mapStateToProps = (state) => {
   // const { order } = state;
   return {
+    initialValues: {
+      userName: state.user.data && state.user.data.clients && state.user.data.clients[0] && state.user.data.clients[0].fullName
+    }
     // initialValues: {
     //   client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
     //   client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,

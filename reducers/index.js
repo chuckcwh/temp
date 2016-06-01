@@ -287,12 +287,19 @@ const bookingApp = combineReducers({
       patient_firstName: (value, previousValue, allValues) => {
         if (allValues.isPatient) {
           return allValues.client_firstName;
-        }
+        } else return value;
       },
       patient_lastName: (value, previousValue, allValues) => {
         if (allValues.isPatient) {
           return allValues.client_lastName;
-        }
+        } else return value;
+      }
+    },
+    bookingLocationUserPatientForm: {
+      fullName: (value, previousValue, allValues) => {
+        if (allValues.isPatient) {
+          return allValues.userName;
+        } else return value;
       }
     }
   }).plugin({

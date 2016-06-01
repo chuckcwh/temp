@@ -12,16 +12,16 @@ class BookingNavigation extends Component {
         <Container>
           {this.props.user ? (
             <ul className="BookingNavigation">
+              <BookingNavigationItem active={'booking1'} link={'booking1'} icon={'1'} text={'Select Service'} />
+              <BookingNavigationItem active={'booking2'} link={'booking2'} icon={'2'} text={'Select Location'} />
+              <BookingNavigationItem active={'booking3'} link={'booking3a'} icon={'3'} text={'Select Date/Time'} />
+            </ul>
+          ) : (
+            <ul className="BookingNavigation">
               <BookingNavigationItem active={'booking1'} link={'booking1'} icon={'1'} text={'Service'} />
               <BookingNavigationItem active={'booking2'} link={'booking2'} icon={'2'} text={'Location'} />
               <BookingNavigationItem active={'booking3'} link={'booking3a'} icon={'3'} text={'Date/Time'} />
               <BookingNavigationItem active={'booking4'} link={'booking4'} icon={'4'} text={'Patient'} />
-            </ul>
-          ) : (
-            <ul className="BookingNavigation">
-              <BookingNavigationItem active={'booking1'} link={'booking1'} icon={'1'} text={'Select Service'} />
-              <BookingNavigationItem active={'booking2'} link={'booking2'} icon={'2'} text={'Select Location'} />
-              <BookingNavigationItem active={'booking3'} link={'booking3a'} icon={'3'} text={'Select Date/Time'} />
             </ul>
           )}
         </Container>

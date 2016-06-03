@@ -118,7 +118,7 @@ class BookingConfirmation extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Date of Birth</div>
               <div className="TableRowItem3">
-                <DatePicker selected={moment(this.props.booking.patient_dob)} maxDate={moment()} dateFormat="YYYY-MM-DD" showYearDropdown onChange={this._onSelectDob.bind(this)} placeholderText="Date of Birth* (Y-M-D)" />
+                <DatePicker selected={this.props.booking && this.props.booking.patient_dob && moment(this.props.booking.patient_dob)} maxDate={moment()} dateFormat="YYYY-MM-DD" showYearDropdown onChange={this._onSelectDob.bind(this)} placeholderText="Date of Birth* (Y-M-D)" />
               </div>
             </div>
             <div>
@@ -145,7 +145,7 @@ class BookingConfirmation extends Component {
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Date of Birth</div>
-            <div className="TableRowItem3">{moment(this.props.booking.patient_dob, 'YYYY-MM-DD').format('ll')}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_dob && moment(this.props.booking.patient_dob, 'YYYY-MM-DD').format('ll')}</div>
           </div>
         </div>
       );

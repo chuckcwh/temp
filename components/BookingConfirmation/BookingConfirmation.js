@@ -197,7 +197,7 @@ class BookingConfirmation extends Component {
     return (
       <div className="BookingConfirmation">
         <Container>
-          <Loader className="spinner" loaded={this.props.booking.id ? true : false}>
+          <Loader className="spinner" loaded={(this.props.booking && this.props.booking.id) ? true : false}>
             <div className="BookingConfirmationWrapper">
               <div className="BookingConfirmationBody">
                 <div className="BookingConfirmationBodySection">

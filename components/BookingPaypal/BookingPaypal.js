@@ -83,7 +83,7 @@ class BookingPaypal extends Component {
 
     var url;
     if (typeof window !== 'undefined') {
-      url = (window.location.href.indexOf('?') > -1 ? window.location.href.slice(0, window.location.href.indexOf('?')+1) : window.location.href) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail;
+      url = (window.location.href.indexOf('?') > -1 ? window.location.href.slice(0, window.location.href.indexOf('?')) : window.location.href) + '?bid=' + this.props.booking.id + '&email=' + this.props.booking.client_contactEmail;
       url = url.replace('#', '');
     }
 

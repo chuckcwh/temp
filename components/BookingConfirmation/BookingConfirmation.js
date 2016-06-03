@@ -69,19 +69,19 @@ class BookingConfirmation extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking.client_firstName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_firstName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking.client_lastName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_lastName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{this.props.booking.client_contactEmail}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactEmail}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Contact Number</div>
-            <div className="TableRowItem3">{this.props.booking.client_contactNumber}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactNumber}</div>
           </div>
         </div>
       );
@@ -93,24 +93,24 @@ class BookingConfirmation extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="patient_firstName" name="patient_firstName" value={this.props.booking.patient_firstName} placeholder="First Name*" maxLength="50" required />
+                <input type="text" id="patient_firstName" name="patient_firstName" value={this.props.booking && this.props.booking.patient_firstName} placeholder="First Name*" maxLength="50" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Last Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="patient_lastName" name="patient_lastName" value={this.props.booking.patient_lastName} placeholder="Last Name*" maxLength="50" required />
+                <input type="text" id="patient_lastName" name="patient_lastName" value={this.props.booking && this.props.booking.patient_lastName} placeholder="Last Name*" maxLength="50" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Gender</div>
               <div className="TableRowItem3">
                 <div className="radio radio-inline">
-                  <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.props.booking.patient_gender==='Male'} value="Male" required />
+                  <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.props.booking && this.props.booking.patient_gender==='Male'} value="Male" required />
                   <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
                 </div>
                 <div className="radio radio-inline">
-                  <input type="radio" id="patient_gender_female" name="patient_gender" checked={this.props.booking.patient_gender==='Female'} value="Female" required />
+                  <input type="radio" id="patient_gender_female" name="patient_gender" checked={this.props.booking && this.props.booking.patient_gender==='Female'} value="Female" required />
                   <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
                 </div>
               </div>
@@ -133,15 +133,15 @@ class BookingConfirmation extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking.patient_firstName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_firstName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking.patient_lastName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_lastName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Gender</div>
-            <div className="TableRowItem3">{this.props.booking.patient_gender}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_gender}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Date of Birth</div>

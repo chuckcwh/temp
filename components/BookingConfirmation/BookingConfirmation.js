@@ -182,8 +182,8 @@ class BookingConfirmation extends Component {
     } else {
       addressDetails = (
         <div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}</div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</div>
+          <div>{this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}</div>
+          <div>{this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</div>
         </div>
       );
     }

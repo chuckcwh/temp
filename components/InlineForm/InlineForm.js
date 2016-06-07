@@ -9,7 +9,7 @@ class InlineForm extends Component {
   componentWillReceiveProps(props) {
     const { fields: { postalCode } } = this.props;
     const newPostalCode = props && props.fields && props.fields.postalCode;
-    if (newPostalCode.value.length === 6 && newPostalCode.value !== postalCode.value) {
+    if (newPostalCode && postalCode && newPostalCode.value.length === 6 && newPostalCode.value !== postalCode.value) {
       this.props.fetchAddress && this.props.fetchAddress(newPostalCode.value);
     }
   }

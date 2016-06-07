@@ -7,9 +7,10 @@ import Loader from 'react-loader';
 import './BookingLocationUser.scss';
 import Container from '../Container';
 import Link from '../Link';
+import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
-import { fetchAddress, getPatients, createPatient, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup } from '../../actions';
+import { fetchAddress, getPatients, createPatient, getPatient, getUser, editPatient, editClient, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingLocationUser extends Component {
@@ -17,9 +18,6 @@ class BookingLocationUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editingUser: false,
-      editingPatient: false,
-      editingAddress: false,
       savingPatient: false,
 
       patientId: undefined
@@ -36,47 +34,22 @@ class BookingLocationUser extends Component {
 
   render() {
     var component, userDetails, patientDetails;
-    if (this.state.editingUser) {
-      userDetails = (
-        <div>
-          <form ref={(c) => this._userDetailsForm = c}>
-            <div className="TableRow">
-              <div className="TableRowItem1">Name</div>
-              <div className="TableRowItem3">
-                <input type="text" id="fullName" name="fullName" valueLink={linkState(this, 'fullName')} placeholder="Name*" maxLength="50" required />
-              </div>
-            </div>
-            {/*
-            <div className="TableRow">
-              <div className="TableRowItem1">Email</div>
-              <div className="TableRowItem3">
-                <input type="email" id="email" name="email" value={this.props.user.email} placeholder="Email*" maxLength="50" required />
-              </div>
-            </div>
-            */}
-            <div className="TableRow">
-              <div className="TableRowItem1">Mobile Number</div>
-              <div className="TableRowItem3">
-                <input type="text" id="mobilePhone" name="mobilePhone" valueLink={linkState(this, 'mobilePhone')} placeholder="Mobile Number*" maxLength="8" required />
-              </div>
-            </div>
-            <div>
-              <a href="#" className="btn btn-primary" onClick={this._onClickSave.bind(this, 'user')}>Save</a>
-              <a href="#" className="btn btn-primary" onClick={this._onClickStopEdit.bind(this, 'user')}>Cancel</a>
-            </div>
-          </form>
-        </div>
-      );
+    if (this.props.inlineForm && /^(userName|userEmail|userMobile)$/i.test(this.props.inlineForm.name)) {
+      userDetails = <InlineForm />;
     } else {
       userDetails = (
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">Name</div>
-            <div className="TableRowItem3">{this.props.user && this.props.user.clients && this.props.user.clients[0] && this.props.user.clients[0].fullName}</div>
+            <div className="TableRowItem3">{this.props.user && this.props.user.clients && this.props.user.clients[0] && this.props.user.clients[0].fullName}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'userName')}><img src={require('../pencil.png')} /></a>
+            </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{this.props.user.email}</div>
+            <div className="TableRowItem3">{this.props.user.email}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'userEmail')}><img src={require('../pencil.png')} /></a>
+            </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Mobile Number</div>
@@ -85,7 +58,9 @@ class BookingLocationUser extends Component {
         </div>
       );
     }
-    if (this.props.patients && this.state.patientId) {
+    if (this.props.inlineForm && /^(patientName|patientGender|patientDob|patientRace|patientReligion|patientLocation)$/i.test(this.props.inlineForm.name)) {
+      patientDetails = <InlineForm fetchAddress={this.props.fetchAddress} />;
+    } else if (this.props.patients && this.state.patientId) {
       if (this.state.editingPatient) {
         patientDetails = (
           <div>
@@ -119,15 +94,21 @@ class BookingLocationUser extends Component {
           <div>
             <div className="TableRow">
               <div className="TableRowItem1">Full Name</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].fullName}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].fullName}
+                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientName')}><img src={require('../pencil.png')} /></a>
+              </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Gender</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].gender}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].gender}
+                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientGender')}><img src={require('../pencil.png')} /></a>
+              </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Date of Birth</div>
-              <div className="TableRowItem3">{moment(this.props.patients[this.state.patientId].dob).format('ll')}</div>
+              <div className="TableRowItem3">{moment(this.props.patients[this.state.patientId].dob).format('ll')}
+                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientDob')}><img src={require('../pencil.png')} /></a>
+              </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Age</div>
@@ -147,15 +128,21 @@ class BookingLocationUser extends Component {
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Race</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].race}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].race}
+                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientRace')}><img src={require('../pencil.png')} /></a>
+              </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Religion</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].religion}</div>
+              <div className="TableRowItem3">{this.props.patients[this.state.patientId].religion}
+                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientReligion')}><img src={require('../pencil.png')} /></a>
+              </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Address</div>
-              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].address}</div>
+              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].address}
+                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientLocation')}><img src={require('../pencil.png')} /></a>
+              </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Unit Number</div>
@@ -215,7 +202,6 @@ class BookingLocationUser extends Component {
         <div className="BookingLocationUserBodyEditSection">
           <div className="BookingLocationUserBodyEditSectionTitle">
             <h3>Patient Details</h3>
-            {/*<a href="#" className={this.state.editingPatient || !this.state.patientId ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
           </div>
           <Loader className="spinner" loaded={(this.props.patients && !this.state.savingPatient) ? true : false}>
             {patientDetails}
@@ -250,56 +236,290 @@ class BookingLocationUser extends Component {
     event.preventDefault();
 
     switch (entity) {
-      case 'user':
-        this.setState({
-          fullName: this.props.user.fullName,
-
-          mobilePhone: this.props.user.mobilePhone,
-
-          editingUser: true
+      case 'userName':
+        this.props.showInlineForm({
+          name: 'userName',
+          inputs: {
+            fullName: {
+              label: 'Name',
+              type: 'text',
+              initialValue: this.props.user && this.props.user.clients && this.props.user.clients[0] && this.props.user.clients[0].fullName
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.fullName) {
+              errors.fullName = 'Required';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'userName')
         });
         break;
-      case 'patient':
-        this.setState({editingPatient: true});
+      case 'userEmail':
+        this.props.showInlineForm({
+          name: 'userEmail',
+          inputs: {
+            email: {
+              label: 'Email',
+              type: 'text',
+              initialValue: this.props.user.email
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.email) {
+              errors.email = 'Required';
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+              errors.email = 'Invalid email address';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'userEmail')
+        });
         break;
-      case 'address':
-        this.setState({editingAddress: true});
+      case 'userMobile':
+        this.props.showInlineForm({
+          name: 'userMobile',
+          inputs: {
+            mobilePhone: {
+              label: 'Mobile Number',
+              type: 'text',
+              initialValue: this.props.user.mobilePhone
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.mobilePhone) {
+              errors.mobilePhone = 'Required';
+            } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.mobilePhone)) {
+              errors.mobilePhone = 'Invalid mobile phone';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'userMobile')
+        });
+        break;
+      case 'patientName':
+        this.props.showInlineForm({
+          name: 'patientName',
+          inputs: {
+            fullName: {
+              label: 'Full Name',
+              type: 'text',
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].fullName
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.fullName) {
+              errors.fullName = 'Required';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'patientName')
+        });
+        break;
+      case 'patientGender':
+        this.props.showInlineForm({
+          name: 'patientGender',
+          inputs: {
+            gender: {
+              label: 'Gender',
+              type: 'select',
+              options: [{ label: 'Male', value: 'Male' }, { label: 'Female', value: 'Female' }],
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].gender
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.gender) {
+              errors.gender = 'Required';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'patientGender')
+        });
+        break;
+      case 'patientDob':
+        this.props.showInlineForm({
+          name: 'patientDob',
+          inputs: {
+            dob: {
+              label: 'Date of Birth',
+              type: 'text',
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].dob
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.dob) {
+              errors.dob = 'Required';
+            } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.dob)) {
+              errors.dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'patientDob')
+        });
+        break;
+      case 'patientRace':
+        this.props.showInlineForm({
+          name: 'patientRace',
+          inputs: {
+            race: {
+              label: 'Race',
+              type: 'select',
+              options: [{ label: 'Chinese', value: 'Chinese' }, { label: 'Malay', value: 'Malay' }, { label: 'Indian', value: 'Indian' }, { label: 'Eurasian', value: 'Eurasian' }, { label: 'Others', value: 'Others' }],
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].race
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.race) {
+              errors.race = 'Required';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'patientRace')
+        });
+        break;
+      case 'patientReligion':
+        this.props.showInlineForm({
+          name: 'patientReligion',
+          inputs: {
+            religion: {
+              label: 'Religion',
+              type: 'select',
+              options: [{ label: 'Buddhist', value: 'Buddhist' }, { label: 'Christian', value: 'Christian' }, { label: 'Free Thinker', value: 'Free Thinker' }, { label: 'Hinduism', value: 'Hinduism' }, { label: 'Islam', value: 'Islam' }, { label: 'Taoist', value: 'Taoist' }, { label: 'Catholic', value: 'Catholic' }, { label: 'Others', value: 'Others' }],
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].religion
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.religion) {
+              errors.religion = 'Required';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'patientReligion')
+        });
+        break;
+      case 'patientLocation':
+        this.props.showInlineForm({
+          name: 'patientLocation',
+          inputs: {
+            postalCode: {
+              label: 'Postal Code',
+              type: 'text',
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].postalCode
+            },
+            address: {
+              label: 'Address',
+              type: 'text',
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].address
+            },
+            unitNumber: {
+              label: 'Unit Number',
+              type: 'text',
+              initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].unitNumber
+            }
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.postalCode) {
+              errors.postalCode = 'Required';
+            } else if (!/^[0-9]{6}$/i.test(values.postalCode)) {
+              errors.postalCode = 'Invalid postal code (e.g. 123456)';
+            }
+            if (!values.address) {
+              errors.address = 'Required';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'patientLocation')
+        });
         break;
     }
   }
 
-  _onClickStopEdit(entity, event) {
-    event.preventDefault();
-
-    switch (entity) {
-      case 'user':
-        this.setState({editingUser: false});
-        break;
-      case 'patient':
-        this.setState({editingPatient: false});
-        break;
-      case 'address':
-        this.setState({editingAddress: false});
-        break;
-    }
-  }
-
-  _onClickSave(entity, event) {
-    event.preventDefault();
-
-    switch (entity) {
-      case 'user':
-        if (this._userDetailsForm.checkValidity()) {
-          this.setState({editingUser: false});
-        }
-        break;
-      case 'patient':
-        this.setState({editingPatient: false});
-        break;
-      case 'address':
-        this.setState({editingAddress: false});
-        break;
-    }
+  _onClickSave(entity, values, dispatch) {
+    return new Promise((resolve, reject) => {
+      switch (entity) {
+        case 'userName':
+          this.props.editClient({
+            cid: this.props.client.id,
+            fullName: values.fullName
+          }).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              this.props.getUser().then(() => resolve());
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => {
+            reject({ _error: reason });
+          });
+          break;
+        case 'userEmail':
+          this.props.editEmail({
+            email: values.email
+          }).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              this.props.getUser().then(() => resolve())
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => {
+            reject({ _error: reason });
+          });
+          break;
+        case 'userMobile':
+          this.props.editMobile({
+            mobilephone: values.mobilePhone
+          }).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => {
+            reject({ _error: reason });
+          });
+          break;
+        case 'patientName':
+        case 'patientGender':
+        case 'patientDob':
+        case 'patientRace':
+        case 'patientReligion':
+          this.props.editPatient(Object.assign({
+            pid: this.state.patientId
+          }, values)).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              this.props.getPatient({ pid: this.state.patientId }).then(() => resolve());
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => reject({ _error: reason }));
+          break;
+        case 'patientLocation':
+          this.props.editPatient({
+            pid: this.state.patientId,
+            addresses: [Object.assign({
+              id: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].id
+            }, values)]
+          }).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              this.props.getPatient({ pid: this.state.patientId }).then(() => resolve());
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => reject({ _error: reason }));
+          break;
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   _onClickAddPatient(event) {
@@ -434,8 +654,10 @@ const mapStateToProps = (state) => {
     lastPage: state.lastPage,
     order: state.order,
     user: state.user.data,
+    client: state.user.data && state.user.data.clients && state.user.data.clients[0],
     patients: state.patients.data,
-    patientIds: state.patients.ids
+    patientIds: state.patients.ids,
+    inlineForm: state.inlineForm
   }
 }
 
@@ -449,6 +671,27 @@ const mapDispatchToProps = (dispatch) => {
     },
     createPatient: (patient) => {
       return dispatch(createPatient(patient));
+    },
+    getPatient: (params) => {
+      return dispatch(getPatient(params));
+    },
+    getUser: () => {
+      return dispatch(getUser());
+    },
+    editPatient: (params) => {
+      return dispatch(editPatient(params));
+    },
+    editClient: (params) => {
+      return dispatch(editClient(params));
+    },
+    editEmail: (params) => {
+      return dispatch(editEmail(params));
+    },
+    editMobile: (params) => {
+      return dispatch(editMobile(params));
+    },
+    verifyMobile: (params) => {
+      return dispatch(verifyMobile(params));
     },
     setOrderBooker: (booker) => {
       return dispatch(setOrderBooker(booker));
@@ -467,6 +710,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     showAlertPopup: (message) => {
       return dispatch(showAlertPopup(message));
+    },
+    showInlineForm: (params) => {
+      return dispatch(showInlineForm(params));
     }
   }
 }

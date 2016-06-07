@@ -30,17 +30,41 @@ export const USER_SUCCESS = 'USER_SUCCESS'
 export const USER_FAILURE = 'USER_FAILURE'
 export const USER_DESTROY = 'USER_DESTROY'
 
+export const CLIENT_EDIT_REQUEST = 'CLIENT_EDIT_REQUEST'
+export const CLIENT_EDIT_SUCCESS = 'CLIENT_EDIT_SUCCESS'
+export const CLIENT_EDIT_FAILURE = 'CLIENT_EDIT_FAILURE'
+
 export const PATIENTS_REQUEST = 'PATIENTS_REQUEST'
 export const PATIENTS_SUCCESS = 'PATIENTS_SUCCESS'
 export const PATIENTS_FAILURE = 'PATIENTS_FAILURE'
+
+export const PATIENT_REQUEST = 'PATIENT_REQUEST'
+export const PATIENT_SUCCESS = 'PATIENT_SUCCESS'
+export const PATIENT_FAILURE = 'PATIENT_FAILURE'
 
 export const PATIENT_CREATE_REQUEST = 'PATIENT_CREATE_REQUEST'
 export const PATIENT_CREATE_SUCCESS = 'PATIENT_CREATE_SUCCESS'
 export const PATIENT_CREATE_FAILURE = 'PATIENT_CREATE_FAILURE'
 
+export const PATIENT_EDIT_REQUEST = 'PATIENT_EDIT_REQUEST'
+export const PATIENT_EDIT_SUCCESS = 'PATIENT_EDIT_SUCCESS'
+export const PATIENT_EDIT_FAILURE = 'PATIENT_EDIT_FAILURE'
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'LOGIN_FAILURE'
+
+export const EMAIL_EDIT_REQUEST = 'EMAIL_EDIT_REQUEST'
+export const EMAIL_EDIT_SUCCESS = 'EMAIL_EDIT_SUCCESS'
+export const EMAIL_EDIT_FAILURE = 'EMAIL_EDIT_FAILURE'
+
+export const MOBILE_EDIT_REQUEST = 'MOBILE_EDIT_REQUEST'
+export const MOBILE_EDIT_SUCCESS = 'MOBILE_EDIT_SUCCESS'
+export const MOBILE_EDIT_FAILURE = 'MOBILE_EDIT_FAILURE'
+
+export const MOBILE_VERIFY_REQUEST = 'MOBILE_VERIFY_REQUEST'
+export const MOBILE_VERIFY_SUCCESS = 'MOBILE_VERIFY_SUCCESS'
+export const MOBILE_VERIFY_FAILURE = 'MOBILE_VERIFY_FAILURE'
 
 export const SESSIONS_REQUEST = 'SESSIONS_REQUEST'
 export const SESSIONS_SUCCESS = 'SESSIONS_SUCCESS'
@@ -131,15 +155,45 @@ function fetchAction(route) {
       method: 'get',
       auth: 'userParams'
     },
+    editClient: {
+      types: [ CLIENT_EDIT_REQUEST, CLIENT_EDIT_SUCCESS, CLIENT_EDIT_FAILURE ],
+      endpoint: 'editClient',
+      method: 'post',
+      auth: 'user'
+    },
     getPatients: {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
       endpoint: 'getPatients',
       method: 'get',
       auth: 'user'
     },
+    getPatient: {
+      types: [ PATIENT_REQUEST, PATIENT_SUCCESS, PATIENT_FAILURE ],
+      endpoint: 'getPatient',
+      method: 'get',
+      auth: 'user'
+    },
     createPatient: {
       types: [ PATIENT_CREATE_REQUEST, PATIENT_CREATE_SUCCESS, PATIENT_CREATE_FAILURE ],
       endpoint: 'createPatient',
+      method: 'post',
+      auth: 'user'
+    },
+    editPatient: {
+      types: [ PATIENT_EDIT_REQUEST, PATIENT_EDIT_SUCCESS, PATIENT_EDIT_FAILURE ],
+      endpoint: 'editPatient',
+      method: 'post',
+      auth: 'user'
+    },
+    editEmail: {
+      types: [ EMAIL_EDIT_REQUEST, EMAIL_EDIT_SUCCESS, EMAIL_EDIT_FAILURE ],
+      endpoint: 'changeEmail',
+      method: 'post',
+      auth: 'user'
+    },
+    editMobile: {
+      types: [ MOBILE_EDIT_REQUEST, MOBILE_EDIT_SUCCESS, MOBILE_EDIT_FAILURE ],
+      endpoint: 'changeMobileNumber',
       method: 'post',
       auth: 'user'
     },
@@ -264,12 +318,36 @@ export function destroyUser() {
   }
 }
 
+export function editClient(params) {
+  return fetch('editClient', params);
+}
+
 export function getPatients(params) {
   return fetch('getPatients', params);
 }
 
+export function getPatient(params) {
+  return fetch('getPatient', params);
+}
+
 export function createPatient(params) {
   return fetch('createPatient', params);
+}
+
+export function editPatient(params) {
+  return fetch('editPatient', params);
+}
+
+export function editEmail(params) {
+  return fetch('editEmail', params);
+}
+
+export function editMobile(params) {
+  return fetch('editMobile', params);
+}
+
+export function verifyMobile(params) {
+  return fetch('verifyMobile', params);
 }
 
 export function getSessions(params) {

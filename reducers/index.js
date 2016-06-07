@@ -153,6 +153,12 @@ const patients = (state = {
         ids: ids,
         lastUpdated: action.response && action.response.receivedAt
       })
+    case ActionTypes.PATIENT_SUCCESS:
+      if (action.response && action.response.patient && action.response.patient.id && state.data[action.response.patient.id]) {
+        let newState = Object.assign({}, state)
+        newState.data[action.response.patient.id] = action.response.patient
+        return newState
+      }
     default:
       return state
   }

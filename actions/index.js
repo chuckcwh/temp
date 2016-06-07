@@ -467,6 +467,8 @@ export const SHOW_MODAL_VERIFYBOOKING = 'SHOW_MODAL_VERIFYBOOKING'
 export const HIDE_MODAL_VERIFYBOOKING = 'HIDE_MODAL_VERIFYBOOKING'
 export const SHOW_MODAL_RESENDVERIFYBOOKING = 'SHOW_MODAL_RESENDVERIFYBOOKING'
 export const HIDE_MODAL_RESENDVERIFYBOOKING = 'HIDE_MODAL_RESENDVERIFYBOOKING'
+export const SHOW_INLINE_FORM = 'SHOW_INLINE_FORM'
+export const HIDE_INLINE_FORM = 'HIDE_INLINE_FORM'
 
 export function showAlertPopup(message) {
   return {
@@ -547,6 +549,23 @@ export function showResendVerifyBookingPopup(bookingId) {
 export function hideResendVerifyBookingPopup() {
   return {
     type: HIDE_MODAL_RESENDVERIFYBOOKING
+  }
+}
+
+export function showInlineForm(params) {
+  return {
+    type: SHOW_INLINE_FORM,
+    name: params.name,
+    inputs: params.inputs,
+    ok: params.ok,
+    cancel: params.cancel,
+    validate: params.validate
+  }
+}
+
+export function hideInlineForm() {
+  return {
+    type: HIDE_INLINE_FORM
   }
 }
 

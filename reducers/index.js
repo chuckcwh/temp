@@ -254,6 +254,23 @@ const postStatus = (state = 'confirmation', action) => {
   }
 }
 
+const inlineForm = (state = null, action) => {
+  switch (action.type) {
+    case ActionTypes.SHOW_INLINE_FORM:
+      return {
+        name: action.name,
+        inputs: action.inputs,
+        ok: action.ok,
+        cancel: action.cancel,
+        validate: action.validate
+      }
+    case ActionTypes.HIDE_INLINE_FORM:
+      return null;
+    default:
+      return state;
+  }
+}
+
 // Updates error message to notify about the failed fetches.
 const errorMessage = (state = null, action) => {
   const { type, error } = action
@@ -281,6 +298,7 @@ const bookingApp = combineReducers({
   postStatus,
   order,
   modal,
+  inlineForm,
   errorMessage,
   form: form.normalize({
     bookingLocationForm: {
@@ -335,6 +353,34 @@ const bookingApp = combineReducers({
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
           if (action.source === 'bookingLocationUserPatientForm') {
+            return {
+              ...state,
+              dob: {
+                ...state.dob,
+                value: action.value
+              }
+            }
+          }
+          break;
+        case ActionTypes.GEOCODE_SUCCESS:
+          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+            return {
+              ...state,
+              address: {
+                ...state.address,
+                value: action.address
+              }
+            }
+          }
+          break;
+        default:
+          return state;
+      }
+    },
+    inlineForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'inlineForm') {
             return {
               ...state,
               dob: {

@@ -31,7 +31,7 @@ class Html extends Component {
         <div id="app" dangerouslySetInnerHTML={{__html: this.props.body}} />
         <GoogleAnalytics />
         <TawkTo />
-        <script src="https://maps.googleapis.com/maps/api/js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js" async defer></script>
         <Markup />
       </body>
       </html>

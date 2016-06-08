@@ -24,7 +24,7 @@ export default class Testimonials extends Component {
                         <polygon fill="#ff0000" points="60,0 120,30 120,90 60,120 0,90 0,30" />
                       </clipPath>
                     </g>
-                    <image clipPath="url(#hex-mask)" height="120" width="120" xlinkHref={require('./ho_qun_tea.png')} />
+                    <image clipPath="url(#hex-mask)" height="120" width="120" xlinkHref={require('../../assets/images/ho_qun_tea.jpg')} />
                   </svg>
                 </div>
               </div>
@@ -41,7 +41,7 @@ export default class Testimonials extends Component {
                         <polygon fill="#ff0000" points="60,0 120,30 120,90 60,120 0,90 0,30" />
                       </clipPath>
                     </g>
-                    <image clipPath="url(#hex-mask)" height="120" width="120" xlinkHref={require('./goh_chng_ying.png')} />
+                    <image clipPath="url(#hex-mask)" height="120" width="120" xlinkHref={require('../../assets/images/goh_chng_ying.jpg')} />
                   </svg>
                 </div>
               </div>
@@ -58,7 +58,7 @@ export default class Testimonials extends Component {
                         <polygon fill="#ff0000" points="60,0 120,30 120,90 60,120 0,90 0,30" />
                       </clipPath>
                     </g>
-                    <image clipPath="url(#hex-mask)" height="120" width="120" xlinkHref={require('./cindy_chng.png')} />
+                    <image clipPath="url(#hex-mask)" height="120" width="120" xlinkHref={require('../../assets/images/cindy_chng.jpg')} />
                   </svg>
                 </div>
               </div>

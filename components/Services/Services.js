@@ -25,7 +25,13 @@ class Services extends Component {
   }
 
   render() {
-    const { allServices } = this.props;
+    const { allServices, allServicesFetching } = this.props;
+    const { filter } = this.state;
+
+    const serviceTree = Util.appendAllServices(Util.parseCategories(allServices));
+    let serviceTreeHash = {};
+    serviceTree.map(category => { serviceTreeHash[category.name] = category });
+
     return (
       <div className="Services">
         <Container>
@@ -33,15 +39,16 @@ class Services extends Component {
             <h1 className="text-center">Services</h1>
           </div>
         </Container>
-        <Loader className="spinner" loaded={allServices.isFetching ? false : true}>
+        <Loader className="spinner" loaded={allServicesFetching ? false : true}>
           <div className="ServicesNav-wrapper">
             <Container>
               <ul className="ServicesNav">
               {
-                Util.SERVICES_CATEGORY_ORDER.map(category => {
+                serviceTree.map(category => {
+                  const { name } = category;
                   return (
-                    <li className="ServicesNav-item" key={category}>
-                      <a className={classNames('ServicesNav-link', (this.state.filter === category) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, category)}>{category}<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                    <li className="ServicesNav-item" key={name}>
+                      <a className={classNames('ServicesNav-link', (filter === name) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, name)}>{name}<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
                     </li>
                   );
                 })
@@ -53,13 +60,13 @@ class Services extends Component {
             <Container>
               <div className="ServicesBody">
                 {
-                  allServices.data && Util.subFilterServices(Util.filterServices(allServices.data, this.state.filter)).map((services) => {
+                  serviceTreeHash[filter].children.map(subType => {
                     return (
-                      <div key={services[0].subType}>
-                        <h3>{this.state.filter === Util.ALL_SERVICES ? services[0].category + ' > ' : ''}{services[0].subType}</h3>
+                      <div key={subType.children[0].category + subType.name}>
+                        <h3>{this.state.filter === Util.ALL_SERVICES ? subType.children[0].category + ' > ' : ''}{subType.name}</h3>
                         <Accordion activeItems={-1}>
                           {
-                            services.map((service) => {
+                            subType.children.map((service) => {
                               return (
                                 <AccordionItem title={service.name} key={service.id}>
                                   <div className="ServicesItem">
@@ -106,7 +113,8 @@ class Services extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allServices: state.allServices
+    allServices: state.allServices.data,
+    allServicesFetching: state.allServices.isFetching
   }
 }
 

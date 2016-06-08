@@ -1,4 +1,6 @@
 import moment from 'moment';
+import uniqBy from 'lodash/uniqBy';
+import sortBy from 'lodash/sortBy';
 
 export const PAGE_ORDERS = [
   '',
@@ -63,28 +65,60 @@ export function getCookies() {
   }
 }
 
-export function filterServices(services, filter) {
-  return Object.values(services).filter(function(service) {
-    if (filter === ALL_SERVICES) return true;
-    return service.category === filter;
-  }).sort(function(a, b) {
-    return a.name.localeCompare(b.name);
-  });
+//
+// Output
+// 
+// [{
+//   name: CATEGORY_1,
+//   children: [{
+//     name: SUB_CATEGORY_1,
+//     children: [{
+//       id: SERVICE_ID_1,
+//       ...service
+//     }]
+//   }]
+// }]
+export function parseCategories(services) {
+  if (!services) return [];
+  return parseCategoriesLevel(Object.values(services), 0);
 }
 
-export function subFilterServices(services) {
-  var hash = {}, arr = [];
-  services.forEach(service => {
-    if (hash[service.subType]) {
-      hash[service.subType].push(service);
-    } else {
-      hash[service.subType] = [service];
-    }
-  });
-  for (var subType in hash) {
-    arr.push(hash[subType]);
+function parseCategoriesLevel(services, index) {
+  const terms = ['category', 'subType', 'service'];
+  let hash = {};
+  if (index === 2) {
+    services.sort((a, b) => {
+      return a[terms[index]+'Order'] - b[terms[index]+'Order'];
+    });
+    return services;
   }
-  return arr;
+  services.forEach((service, i) => {
+    if (!hash[service[terms[index]]]) {
+      hash[service[terms[index]]] = [];
+    }
+    hash[service[terms[index]]].push(service);
+  });
+  let output = [];
+  for (var i in hash) {
+    output.push({ name: i, order: hash[i][0][terms[index]+'Order'], children: parseCategoriesLevel(hash[i], index+1) });
+  }
+  output.sort((a, b) => {
+    return a.order - b.order;
+  });
+  return output;
+}
+
+export function appendAllServices(tree) {
+  let t = {
+    name: ALL_SERVICES,
+    children: []
+  }
+  for (var i in tree) {
+    t.children = t.children.concat(tree[i].children);
+  }
+  tree.unshift(t);
+
+  return tree;
 }
 
 export function calcRate(session, promo, sid) {
@@ -131,8 +165,9 @@ const util = {
 
   ALL_SERVICES: ALL_SERVICES,
   SERVICES_CATEGORY_ORDER: SERVICES_CATEGORY_ORDER,
-  filterServices: filterServices,
-  subFilterServices: subFilterServices,
+
+  parseCategories: parseCategories,
+  appendAllServices: appendAllServices,
 
   calcRate: calcRate
 };

@@ -1,5 +1,4 @@
 import moment from 'moment';
-import uniqBy from 'lodash/uniqBy';
 import sortBy from 'lodash/sortBy';
 
 export const PAGE_ORDERS = [
@@ -85,26 +84,24 @@ export function parseCategories(services) {
 
 function parseCategoriesLevel(services, index) {
   const terms = ['category', 'subType', 'service'];
+  let name = terms[index];
+  if (name === 'service') name = 'name';
   let hash = {};
   if (index === 2) {
-    services.sort((a, b) => {
-      return a[terms[index]+'Order'] - b[terms[index]+'Order'];
-    });
+    services = sortBy(services, [name+'Order', name]);
     return services;
   }
   services.forEach((service, i) => {
-    if (!hash[service[terms[index]]]) {
-      hash[service[terms[index]]] = [];
+    if (!hash[service[name]]) {
+      hash[service[name]] = [];
     }
-    hash[service[terms[index]]].push(service);
+    hash[service[name]].push(service);
   });
   let output = [];
   for (var i in hash) {
-    output.push({ name: i, order: hash[i][0][terms[index]+'Order'], children: parseCategoriesLevel(hash[i], index+1) });
+    output.push({ name: i, order: hash[i][0][name+'Order'], children: parseCategoriesLevel(hash[i], index+1) });
   }
-  output.sort((a, b) => {
-    return a.order - b.order;
-  });
+  output = sortBy(output, ['order', 'name'])
   return output;
 }
 

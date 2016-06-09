@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import Loader from 'react-loader';
 import './InlineForm.scss';
+import MultiSelect from '../MultiSelect';
 import { hideInlineForm } from '../../actions';
 
 class InlineForm extends Component {
@@ -20,6 +21,8 @@ class InlineForm extends Component {
       invalid,
       handleSubmit, 
       onCancel,
+      onBlur,
+      onChange,
       pristine,
       submitFailed,
       submitting,
@@ -57,6 +60,14 @@ class InlineForm extends Component {
                     </select>
                   </div>
                 );
+                break;
+              case 'multiselect':
+                inputField = (
+                  <MultiSelect 
+                    options={input.options}
+                    {...field}
+                  />
+                )
                 break;
             }
             return (
@@ -119,6 +130,8 @@ InlineForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
   onSave: PropTypes.func,
   onCancel: PropTypes.func,
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func,
   error: PropTypes.string,
   inputs: PropTypes.object.isRequired
 }

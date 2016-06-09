@@ -4,6 +4,10 @@ export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
 
+export const LANGUAGES_REQUEST = 'LANGUAGES_REQUEST'
+export const LANGUAGES_SUCCESS = 'LANGUAGES_SUCCESS'
+export const LANGUAGES_FAILURE = 'LANGUAGES_FAILURE'
+
 export const BOOKING_REQUEST = 'BOOKING_REQUEST'
 export const BOOKING_SUCCESS = 'BOOKING_SUCCESS'
 export const BOOKING_FAILURE = 'BOOKING_FAILURE'
@@ -106,6 +110,13 @@ function fetchAction(route) {
       method: 'get',
       auth: 'app',
       entity: 'allServices'
+    },
+    getLanguages: {
+      types: [ LANGUAGES_REQUEST, LANGUAGES_SUCCESS, LANGUAGES_FAILURE ],
+      endpoint: 'getLanguages',
+      method: 'get',
+      auth: 'app',
+      entity: 'languages'
     },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
@@ -272,12 +283,16 @@ function fetch(route, data) {
           [CALL_API]: fetchAction(route)
         })
       }
-    }
+    } else return new Promise((resolve) => resolve());
   }
 }
 
 export function fetchServices() {
   return fetch('getServices');
+}
+
+export function fetchLanguages() {
+  return fetch('getLanguages');
 }
 
 export function getBooking(params) {

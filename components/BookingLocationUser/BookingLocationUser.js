@@ -10,7 +10,7 @@ import Link from '../Link';
 import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
-import { fetchAddress, getPatients, createPatient, getPatient, getUser, editPatient, editClient, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
+import { fetchLanguages, fetchAddress, getPatients, createPatient, getPatient, getUser, editPatient, editClient, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import Util from '../../core/Util';
 
 class BookingLocationUser extends Component {
@@ -58,7 +58,7 @@ class BookingLocationUser extends Component {
         </div>
       );
     }
-    if (this.props.inlineForm && /^(patientName|patientGender|patientDob|patientRace|patientReligion|patientLocation)$/i.test(this.props.inlineForm.name)) {
+    if (this.props.inlineForm && /^(patientName|patientGender|patientDob|patientLanguages|patientRace|patientReligion|patientLocation)$/i.test(this.props.inlineForm.name)) {
       patientDetails = <InlineForm fetchAddress={this.props.fetchAddress} />;
     } else if (this.props.patients && this.state.patientId) {
       if (this.state.editingPatient) {
@@ -124,7 +124,9 @@ class BookingLocationUser extends Component {
                     <span key={language.id}>{language.name}</span>
                   );
                 })
-              }</div>
+              }
+                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientLanguages')}><img src={require('../pencil.png')} /></a>
+              </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Race</div>
@@ -320,6 +322,31 @@ class BookingLocationUser extends Component {
           ok: this._onClickSave.bind(this, 'patientName')
         });
         break;
+      case 'patientLanguages':
+        this.props.fetchLanguages().then(() => {
+          if (this.props.languages) {
+            this.props.showInlineForm({
+              name: 'patientLanguages',
+              inputs: {
+                languages: {
+                  label: 'Languages',
+                  type: 'multiselect',
+                  options: Object.values(this.props.languages).map((l) => { return { label: l.name, value: l.id } }),
+                  initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].languages.map(l => l.id).join(',')
+                }
+              },
+              validate: (values) => {
+                const errors = {};
+                if (!values.languages) {
+                  errors.languages = 'Required';
+                }
+                return errors;
+              },
+              ok: this._onClickSave.bind(this, 'patientLanguages')
+            });
+          }
+        });
+        break;
       case 'patientGender':
         this.props.showInlineForm({
           name: 'patientGender',
@@ -501,6 +528,18 @@ class BookingLocationUser extends Component {
             }
           }, (reason) => reject({ _error: reason }));
           break;
+        case 'patientLanguages':
+          this.props.editPatient({
+            pid: this.state.patientId,
+            languages: values.languages.split(',')
+          }).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              this.props.getPatient({ pid: this.state.patientId }).then(() => resolve());
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => reject({ _error: reason }));
+          break;
         case 'patientLocation':
           this.props.editPatient({
             pid: this.state.patientId,
@@ -514,7 +553,6 @@ class BookingLocationUser extends Component {
               reject({ _error: res.response.message });
             }
           }, (reason) => reject({ _error: reason }));
-          break;
           break;
         default:
           break;
@@ -651,6 +689,7 @@ class BookingLocationUser extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    languages: state.languages.data,
     lastPage: state.lastPage,
     order: state.order,
     user: state.user.data,
@@ -663,6 +702,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchLanguages: () => {
+      return dispatch(fetchLanguages());
+    },
     fetchAddress: (postalCode) => {
       return dispatch(fetchAddress(postalCode));
     },

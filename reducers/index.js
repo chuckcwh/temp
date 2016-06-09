@@ -44,6 +44,36 @@ const allServices = (state = {
   }
 }
 
+const languages = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  data: null,
+  ids: null
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.LANGUAGES_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false
+      })
+    case ActionTypes.LANGUAGES_SUCCESS:
+      let hash = {}, ids = []
+      action.response && action.response.languages.forEach((language) => {
+        hash[language.id] = language
+        ids.push(language.id)
+      })
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        data: hash,
+        ids: ids,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    default:
+      return state
+  }
+}
+
 const booking = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -293,6 +323,7 @@ const errorMessage = (state = null, action) => {
 const bookingApp = combineReducers({
   router,
   allServices,
+  languages,
   booking,
   caze,
   user,

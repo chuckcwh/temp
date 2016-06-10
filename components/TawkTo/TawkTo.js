@@ -5,6 +5,7 @@ const trackingCode = { __html:
   `(function(){` +
   `var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];` +
   `s1.async=true;` +
+  `s1.defer=true;` +
   `s1.src='https://embed.tawk.to/56c54a98d11175f079724e76/default';` +
   `s1.charset='UTF-8';` +
   `s1.setAttribute('crossorigin','*');` +

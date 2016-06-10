@@ -84,11 +84,11 @@ export function parseCategories(services) {
 
 function parseCategoriesLevel(services, index) {
   const terms = ['category', 'subType', 'service'];
-  let name = terms[index];
+  let name = terms[index], order = name + 'Order';
   if (name === 'service') name = 'name';
   let hash = {};
   if (index === 2) {
-    services = sortBy(services, [name+'Order', name]);
+    services = sortBy(services, [order, name]);
     return services;
   }
   services.forEach((service, i) => {
@@ -99,7 +99,7 @@ function parseCategoriesLevel(services, index) {
   });
   let output = [];
   for (var i in hash) {
-    output.push({ name: i, order: hash[i][0][name+'Order'], children: parseCategoriesLevel(hash[i], index+1) });
+    output.push({ name: i, order: hash[i][0][order], children: parseCategoriesLevel(hash[i], index+1) });
   }
   output = sortBy(output, ['order', 'name'])
   return output;

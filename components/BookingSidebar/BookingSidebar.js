@@ -12,9 +12,9 @@ class BookingSidebar extends Component {
 
   render() {
     const { allServices, order } = this.props;
-    var service, patientName, location, dates, timeslots, sum;
-    if (allServices && allServices.items && order && order.service) {
-      service = allServices.items[order.service].name;
+    var service, patientName, location, dates, timeslots, sessions, sum;
+    if (allServices && allServices.data && order && order.service) {
+      service = allServices.data[order.service].name;
     }
     if (order && order.patient && order.patient.fullName) {
       patientName = order.patient.fullName;
@@ -29,7 +29,10 @@ class BookingSidebar extends Component {
     if (order && order.timeslots) {
       timeslots = order.timeslots;
     }
-    if (this.props.location.pathname.indexOf('booking3c') > -1 && order && typeof order.sum === 'number') {
+    if (this.props.location.pathname.indexOf('booking4') > -1 && order && order.sessions) {
+      sessions = order.sessions;
+    }
+    if ((this.props.location.pathname.indexOf('booking3c') > -1 || this.props.location.pathname.indexOf('booking4') > -1) && order && typeof order.sum === 'number') {
       sum = order.sum;
     }
     return (
@@ -89,7 +92,15 @@ class BookingSidebar extends Component {
           </a>
           <a href="/booking3c" onClick={Link.handleClick}>
             <div className="BookingSidebarSlots">
-              <div className="BookingSidebarItem"></div>
+              <div className="BookingSidebarItem">
+              {
+                sessions && sessions.map((session, index) => {
+                  return (
+                    <div key={index}>{session.date && moment(session.date, 'YYYY-MM-DD').format('DD MMM')} - {session.time}</div>
+                  );
+                })
+              }
+              </div>
             </div>
           </a>
         </div>

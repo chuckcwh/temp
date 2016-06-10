@@ -17,7 +17,7 @@ const router = (state = {}, action) => {
 const allServices = (state = {
   isFetching: false,
   didInvalidate: false,
-  items: null,
+  data: null,
   ids: null
 }, action) => {
   switch (action.type) {
@@ -35,7 +35,37 @@ const allServices = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        items: hash,
+        data: hash,
+        ids: ids,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    default:
+      return state
+  }
+}
+
+const languages = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  data: null,
+  ids: null
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.LANGUAGES_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false
+      })
+    case ActionTypes.LANGUAGES_SUCCESS:
+      let hash = {}, ids = []
+      action.response && action.response.languages.forEach((language) => {
+        hash[language.id] = language
+        ids.push(language.id)
+      })
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        data: hash,
         ids: ids,
         lastUpdated: action.response && action.response.receivedAt
       })
@@ -47,7 +77,7 @@ const allServices = (state = {
 const booking = (state = {
   isFetching: false,
   didInvalidate: true,
-  items: null
+  data: null
 }, action) => {
   switch (action.type) {
     case ActionTypes.BOOKING_REQUEST:
@@ -61,13 +91,13 @@ const booking = (state = {
     case ActionTypes.BOOKING_EDIT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        items: action.response && action.response.booking,
+        data: action.response && action.response.booking,
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.BOOKING_DESTROY:
       return Object.assign({}, state, {
         isFetching: false,
-        items: null,
+        data: null,
         lastUpdated: undefined
       })
     default:
@@ -153,6 +183,12 @@ const patients = (state = {
         ids: ids,
         lastUpdated: action.response && action.response.receivedAt
       })
+    case ActionTypes.PATIENT_SUCCESS:
+      if (action.response && action.response.patient && action.response.patient.id && state.data[action.response.patient.id]) {
+        let newState = Object.assign({}, state)
+        newState.data[action.response.patient.id] = action.response.patient
+        return newState
+      }
     default:
       return state
   }
@@ -254,6 +290,23 @@ const postStatus = (state = 'confirmation', action) => {
   }
 }
 
+const inlineForm = (state = null, action) => {
+  switch (action.type) {
+    case ActionTypes.SHOW_INLINE_FORM:
+      return {
+        name: action.name,
+        inputs: action.inputs,
+        ok: action.ok,
+        cancel: action.cancel,
+        validate: action.validate
+      }
+    case ActionTypes.HIDE_INLINE_FORM:
+      return null;
+    default:
+      return state;
+  }
+}
+
 // Updates error message to notify about the failed fetches.
 const errorMessage = (state = null, action) => {
   const { type, error } = action
@@ -270,6 +323,7 @@ const errorMessage = (state = null, action) => {
 const bookingApp = combineReducers({
   router,
   allServices,
+  languages,
   booking,
   caze,
   user,
@@ -281,18 +335,26 @@ const bookingApp = combineReducers({
   postStatus,
   order,
   modal,
+  inlineForm,
   errorMessage,
   form: form.normalize({
     bookingLocationForm: {
       patient_firstName: (value, previousValue, allValues) => {
         if (allValues.isPatient) {
           return allValues.client_firstName;
-        }
+        } else return value;
       },
       patient_lastName: (value, previousValue, allValues) => {
         if (allValues.isPatient) {
           return allValues.client_lastName;
-        }
+        } else return value;
+      }
+    },
+    bookingLocationUserPatientForm: {
+      fullName: (value, previousValue, allValues) => {
+        if (allValues.isPatient) {
+          return allValues.userName;
+        } else return value;
       }
     }
   }).plugin({
@@ -308,6 +370,7 @@ const bookingApp = combineReducers({
               }
             }
           }
+          break;
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
             return {
@@ -318,6 +381,63 @@ const bookingApp = combineReducers({
               }
             }
           }
+          break;
+        default:
+          return state;
+      }
+    },
+    bookingLocationUserPatientForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'bookingLocationUserPatientForm') {
+            return {
+              ...state,
+              dob: {
+                ...state.dob,
+                value: action.value
+              }
+            }
+          }
+          break;
+        case ActionTypes.GEOCODE_SUCCESS:
+          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+            return {
+              ...state,
+              address: {
+                ...state.address,
+                value: action.address
+              }
+            }
+          }
+          break;
+        default:
+          return state;
+      }
+    },
+    inlineForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'inlineForm') {
+            return {
+              ...state,
+              dob: {
+                ...state.dob,
+                value: action.value
+              }
+            }
+          }
+          break;
+        case ActionTypes.GEOCODE_SUCCESS:
+          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+            return {
+              ...state,
+              address: {
+                ...state.address,
+                value: action.address
+              }
+            }
+          }
+          break;
         default:
           return state;
       }

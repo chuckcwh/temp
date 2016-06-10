@@ -38,7 +38,7 @@ class VerifyBookingPopup extends Component {
                   <input ref={(c) => this._startInput = c} className="PinInput" type="password" name="pin" valueLink={linkState(this, 'pin')} placeholder="Enter PIN" required />
                   <div className="Account-container-item-middle">
                     <div className={this.state.error ? '' : 'hidden'}><span className="error">Wrong PIN.</span></div>
-                    <div><a href="#" onClick={this._onClickNoPin.bind(this)}>Never receive PIN?</a></div>
+                    <div><a href="#" onClick={this._onClickNoPin.bind(this)}>Resend PIN</a></div>
                     {resentText}
                   </div>
                   <button className="btn btn-primary" onClick={this._onClickSubmit.bind(this)}>Submit</button>

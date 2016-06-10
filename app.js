@@ -10,14 +10,9 @@ import Layout from './components/Layout';
 import { setRouter } from './actions';
 import bookingApp from './reducers';
 import api from './middleware/api';
+import configureStore from './store/configureStore'
 
-let store = createStore(
-  bookingApp,
-  applyMiddleware(
-    thunkMiddleware,
-    api
-  )
-);
+const store = configureStore();
 
 const routes = {}; // Auto-generated on build. See tools/lib/routes-loader.js
 

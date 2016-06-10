@@ -4,6 +4,10 @@ export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
 
+export const LANGUAGES_REQUEST = 'LANGUAGES_REQUEST'
+export const LANGUAGES_SUCCESS = 'LANGUAGES_SUCCESS'
+export const LANGUAGES_FAILURE = 'LANGUAGES_FAILURE'
+
 export const BOOKING_REQUEST = 'BOOKING_REQUEST'
 export const BOOKING_SUCCESS = 'BOOKING_SUCCESS'
 export const BOOKING_FAILURE = 'BOOKING_FAILURE'
@@ -30,17 +34,41 @@ export const USER_SUCCESS = 'USER_SUCCESS'
 export const USER_FAILURE = 'USER_FAILURE'
 export const USER_DESTROY = 'USER_DESTROY'
 
+export const CLIENT_EDIT_REQUEST = 'CLIENT_EDIT_REQUEST'
+export const CLIENT_EDIT_SUCCESS = 'CLIENT_EDIT_SUCCESS'
+export const CLIENT_EDIT_FAILURE = 'CLIENT_EDIT_FAILURE'
+
 export const PATIENTS_REQUEST = 'PATIENTS_REQUEST'
 export const PATIENTS_SUCCESS = 'PATIENTS_SUCCESS'
 export const PATIENTS_FAILURE = 'PATIENTS_FAILURE'
+
+export const PATIENT_REQUEST = 'PATIENT_REQUEST'
+export const PATIENT_SUCCESS = 'PATIENT_SUCCESS'
+export const PATIENT_FAILURE = 'PATIENT_FAILURE'
 
 export const PATIENT_CREATE_REQUEST = 'PATIENT_CREATE_REQUEST'
 export const PATIENT_CREATE_SUCCESS = 'PATIENT_CREATE_SUCCESS'
 export const PATIENT_CREATE_FAILURE = 'PATIENT_CREATE_FAILURE'
 
+export const PATIENT_EDIT_REQUEST = 'PATIENT_EDIT_REQUEST'
+export const PATIENT_EDIT_SUCCESS = 'PATIENT_EDIT_SUCCESS'
+export const PATIENT_EDIT_FAILURE = 'PATIENT_EDIT_FAILURE'
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'LOGIN_FAILURE'
+
+export const EMAIL_EDIT_REQUEST = 'EMAIL_EDIT_REQUEST'
+export const EMAIL_EDIT_SUCCESS = 'EMAIL_EDIT_SUCCESS'
+export const EMAIL_EDIT_FAILURE = 'EMAIL_EDIT_FAILURE'
+
+export const MOBILE_EDIT_REQUEST = 'MOBILE_EDIT_REQUEST'
+export const MOBILE_EDIT_SUCCESS = 'MOBILE_EDIT_SUCCESS'
+export const MOBILE_EDIT_FAILURE = 'MOBILE_EDIT_FAILURE'
+
+export const MOBILE_VERIFY_REQUEST = 'MOBILE_VERIFY_REQUEST'
+export const MOBILE_VERIFY_SUCCESS = 'MOBILE_VERIFY_SUCCESS'
+export const MOBILE_VERIFY_FAILURE = 'MOBILE_VERIFY_FAILURE'
 
 export const SESSIONS_REQUEST = 'SESSIONS_REQUEST'
 export const SESSIONS_SUCCESS = 'SESSIONS_SUCCESS'
@@ -80,7 +108,15 @@ function fetchAction(route) {
       types: [ SERVICES_REQUEST, SERVICES_SUCCESS, SERVICES_FAILURE ],
       endpoint: 'getServices',
       method: 'get',
-      auth: 'app'
+      auth: 'app',
+      entity: 'allServices'
+    },
+    getLanguages: {
+      types: [ LANGUAGES_REQUEST, LANGUAGES_SUCCESS, LANGUAGES_FAILURE ],
+      endpoint: 'getLanguages',
+      method: 'get',
+      auth: 'app',
+      entity: 'languages'
     },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
@@ -130,15 +166,45 @@ function fetchAction(route) {
       method: 'get',
       auth: 'userParams'
     },
+    editClient: {
+      types: [ CLIENT_EDIT_REQUEST, CLIENT_EDIT_SUCCESS, CLIENT_EDIT_FAILURE ],
+      endpoint: 'editClient',
+      method: 'post',
+      auth: 'user'
+    },
     getPatients: {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
       endpoint: 'getPatients',
       method: 'get',
       auth: 'user'
     },
+    getPatient: {
+      types: [ PATIENT_REQUEST, PATIENT_SUCCESS, PATIENT_FAILURE ],
+      endpoint: 'getPatient',
+      method: 'get',
+      auth: 'user'
+    },
     createPatient: {
       types: [ PATIENT_CREATE_REQUEST, PATIENT_CREATE_SUCCESS, PATIENT_CREATE_FAILURE ],
       endpoint: 'createPatient',
+      method: 'post',
+      auth: 'user'
+    },
+    editPatient: {
+      types: [ PATIENT_EDIT_REQUEST, PATIENT_EDIT_SUCCESS, PATIENT_EDIT_FAILURE ],
+      endpoint: 'editPatient',
+      method: 'post',
+      auth: 'user'
+    },
+    editEmail: {
+      types: [ EMAIL_EDIT_REQUEST, EMAIL_EDIT_SUCCESS, EMAIL_EDIT_FAILURE ],
+      endpoint: 'changeEmail',
+      method: 'post',
+      auth: 'user'
+    },
+    editMobile: {
+      types: [ MOBILE_EDIT_REQUEST, MOBILE_EDIT_SUCCESS, MOBILE_EDIT_FAILURE ],
+      endpoint: 'changeMobileNumber',
       method: 'post',
       auth: 'user'
     },
@@ -193,9 +259,9 @@ function fetchAction(route) {
   }[route]
 }
 
-function shouldFetch(state, entity) {
-  const obj = state[entity]
-  if (!obj || !(obj.items)) {
+function shouldFetch(state, action) {
+  const obj = action.entity && state[action.entity]
+  if (!(obj && obj.data)) {
     return true
   }
   if (obj.isFetching) {
@@ -206,7 +272,7 @@ function shouldFetch(state, entity) {
 
 function fetch(route, data) {
   return (dispatch, getState) => {
-    if (shouldFetch(getState(), route)) {
+    if (shouldFetch(getState(), fetchAction(route))) {
       if (data) {
         return dispatch({
           data,
@@ -217,12 +283,16 @@ function fetch(route, data) {
           [CALL_API]: fetchAction(route)
         })
       }
-    }
+    } else return new Promise((resolve) => resolve());
   }
 }
 
 export function fetchServices() {
   return fetch('getServices');
+}
+
+export function fetchLanguages() {
+  return fetch('getLanguages');
 }
 
 export function getBooking(params) {
@@ -263,12 +333,36 @@ export function destroyUser() {
   }
 }
 
+export function editClient(params) {
+  return fetch('editClient', params);
+}
+
 export function getPatients(params) {
   return fetch('getPatients', params);
 }
 
+export function getPatient(params) {
+  return fetch('getPatient', params);
+}
+
 export function createPatient(params) {
   return fetch('createPatient', params);
+}
+
+export function editPatient(params) {
+  return fetch('editPatient', params);
+}
+
+export function editEmail(params) {
+  return fetch('editEmail', params);
+}
+
+export function editMobile(params) {
+  return fetch('editMobile', params);
+}
+
+export function verifyMobile(params) {
+  return fetch('verifyMobile', params);
 }
 
 export function getSessions(params) {
@@ -466,6 +560,8 @@ export const SHOW_MODAL_VERIFYBOOKING = 'SHOW_MODAL_VERIFYBOOKING'
 export const HIDE_MODAL_VERIFYBOOKING = 'HIDE_MODAL_VERIFYBOOKING'
 export const SHOW_MODAL_RESENDVERIFYBOOKING = 'SHOW_MODAL_RESENDVERIFYBOOKING'
 export const HIDE_MODAL_RESENDVERIFYBOOKING = 'HIDE_MODAL_RESENDVERIFYBOOKING'
+export const SHOW_INLINE_FORM = 'SHOW_INLINE_FORM'
+export const HIDE_INLINE_FORM = 'HIDE_INLINE_FORM'
 
 export function showAlertPopup(message) {
   return {
@@ -546,6 +642,23 @@ export function showResendVerifyBookingPopup(bookingId) {
 export function hideResendVerifyBookingPopup() {
   return {
     type: HIDE_MODAL_RESENDVERIFYBOOKING
+  }
+}
+
+export function showInlineForm(params) {
+  return {
+    type: SHOW_INLINE_FORM,
+    name: params.name,
+    inputs: params.inputs,
+    ok: params.ok,
+    cancel: params.cancel,
+    validate: params.validate
+  }
+}
+
+export function hideInlineForm() {
+  return {
+    type: HIDE_INLINE_FORM
   }
 }
 

@@ -145,7 +145,7 @@ class Account extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
-    booking: state.booking.items,
+    booking: state.booking.data,
     user: state.user,
     patient: state.patient
   }

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import sortBy from 'lodash/sortBy';
 
 export const PAGE_ORDERS = [
   '',
@@ -8,6 +9,7 @@ export const PAGE_ORDERS = [
   'booking3b',
   'booking3c',
   'booking4',
+  'booking5',
   'booking-confirmation',
   'booking-payment'
 ];
@@ -39,6 +41,7 @@ export function isNavigationAllowed(path, lastPage) {
   if (path.charAt(0) === '/') {
     path = path.substring(1);
   }
+  if (path === 'booking5' && lastPage === 'booking3c') return true;
   return (PAGE_ORDERS.indexOf(lastPage) + 1) >= PAGE_ORDERS.indexOf(path);
 }
 
@@ -61,28 +64,58 @@ export function getCookies() {
   }
 }
 
-export function filterServices(services, filter) {
-  return Object.values(services).filter(function(service) {
-    if (filter === ALL_SERVICES) return true;
-    return service.category === filter;
-  }).sort(function(a, b) {
-    return a.name.localeCompare(b.name);
-  });
+//
+// Output
+// 
+// [{
+//   name: CATEGORY_1,
+//   children: [{
+//     name: SUB_CATEGORY_1,
+//     children: [{
+//       id: SERVICE_ID_1,
+//       ...service
+//     }]
+//   }]
+// }]
+export function parseCategories(services) {
+  if (!services) return [];
+  return parseCategoriesLevel(Object.values(services), 0);
 }
 
-export function subFilterServices(services) {
-  var hash = {}, arr = [];
-  services.forEach(service => {
-    if (hash[service.subType]) {
-      hash[service.subType].push(service);
-    } else {
-      hash[service.subType] = [service];
-    }
-  });
-  for (var subType in hash) {
-    arr.push(hash[subType]);
+function parseCategoriesLevel(services, index) {
+  const terms = ['category', 'subType', 'service'];
+  let name = terms[index], order = name + 'Order';
+  if (name === 'service') name = 'name';
+  let hash = {};
+  if (index === 2) {
+    services = sortBy(services, [order, name]);
+    return services;
   }
-  return arr;
+  services.forEach((service, i) => {
+    if (!hash[service[name]]) {
+      hash[service[name]] = [];
+    }
+    hash[service[name]].push(service);
+  });
+  let output = [];
+  for (var i in hash) {
+    output.push({ name: i, order: hash[i][0][order], children: parseCategoriesLevel(hash[i], index+1) });
+  }
+  output = sortBy(output, ['order', 'name'])
+  return output;
+}
+
+export function appendAllServices(tree) {
+  let t = {
+    name: ALL_SERVICES,
+    children: []
+  }
+  for (var i in tree) {
+    t.children = t.children.concat(tree[i].children);
+  }
+  tree.unshift(t);
+
+  return tree;
 }
 
 export function calcRate(session, promo, sid) {
@@ -99,7 +132,7 @@ export function calcRate(session, promo, sid) {
       !promo.dates.some(elem =>
         elem.type === 'Void' &&
         elem.status === 'Active' &&
-        !moment(session.date).isSame(moment(elem.dateTimeStart.substr(0, 10)))
+        moment(session.date).isSame(moment(elem.dateTimeStart.substr(0, 10)))
       );
     if (isPromoApplicable) {
       return parseFloat(session.price) * (100 - parseFloat(promo.discountedRate)) / 100;
@@ -129,8 +162,9 @@ const util = {
 
   ALL_SERVICES: ALL_SERVICES,
   SERVICES_CATEGORY_ORDER: SERVICES_CATEGORY_ORDER,
-  filterServices: filterServices,
-  subFilterServices: subFilterServices,
+
+  parseCategories: parseCategories,
+  appendAllServices: appendAllServices,
 
   calcRate: calcRate
 };

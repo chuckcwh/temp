@@ -208,7 +208,7 @@ export default class BookingDetails extends Component {
                 <div className="TableRowItem2">$ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}</div>
                 <div className="TableRowItem2">{session.status}</div>
                 <div className="TableRowItem1">
-                  {session.status === 'Active' && <CloseButton onCloseClicked={this._onCancelSession.bind(this, session)} />}
+                  {session.status === 'Active' && moment(session.dateTimeStart).isAfter(moment(), 'day') && <CloseButton onCloseClicked={this._onCancelSession.bind(this, session)} />}
                 </div>
               </div>
             );
@@ -534,7 +534,7 @@ export default class BookingDetails extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
-    booking: state.booking.items,
+    booking: state.booking.data,
     bookingFetching: state.booking.isFetching
   }
 }

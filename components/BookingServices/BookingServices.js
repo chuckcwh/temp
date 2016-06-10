@@ -47,6 +47,10 @@ class BookingServices extends Component {
     const { allServices, allServicesFetching } = this.props;
     const { filter, selectedService } = this.state;
 
+    const serviceTree = Util.appendAllServices(Util.parseCategories(allServices));
+    let serviceTreeHash = {};
+    serviceTree.map(category => { serviceTreeHash[category.name] = category });
+    
     return (
       <div className="BookingServices">
         <Loader className="spinner" loaded={allServicesFetching ? false : true}>
@@ -54,10 +58,11 @@ class BookingServices extends Component {
             <Container>
               <ul className="BookingServicesNav">
               {
-                Util.SERVICES_CATEGORY_ORDER.map(category => {
+                serviceTree.map(category => {
+                  const { name } = category;
                   return (
-                    <li className="BookingServicesNav-item" key={category}>
-                      <a className={classNames('BookingServicesNav-link', (filter === category) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, category)}>{category}<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                    <li className="BookingServicesNav-item" key={name}>
+                      <a className={classNames('BookingServicesNav-link', (filter === name) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, name)}>{name}<span className="BookingServicesNav-arrow"><div className="nav-caret"></div></span></a>
                     </li>
                   );
                 })
@@ -70,27 +75,27 @@ class BookingServices extends Component {
               <form ref={(c) => this._bookingServicesForm = c}>
                 <div className="BookingServicesBody">
                 {
-                  allServices && Util.subFilterServices(Util.filterServices(allServices, filter)).map(services => {
+                  serviceTreeHash[filter].children.map(subType => {
                     var header;
                     if (filter === Util.ALL_SERVICES) {
                       header = (
-                        <h3><a href="#" onClick={this._onClickFilter.bind(this, services[0].category)}>{services[0].category}</a> &gt; {services[0].subType}</h3>
+                        <h3><a href="#" onClick={this._onClickFilter.bind(this, subType.children[0].category)}>{subType.children[0].category}</a> &gt; {subType.name}</h3>
                       );
                     } else {
                       header = (
-                        <h3>{services[0].subType}</h3>
+                        <h3>{subType.name}</h3>
                       );
                     }
                     return (
-                      <div className="BookingServicesSection" key={services[0].subType}>
+                      <div className="BookingServicesSection" key={subType.children[0].category + subType.name}>
                         {header}
                         {
-                          services.map((service, index) => {
+                          subType.children.map(service => {
                             var id = "BookingServicesRadio" + service.id;
                             return (
                               <div className={classNames('BookingServicesItem', (service.id === selectedService) ? 'active' : '')} key={service.id}>
-                                <input className="BookingServicesRadio" type="radio" id={id} name="service" value={service.id} checked={service.id === selectedService} onChange={this._onSelect.bind(this)} required />
-                                <label className="BookingServicesRadioLabel" htmlFor={id}>
+                                <input className="BookingServicesRadio" type="radio" id={service.id} name="service" value={service.id} checked={service.id === selectedService} onChange={this._onSelect.bind(this)} required />
+                                <label className="BookingServicesRadioLabel" htmlFor={service.id}>
                                   <span><span></span></span><span>{service.name}</span>
                                 </label>
                                 <div className="BookingServicesItemDescription">
@@ -151,7 +156,7 @@ const mapStateToProps = (state) => {
     location: state.router && state.router.location,
     lastPage: state.lastPage,
     order: state.order,
-    allServices: state.allServices.items,
+    allServices: state.allServices.data,
     allServicesFetching: state.allServices.isFetching
   }
 }

@@ -1,0 +1,48 @@
+@import '../variables.scss';
+
+@import 'react-select/dist/react-select.css';
+
+.MultiSelect {
+  .Select-control {
+    border-radius: 0;
+
+    .Select-placeholder {
+      margin-left: 15px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    .Select-item {
+      background-color: #fff;
+      border: 1px solid $border-color;
+      color: $text-color;
+      margin-left: 15px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+
+      & + & {
+        margin-left: 5px;
+      }
+
+      &-icon {
+        border-right: 1px solid $border-color;
+        font-size: 21px;
+      }
+    }
+
+    .Select-input {
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+
+    .Select-clear-zone {
+      .Select-clear {
+        font-size: 21px;
+      }
+    }
+
+    .Select-arrow-zone {
+      padding-right: 15px;
+    }
+  }
+}

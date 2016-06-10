@@ -10,6 +10,7 @@ import BookingDateTime from '../BookingDateTime';
 import BookingDate from '../BookingDate';
 import BookingTime from '../BookingTime';
 import BookingResults from '../BookingResults';
+import BookingPatient from '../BookingPatient';
 import BookingComplete from '../BookingComplete';
 import BookingPostNavigation from '../BookingPostNavigation';
 import BookingConfirmation from '../BookingConfirmation';
@@ -140,6 +141,14 @@ class BookingApp extends Component {
         </div>;
     } else if (location && location.pathname === '/booking4') {
       component =
+        <div>
+          <BookingNavigation />
+          <BookingPatient>
+            <BookingSidebar />
+          </BookingPatient>
+        </div>;
+    } else if (location && location.pathname === '/booking5') {
+      component =
         <BookingComplete />;
     } else if (location && location.pathname === '/booking-confirmation' && postStatus === 'confirmation') {
       component =
@@ -203,7 +212,7 @@ class BookingApp extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
-    booking: state.booking.items,
+    booking: state.booking.data,
     bookingFetching: state.booking.isFetching,
     allServices: state.allServices,
     postStatus: state.postStatus,

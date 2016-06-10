@@ -29,8 +29,12 @@ class LoginPopup extends Component {
             <div className="Account-login Account-container-item">
               <form id="AccountLoginForm" ref={(c) => this._accountLoginForm = c} autoComplete="off">
                 <h3>eBeeCare Client Login</h3>
-                <input className="EmailInput" type="email" name="email" ref={(c) => this._startInput = c} valueLink={linkState(this, 'email')} placeholder="Enter Email" required />
-                <input className="PasswordInput" type="password" name="password" valueLink={linkState(this, 'password')} placeholder="Enter Password" required />
+                <div className="IconInput EmailInput">
+                  <input type="email" name="email" ref={(c) => this._startInput = c} valueLink={linkState(this, 'email')} placeholder="Enter Email" required />
+                </div>
+                <div className="IconInput PasswordInput">
+                  <input type="password" name="password" valueLink={linkState(this, 'password')} placeholder="Enter Password" required />
+                </div>
                 <div className="Account-container-item-middle">
                   <div className={this.state.error ? '' : 'hidden'}><span className="error">Failed to login.</span></div>
                 </div>

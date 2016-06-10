@@ -69,8 +69,12 @@ class Account extends Component {
             <Loader className="spinner" loaded={(!(this.props.bookingFetching) && this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
               <form ref={(c) => this._accountManageBookingForm = c}>
                 <h3>Have Guest Booking ID?</h3>
-                <input className="BookingIdInput" type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />
-                <input className="EmailInput" type="email" valueLink={linkState(this, 'email')} placeholder="Enter Email*" required />
+                <div className="IconInput BookingIdInput">
+                  <input type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />
+                </div>
+                <div className="IconInput EmailInput">
+                  <input type="email" valueLink={linkState(this, 'email')} placeholder="Enter Email*" required />
+                </div>
                 <div className="Account-container-item-middle">
                   <div className="LoginInsteadContainer">
                     Have account? <a href="https://app.ebeecare.com/login/" className="LoginInsteadLink">Login instead</a>
@@ -88,7 +92,9 @@ class Account extends Component {
           <div className="Account-forgot Account-container-item">
             <form ref={(c) => this._accountForgotPasswordForm = c}>
               <h3>Forgot Password?</h3>
-              <input className="EmailInput" type="email" placeholder="Enter Email*" />
+              <div className="IconInput EmailInput">
+                <input type="email" placeholder="Enter Email*" />
+              </div>
               <div className="Account-container-item-middle">
                 <div className="ForgotPasswordContainer">
                   <a href="/manage-booking" className="ForgotPasswordLink" onClick={Link.handleClick}>Remembered Password?</a>

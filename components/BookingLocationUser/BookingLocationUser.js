@@ -58,8 +58,15 @@ class BookingLocationUser extends Component {
         </div>
       );
     }
-    if (this.props.inlineForm && /^(patientName|patientGender|patientDob|patientLanguages|patientRace|patientReligion|patientLocation)$/i.test(this.props.inlineForm.name)) {
+    if (this.props.inlineForm && /^(patientName|patientGender|patientLanguages|patientRace|patientReligion|patientLocation)$/i.test(this.props.inlineForm.name)) {
       patientDetails = <InlineForm fetchAddress={this.props.fetchAddress} />;
+    } else if (this.props.inlineForm && /^(patientDob)$/i.test(this.props.inlineForm.name)) {
+      patientDetails = (
+        <div>
+          <InlineForm fetchAddress={this.props.fetchAddress} showDayPickerPopup={this.props.showDayPickerPopup} />
+          <DayPickerPopup title="Date of Birth" />
+        </div>
+      );
     } else if (this.props.patients && this.state.patientId) {
       if (this.state.editingPatient) {
         patientDetails = (
@@ -374,7 +381,7 @@ class BookingLocationUser extends Component {
           inputs: {
             dob: {
               label: 'Date of Birth',
-              type: 'text',
+              type: 'date',
               initialValue: this.props.patients && this.state.patientId && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].dob
             }
           },

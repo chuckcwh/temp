@@ -230,15 +230,17 @@ input.btn-inline {
 .DateInput {
   display: inline-block;
   position: relative;
+  margin: 20px 20px 0 0;
 
-  input {
+  > input {
     width: 195px;
     padding-right: 50px;
+    margin: 0;
   }
 
-  span {
+  > span {
     position: absolute;
-    right: 30px;
+    right: 15px;
     bottom: 16px;
     height: 25px;
     width: 25px;
@@ -428,9 +430,5 @@ input:disabled, textarea:disabled {
 
   .TableRowItem3 {
     flex: 3;
-  }
-
-  input {
-    margin: 5px 0;
   }
 }

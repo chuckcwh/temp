@@ -3,6 +3,7 @@ import { reduxForm } from 'redux-form';
 import Loader from 'react-loader';
 import './InlineForm.scss';
 import MultiSelect from '../MultiSelect';
+import DayPickerPopup from '../DayPickerPopup';
 import { hideInlineForm } from '../../actions';
 
 class InlineForm extends Component {
@@ -42,6 +43,14 @@ class InlineForm extends Component {
               case 'hidden':
                 inputField = (
                   <input type={input.type} id={name} name={name} placeholder={input.placeholder || input.label} {...field} />
+                );
+                break;
+              case 'date':
+                inputField = (
+                  <div className="DateInput">
+                    <input type="text" id={name} name={name} placeholder={input.placeholder || input.label} {...field} />
+                    <span onClick={() => this.props.showDayPickerPopup && this.props.showDayPickerPopup(field.value, 'inlineForm')}></span>
+                  </div>
                 );
                 break;
               case 'select':
@@ -133,7 +142,10 @@ InlineForm.propTypes = {
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
   error: PropTypes.string,
-  inputs: PropTypes.object.isRequired
+  inputs: PropTypes.object.isRequired,
+
+  fetchAddress: PropTypes.func,
+  showDayPickerPopup: PropTypes.func
 }
 
 const reduxFormConfig = {

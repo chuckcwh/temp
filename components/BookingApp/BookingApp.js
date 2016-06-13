@@ -40,15 +40,16 @@ class BookingApp extends Component {
   }
 
   componentDidMount() {
+    const { location } = this.props;
     // if "bid" query parameter exists, must be booking manage/confirmation
-    if (this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) {
-      if (this.props.location.query.token) {
+    if (location && location.query && location.query.bid && location.query.email) {
+      if (location.query.token) {
         this.props.setPostStatus('payment-paypal');
       }
 
       this.props.getBooking({
-        bid: this.props.location.query.bid,
-        email: this.props.location.query.email
+        bid: location.query.bid,
+        email: location.query.email
       }).then((res) => {
         if (res.response && res.response.status >= 1) {
           const { data } = res.response;
@@ -57,7 +58,7 @@ class BookingApp extends Component {
             this.props.setPostStatus('success');
           } else if (data && data.case && data.case.status === 'Accepting Quotes') {
             // if booking is still pending service providers
-            Location.replace({ pathname: '/booking-manage', query: { bid: this.props.location.query.bid, email: this.props.location.query.email } });
+            Location.replace({ pathname: '/booking-manage', query: { bid: location.query.bid, email: location.query.email } });
           }
         } else {
           console.error('Failed to obtain booking data.');
@@ -66,10 +67,10 @@ class BookingApp extends Component {
     }
 
     // if "uid" query parameter exists, login automatically
-    if (this.props.location && this.props.location.query && this.props.location.query.uid && this.props.location.query.token) {
+    if (location && location.query && location.query.uid && location.query.token) {
       this.props.getUserWithToken({
-        id: this.props.location.query.uid,
-        token: this.props.location.query.token
+        id: location.query.uid,
+        token: location.query.token
       }).then((res) => {
         if (res.response && res.response.status < 1) {
           console.error('Failed to get user data.');

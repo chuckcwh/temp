@@ -26,6 +26,7 @@ class Html extends Component {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.3.15/slick.css" />
         <link rel="stylesheet" href="main.css" />
         <script src={'/app.js?' + new Date().getTime()}></script>
+        <script src="//load.sumome.com/" data-sumo-site-id="4a5724c7a698d218000388ccab5de5e14b18825947972413358e296d3202620e" async="async"></script>
       </head>
       <body>
         <div id="app" dangerouslySetInnerHTML={{__html: this.props.body}} />

@@ -73,7 +73,8 @@ FindBookingForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'findBookingForm',
-  fields: ['bid', 'email']
+  fields: ['bid', 'email'],
+  destroyOnUnmount: true
 }
 
 export default reduxForm(reduxFormConfig)(FindBookingForm);

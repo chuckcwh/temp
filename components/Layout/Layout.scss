@@ -215,28 +215,39 @@ input.btn-inline {
   height: 55px;
   border: 1px solid $border-color;
 
-  > input {
+  > span {
     position: absolute;
-    width: 200px;
-    padding: 0 10px 0 50px;
+    display: inline;
+    width: 50px;
+    height: 55px;
+  }
+
+  > input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 15px 10px 15px 50px;
     margin: 0;
     border: 0;
-    top: 0;
-    left: 0;
-    bottom: 0;
     background: transparent;
   }
 
   &.EmailInput {
-    background: url('../mail.png') no-repeat 12.5px;
+    > span {
+      background: url('../mail.png') no-repeat 12.5px;
+    }
   }
 
   &.BookingIdInput {
-    background: url('../tick.png') no-repeat 12.5px;
+    > span {
+      background: url('../tick.png') no-repeat 12.5px;
+    }
   }
 
   &.PasswordInput {
-    background: url('../lock.png') no-repeat 12.5px;
+    > span {
+      background: url('../lock.png') no-repeat 12.5px;
+    }
   }
 
   & + & {

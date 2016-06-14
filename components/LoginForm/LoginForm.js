@@ -66,9 +66,11 @@ class LoginForm extends Component {
         <Loader className="spinner" loaded={!submitting}>
           <h3>eBeeCare {type === 'client' ? 'Client ' : ''}Login</h3>
           <div className="IconInput EmailInput">
+            <span />
             <input type="email" placeholder="Enter Email" {...email} ref={(c) => { this._startInput = c }} autoFocus={true} />
           </div>
           <div className="IconInput PasswordInput">
+            <span />
             <input type="password" placeholder="Enter Password" {...password} />
           </div>
           <div className="Account-container-item-middle">

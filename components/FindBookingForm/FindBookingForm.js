@@ -44,9 +44,11 @@ class FindBookingForm extends Component {
       <form className="FindBookingForm" onSubmit={handleSubmit(submit)}>
         <h3>Have Guest Booking ID?</h3>
         <div className="IconInput BookingIdInput">
+          <span />
           <input type="text" placeholder="Booking ID*" {...bid} />
         </div>
         <div className="IconInput EmailInput">
+          <span />
           <input type="email" placeholder="Enter Email*" {...email} />
         </div>
         <div className="Account-container-item-middle">

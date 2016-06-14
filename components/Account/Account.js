@@ -5,7 +5,7 @@ import linkState from 'react-link-state';
 import './Account.scss';
 import Container from '../Container';
 import Link from '../Link';
-import LoginForm from '../LoginForm';
+import FindBookingForm from '../FindBookingForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
 import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
@@ -47,7 +47,7 @@ class Account extends Component {
         <div className="Account-container">
           {/*
           <div className="Account-login Account-container-item">
-            <form id="AccountLoginForm" action="https://app.ebecare.com/login/" method="POST">
+            <form id="AccountFindBookingForm" action="https://app.ebecare.com/login/" method="POST">
               <h3>Already a Member?</h3>
               <input className="EmailInput" type="email" name="email" placeholder="Enter Email" />
               <input className="PasswordInput" type="password" name="password" placeholder="Enter Password" />
@@ -68,8 +68,7 @@ class Account extends Component {
           */}
           <div className="Account-find Account-container-item">
             <Loader className="spinner" loaded={(!(this.props.bookingFetching) && this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
-              {/*<LoginForm onSubmit={this._onClickFindBooking.bind(this)} />*/}
-              <LoginForm />
+              <FindBookingForm />
             </Loader>
           </div>
         </div>

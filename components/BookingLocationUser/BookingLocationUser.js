@@ -18,6 +18,7 @@ class BookingLocationUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      editing: false,
       savingPatient: false,
 
       patientId: undefined
@@ -34,7 +35,7 @@ class BookingLocationUser extends Component {
 
   render() {
     var component, userDetails, patientDetails;
-    if (this.props.inlineForm && /^(userName|userEmail|userMobile)$/i.test(this.props.inlineForm.name)) {
+    if (this.state.editing && this.props.inlineForm && /^(userName|userEmail|userMobile)$/i.test(this.props.inlineForm.name)) {
       userDetails = <InlineForm />;
     } else {
       userDetails = (
@@ -58,7 +59,7 @@ class BookingLocationUser extends Component {
         </div>
       );
     }
-    if (this.props.inlineForm && /^(patientName|patientGender|patientLanguages|patientRace|patientReligion|patientLocation)$/i.test(this.props.inlineForm.name)) {
+    if (this.state.editing && this.props.inlineForm && /^(patientName|patientGender|patientLanguages|patientRace|patientReligion|patientLocation)$/i.test(this.props.inlineForm.name)) {
       patientDetails = <InlineForm fetchAddress={this.props.fetchAddress} />;
     } else if (this.props.inlineForm && /^(patientDob)$/i.test(this.props.inlineForm.name)) {
       patientDetails = (
@@ -243,6 +244,7 @@ class BookingLocationUser extends Component {
 
   _onClickEdit(entity, event) {
     event.preventDefault();
+    this.setState({ editing: true });
 
     switch (entity) {
       case 'userName':
@@ -262,7 +264,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'userName')
+          ok: this._onClickSave.bind(this, 'userName'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'userEmail':
@@ -284,7 +287,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'userEmail')
+          ok: this._onClickSave.bind(this, 'userEmail'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'userMobile':
@@ -306,7 +310,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'userMobile')
+          ok: this._onClickSave.bind(this, 'userMobile'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'patientName':
@@ -326,7 +331,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'patientName')
+          ok: this._onClickSave.bind(this, 'patientName'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'patientLanguages':
@@ -349,7 +355,8 @@ class BookingLocationUser extends Component {
                 }
                 return errors;
               },
-              ok: this._onClickSave.bind(this, 'patientLanguages')
+              ok: this._onClickSave.bind(this, 'patientLanguages'),
+              cancel: () => { this.setState({ editing: false }); }
             });
           }
         });
@@ -372,7 +379,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'patientGender')
+          ok: this._onClickSave.bind(this, 'patientGender'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'patientDob':
@@ -394,7 +402,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'patientDob')
+          ok: this._onClickSave.bind(this, 'patientDob'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'patientRace':
@@ -415,7 +424,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'patientRace')
+          ok: this._onClickSave.bind(this, 'patientRace'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'patientReligion':
@@ -436,7 +446,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'patientReligion')
+          ok: this._onClickSave.bind(this, 'patientReligion'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
       case 'patientLocation':
@@ -471,7 +482,8 @@ class BookingLocationUser extends Component {
             }
             return errors;
           },
-          ok: this._onClickSave.bind(this, 'patientLocation')
+          ok: this._onClickSave.bind(this, 'patientLocation'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
     }
@@ -486,7 +498,10 @@ class BookingLocationUser extends Component {
             fullName: values.fullName
           }).then((res) => {
             if (res && res.response && res.response.status === 1) {
-              this.props.getUser().then(() => resolve());
+              this.props.getUser().then(() => {
+                resolve();
+                this.setState({ editing: false });
+              });
             } else {
               reject({ _error: res.response.message });
             }
@@ -499,7 +514,10 @@ class BookingLocationUser extends Component {
             email: values.email
           }).then((res) => {
             if (res && res.response && res.response.status === 1) {
-              this.props.getUser().then(() => resolve())
+              this.props.getUser().then(() => {
+                resolve();
+                this.setState({ editing: false });
+              });
             } else {
               reject({ _error: res.response.message });
             }
@@ -529,7 +547,10 @@ class BookingLocationUser extends Component {
             pid: this.state.patientId
           }, values)).then((res) => {
             if (res && res.response && res.response.status === 1) {
-              this.props.getPatient({ pid: this.state.patientId }).then(() => resolve());
+              this.props.getPatient({ pid: this.state.patientId }).then(() => {
+                resolve();
+                this.setState({ editing: false });
+              });
             } else {
               reject({ _error: res.response.message });
             }
@@ -541,7 +562,10 @@ class BookingLocationUser extends Component {
             languages: values.languages.split(',')
           }).then((res) => {
             if (res && res.response && res.response.status === 1) {
-              this.props.getPatient({ pid: this.state.patientId }).then(() => resolve());
+              this.props.getPatient({ pid: this.state.patientId }).then(() => {
+                resolve();
+                this.setState({ editing: false });
+              });
             } else {
               reject({ _error: res.response.message });
             }
@@ -555,7 +579,10 @@ class BookingLocationUser extends Component {
             }, values)]
           }).then((res) => {
             if (res && res.response && res.response.status === 1) {
-              this.props.getPatient({ pid: this.state.patientId }).then(() => resolve());
+              this.props.getPatient({ pid: this.state.patientId }).then(() => {
+                resolve();
+                this.setState({ editing: false });
+              });
             } else {
               reject({ _error: res.response.message });
             }
@@ -703,7 +730,8 @@ const mapStateToProps = (state) => {
     client: state.user.data && state.user.data.clients && state.user.data.clients[0],
     patients: state.patients.data,
     patientIds: state.patients.ids,
-    inlineForm: state.inlineForm
+    inlineForm: state.inlineForm,
+    form: state.form
   }
 }
 

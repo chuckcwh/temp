@@ -5,6 +5,7 @@ import linkState from 'react-link-state';
 import './Account.scss';
 import Container from '../Container';
 import Link from '../Link';
+import LoginForm from '../LoginForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
 import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
@@ -67,21 +68,8 @@ class Account extends Component {
           */}
           <div className="Account-find Account-container-item">
             <Loader className="spinner" loaded={(!(this.props.bookingFetching) && this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
-              <form ref={(c) => this._accountManageBookingForm = c}>
-                <h3>Have Guest Booking ID?</h3>
-                <div className="IconInput BookingIdInput">
-                  <input type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />
-                </div>
-                <div className="IconInput EmailInput">
-                  <input type="email" valueLink={linkState(this, 'email')} placeholder="Enter Email*" required />
-                </div>
-                <div className="Account-container-item-middle">
-                  <div className="LoginInsteadContainer">
-                    Have account? <a href="https://app.ebeecare.com/login/" className="LoginInsteadLink">Login instead</a>
-                  </div>
-                </div>
-                <button className="btn btn-primary" onClick={this._onClickFindBooking.bind(this)}>Find Booking</button>
-              </form>
+              {/*<LoginForm onSubmit={this._onClickFindBooking.bind(this)} />*/}
+              <LoginForm />
             </Loader>
           </div>
         </div>
@@ -125,24 +113,6 @@ class Account extends Component {
         this.props.showAlertPopup('Sorry, we are not able to find your booking.');
       }
     });
-  }
-
-  _onClickFindBooking(event) {
-    if (this._accountManageBookingForm.checkValidity()) {
-      event.preventDefault();
-
-      this.props.getBooking({
-        bid: this.state.bid,
-        email: this.state.email
-      }).then((res) => {
-        if (res.response && res.response.status < 1) {
-          this.props.showAlertPopup('Sorry, we are not able to find your booking.');
-        }
-      });
-    } else {
-      event.preventDefault();
-      this.props.showAlertPopup('Please fill up all required fields.');
-    }
   }
 
 }

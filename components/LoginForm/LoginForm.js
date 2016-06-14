@@ -1,63 +1,83 @@
 import React, { Component, PropTypes } from 'react';
+import Loader from 'react-loader';
 import { reduxForm } from 'redux-form';
 import './LoginForm.scss';
-import { getBooking } from '../../actions';
+import { login, loginClient } from '../../actions';
 
-const submit = (values, dispatch) => {
-  return new Promise((resolve, reject) => {
-    const errors = {};
-    if (!values.bid) {
-      errors.bid = 'Booking ID is required';
-    }
-    if (!values.email) {
-      errors.email = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
-    }
-    if (errors.bid || errors.email) {
-      reject(errors);
-    } else {
-      dispatch(getBooking({
-        bid: values.bid,
-        email: values.email
-      })).then((res) => {
-        if (res.response && res.response.status === 1) {
-          resolve();
+const submit = (props) => {
+  return (values, dispatch) => {
+    return new Promise((resolve, reject) => {
+      const errors = {};
+      if (!values.email) {
+        errors.email = 'Email is required';
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        errors.email = 'Invalid email address';
+      }
+      if (!values.password) {
+        errors.password = 'Password is required';
+      }
+      if (errors.email || errors.password) {
+        reject(errors);
+      } else {
+        if (props.type === 'client') {
+          dispatch(loginClient({
+            email: values.email,
+            password: values.password
+          })).then((res) => {
+            if (res && res.response && res.response.user && res.response.user.type === 'Client') {
+              props.onSuccess && props.onSuccess();
+              resolve();
+            } else {
+              props.onFailure && props.onFailure();
+              reject({ _error: 'Failed to login.' });
+            }
+          });;
         } else {
-          reject({ _error: 'Sorry, we are not able to find your booking.' });
+          dispatch(login({
+            email: values.email,
+            password: values.password
+          })).then((res) => {
+            if (res && res.response && res.response.user) {
+              props.onSuccess && props.onSuccess();
+              resolve();
+            } else {
+              props.onFailure && props.onFailure();
+              reject({ _error: 'Failed to login.' });
+            }
+          });
         }
-      });
-    }
-  });
+      }
+    });
+  }
 }
 
 class LoginForm extends Component {
 
   render() {
     const { 
-      fields: { bid, email }, 
+      fields: { email, password }, 
       error,
       handleSubmit, 
-      submitting 
+      submitting,
+      type
     } = this.props;
     return (
-      <form className="LoginForm" onSubmit={handleSubmit(submit)}>
-        <h3>Have Guest Booking ID?</h3>
-        <div className="IconInput BookingIdInput">
-          <input type="text" placeholder="Booking ID*" {...bid} />
-        </div>
-        <div className="IconInput EmailInput">
-          <input type="email" placeholder="Enter Email*" {...email} />
-        </div>
-        <div className="Account-container-item-middle">
-          {bid.touched && bid.error && <div className="LoginFormError">{bid.error}</div>}
-          {email.touched && email.error && <div className="LoginFormError">{email.error}</div>}
-          {error && <div className="LoginFormError">{error}</div>}
-          <div className="LoginInsteadContainer">
-            Have account? <a href="https://app.ebeecare.com/login/" className="LoginInsteadLink">Login instead</a>
+      <form className="LoginForm" onSubmit={handleSubmit(submit(this.props))}>
+        <Loader className="spinner" loaded={!submitting}>
+          <h3>eBeeCare {type === 'client' ? 'Client ' : ''}Login</h3>
+          <div className="IconInput EmailInput">
+            <input type="email" placeholder="Enter Email" {...email} ref={(c) => { this._startInput = c }} autoFocus={true} />
           </div>
-        </div>
-        <button className="btn btn-primary" type="submit" disabled={submitting}>Find Booking</button>
+          <div className="IconInput PasswordInput">
+            <input type="password" placeholder="Enter Password" {...password} />
+          </div>
+          <div className="Account-container-item-middle">
+            {email.touched && email.error && <div className="LoginFormError">{email.error}</div>}
+            {password.touched && password.error && <div className="LoginFormError">{password.error}</div>}
+            {error && <div className="LoginFormError">{error}</div>}
+          </div>
+          <button className="btn btn-primary" type="submit" disabled={submitting}>Login</button>
+        </Loader>
       </form>
     );
   }
@@ -68,12 +88,17 @@ LoginForm.propTypes = {
   fields: PropTypes.object.isRequired,
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired
+  submitting: PropTypes.bool.isRequired,
+  type: PropTypes.string,
+  focused: PropTypes.bool,
+  onSuccess: PropTypes.func,
+  onFailure: PropTypes.func
 }
 
 const reduxFormConfig = {
   form: 'loginForm',
-  fields: ['bid', 'email']
+  fields: ['email', 'password'],
+  destroyOnUnmount: true
 }
 
 export default reduxForm(reduxFormConfig)(LoginForm);

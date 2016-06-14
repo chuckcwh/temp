@@ -19,8 +19,8 @@ class BookingPostSidebar extends Component {
     if (booking && booking.case && booking.case.addresses && booking.case.addresses[0]) {
       location = (<span>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].address}<br/>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].unitNumber}</span>);
     }
-    if (booking && booking.case) {
-      sessions = booking.case.dates;
+    if (booking && booking.case && booking.case.dates) {
+      sessions = booking.case.dates.filter((date) => date.status === 'Active');
     }
     if (booking && booking.case) {
       sum = parseFloat(booking.case.price);

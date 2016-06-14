@@ -58,6 +58,10 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'LOGIN_FAILURE'
 
+export const LOGIN_CLIENT_REQUEST = 'LOGIN_CLIENT_REQUEST'
+export const LOGIN_CLIENT_SUCCESS = 'LOGIN_CLIENT_SUCCESS'
+export const LOGIN_CLIENT_FAILURE = 'LOGIN_CLIENT_FAILURE'
+
 export const EMAIL_EDIT_REQUEST = 'EMAIL_EDIT_REQUEST'
 export const EMAIL_EDIT_SUCCESS = 'EMAIL_EDIT_SUCCESS'
 export const EMAIL_EDIT_FAILURE = 'EMAIL_EDIT_FAILURE'
@@ -150,6 +154,12 @@ function fetchAction(route) {
     },
     login: {
       types: [ LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE ],
+      endpoint: 'mlogin',
+      method: 'post',
+      auth: 'app'
+    },
+    loginClient: {
+      types: [ LOGIN_CLIENT_REQUEST, LOGIN_CLIENT_SUCCESS, LOGIN_CLIENT_FAILURE ],
       endpoint: 'mlogin',
       method: 'post',
       auth: 'app'
@@ -317,6 +327,10 @@ export function cancelBookingSession(params, booking) {
 
 export function login(params) {
   return fetch('login', params);
+}
+
+export function loginClient(params) {
+  return fetch('loginClient', params);
 }
 
 export function getUser() {

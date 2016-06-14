@@ -134,6 +134,7 @@ const user = (state = {
   switch (action.type) {
     case ActionTypes.USER_REQUEST:
     case ActionTypes.LOGIN_REQUEST:
+    case ActionTypes.LOGIN_CLIENT_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         didInvalidate: false
@@ -144,6 +145,13 @@ const user = (state = {
         isFetching: false,
         didInvalidate: false,
         data: action.response && action.response.user,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    case ActionTypes.LOGIN_CLIENT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true,
+        data: (action.response && action.response.user && action.response.user.type === 'Client') ? action.response.user : null,
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.USER_DESTROY:

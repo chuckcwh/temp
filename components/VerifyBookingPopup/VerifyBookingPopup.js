@@ -41,7 +41,7 @@ class VerifyBookingPopup extends Component {
                     <div><a href="#" onClick={this._onClickNoPin.bind(this)}>Resend PIN</a></div>
                     {resentText}
                   </div>
-                  <button className="btn btn-primary" onClick={this._onClickSubmit.bind(this)}>Submit</button>
+                  <a href="#" className="btn btn-primary" onClick={this._onClickSubmit.bind(this)}>Submit</a>
                 </form>
               </div>
             </Loader>

@@ -1,5 +1,14 @@
 @import '../variables.scss';
 
+.Testimonials {
+  background-color: $brand-color;
+  padding: 20px 0;
+
+  h1 {
+    color: #fff;
+  }
+}
+
 .Testimonials-list {
   display: flex;
   flex-direction: row;
@@ -15,11 +24,11 @@
 
 .Testimonials-item {
   position: relative;
+  background-color: #fff;
   margin: 0 15px 65px 15px;
   padding: 0;
   width: 310px;
   height: 390px;
-  border: 1px solid $secondary-color;
   text-align: center;
   font-size: 18px;
   line-height: 1.5em;

@@ -100,7 +100,8 @@ const appConfig = merge({}, config, {
     './app.js',
   ],
   output: {
-    filename: 'app.js'
+    filename: 'app.js',
+    chunkFilename: '[id].[hash].app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
   devtool: DEBUG ? 'cheap-module-eval-source-map' : false,

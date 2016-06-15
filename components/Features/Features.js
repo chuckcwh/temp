@@ -8,8 +8,8 @@ export default class Features extends Component {
     return (
       <div className="Features">
         <Container>
-          <h1 className="text-center">A family caregiver for every needing family</h1>
-          <p className="text-center featured">As caregivers ourselves, we understand the stress and urgency involved, often in the busiest period of the day in the mornings. Let our healthcare professionals assist you in reducing your load and in supporting you to get your loved ones ready to start the day!</p>
+          <h1 className="text-center">Quality & Trust</h1>
+          <p className="text-center featured">eBeeCare is the largest online local home healthcare provider in Singapore. Since 2015 our caregivers have provided over 50,000 hours of care for patients... and they are ready to serve you!</p>
           <div className="Features-list">
             <div className="Features-item">
               <img src={require('./features-1.png')} className="Features-item-icon" />

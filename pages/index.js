@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Banner from '../components/Banner/Banner';
-import Features from '../components/Features/Features';
-import Actions from '../components/Actions/Actions';
-import Testimonials from '../components/Testimonials/Testimonials';
+import Banner from '../components/Banner';
+import Features from '../components/Features';
+import Actions from '../components/Actions';
+import Testimonials from '../components/Testimonials';
+import Download from '../components/Download';
 
 export default class extends Component {
 
@@ -10,9 +11,10 @@ export default class extends Component {
     return (
       <div>
         <Banner location={this.props.location} />
+        <Testimonials />
         <Features />
         <Actions />
-        <Testimonials />
+        <Download />
       </div>
     );
   }

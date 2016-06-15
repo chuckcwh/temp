@@ -31,22 +31,22 @@ class Actions extends Component {
     return (
       <div className="Actions">
         <Container>
-          <div className="Actions-statistics">
+          {/*<div className="Actions-statistics">
             {sessionsCountText}
-          </div>
+          </div>*/}
           <div className="Actions-list">
             <div className="Actions-item">
               <img src={require('./actions-1.png')} />
-              <div className="Actions-item-title">Book A Caregiver Online</div>
+              {/*<div className="Actions-item-title">Book A Caregiver Online</div>*/}
               <div>
-                <a href="/booking1" className="btn Actions-item-button" onClick={Link.handleClick}>Book A Caregiver</a>
+                <a href="/booking1" className="btn Actions-item-button" onClick={Link.handleClick}>Find A Caregiver</a>
               </div>
             </div>
             <div className="Actions-item">
               <img src={require('./actions-2.png')} />
-              <div className="Actions-item-title">Call Ebeecare Hotline</div>
+              {/*<div className="Actions-item-title">Call Ebeecare Hotline</div>*/}
               <div>
-                <a href="#" className="btn Actions-item-button" onClick={(e) => {e.preventDefault()}}>6514 9729</a>
+                <a href="#" className="btn Actions-item-button" onClick={this._handleContactUs.bind(this)}>Contact Us</a>
               </div>
             </div>
           </div>
@@ -72,6 +72,12 @@ class Actions extends Component {
         console.error('Failed to obtain statistics data.');
       }
     });
+  }
+
+  _handleContactUs(event) {
+    event.preventDefault();
+
+    typeof window !== 'undefined' && window.Tawk_API && window.Tawk_API.toggle();
   }
 
 }

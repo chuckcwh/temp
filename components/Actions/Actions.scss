@@ -65,6 +65,23 @@
 
     .Actions-item-button {
       display: inline-block;
+      margin-top: 10px;
+      padding: 5px;
+      color: #ffffff;
+      font-weight: 100;
+      font-size: 26px;
+      text-transform: uppercase;
+      width: 260px;
+      border: 1px solid #ffffff;
+      @mixin border-radius 5px;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+    }
+
+    /*.Actions-item-button {
+      display: inline-block;
       padding: 5px;
       color: #ffffff;
       font-weight: 600;
@@ -78,6 +95,6 @@
       &:hover {
         background-color: rgba(255, 255, 255, 0.25);
       }
-    }
+    }*/
   }
 }

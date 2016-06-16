@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Slider from 'react-slick';
 import './Testimonials.scss';
 import Container from '../Container';
+import Link from '../Link';
 
-export default class Testimonials extends Component {
+class Testimonials extends Component {
 
   render() {
-    var avatar = image => {
-      return '<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><g><clipPath id="hex-mask"><polygon fill="#ff0000" points="60,0 120,30 120,90 60,120 0,90 0,30"/></clipPath></g><image clip-path="url(#hex-mask)" height="120" width="120" xlink:href="' + image + '" /></svg>';
-    }
     return (
       <div className="Testimonials">
         <Container>
@@ -77,9 +75,18 @@ export default class Testimonials extends Component {
               </div>
             </Slider>
           </div>
+          <div className="Testimonials-footer">
+            <a href="/booking1" className="btn btn-secondary" onClick={Link.handleClickQuery.bind(this, this.props.location && this.props.location.query)}>FIND A CAREGIVER</a>
+          </div>
         </Container>
       </div>
     );
   }
 
 }
+
+Testimonials.propTypes = {
+  location: PropTypes.object.isRequired
+}
+
+export default Testimonials;

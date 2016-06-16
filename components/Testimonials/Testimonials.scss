@@ -7,70 +7,74 @@
   h1 {
     color: #fff;
   }
-}
 
-.Testimonials-list {
-  /*display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;*/
-  margin: 0 0 20px 0;
-  list-style: none;
-  
-  @media (max-width: $screen-sm-min) {
-    flex-wrap: wrap;
+  .Testimonials-list {
+    /*display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;*/
+    margin: 0 0 20px 0;
+    list-style: none;
+    
+    @media (max-width: $screen-sm-min) {
+      flex-wrap: wrap;
+    }
   }
-}
 
-.Testimonials-slider-item {
-  text-align: center;
-
-  .Testimonials-item {
-    display: inline-block;
-    position: relative;
-    background-color: #fff;
-    margin: 0 15px 65px 15px;
-    padding: 0;
-    width: 360px;
-    height: 250px;
+  .Testimonials-slider-item {
     text-align: center;
-    font-size: 18px;
-    line-height: 1.5em;
 
-    .Testimonials-wrapper {
-      padding: 1em;
+    .Testimonials-item {
+      display: inline-block;
+      position: relative;
+      background-color: #fff;
+      margin: 0 15px 65px 15px;
+      padding: 0;
+      width: 360px;
+      height: 250px;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.5em;
 
-      .Testimonials-item-text {
-        color: $text-color;
-        max-height: 230px;
-        overflow: hidden;
-      }
+      .Testimonials-wrapper {
+        padding: 1em;
 
-      .Testimonials-item-name {
-        position: absolute;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        bottom: 65px;
-        color: $brand-color;
-      }
+        .Testimonials-item-text {
+          color: $text-color;
+          max-height: 230px;
+          overflow: hidden;
+        }
 
-      .Testimonials-item-avatar {
-        position: absolute;
-        width: 120px;
-        height: 120px;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        bottom: -60px;
+        .Testimonials-item-name {
+          position: absolute;
+          margin-left: auto;
+          margin-right: auto;
+          left: 0;
+          right: 0;
+          bottom: 65px;
+          color: $brand-color;
+        }
 
-        img {
-          width: 100%;
-          border-radius: 50%;
+        .Testimonials-item-avatar {
+          position: absolute;
+          width: 120px;
+          height: 120px;
+          margin-left: auto;
+          margin-right: auto;
+          left: 0;
+          right: 0;
+          bottom: -60px;
+
+          img {
+            width: 100%;
+            border-radius: 50%;
+          }
         }
       }
     }
+  }
+
+  .Testimonials-footer {
+    text-align: center;
   }
 }

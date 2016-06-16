@@ -25,7 +25,6 @@
   .Actions-list {
     display: flex;
     flex-direction: row;
-    margin: 0 0 5em 0;
     padding-top: 60px;
     padding-bottom: 60px;
     list-style: none;
@@ -37,20 +36,18 @@
     }
 
     .Actions-item {
-      flex-grow: 1;
+      flex: 1;
       padding: 20px 60px;
       text-align: center;
+
+      @media (max-width: $screen-sm-min) {
+        padding: 20px 0;
+      }
     }
 
     @media (min-width: $screen-sm-min) {
       .Actions-item + .Actions-item {
         border-left: 1px solid #ffffff;
-      }
-    }
-
-    @media (max-width: $screen-sm-min) {
-      .Actions-item + .Actions-item {
-        border-top: 1px solid #ffffff;
       }
     }
 

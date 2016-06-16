@@ -35,11 +35,11 @@ export default class Partners extends Component {
               <div className="Partners-logo" style={{width: 57}}>
                 <img src={require('./startup-season3.png')} />
               </div>
-              <div className="Partners-logo" style={{width: 86}}>
-                <img src={require('./raise.png')} />
-              </div>
               <div className="Partners-logo" style={{width: 177}}>
                 <img src={require('./nus.png')} />
+              </div>
+              <div className="Partners-logo" style={{width: 86}}>
+                <img src={require('./raise.png')} />
               </div>
               <div className="Partners-logo" style={{width: 97}}>
                 <img src={require('./spring.png')} />

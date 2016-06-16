@@ -137,6 +137,10 @@
     background-image: url(banner-1.jpg);
 
     @media (max-width: $screen-sm-min) {
+      background-position: -500px 0px;
+    }
+
+    @media (max-width: $screen-xs-min) {
       background-position: -550px 0px;
     }
   }

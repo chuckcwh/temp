@@ -12,7 +12,7 @@
 .Testimonials-list {
   display: flex;
   flex-direction: row;
-  margin: 0 0 5em 0;
+  margin: 0 0 20px 0;
   list-style: none;
   justify-content: center;
   align-items: flex-start;
@@ -28,7 +28,7 @@
   margin: 0 15px 65px 15px;
   padding: 0;
   width: 310px;
-  height: 390px;
+  height: 350px;
   text-align: center;
   font-size: 18px;
   line-height: 1.5em;
@@ -48,7 +48,7 @@
       margin-right: auto;
       left: 0;
       right: 0;
-      bottom: 80px;
+      bottom: 65px;
       color: $brand-color;
     }
 

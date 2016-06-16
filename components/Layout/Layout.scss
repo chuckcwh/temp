@@ -76,6 +76,21 @@ a.btn-primary:disabled, button.btn-primary:disabled {
   cursor: default;
 }
 
+a.btn-secondary, button.btn-secondary {
+  display: inline-block;
+  background-color: #f2635f;
+  text-decoration: none;
+  color: #fff;
+  width: 260px;
+  padding: 0.3em 0 0.3em 0;
+  font-size: 25px;
+  @extend font-smoothing;
+  cursor:pointer;
+  &:hover {
+    background-color: $brand-color;
+  }
+}
+
 a.btn-small, button.btn-small {
   width: 150px;
   font-size: 21px;

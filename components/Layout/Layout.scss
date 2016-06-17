@@ -71,11 +71,6 @@ a.btn-primary, button.btn-primary {
   }
 }
 
-a.btn-primary:disabled, button.btn-primary:disabled {
-  background-color: #969696;
-  cursor: default;
-}
-
 a.btn-secondary, button.btn-secondary {
   display: inline-block;
   background-color: #f2635f;
@@ -86,9 +81,16 @@ a.btn-secondary, button.btn-secondary {
   font-size: 25px;
   @extend font-smoothing;
   cursor:pointer;
+  border-bottom: 2px solid #cd5551;
+  box-shadow: inset 0 -2px #cd5551;
   &:hover {
-    background-color: $brand-color;
+    background-color: #cd5551;
   }
+}
+
+a.btn-primary:disabled, button.btn-primary:disabled, a.btn-secondary:disabled, button.btn-secondary:disabled {
+  background-color: #969696;
+  cursor: default;
 }
 
 a.btn-small, button.btn-small {

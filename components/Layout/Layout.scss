@@ -475,3 +475,142 @@ input:disabled, textarea:disabled {
     flex: 3;
   }
 }
+
+.service-icon {
+  display: inline-block;
+  width: calc($popular-icon-size * $popular-icon-multipler);
+  height: calc($popular-icon-size * $popular-icon-multipler);
+  background-image: url('../../assets/images/service-icons.png');
+  background-repeat: no-repeat;
+  background-size: calc($popular-icon-size * 5 * $popular-icon-multipler);
+}
+.service-icon.ambulance {
+  background-position: calc($popular-icon-size * 0 * $popular-icon-multipler) calc($popular-icon-size * 0 * $popular-icon-multipler);
+}
+.service-icon.heart {
+  background-position: calc($popular-icon-size * -1 * $popular-icon-multipler) calc($popular-icon-size * 0 * $popular-icon-multipler);
+}
+.service-icon.stethoscope {
+  background-position: calc($popular-icon-size * -2 * $popular-icon-multipler) calc($popular-icon-size * 0 * $popular-icon-multipler2);
+}
+.service-icon.syringe {
+  background-position: calc($popular-icon-size * -3 * $popular-icon-multipler) calc($popular-icon-size * 0 * $popular-icon-multipler);
+}
+.service-icon.bandage {
+  background-position: calc($popular-icon-size * -4 * $popular-icon-multipler) calc($popular-icon-size * 0 * $popular-icon-multipler);
+}
+.service-icon.report {
+  background-position: calc($popular-icon-size * 0 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
+}
+.service-icon.pill {
+  background-position: calc($popular-icon-size * -1 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
+}
+.service-icon.medicinebox {
+  background-position: calc($popular-icon-size * -2 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
+}
+.service-icon.scalpel {
+  background-position: calc($popular-icon-size * -3 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
+}
+.service-icon.pestle {
+  background-position: calc($popular-icon-size * -4 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
+}
+.service-icon.dangerbottle {
+  background-position: calc($popular-icon-size * 0 * $popular-icon-multipler) calc($popular-icon-size * -2 * $popular-icon-multipler);
+}
+.service-icon.hospital {
+  background-position: calc($popular-icon-size * -1 * $popular-icon-multipler) calc($popular-icon-size * -2 * $popular-icon-multipler);
+}
+.service-icon.drip {
+  background-position: calc($popular-icon-size * -2 * $popular-icon-multipler) calc($popular-icon-size * -2 * $popular-icon-multipler);
+}
+.service-icon.tube {
+  background-position: calc($popular-icon-size * -3 * $popular-icon-multipler) calc($popular-icon-size * -2 * $popular-icon-multipler);
+}
+.service-icon.microscope {
+  background-position: calc($popular-icon-size * -4 * $popular-icon-multipler) calc($popular-icon-size * -2 * $popular-icon-multipler);
+}
+.service-icon.helicopter {
+  background-position: calc($popular-icon-size * 0 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
+}
+.service-icon.thermometer {
+  background-position: calc($popular-icon-size * -1 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
+}
+.service-icon.dna {
+  background-position: calc($popular-icon-size * -2 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
+}
+.service-icon.xray {
+  background-position: calc($popular-icon-size * -3 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
+}
+.service-icon.dialysis {
+  background-position: calc($popular-icon-size * -4 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
+}
+@media (max-width: $screen-sm-min) {
+  .service-icon {
+    display: inline-block;
+    width: $popular-icon-size;
+    height: $popular-icon-size;
+    background-image: url('../../assets/images/service-icons.png');
+    background-repeat: no-repeat;
+    background-size: calc($popular-icon-size * 5);
+  }
+  .service-icon.ambulance {
+    background-position: calc($popular-icon-size * 0) calc($popular-icon-size * 0);
+  }
+  .service-icon.heart {
+    background-position: calc($popular-icon-size * -1) calc($popular-icon-size * 0);
+  }
+  .service-icon.stethoscope {
+    background-position: calc($popular-icon-size * -2) calc($popular-icon-size * 0);
+  }
+  .service-icon.syringe {
+    background-position: calc($popular-icon-size * -3) calc($popular-icon-size * 0);
+  }
+  .service-icon.bandage {
+    background-position: calc($popular-icon-size * -4) calc($popular-icon-size * 0);
+  }
+  .service-icon.report {
+    background-position: calc($popular-icon-size * 0) calc($popular-icon-size * -1);
+  }
+  .service-icon.pill {
+    background-position: calc($popular-icon-size * -1) calc($popular-icon-size * -1);
+  }
+  .service-icon.medicinebox {
+    background-position: calc($popular-icon-size * -2) calc($popular-icon-size * -1);
+  }
+  .service-icon.scalpel {
+    background-position: calc($popular-icon-size * -3) calc($popular-icon-size * -1);
+  }
+  .service-icon.pestle {
+    background-position: calc($popular-icon-size * -4) calc($popular-icon-size * -1);
+  }
+  .service-icon.dangerbottle {
+    background-position: calc($popular-icon-size * 0) calc($popular-icon-size * -2);
+  }
+  .service-icon.hospital {
+    background-position: calc($popular-icon-size * -1) calc($popular-icon-size * -2);
+  }
+  .service-icon.drip {
+    background-position: calc($popular-icon-size * -2) calc($popular-icon-size * -2);
+  }
+  .service-icon.tube {
+    background-position: calc($popular-icon-size * -3) calc($popular-icon-size * -2);
+  }
+  .service-icon.microscope {
+    background-position: calc($popular-icon-size * -4) calc($popular-icon-size * -2);
+  }
+  .service-icon.helicopter {
+    background-position: calc($popular-icon-size * 0) calc($popular-icon-size * -3);
+  }
+  .service-icon.thermometer {
+    background-position: calc($popular-icon-size * -1) calc($popular-icon-size * -3);
+  }
+  .service-icon.dna {
+    background-position: calc($popular-icon-size * -2) calc($popular-icon-size * -3);
+  }
+  .service-icon.xray {
+    background-position: calc($popular-icon-size * -3) calc($popular-icon-size * -3);
+  }
+  .service-icon.dialysis {
+    background-position: calc($popular-icon-size * -4) calc($popular-icon-size * -3);
+  }
+}

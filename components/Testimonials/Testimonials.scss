@@ -30,11 +30,15 @@
       background-color: #fff;
       margin: 0 15px 65px 15px;
       padding: 0;
-      width: 360px;
-      height: 250px;
+      width: 300px;
+      height: 280px;
       text-align: center;
       font-size: 18px;
       line-height: 1.5em;
+
+      @media (max-width: $screen-sm-min) {
+        margin: 0 0 65px 0;
+      }
 
       .Testimonials-wrapper {
         padding: 1em;

@@ -15,14 +15,14 @@ class Testimonials extends Component {
             <Slider dots={true} speed={1000} autoplay={false} slidesToScroll={1} arrows={false} 
               responsive={[
                 {
-                  breakpoint: 800,
+                  breakpoint: 640,
                   settings: {
                     slidesToShow: 1,
                     infinite: true
                   }
                 },
                 {
-                  breakpoint: 1200,
+                  breakpoint: 960,
                   settings: {
                     slidesToShow: 2,
                     infinite: true

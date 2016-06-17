@@ -280,6 +280,27 @@ const totalSessionsCount = (state = {
   }
 }
 
+const rankedSubcategories = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  data: null
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.STATS_SUBCATEGORIES_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case ActionTypes.STATS_SUBCATEGORIES_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        data: action.response && action.response.subCategories,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    default:
+      return state;
+  }
+}
+
 const lastPage = (state = '', action) => {
   switch (action.type) {
     case ActionTypes.SET_LAST_PAGE:
@@ -339,6 +360,7 @@ const bookingApp = combineReducers({
   sessions,
   // paypal,
   totalSessionsCount,
+  rankedSubcategories,
   lastPage,
   postStatus,
   order,

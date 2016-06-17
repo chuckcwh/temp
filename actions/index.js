@@ -106,6 +106,10 @@ export const STATS_SESSIONS_REQUEST = 'STATS_SESSIONS_REQUEST'
 export const STATS_SESSIONS_SUCCESS = 'STATS_SESSIONS_SUCCESS'
 export const STATS_SESSIONS_FAILURE = 'STATS_SESSIONS_FAILURE'
 
+export const STATS_SUBCATEGORIES_REQUEST = 'STATS_SUBCATEGORIES_REQUEST'
+export const STATS_SUBCATEGORIES_SUCCESS = 'STATS_SUBCATEGORIES_SUCCESS'
+export const STATS_SUBCATEGORIES_FAILURE = 'STATS_SUBCATEGORIES_FAILURE'
+
 function fetchAction(route) {
   return {
     getServices: {
@@ -265,6 +269,12 @@ function fetchAction(route) {
       endpoint: 'getTotalSessionsCount',
       method: 'get',
       auth: 'app'
+    },
+    getRankedSubcategories: {
+      types: [ STATS_SUBCATEGORIES_REQUEST, STATS_SUBCATEGORIES_SUCCESS, STATS_SUBCATEGORIES_FAILURE ],
+      endpoint: 'getRankedSubCategory',
+      method: 'get',
+      auth: 'app'
     }
   }[route]
 }
@@ -408,7 +418,11 @@ export function resendVerifyBookingPin(params) {
 }
 
 export function getTotalSessionsCount() {
-  return fetch('getTotalSessionsCount')
+  return fetch('getTotalSessionsCount');
+}
+
+export function getRankedSubcategories() {
+  return fetch('getRankedSubcategories');
 }
 
 export function clearBooking() {

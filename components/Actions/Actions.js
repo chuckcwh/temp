@@ -81,6 +81,7 @@ class Actions extends Component {
   }
 
 }
+
 const mapStateToProps = (state) => {
   return {
     totalSessionsCount: state.totalSessionsCount.data

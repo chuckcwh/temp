@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import './Popular.scss';
 import Container from '../Container';
+import Link from '../Link';
 import { getRankedSubcategories } from '../../actions';
+import Location from '../../core/Location';
 
 class Popular extends Component {
 
@@ -21,10 +23,57 @@ class Popular extends Component {
             <div className="Popular-list">
               {
                 rankedSubcategories && rankedSubcategories.map((subcategory) => {
+                  let subcatClass;
+                  switch (subcategory.id) {
+                    case 11:
+                      subcatClass = 'headheart';
+                      break;
+                    case 13:
+                      subcatClass = 'elderly';
+                      break;
+                    case 14:
+                      subcatClass = 'needle';
+                      break;
+                    case 15:
+                      subcatClass = 'drip';
+                      break;
+                    case 27:
+                      subcatClass = 'housecall';
+                      break;
+                    case 17:
+                      subcatClass = 'syringe';
+                      break;
+                    case 20:
+                      subcatClass = 'diabetic';
+                      break;
+                    case 21:
+                      subcatClass = 'bandage';
+                      break;
+                    case 23:
+                      subcatClass = 'report';
+                      break;
+                    case 24:
+                      subcatClass = 'headdots';
+                      break;
+                    case 27:
+                      subcatClass = 'housecall';
+                      break;
+                    case 29:
+                      subcatClass = 'stethoscope';
+                      break;
+                    case 30:
+                      subcatClass = 'headheart';
+                      break;
+                    case 31:
+                      subcatClass = 'heart';
+                      break;
+                    default:
+                      subcatClass = 'ebeecare';
+                  }
                   return (
                     <div className="Popular-item" key={subcategory.id}>
-                      <div className="service-icon heart" />
-                      <div className="Popular-item-title">{subcategory.name}</div>
+                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, subcategory)}><div className={'service-icon ' + subcatClass} /></a>
+                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, subcategory)}><div className="Popular-item-title">{subcategory.name}</div></a>
                     </div>
                   )
                 })
@@ -40,6 +89,12 @@ class Popular extends Component {
         </Container>
       </div>
     );
+  }
+
+  _onClickSubcat(subcat, event) {
+    event.preventDefault();
+
+    Location.push({ pathname: '/services', query: { subcat: subcat.id } });
   }
 
 }

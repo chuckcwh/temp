@@ -1,6 +1,8 @@
 @import '../variables.scss';
 
 .Popular {
+  position: relative;
+  min-height: 200px;
   padding: 20px 0;
 
   .Popular-list {

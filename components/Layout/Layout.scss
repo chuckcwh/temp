@@ -484,7 +484,7 @@ input:disabled, textarea:disabled {
   background-repeat: no-repeat;
   background-size: calc($popular-icon-size * 5 * $popular-icon-multipler);
 }
-.service-icon.ambulance {
+.service-icon.physiotherapy {
   background-position: calc($popular-icon-size * 0 * $popular-icon-multipler) calc($popular-icon-size * 0 * $popular-icon-multipler);
 }
 .service-icon.heart {
@@ -502,16 +502,16 @@ input:disabled, textarea:disabled {
 .service-icon.report {
   background-position: calc($popular-icon-size * 0 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
 }
-.service-icon.pill {
+.service-icon.motherchild {
   background-position: calc($popular-icon-size * -1 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
 }
 .service-icon.housecall {
   background-position: calc($popular-icon-size * -2 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
 }
-.service-icon.scalpel {
+.service-icon.stomach {
   background-position: calc($popular-icon-size * -3 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
 }
-.service-icon.pestle {
+.service-icon.lung {
   background-position: calc($popular-icon-size * -4 * $popular-icon-multipler) calc($popular-icon-size * -1 * $popular-icon-multipler);
 }
 .service-icon.headheart {
@@ -532,16 +532,16 @@ input:disabled, textarea:disabled {
 .service-icon.needle {
   background-position: calc($popular-icon-size * 0 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
 }
-.service-icon.thermometer {
+.service-icon.urinary {
   background-position: calc($popular-icon-size * -1 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
 }
 .service-icon.elderly {
   background-position: calc($popular-icon-size * -2 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
 }
-.service-icon.xray {
+.service-icon.ebeecare {
   background-position: calc($popular-icon-size * -3 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
 }
-.service-icon.dialysis {
+.service-icon.questionmark {
   background-position: calc($popular-icon-size * -4 * $popular-icon-multipler) calc($popular-icon-size * -3 * $popular-icon-multipler);
 }
 @media (max-width: $screen-sm-min) {

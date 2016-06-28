@@ -102,6 +102,126 @@
     }
   }
 
+  .ServiceBody {
+
+    .ServiceDesc-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .ServiceIcon-wrapper {
+        flex: 1;
+
+        .service-icon {
+          margin: 65px 30px 30px 30px;
+        }
+      }
+
+      .ServiceContent-wrapper {
+        flex: 4;
+
+        .ServiceSubTypeTitle {
+          margin-top: 65px;
+          font-size: 65px;
+          color: $secondary-color;
+          flex: 1;
+        }
+
+        .ServiceSubTypeDesc {
+          margin-top: 25px;
+          margin-bottom: 65px;
+          line-height: 22px;
+          flex: 1;
+        }
+      }
+
+
+      h3 {
+        color: $secondary-color;
+      }
+
+      .react-sanfona {
+        border: 1px solid $border-color;
+        border-radius: 5px;
+
+        .react-sanfona-item {
+          .react-sanfona-item-title {
+            border-top: 1px solid $border-color;
+            color: $text-color;
+            font-weight: 600;
+            padding: 10px;
+            transition: background-color .3s;
+          }
+
+          .react-sanfona-item-body {
+            .react-sanfona-item-body-wrapper {
+              padding: 10px;
+              position: relative;
+            }
+          }
+
+          &.react-sanfona-item-expanded {
+            .react-sanfona-item-title {
+              background-color: $brand-color;
+              color: #fff;
+            }
+          }
+
+          &:first-child {
+            .react-sanfona-item-title {
+              border-top: none;
+            }
+          }
+        }
+      }
+
+      .ServiceItem {
+        color: $text-color;
+        font-size: 15px;
+
+        .ServiceItemDescription {
+          &-price {
+            font-style: italic;
+          }
+        }
+      }
+    }
+
+
+
+    .OtherServices {
+
+      .OtherServicesTitle {
+        margin-top: 80px;
+        margin-bottom: 55px;
+        font-size: 35px;
+        color: $secondary-color;
+      }
+
+      .OtherServicesList {
+        display: flex;
+        flex-direction: horizontal;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 100px;
+
+        .OtherServicesItem {
+
+        }
+
+        .OtherServicesItemTitle {
+          text-align: center;
+          color: $secondary-color;
+        }
+      }
+
+
+
+
+    }
+
+  }
+
   .ServicesBody {
     margin-top: 50px;
     margin-bottom: 100px;

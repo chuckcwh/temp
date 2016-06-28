@@ -72,8 +72,8 @@ class Popular extends Component {
                   }
                   return (
                     <div className="Popular-item" key={subcategory.id}>
-                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, subcategory)}><div className={'service-icon ' + subcatClass} /></a>
-                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, subcategory)}><div className="Popular-item-title">{subcategory.name}</div></a>
+                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className={'service-icon ' + subcatClass} /></a>
+                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className="Popular-item-title">{subcategory.name}</div></a>
                     </div>
                   )
                 })
@@ -91,10 +91,10 @@ class Popular extends Component {
     );
   }
 
-  _onClickSubcat(subcat, event) {
+  _onClickSubcat(state, event) {
     event.preventDefault();
 
-    Location.push({ pathname: '/services', query: { subcat: subcat.id } });
+    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: { subcatClass: state.subcatClass } });
   }
 
 }

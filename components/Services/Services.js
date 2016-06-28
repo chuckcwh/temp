@@ -34,6 +34,14 @@ class Services extends Component {
 
     let serviceContent;
     if (location.query && location.query.subcat && allServices) {
+      const allServicesArr = Object.values(allServices);
+      const selectedSubTypeId = (location.search).substr(8);
+      const subcatClass = location.state.subcatClass;
+      // services of same subtype category
+      const relatedServices = allServicesArr.filter((service) => (String(service.categoryObj) == selectedSubTypeId));
+      console.log('location', location);
+      console.log('relatedServices', relatedServices);
+      console.log('ALLSERVICES', allServices);
       let subcat = parseInt(location.query.subcat);
       serviceContent = (
         <div>
@@ -55,35 +63,69 @@ class Services extends Component {
           </div>
           <div>
             <Container>
-              <div className="ServicesBody">
-                {
-                  serviceTreeHash[filter].children.map(subType => {
-                    return (
-                      <div key={subType.children[0].category + subType.name}>
-                        <h3>{this.state.filter === Util.ALL_SERVICES ? subType.children[0].category + ' > ' : ''}{subType.name}</h3>
-                        <Accordion activeItems={-1}>
-                          {
-                            subType.children.map((service) => {
-                              return (
-                                <AccordionItem title={service.name} key={service.id}>
-                                  <div className="ServicesItem">
-                                    <div className="ServicesItemDescription">
-                                      {service.description} ({parseFloat(service.duration)} hours)<br />
-                                      <span className="ServicesItemDescription-price">Starting from SGD {service.price} per session</span>
-                                    </div>
-                                    <div>
-                                      <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
-                                    </div>
+              <div className="ServiceBody">
+                <div className="ServiceDesc-wrapper">
+                  <div className="ServiceIcon-wrapper">
+                    <div className={'service-icon ' + subcatClass}></div>
+                  </div>
+                  <div className="ServiceContent-wrapper">
+                    <div className="ServiceSubTypeTitle">
+                      {relatedServices[0].subType}
+                    </div>
+                    <div className="ServiceSubTypeDesc">
+                      Veniam veniam sit cupidatat mollit dolor proident. Ea est reprehenderit reprehenderit ullamco. Sunt dolore sint velit incididunt dolore reprehenderit ad sit. Do esse voluptate sit in consequat sint Lorem consectetur laboris elit ipsum. Fugiat excepteur dolor veniam sit velit aliquip laboris consectetur dolor incididunt sint proident.
+                      {relatedServices[0].subTypeDesc}
+                    </div>
+                    <div className="ServicesList">
+                      <Accordion activeItems={-1}>
+                        {
+                          relatedServices.map(service => {
+                            return (
+                              <AccordionItem title={service.name} key={service.id}>
+                                <div className="ServiceItem">
+                                  <div className="ServiceItemDescription">
+                                    {service.description} ({parseFloat(service.duration)} hours)<br />
+                                    <span className="ServiceItemDescription-price">Starting from SGD {service.price} per session</span>
                                   </div>
-                                </AccordionItem>
-                              );
-                            })
-                          }
-                        </Accordion>
-                      </div>
-                    );
-                  })
-                }
+                                  <div>
+                                    <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
+                                  </div>
+                                </div>
+                              </AccordionItem>
+                            );
+                          })
+                        }
+                      </Accordion>
+                    </div>
+                  </div>
+                </div>
+                <div className="OtherServices">
+                  <div className="OtherServicesTitle">
+                    Other services you might be interested
+                  </div>
+                  <div className="OtherServicesList">
+                    <div className="OtherServicesItem">
+                      <div className="service-icon ebeecare"></div>
+                      <div className="OtherServicesItemTitle">Test</div>
+                    </div>
+                    <div className="OtherServicesItem">
+                      <div className="service-icon ebeecare"></div>
+                      <div className="OtherServicesItemTitle">Test</div>
+                    </div>
+                    <div className="OtherServicesItem">
+                      <div className="service-icon ebeecare"></div>
+                      <div className="OtherServicesItemTitle">Test</div>
+                    </div>
+                    <div className="OtherServicesItem">
+                      <div className="service-icon ebeecare"></div>
+                      <div className="OtherServicesItemTitle">Test</div>
+                    </div>
+                    <div className="OtherServicesItem">
+                      <div className="service-icon ebeecare"></div>
+                      <div className="OtherServicesItemTitle">Test</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Container>
           </div>

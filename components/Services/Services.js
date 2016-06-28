@@ -35,7 +35,8 @@ class Services extends Component {
 
     let serviceContent;
     if (location.query && location.query.subcat && allServices) {
-      const { subcatClass, rankedSubcategories } = location.state;
+      console.log('LOCATION', location);
+      const { subcatClass } = location.state;
       const allServicesArr = Object.values(allServices);
       const selectedSubTypeId = (location.search).substr(8);
       // services of same subtype category
@@ -53,15 +54,16 @@ class Services extends Component {
         allServicesArr.forEach((service) => {
           for (let mainCat in map) {
             if (service.category === mainCat) {
-              if (map[mainCat].indexOf(service.subType) === -1 && service.subType !==  subCat) {
-                map[mainCat].push(service.subType);
+              if (!(map[mainCat].find((servic) => (servic.subType === service.subType))) && service.subType !==  subCat) {
+                // push the entire service obj for useful attributes
+                map[mainCat].push(service);
               }
             }
           }
         });
         console.log('FULLMAP', map)
         if (map[mainCat].length > 4) {
-          return _.shuffle(map[mainCat]).slice(0, 5);
+          return _.shuffle(map[mainCat]).slice(0, 4);
         } else {
           return map[mainCat];
         }
@@ -111,31 +113,83 @@ class Services extends Component {
                   </div>
                 </div>
                 <div className="OtherServices">
-                  {
-                    (() => {
-                      if (otherSubcats.length > 0) {
-                        return (
-                          <div className="OtherServicesTitle">
-                            Other services you might be interested
-                          </div>
-                        );
-                      }
-                    })()
-                  }
+                  <div className="OtherServicesTitle">
+                    Other services you might be interested
+                  </div>
                   <div className="OtherServicesList">
                     {
-                      otherSubcats.map((subcategory) => {
+                      otherSubcats.map((service) => {
+                        let subcatClass;
+                        switch (service.categoryObj) {
+                          case 11:
+                            subcatClass = 'headheart';
+                            break;
+                          case 13:
+                            subcatClass = 'elderly';
+                            break;
+                          case 14:
+                            subcatClass = 'needle';
+                            break;
+                          case 15:
+                            subcatClass = 'drip';
+                            break;
+                          case 16:
+                            subcatClass = 'nutrition'
+                            break;
+                          case 18:
+                            subcatClass = 'urinary';
+                            break;
+                          case 19:
+                            subcatClass = 'stomach';
+                            break;
+                          case 22:
+                            subcatClass = 'lung';
+                            break;
+                          case 27:
+                            subcatClass = 'housecall';
+                            break;
+                          case 17:
+                            subcatClass = 'syringe';
+                            break;
+                          case 20:
+                            subcatClass = 'diabetic';
+                            break;
+                          case 21:
+                            subcatClass = 'bandage';
+                            break;
+                          case 23:
+                            subcatClass = 'report';
+                            break;
+                          case 24:
+                            subcatClass = 'headdots';
+                            break;
+                          case 27:
+                            subcatClass = 'housecall';
+                            break;
+                          case 29:
+                            subcatClass = 'stethoscope';
+                            break;
+                          case 30:
+                            subcatClass = 'headheart';
+                            break;
+                          case 31:
+                            subcatClass = 'heart';
+                            break;
+                          default:
+                            subcatClass = 'ebeecare';
+                        }
+                        console.log('test', subcatClass)
                         return (
-                          <div className="OtherServicesItem">
-                            <div className="service-icon ebeecare"></div>
-                            <div className="OtherServicesItemTitle">{subcategory}</div>
+                          <div className="OtherServicesItem" key={service.name}>
+                            <a href={'/services?subcat=' + service.categoryObj} onClick={this._onClickSubcat.bind(this, { subcat: service.categoryObj, subcatClass: subcatClass})}><div className={'service-icon ' + subcatClass}></div></a>
+                            <a href={'/services?subcat=' + service.categoryObj} onClick={this._onClickSubcat.bind(this, { subcat: service.categoryObj, subcatClass: subcatClass})}><div className="OtherServicesItemTitle">{service.subType}</div></a>
                           </div>
                         );
                       })
                     }
                     <div className="OtherServicesItem">
-                      <div className="service-icon ebeecare"></div>
-                      <div className="OtherServicesItemTitle">All Services</div>
+                        <a href="/services"><div className="service-icon ebeecare"></div></a>
+                        <a href="/services"><div className="OtherServicesItemTitle">All Services</div></a>
                     </div>
                   </div>
                 </div>
@@ -145,6 +199,7 @@ class Services extends Component {
         </div>
       );
     } else {
+      console.log('LOCATION', location);
       serviceContent = (
         <div>
           <div className="ServicesNav-wrapper">
@@ -217,8 +272,10 @@ class Services extends Component {
 
   _onClickSubcat(state, event) {
     event.preventDefault();
+    console.log('STATE', state);
 
-    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: {subcatClass: state.subcatClass, rankedSubcategories: state.rankedSubcategories} });
+
+    Location.push({ pathname: '/services', query: { subcat: state.subcat }, state: {subcatClass: state.subcatClass} });
   }
 
   _onClickFilter(filter, event) {

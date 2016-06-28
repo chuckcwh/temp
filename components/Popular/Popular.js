@@ -36,6 +36,11 @@ class Popular extends Component {
                       break;
                     case 15:
                       subcatClass = 'drip';
+                    case 18:
+                      subcatClass = 'urinary';
+                      break;
+                    case 19:
+                      subcatClass = 'stomach';
                       break;
                     case 27:
                       subcatClass = 'housecall';
@@ -94,7 +99,7 @@ class Popular extends Component {
   _onClickSubcat(state, event) {
     event.preventDefault();
 
-    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: {subcatClass: state.subcatClass, rankedSubcategories: state.rankedSubcategories} });
+    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: {subcatClass: state.subcatClass} });
   }
 
 }

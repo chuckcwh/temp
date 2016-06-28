@@ -104,6 +104,8 @@
 
   .ServiceBody {
 
+    border-top: 1px solid $secondary-color;
+
     .ServiceDesc-wrapper {
       display: flex;
       flex-direction: row;
@@ -202,16 +204,26 @@
         display: flex;
         flex-direction: horizontal;
         flex-wrap: wrap;
-        justify-content: space-between;
+        text-align: center;
+        align-items: flex-start;
         margin-bottom: 100px;
 
-        .OtherServicesItem {
+        @media (max-width: $screen-sm-min) {
+          flex-direction: column;
+          justify-content: center;
+        }
 
+        .OtherServicesItem {
+          margin: 0px 35px 0px 35px;
+
+          @media (max-width: $screen-sm-min) {
+            margin: 10px auto 10px auto;
+          }
         }
 
         .OtherServicesItemTitle {
-          text-align: center;
           color: $secondary-color;
+
         }
       }
 

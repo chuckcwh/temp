@@ -94,7 +94,7 @@ class Popular extends Component {
   _onClickSubcat(state, event) {
     event.preventDefault();
 
-    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: { subcatClass: state.subcatClass } });
+    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: {subcatClass: state.subcatClass, rankedSubcategories: state.rankedSubcategories} });
   }
 
 }

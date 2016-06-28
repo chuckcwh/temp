@@ -10,6 +10,7 @@ import AlertPopup from '../AlertPopup';
 import { fetchServices } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
+import _ from 'lodash';
 
 class Services extends Component {
 
@@ -34,33 +35,43 @@ class Services extends Component {
 
     let serviceContent;
     if (location.query && location.query.subcat && allServices) {
+      const { subcatClass, rankedSubcategories } = location.state;
       const allServicesArr = Object.values(allServices);
       const selectedSubTypeId = (location.search).substr(8);
-      const subcatClass = location.state.subcatClass;
       // services of same subtype category
-      const relatedServices = allServicesArr.filter((service) => (String(service.categoryObj) == selectedSubTypeId));
-      console.log('location', location);
-      console.log('relatedServices', relatedServices);
-      console.log('ALLSERVICES', allServices);
+      const subcatServices = allServicesArr.filter((service) => (String(service.categoryObj) === selectedSubTypeId));
+      const otherSubcats = (function () {
+        // relationship between main categories and sub catergories
+        const mainCat = subcatServices[0].category;
+        const subCat = subcatServices[0].subType;
+        let map = {};
+        allServicesArr.forEach((service) => {
+          if (!map[service.category]) {
+            map[service.category] = [];
+          }
+        });
+        allServicesArr.forEach((service) => {
+          for (let mainCat in map) {
+            if (service.category === mainCat) {
+              if (map[mainCat].indexOf(service.subType) === -1 && service.subType !==  subCat) {
+                map[mainCat].push(service.subType);
+              }
+            }
+          }
+        });
+        console.log('FULLMAP', map)
+        if (map[mainCat].length > 4) {
+          return _.shuffle(map[mainCat]).slice(0, 5);
+        } else {
+          return map[mainCat];
+        }
+      })();
+      console.log('PROCMAP', otherSubcats);
+      console.log('SERVICES', allServices);
+
       let subcat = parseInt(location.query.subcat);
       serviceContent = (
         <div>
-          <div className="ServicesNav-wrapper">
-            <Container>
-              <ul className="ServicesNav">
-              {
-                serviceTree.map(category => {
-                  const { name } = category;
-                  return (
-                    <li className="ServicesNav-item" key={name}>
-                      <a className={classNames('ServicesNav-link', (filter === name) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, name)}>{name}<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
-                    </li>
-                  );
-                })
-              }
-              </ul>
-            </Container>
-          </div>
           <div>
             <Container>
               <div className="ServiceBody">
@@ -70,16 +81,16 @@ class Services extends Component {
                   </div>
                   <div className="ServiceContent-wrapper">
                     <div className="ServiceSubTypeTitle">
-                      {relatedServices[0].subType}
+                      {subcatServices[0].subType}
                     </div>
                     <div className="ServiceSubTypeDesc">
                       Veniam veniam sit cupidatat mollit dolor proident. Ea est reprehenderit reprehenderit ullamco. Sunt dolore sint velit incididunt dolore reprehenderit ad sit. Do esse voluptate sit in consequat sint Lorem consectetur laboris elit ipsum. Fugiat excepteur dolor veniam sit velit aliquip laboris consectetur dolor incididunt sint proident.
-                      {relatedServices[0].subTypeDesc}
+                      {subcatServices[0].subTypeDesc}
                     </div>
                     <div className="ServicesList">
                       <Accordion activeItems={-1}>
                         {
-                          relatedServices.map(service => {
+                          subcatServices.map(service => {
                             return (
                               <AccordionItem title={service.name} key={service.id}>
                                 <div className="ServiceItem">
@@ -100,29 +111,31 @@ class Services extends Component {
                   </div>
                 </div>
                 <div className="OtherServices">
-                  <div className="OtherServicesTitle">
-                    Other services you might be interested
-                  </div>
+                  {
+                    (() => {
+                      if (otherSubcats.length > 0) {
+                        return (
+                          <div className="OtherServicesTitle">
+                            Other services you might be interested
+                          </div>
+                        );
+                      }
+                    })()
+                  }
                   <div className="OtherServicesList">
+                    {
+                      otherSubcats.map((subcategory) => {
+                        return (
+                          <div className="OtherServicesItem">
+                            <div className="service-icon ebeecare"></div>
+                            <div className="OtherServicesItemTitle">{subcategory}</div>
+                          </div>
+                        );
+                      })
+                    }
                     <div className="OtherServicesItem">
                       <div className="service-icon ebeecare"></div>
-                      <div className="OtherServicesItemTitle">Test</div>
-                    </div>
-                    <div className="OtherServicesItem">
-                      <div className="service-icon ebeecare"></div>
-                      <div className="OtherServicesItemTitle">Test</div>
-                    </div>
-                    <div className="OtherServicesItem">
-                      <div className="service-icon ebeecare"></div>
-                      <div className="OtherServicesItemTitle">Test</div>
-                    </div>
-                    <div className="OtherServicesItem">
-                      <div className="service-icon ebeecare"></div>
-                      <div className="OtherServicesItemTitle">Test</div>
-                    </div>
-                    <div className="OtherServicesItem">
-                      <div className="service-icon ebeecare"></div>
-                      <div className="OtherServicesItemTitle">Test</div>
+                      <div className="OtherServicesItemTitle">All Services</div>
                     </div>
                   </div>
                 </div>
@@ -200,6 +213,12 @@ class Services extends Component {
         </Loader>
       </div>
     );
+  }
+
+  _onClickSubcat(state, event) {
+    event.preventDefault();
+
+    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: {subcatClass: state.subcatClass, rankedSubcategories: state.rankedSubcategories} });
   }
 
   _onClickFilter(filter, event) {

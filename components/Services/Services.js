@@ -34,8 +34,7 @@ class Services extends Component {
     serviceTree.map(category => { serviceTreeHash[category.name] = category });
 
     let serviceContent;
-    if (location.query && location.query.subcat && allServices) {
-      console.log('LOCATION', location);
+    if (location && location.query && location.query.subcat && allServices) {
       const { subcatClass } = location.state;
       const allServicesArr = Object.values(allServices);
       const selectedSubTypeId = (location.search).substr(8);
@@ -61,15 +60,12 @@ class Services extends Component {
             }
           }
         });
-        console.log('FULLMAP', map)
         if (map[mainCat].length > 4) {
           return _.shuffle(map[mainCat]).slice(0, 4);
         } else {
           return map[mainCat];
         }
       })();
-      console.log('PROCMAP', otherSubcats);
-      console.log('SERVICES', allServices);
 
       let subcat = parseInt(location.query.subcat);
       serviceContent = (
@@ -124,6 +120,9 @@ class Services extends Component {
                           case 11:
                             subcatClass = 'headheart';
                             break;
+                          case 12:
+                            subcatClass = 'physiotherapy';
+                            break
                           case 13:
                             subcatClass = 'elderly';
                             break;
@@ -178,9 +177,8 @@ class Services extends Component {
                           default:
                             subcatClass = 'ebeecare';
                         }
-                        console.log('test', subcatClass)
                         return (
-                          <div className="OtherServicesItem" key={service.name}>
+                          <div className="OtherServicesItem" key={service.categoryObj}>
                             <a href={'/services?subcat=' + service.categoryObj} onClick={this._onClickSubcat.bind(this, { subcat: service.categoryObj, subcatClass: subcatClass})}><div className={'service-icon ' + subcatClass}></div></a>
                             <a href={'/services?subcat=' + service.categoryObj} onClick={this._onClickSubcat.bind(this, { subcat: service.categoryObj, subcatClass: subcatClass})}><div className="OtherServicesItemTitle">{service.subType}</div></a>
                           </div>
@@ -188,8 +186,8 @@ class Services extends Component {
                       })
                     }
                     <div className="OtherServicesItem">
-                        <a href="/services"><div className="service-icon ebeecare"></div></a>
-                        <a href="/services"><div className="OtherServicesItemTitle">All Services</div></a>
+                        <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="service-icon ebeecare"></div></a>
+                        <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="OtherServicesItemTitle">All Services</div></a>
                     </div>
                   </div>
                 </div>
@@ -199,7 +197,6 @@ class Services extends Component {
         </div>
       );
     } else {
-      console.log('LOCATION', location);
       serviceContent = (
         <div>
           <div className="ServicesNav-wrapper">
@@ -272,10 +269,14 @@ class Services extends Component {
 
   _onClickSubcat(state, event) {
     event.preventDefault();
-    console.log('STATE', state);
-
 
     Location.push({ pathname: '/services', query: { subcat: state.subcat }, state: {subcatClass: state.subcatClass} });
+  }
+
+  _onClickAllServices(event) {
+    event.preventDefault();
+
+    Location.push({ pathname: '/services'});
   }
 
   _onClickFilter(filter, event) {

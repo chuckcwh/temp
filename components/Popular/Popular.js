@@ -28,6 +28,9 @@ class Popular extends Component {
                     case 11:
                       subcatClass = 'headheart';
                       break;
+                    case 12:
+                      subcatClass = 'physiotherapy';
+                      break
                     case 13:
                       subcatClass = 'elderly';
                       break;
@@ -36,11 +39,18 @@ class Popular extends Component {
                       break;
                     case 15:
                       subcatClass = 'drip';
+                      break;
+                    case 16:
+                      subcatClass = 'nutrition'
+                      break;
                     case 18:
                       subcatClass = 'urinary';
                       break;
                     case 19:
                       subcatClass = 'stomach';
+                      break;
+                    case 22:
+                      subcatClass = 'lung';
                       break;
                     case 27:
                       subcatClass = 'housecall';
@@ -71,6 +81,15 @@ class Popular extends Component {
                       break;
                     case 31:
                       subcatClass = 'heart';
+                      break;
+                    case 33:
+                      subcatClass = 'homeheart'
+                      break;
+                    case 32:
+                      subcatClass = 'baby'
+                      break;
+                    case 34:
+                      subcatClass = 'breast'
                       break;
                     default:
                       subcatClass = 'ebeecare';

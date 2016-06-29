@@ -65,8 +65,7 @@ class Services extends Component {
         } else {
           return map[mainCat];
         }
-      })();
-
+      })()
       let subcat = parseInt(location.query.subcat);
       serviceContent = (
         <div>
@@ -173,6 +172,15 @@ class Services extends Component {
                             break;
                           case 31:
                             subcatClass = 'heart';
+                            break;
+                          case 33:
+                            subcatClass = 'homeheart'
+                            break;
+                          case 32:
+                            subcatClass = 'baby'
+                            break;
+                          case 34:
+                            subcatClass = 'breast'
                             break;
                           default:
                             subcatClass = 'ebeecare';

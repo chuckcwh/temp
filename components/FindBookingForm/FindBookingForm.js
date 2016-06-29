@@ -9,17 +9,19 @@ const submit = (values, dispatch) => {
     if (!values.bid) {
       errors.bid = 'Booking ID is required';
     }
-    if (!values.email) {
-      errors.email = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
+    if (!values.mobilePhone) {
+      errors.mobilePhone = 'Mobile Number is required';
+    // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    //   errors.email = 'Invalid email address';
+    } else if (!/^[8-9]{1}[0-9]{7}$/.test(values.mobilePhone)) {
+      errors.mobilePhone = 'Invalid mobile number';
     }
-    if (errors.bid || errors.email) {
+    if (errors.bid || errors.mobilePhone) {
       reject(errors);
     } else {
       dispatch(getBooking({
         bid: values.bid,
-        email: values.email
+        mobilePhone: values.mobilePhone
       })).then((res) => {
         if (res.response && res.response.status === 1) {
           resolve();
@@ -34,12 +36,16 @@ const submit = (values, dispatch) => {
 class FindBookingForm extends Component {
 
   render() {
-    const { 
-      fields: { bid, email }, 
+    const {
+      fields: { bid, mobilePhone },
       error,
-      handleSubmit, 
-      submitting 
+      handleSubmit,
+      submitting
     } = this.props;
+    console.log('myprops', this.props);
+    console.log('bid', {...bid});
+    console.log('mobilePhone', {...mobilePhone});
+    console.log('handleSubmit', handleSubmit);
     return (
       <form className="FindBookingForm" onSubmit={handleSubmit(submit)}>
         <h3>Have Guest Booking ID?</h3>
@@ -49,11 +55,11 @@ class FindBookingForm extends Component {
         </div>
         <div className="IconInput EmailInput">
           <span />
-          <input type="email" placeholder="Enter Email*" {...email} />
+          <input type="text" placeholder="Enter Mobile Number*" {...mobilePhone} />
         </div>
         <div className="Account-container-item-middle">
           {bid.touched && bid.error && <div className="FindBookingFormError">{bid.error}</div>}
-          {email.touched && email.error && <div className="FindBookingFormError">{email.error}</div>}
+          {mobilePhone.touched && mobilePhone.error && <div className="FindBookingFormError">{mobilePhone.error}</div>}
           {error && <div className="FindBookingFormError">{error}</div>}
           <div className="LoginInsteadContainer">
             Have account? <a href="https://app.ebeecare.com/login/" className="LoginInsteadLink">Login instead</a>
@@ -75,7 +81,7 @@ FindBookingForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'findBookingForm',
-  fields: ['bid', 'email'],
+  fields: ['bid', 'mobilePhone'],
   destroyOnUnmount: true
 }
 

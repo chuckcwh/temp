@@ -19,7 +19,7 @@ class Banner extends Component {
     this.state = {
       bgImageIndex: 0,
       bgImages: [0],
-      serviceId: null
+      option: null
     };
   }
 
@@ -68,8 +68,8 @@ class Banner extends Component {
                   <Select
                     name="service-search"
                     placeholder="Select service"
-                    value={this.state.serviceId}
-                    onChange={(val) => this.setState({serviceId: val})}
+                    value={this.state.option ? this.state.option.value : this.state.option}
+                    onChange={(val) => this.setState({option: val})}
                     options={serviceOptions}
                   />
                 </Loader>
@@ -99,8 +99,8 @@ class Banner extends Component {
   _onClickSubmit(event) {
     event.preventDefault();
 
-    if(this.state.serviceId) {
-      Location.push({ pathname: '/booking1', query: {sid: this.state.serviceId} });
+    if (this.state.option) {
+      Location.push({ pathname: '/booking1', query: {sid: this.state.option.value} });
     }
   }
 }

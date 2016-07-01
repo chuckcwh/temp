@@ -38,15 +38,15 @@ class Actions extends Component {
             <div className="Actions-item">
               <img src={require('./actions-1.png')} />
               {/*<div className="Actions-item-title">Book A Caregiver Online</div>*/}
-              <div>
-                <a href="/booking1" className="btn Actions-item-button" onClick={Link.handleClick}>Find A Caregiver</a>
+              <div className="Actions-button">
+                <a href="/booking1" className="btn btn-secondary" onClick={Link.handleClick}>Find A Caregiver</a>
               </div>
             </div>
             <div className="Actions-item">
               <img src={require('./actions-2.png')} />
               {/*<div className="Actions-item-title">Call Ebeecare Hotline</div>*/}
-              <div>
-                <a href="#" className="btn Actions-item-button" onClick={this._handleContactUs.bind(this)}>Contact Us</a>
+              <div className="Actions-button">
+                <a href="#" className="btn btn-primary" onClick={this._handleContactUs.bind(this)}>Contact Us</a>
               </div>
             </div>
           </div>

@@ -28,7 +28,7 @@
     padding-top: 60px;
     padding-bottom: 60px;
     list-style: none;
-    justify-content: space-around;
+    justify-content: center;
     align-items: flex-start;
 
     @media (max-width: $screen-sm-min) {
@@ -47,7 +47,7 @@
 
     @media (min-width: $screen-sm-min) {
       .Actions-item + .Actions-item {
-        border-left: 1px solid #ffffff;
+        margin-bottom: 10px;
       }
     }
 
@@ -75,6 +75,10 @@
       &:hover {
         background-color: rgba(255, 255, 255, 0.25);
       }
+    }
+
+    .Actions-button {
+      margin-top: 10px;
     }
 
     /*.Actions-item-button {

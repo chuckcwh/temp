@@ -9,11 +9,11 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin: 0 0 5em 0;
+    margin: 0 0 2em 0;
+    padding: 20px 0 0;
     list-style: none;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 50px 0 0 0;
 
     @media (max-width: $screen-sm-min) {
       padding: 0;
@@ -59,7 +59,7 @@
         color: $secondary-color;
         font-size: 22px;
         padding: 5px 0 5px 0;
-
+        
         @media (max-width: $screen-sm-min) {
           font-size: 18px;
         }

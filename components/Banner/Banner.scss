@@ -81,8 +81,8 @@
       }
 
       .Banner-item-input {
-        width: 350px;
-        margin: auto 10px auto 10px;
+        width: 260px;
+        margin: auto 20px auto 20px;
 
         @media(max-width: $screen-sm-min) {
           width: 260px;
@@ -96,7 +96,7 @@
       }
 
       .Banner-item-button {
-        margin: auto 10px auto 10px;
+        margin: auto 20px auto 20px;
 
         @media (max-width: $screen-sm-min) {
           margin: auto;
@@ -126,7 +126,7 @@
         height: 42px;
         border-radius: none;
         line-height: 42px;
-        width: 300px;
+        width: 260px;
 
         @media(max-width: $screen-sm-min) {
           width: 245px;
@@ -137,6 +137,7 @@
         line-height: 25px;
         border-radius: 0px;
         border-color: $secondary-color;
+        width: 277px;
 
         @media(max-width: $screen-sm-min) {
           width: 262px;

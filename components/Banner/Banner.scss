@@ -74,14 +74,19 @@
 
       @media (max-width: $screen-sm-min) {
         flex-direction: column;
-        justify-content: center;
-        display: inline-block;
+        justify-content: space-between;
+        display: inline-flex;
         margin: auto;
+        height: 100px;
       }
 
       .Banner-item-input {
         width: 350px;
         margin: auto 10px auto 10px;
+
+        @media(max-width: $screen-sm-min) {
+          width: 260px;
+        }
 
         .is-searchable {
           text-align: center;
@@ -111,6 +116,10 @@
 
       .Select-placeholder {
         line-height: 42px;
+
+        @media(max-width: $screen-sm-min) {
+          width: 245px;
+        }
       }
 
       .Select-input {
@@ -118,12 +127,20 @@
         border-radius: none;
         line-height: 42px;
         width: 300px;
+
+        @media(max-width: $screen-sm-min) {
+          width: 245px;
+        }
       }
 
       .Select-menu-outer {
         line-height: 25px;
         border-radius: 0px;
         border-color: $secondary-color;
+
+        @media(max-width: $screen-sm-min) {
+          width: 262px;
+        }
 
         .is-focused {
           background-color: #fcf6e6;

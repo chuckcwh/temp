@@ -29,10 +29,15 @@
         width: calc(100% / 3);
       }
 
+      &.last-item {
+       @media (min-width: $screen-sm-min) {
+         display: none;
+       }
+      }
+
+
       &.Popular-item-question {
-        @media (min-width: $screen-sm-min) {
-          display: none;
-        }
+
 
         .Popular-item-question-icon {
           display: inline-block;

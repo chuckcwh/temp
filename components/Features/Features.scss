@@ -30,7 +30,7 @@
 
       .Features-item-left {
         .Features-item-icon {
-          padding: 0 20px;
+          padding: 10px 20px 0 20px;
 
           @media (max-width: $screen-sm-min) {
             padding: 0 20%;
@@ -54,6 +54,10 @@
           @media (max-width: $screen-sm-min) {
             padding-top: 0;
           }
+        }
+
+        .Features-item-description {
+          line-height: 1.2em;
         }
 
         @media (max-width: $screen-sm-min) {

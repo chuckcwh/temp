@@ -17,7 +17,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Interview</div>
-                <div>Only qualified caregivers are invited to our interview workshop. Besides verifying their qualification and experience, we also allocate them into different specialities, like wound care, dementia care speciality etc.</div>
+                <div>Only qualified caregivers are invited to our interview workshop. We also allocate them into different specialities; wound care, dementia care &  etc.</div>
               </div>
             </div>
             <div className="Features-item">
@@ -26,7 +26,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Certification</div>
-                <div>Our caregivers are certified by Singapore Nursing Board, Singapore Allied Health Professions Council and Traditional Chinese Medicine Practitioners Board.</div>
+                <div className="Features-item-description">Our caregivers are certified by Singapore Nursing Board, Singapore Allied Health Professions Council and Traditional Chinese Medicine Practitioners Board.</div>
               </div>
             </div>
             <div className="Features-item">
@@ -35,7 +35,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Experience</div>
-                <div>All caregivers have 2 - 20 years of relevant experience.</div>
+                <div className="Features-item-description">We ensure that all of our caregivers have minimum of 2 years experience with specialties they are assigned to. Some goes to 20 years!</div>
               </div>
             </div>
             <div className="Features-item">
@@ -44,7 +44,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Affordable Quality</div>
-                <div>No more high agency fee, no more unnecessary travel. Our qualified caregivers work directly with patients, ensuring personalized care in their homes.</div>
+                <div className="Features-item-description">No more high agency fee, no more unnecessary travel. Our qualified caregivers work directly with patients, ensuring personalized care in their homes.</div>
               </div>
             </div>
             <div className="Features-item">
@@ -53,7 +53,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Convenience</div>
-                <div>No minimum hours required. 24 hours booking. Caregivers who speak your language.</div>
+                <div className="Features-item-description">No minimum hours required. 24 hours booking. We also provide caregivers who speak your language to take care of you at your comfort home.</div>
               </div>
             </div>
             <div className="Features-item">
@@ -62,7 +62,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Safety Assurance</div>
-                <div>Each service is Insurance protected.</div>
+                <div className="Features-item-description">Each service is Insurance protected.</div>
               </div>
             </div>
           </div>

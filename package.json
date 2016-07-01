@@ -56,7 +56,7 @@
     "react-slick": "^0.12.0",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
-    "redbox-react": "^1.1.1",
+    "redbox-react": "1.2.6",
     "redux": "^3.5.2",
     "redux-devtools": "^3.3.1",
     "redux-devtools-dock-monitor": "^1.1.1",
@@ -81,5 +81,8 @@
     "start": "babel-node --eval \"require('./tools/start')().catch(err => console.log(err.stack))\"",
     "deploy": "babel-node --eval \"require('./tools/deploy')().catch(err => console.log(err.stack))\"",
     "stage": "babel-node --eval \"require('./tools/stage')().catch(err => console.log(err.stack))\""
+  },
+  "dependencies": {
+    "react-select": "^1.0.0-beta13"
   }
 }

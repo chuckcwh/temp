@@ -66,8 +66,10 @@ a.btn-primary, button.btn-primary {
   font-size: 25px;
   @extend font-smoothing;
   cursor:pointer;
+  border-bottom: 2px solid #cb760a;
+  box-shadow: inset 0 -2px #cb760a;
   &:hover {
-    background-color: $brand-color;
+    background-color: #cb760a;
   }
 }
 

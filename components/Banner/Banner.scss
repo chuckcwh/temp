@@ -1,5 +1,6 @@
 @import '../variables.scss';
 @import '../mixins.scss';
+@import 'react-select/dist/react-select.css';
 
 .Banner {
   position: relative;
@@ -40,13 +41,6 @@
       @mixin text-shadow 1px 1px 1px rgba(0, 0, 0, 0.5);
     }
 
-    .Banner-item-button {
-      position: absolute;
-      margin-left: auto;
-      margin-right: auto;
-      left: 0;
-      right: 0;
-    }
   }
 
   #Banner-item-1 {
@@ -69,6 +63,73 @@
 
     .Banner-item-text-4 {
       top: 360px;
+    }
+
+    .Banner-item-search {
+      position: relative;
+      top: 360px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      @media (max-width: $screen-sm-min) {
+        flex-direction: column;
+        justify-content: center;
+        display: inline-block;
+        margin: auto;
+      }
+
+      .Banner-item-input {
+        width: 350px;
+        margin: auto 10px auto 10px;
+
+        .is-searchable {
+          text-align: center;
+          line-height: 40px
+        }
+
+      }
+
+      .Banner-item-button {
+        margin: auto 10px auto 10px;
+
+        @media (max-width: $screen-sm-min) {
+          margin: auto;
+        }
+      }
+
+      .Select-control {
+        border-radius: 0px;
+        border-color: $secondary-color;
+        line-height: 40px;
+
+        .Select-value {
+          line-height: 42px;
+        }
+
+      }
+
+      .Select-placeholder {
+        line-height: 42px;
+      }
+
+      .Select-input {
+        height: 42px;
+        border-radius: none;
+        line-height: 42px;
+        width: 300px;
+      }
+
+      .Select-menu-outer {
+        line-height: 25px;
+        border-radius: 0px;
+        border-color: $secondary-color;
+
+        .is-focused {
+          background-color: #fcf6e6;
+        }
+      }
+
     }
 
     @media (max-width: $screen-sm-min) {

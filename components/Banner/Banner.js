@@ -1,27 +1,50 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import classNames from 'classnames';
+import Select from 'react-select';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './Banner.scss';
 import Link from '../Link';
+import { fetchServices } from '../../actions';
+import Location from '../../core/Location';
+import Loader from 'react-loader';
 
 const bgImagesCount = 2;
 
-export default class Banner extends Component {
+class Banner extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       bgImageIndex: 0,
-      bgImages: [0]
+      bgImages: [0],
+      serviceId: null
     };
+  }
+
+  componentWillReceiveProps(props) {
+    const { allServices } = props;
   }
 
   componentDidMount() {
     // this._startSlideshow();
+    this.props.fetchServices();
   }
 
   render() {
+    let serviceOptions = [];
+    const { allServices, allServicesFetching } = this.props;
+    if(allServices) {
+      const allServicesArr = Object.values(allServices);
+      allServicesArr.forEach((service) => {
+        let serviceOption = {}
+        serviceOption.label = service.name;
+        serviceOption.value = service.id;
+        serviceOptions.push(serviceOption);
+      });
+    }
+
     return (
       <div className="Banner">
         <div className="SliderWrapper">
@@ -39,7 +62,20 @@ export default class Banner extends Component {
             <div className="Banner-item-text Banner-item-text-1">The Best Homecare Option</div>
             <div className="Banner-item-text Banner-item-text-2">Family Caregivers</div>
             <div className="Banner-item-text Banner-item-text-3">From SGD 30 / Visit</div>
-            <a href="/booking1" className="btn btn-primary Banner-item-button Banner-item-text-4" onClick={Link.handleClickQuery.bind(this, this.props.location && this.props.location.query)}>BOOK A CAREGIVER</a>
+            <div className="Banner-item-search">
+              <div className="Banner-item-input">
+                <Loader className="spinner" loaded={!allServicesFetching}>
+                  <Select
+                    name="service-search"
+                    placeholder="Select service"
+                    value={this.state.serviceId}
+                    onChange={(val) => this.setState({serviceId: val})}
+                    options={serviceOptions}
+                  />
+                </Loader>
+              </div>
+              <a href="/booking1" className="btn btn-secondary Banner-item-button" onClick={this._onClickSubmit.bind(this)}>FIND A CAREGIVER</a>
+            </div>
           </div>
         </div>
       </div>
@@ -60,4 +96,28 @@ export default class Banner extends Component {
     });
   }
 
+  _onClickSubmit(event) {
+    event.preventDefault();
+
+    if(this.state.serviceId) {
+      Location.push({ pathname: '/booking1', query: {sid: this.state.serviceId} });
+    }
+  }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    allServices: state.allServices.data,
+    allServicesFetching: state.allServices.isFetching
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchServices: () => {
+      return dispatch(fetchServices());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Banner);

@@ -144,6 +144,81 @@ export function calcRate(session, promo, sid) {
   }
 }
 
+export function getServiceIconClass(serviceId) {
+  let subcatClass;
+  switch (serviceId) {
+    case 10:
+      subcatClass = 'breast';
+      break;
+    case 11:
+      subcatClass = 'headheart';
+      break;
+    case 12:
+      subcatClass = 'physiotherapy';
+      break
+    case 13:
+      subcatClass = 'elderly';
+      break;
+    case 14:
+      subcatClass = 'needle';
+      break;
+    case 15:
+      subcatClass = 'drip';
+      break;
+    case 16:
+      subcatClass = 'nutrition';
+      break;
+    case 17:
+      subcatClass = 'syringe';
+      break;
+    case 18:
+      subcatClass = 'urinary';
+      break;
+    case 19:
+      subcatClass = 'stomach';
+      break;
+    case 20:
+      subcatClass = 'diabetic';
+      break;
+    case 21:
+      subcatClass = 'bandage';
+      break;
+    case 22:
+      subcatClass = 'lung';
+      break;
+    case 23:
+      subcatClass = 'report';
+      break;
+    case 24:
+      subcatClass = 'headdots';
+      break;
+    case 27:
+      subcatClass = 'housecall';
+      break;
+    case 29:
+      subcatClass = 'stethoscope';
+      break;
+    case 30:
+      subcatClass = 'headheart';
+      break;
+    case 31:
+      subcatClass = 'heart';
+      break;
+    case 32:
+      subcatClass = 'baby';
+      break;
+    case 33:
+      subcatClass = 'homeheart';
+      break;
+    case 34:
+      subcatClass = 'breast';
+      break;
+    default:
+      subcatClass = 'ebeecare';
+  }
+  return subcatClass;
+}
+
 const util = {
   host: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://api.ebeecare.com' : 'http://dev.ebeecare.com'),
   authKey: 'secret',
@@ -166,7 +241,8 @@ const util = {
   parseCategories: parseCategories,
   appendAllServices: appendAllServices,
 
-  calcRate: calcRate
+  calcRate: calcRate,
+  getServiceIconClass: getServiceIconClass
 };
 
 export default util;

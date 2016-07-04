@@ -36,77 +36,7 @@ class Services extends Component {
 
     let serviceContent;
     if (location && location.query && location.query.subcat && allServices) {
-      let subcatClass;
-      switch (parseInt(location.query.subcat)) {
-        case 11:
-          subcatClass = 'headheart';
-          break;
-        case 12:
-          subcatClass = 'physiotherapy';
-          break
-        case 13:
-          subcatClass = 'elderly';
-          break;
-        case 14:
-          subcatClass = 'needle';
-          break;
-        case 15:
-          subcatClass = 'drip';
-          break;
-        case 16:
-          subcatClass = 'nutrition'
-          break;
-        case 18:
-          subcatClass = 'urinary';
-          break;
-        case 19:
-          subcatClass = 'stomach';
-          break;
-        case 22:
-          subcatClass = 'lung';
-          break;
-        case 27:
-          subcatClass = 'housecall';
-          break;
-        case 17:
-          subcatClass = 'syringe';
-          break;
-        case 20:
-          subcatClass = 'diabetic';
-          break;
-        case 21:
-          subcatClass = 'bandage';
-          break;
-        case 23:
-          subcatClass = 'report';
-          break;
-        case 24:
-          subcatClass = 'headdots';
-          break;
-        case 27:
-          subcatClass = 'housecall';
-          break;
-        case 29:
-          subcatClass = 'stethoscope';
-          break;
-        case 30:
-          subcatClass = 'headheart';
-          break;
-        case 31:
-          subcatClass = 'heart';
-          break;
-        case 33:
-          subcatClass = 'homeheart'
-          break;
-        case 32:
-          subcatClass = 'baby'
-          break;
-        case 34:
-          subcatClass = 'breast'
-          break;
-        default:
-          subcatClass = 'ebeecare';
-      }
+      const subcatClass = Util.getServiceIconClass(parseInt(location.query.subcat));
       const allServicesArr = Object.values(allServices);
       // services of same subtype category
       const subcatServices = allServicesArr.filter((service) => (String(service.categoryObj) === location.query.subcat));
@@ -184,77 +114,7 @@ class Services extends Component {
                   <div className="OtherServicesList">
                     {
                       otherSubcats && otherSubcats.map((service) => {
-                        let subcatClass;
-                        switch (service.categoryObj) {
-                          case 11:
-                            subcatClass = 'headheart';
-                            break;
-                          case 12:
-                            subcatClass = 'physiotherapy';
-                            break
-                          case 13:
-                            subcatClass = 'elderly';
-                            break;
-                          case 14:
-                            subcatClass = 'needle';
-                            break;
-                          case 15:
-                            subcatClass = 'drip';
-                            break;
-                          case 16:
-                            subcatClass = 'nutrition'
-                            break;
-                          case 18:
-                            subcatClass = 'urinary';
-                            break;
-                          case 19:
-                            subcatClass = 'stomach';
-                            break;
-                          case 22:
-                            subcatClass = 'lung';
-                            break;
-                          case 27:
-                            subcatClass = 'housecall';
-                            break;
-                          case 17:
-                            subcatClass = 'syringe';
-                            break;
-                          case 20:
-                            subcatClass = 'diabetic';
-                            break;
-                          case 21:
-                            subcatClass = 'bandage';
-                            break;
-                          case 23:
-                            subcatClass = 'report';
-                            break;
-                          case 24:
-                            subcatClass = 'headdots';
-                            break;
-                          case 27:
-                            subcatClass = 'housecall';
-                            break;
-                          case 29:
-                            subcatClass = 'stethoscope';
-                            break;
-                          case 30:
-                            subcatClass = 'headheart';
-                            break;
-                          case 31:
-                            subcatClass = 'heart';
-                            break;
-                          case 33:
-                            subcatClass = 'homeheart'
-                            break;
-                          case 32:
-                            subcatClass = 'baby'
-                            break;
-                          case 34:
-                            subcatClass = 'breast'
-                            break;
-                          default:
-                            subcatClass = 'ebeecare';
-                        }
+                        const subcatClass = Util.getServiceIconClass(service.categoryObj);
                         return (
                           <div className="OtherServicesItem" key={service.categoryObj}>
                             <a href={'/services?subcat=' + service.categoryObj} onClick={this._onClickSubcat.bind(this, { subcat: service.categoryObj, subcatClass: subcatClass})}><div className={'service-icon ' + subcatClass}></div></a>

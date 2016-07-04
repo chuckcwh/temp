@@ -6,6 +6,7 @@ import Container from '../Container';
 import Link from '../Link';
 import { getRankedSubcategories } from '../../actions';
 import Location from '../../core/Location';
+import Util from '../../core/Util';
 
 class Popular extends Component {
 
@@ -23,77 +24,7 @@ class Popular extends Component {
             <div className="Popular-list">
               {
                 rankedSubcategories && rankedSubcategories.map((subcategory, index) => {
-                  let subcatClass;
-                  switch (subcategory.id) {
-                    case 11:
-                      subcatClass = 'headheart';
-                      break;
-                    case 12:
-                      subcatClass = 'physiotherapy';
-                      break
-                    case 13:
-                      subcatClass = 'elderly';
-                      break;
-                    case 14:
-                      subcatClass = 'needle';
-                      break;
-                    case 15:
-                      subcatClass = 'drip';
-                      break;
-                    case 16:
-                      subcatClass = 'nutrition'
-                      break;
-                    case 18:
-                      subcatClass = 'urinary';
-                      break;
-                    case 19:
-                      subcatClass = 'stomach';
-                      break;
-                    case 22:
-                      subcatClass = 'lung';
-                      break;
-                    case 27:
-                      subcatClass = 'housecall';
-                      break;
-                    case 17:
-                      subcatClass = 'syringe';
-                      break;
-                    case 20:
-                      subcatClass = 'diabetic';
-                      break;
-                    case 21:
-                      subcatClass = 'bandage';
-                      break;
-                    case 23:
-                      subcatClass = 'report';
-                      break;
-                    case 24:
-                      subcatClass = 'headdots';
-                      break;
-                    case 27:
-                      subcatClass = 'housecall';
-                      break;
-                    case 29:
-                      subcatClass = 'stethoscope';
-                      break;
-                    case 30:
-                      subcatClass = 'headheart';
-                      break;
-                    case 31:
-                      subcatClass = 'heart';
-                      break;
-                    case 33:
-                      subcatClass = 'homeheart'
-                      break;
-                    case 32:
-                      subcatClass = 'baby'
-                      break;
-                    case 34:
-                      subcatClass = 'breast'
-                      break;
-                    default:
-                      subcatClass = 'ebeecare';
-                  }
+                  const subcatClass = Util.getServiceIconClass(subcategory.id);
                   return (
                     <div className={'Popular-item' + (index === 7 ? ' last-item' : '')} key={subcategory.id}>
                       <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className={'service-icon ' + subcatClass}></div></a>

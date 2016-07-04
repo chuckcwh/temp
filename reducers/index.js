@@ -280,6 +280,27 @@ const totalSessionsCount = (state = {
   }
 }
 
+const rankedServices = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  data: null
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.STATS_SERVICES_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case ActionTypes.STATS_SERVICES_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        data: action.response && action.response.services,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    default:
+      return state;
+  }
+}
+
 const rankedSubcategories = (state = {
   isFetching: false,
   didInvalidate: false,
@@ -360,6 +381,7 @@ const bookingApp = combineReducers({
   sessions,
   // paypal,
   totalSessionsCount,
+  rankedServices,
   rankedSubcategories,
   lastPage,
   postStatus,

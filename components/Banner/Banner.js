@@ -66,7 +66,7 @@ class Banner extends Component {
                   />
                 </Loader>
               </div>
-              <a href="/booking1" className="btn btn-secondary Banner-item-button" onClick={this._onClickSubmit.bind(this)}>FIND A CAREGIVER</a>
+              {!rankedServicesFetching && <a href="/booking1" className="btn btn-secondary Banner-item-button" onClick={this._onClickSubmit.bind(this)}>FIND A CAREGIVER</a>}
             </div>
           </div>
         </div>

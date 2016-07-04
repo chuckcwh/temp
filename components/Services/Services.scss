@@ -134,6 +134,8 @@
           margin-top: 65px;
           font-size: 65px;
           color: $secondary-color;
+          word-break: break-all;
+          hyphens: auto;
           flex: 1;
 
           @media (max-width: $screen-sm-min) {

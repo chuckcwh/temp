@@ -37,7 +37,7 @@ class Services extends Component {
     let serviceContent;
     if (location && location.query && location.query.subcat && allServices) {
       let subcatClass;
-      switch (location.query.subcat) {
+      switch (parseInt(location.query.subcat)) {
         case 11:
           subcatClass = 'headheart';
           break;

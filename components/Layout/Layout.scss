@@ -525,7 +525,7 @@ input:disabled, textarea:disabled {
 .service-icon.drip {
   background-position: calc($popular-icon-size * -2 * $popular-icon-multipler) calc($popular-icon-size * -2 * $popular-icon-multipler);
 }
-.service-icon.tube {
+.service-icon.nutrition {
   background-position: calc($popular-icon-size * -3 * $popular-icon-multipler) calc($popular-icon-size * -2 * $popular-icon-multipler);
 }
 .service-icon.headdots {
@@ -604,7 +604,7 @@ input:disabled, textarea:disabled {
   .service-icon.drip {
     background-position: calc($popular-icon-size * -2) calc($popular-icon-size * -2);
   }
-  .service-icon.tube {
+  .service-icon.nutrition {
     background-position: calc($popular-icon-size * -3) calc($popular-icon-size * -2);
   }
   .service-icon.headdots {

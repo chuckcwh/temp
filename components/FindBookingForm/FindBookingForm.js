@@ -42,10 +42,6 @@ class FindBookingForm extends Component {
       handleSubmit,
       submitting
     } = this.props;
-    console.log('myprops', this.props);
-    console.log('bid', {...bid});
-    console.log('mobilePhone', {...mobilePhone});
-    console.log('handleSubmit', handleSubmit);
     return (
       <form className="FindBookingForm" onSubmit={handleSubmit(submit)}>
         <h3>Have Guest Booking ID?</h3>

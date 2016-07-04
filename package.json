@@ -81,8 +81,5 @@
     "start": "babel-node --eval \"require('./tools/start')().catch(err => console.log(err.stack))\"",
     "deploy": "babel-node --eval \"require('./tools/deploy')().catch(err => console.log(err.stack))\"",
     "stage": "babel-node --eval \"require('./tools/stage')().catch(err => console.log(err.stack))\""
-  },
-  "dependencies": {
-    "react-select": "^1.0.0-beta13"
   }
 }

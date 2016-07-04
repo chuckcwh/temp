@@ -94,16 +94,8 @@ class Popular extends Component {
                     default:
                       subcatClass = 'ebeecare';
                   }
-                  if (index === 7) {
-                    return (
-                      <div className="Popular-item last-item" key={subcategory.id}>
-                        <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className={'service-icon ' + subcatClass}></div></a>
-                        <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className="Popular-item-title">{subcategory.name}</div></a>
-                      </div>
-                    )
-                  }
                   return (
-                    <div className="Popular-item" key={subcategory.id}>
+                    <div className={'Popular-item' + (index === 7 ? ' last-item' : '')} key={subcategory.id}>
                       <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className={'service-icon ' + subcatClass}></div></a>
                       <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className="Popular-item-title">{subcategory.name}</div></a>
                     </div>

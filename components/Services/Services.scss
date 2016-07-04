@@ -116,6 +116,14 @@
 
         .service-icon {
           margin: 65px 30px 30px 30px;
+
+          @media (max-width: $screen-sm-min) {
+            margin: 35px 0 0 0;
+          }
+        }
+
+        @media (max-width: $screen-sm-min) {
+          text-align: center;
         }
       }
 
@@ -127,6 +135,11 @@
           font-size: 65px;
           color: $secondary-color;
           flex: 1;
+
+          @media (max-width: $screen-sm-min) {
+            text-align: center;
+            margin: 0;
+          }
         }
 
         .ServiceSubTypeDesc {
@@ -134,6 +147,11 @@
           margin-bottom: 65px;
           line-height: 22px;
           flex: 1;
+
+          @media (max-width: $screen-sm-min) {
+            text-align: center;
+            margin: 10px 0;
+          }
         }
       }
 
@@ -187,6 +205,10 @@
           }
         }
       }
+
+      @media (max-width: $screen-sm-min) {
+        flex-direction: column;
+      }
     }
 
 
@@ -198,6 +220,11 @@
         margin-bottom: 55px;
         font-size: 35px;
         color: $secondary-color;
+
+        @media (max-width: $screen-sm-min) {
+          text-align: center;
+          margin: 20px 0 0;
+        }
       }
 
       .OtherServicesList {

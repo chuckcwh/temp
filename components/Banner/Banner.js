@@ -61,7 +61,7 @@ class Banner extends Component {
                     name="service-search"
                     placeholder="Select Service"
                     value={(this.state.option && this.state.option.value) ? this.state.option.value : this.state.option}
-                    onChange={(val) => { console.log(val); this.setState({option: val}) }}
+                    onChange={(val) => this.setState({option: val})}
                     options={rankedServices && rankedServices.map(service => { return { label: service.name, value: service.id } })}
                   />
                 </Loader>

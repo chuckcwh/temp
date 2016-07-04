@@ -15,7 +15,6 @@ class Popular extends Component {
 
   render() {
     const { rankedSubcategories, rankedSubcategoriesFetching } = this.props;
-    console.log('rankedSubcategories', rankedSubcategories);
     return (
       <div className="Popular">
         <Container>
@@ -125,7 +124,7 @@ class Popular extends Component {
   _onClickSubcat(state, event) {
     event.preventDefault();
 
-    Location.push({ pathname: '/services', query: { subcat: state.subcat.id }, state: {subcatClass: state.subcatClass} });
+    Location.push({ pathname: '/services', query: { subcat: state.subcat.id } });
   }
 
   _onClickAllServices(event) {

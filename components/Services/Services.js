@@ -7,7 +7,7 @@ import './Services.scss';
 import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
-import { fetchServices } from '../../actions';
+import { fetchServices, setOrderService, setLastPage } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 import find from 'lodash/find';
@@ -228,7 +228,10 @@ class Services extends Component {
   _onClickBook(service, event) {
     event.preventDefault();
 
-    Location.push({ pathname: '/booking1', query: { sid: service.id } });
+    this.props.setOrderService(service.id);
+    Util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
+
+    Location.push({ pathname: '/booking2' });
   }
 
 }
@@ -236,6 +239,7 @@ class Services extends Component {
 const mapStateToProps = (state) => {
   return {
     location: state.router && state.router.location,
+    lastPage: state.lastPage,
     allServices: state.allServices.data,
     allServicesFetching: state.allServices.isFetching
   }
@@ -245,6 +249,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchServices: () => {
       return dispatch(fetchServices());
+    },
+    setOrderService: (service) => {
+      return dispatch(setOrderService(service));
+    },
+    setLastPage: (page) => {
+      return dispatch(setLastPage(page));
     }
   }
 }

@@ -6,7 +6,7 @@ import Select from 'react-select';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './Banner.scss';
 import Link from '../Link';
-import { fetchServices } from '../../actions';
+import { fetchServices, getRankedServices } from '../../actions';
 import Location from '../../core/Location';
 import Loader from 'react-loader';
 
@@ -30,20 +30,12 @@ class Banner extends Component {
   componentDidMount() {
     // this._startSlideshow();
     this.props.fetchServices();
+    this.props.getRankedServices();
   }
 
   render() {
     let serviceOptions = [];
-    const { allServices, allServicesFetching } = this.props;
-    if(allServices) {
-      const allServicesArr = Object.values(allServices);
-      allServicesArr.forEach((service) => {
-        let serviceOption = {}
-        serviceOption.label = service.name;
-        serviceOption.value = service.id;
-        serviceOptions.push(serviceOption);
-      });
-    }
+    const { allServices, allServicesFetching, rankedServices, rankedServicesFetching } = this.props;
 
     return (
       <div className="Banner">
@@ -64,13 +56,13 @@ class Banner extends Component {
             <div className="Banner-item-text Banner-item-text-3">From SGD 30 / Visit</div>
             <div className="Banner-item-search">
               <div className="Banner-item-input">
-                <Loader className="spinner" loaded={!allServicesFetching}>
+                <Loader className="spinner" loaded={!rankedServicesFetching}>
                   <Select
                     name="service-search"
-                    placeholder="Select service"
-                    value={this.state.option ? this.state.option.value : this.state.option}
-                    onChange={(val) => this.setState({option: val})}
-                    options={serviceOptions}
+                    placeholder="Select Service"
+                    value={(this.state.option && this.state.option.value) ? this.state.option.value : this.state.option}
+                    onChange={(val) => { console.log(val); this.setState({option: val}) }}
+                    options={rankedServices && rankedServices.map(service => { return { label: service.name, value: service.id } })}
                   />
                 </Loader>
               </div>
@@ -100,7 +92,7 @@ class Banner extends Component {
     event.preventDefault();
 
     if (this.state.option) {
-      Location.push({ pathname: '/booking1', query: {sid: this.state.option.value} });
+      Location.push({ pathname: '/booking1', query: {sid: this.state.option} });
     }
   }
 }
@@ -108,7 +100,9 @@ class Banner extends Component {
 const mapStateToProps = (state) => {
   return {
     allServices: state.allServices.data,
-    allServicesFetching: state.allServices.isFetching
+    allServicesFetching: state.allServices.isFetching,
+    rankedServices: state.rankedServices.data,
+    rankedServicesFetching: state.rankedServices.isFetching
   }
 }
 
@@ -116,6 +110,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchServices: () => {
       return dispatch(fetchServices());
+    },
+    getRankedServices: () => {
+      return dispatch(getRankedServices());
     }
   }
 }

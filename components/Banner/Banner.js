@@ -6,7 +6,7 @@ import Select from 'react-select';
 import Loader from 'react-loader';
 import './Banner.scss';
 import Link from '../Link';
-import { fetchServices, getRankedServices, setOrderService, setLastPage } from '../../actions';
+import { fetchServices, getRankedServices, setOrderService, setLastPage, showAlertPopup } from '../../actions';
 import Location from '../../core/Location';
 import Util from '../../core/Util';
 
@@ -96,6 +96,8 @@ class Banner extends Component {
       Util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
 
       Location.push({ pathname: '/booking2' });
+    } else {
+      this.props.showAlertPopup('Please select a service.');
     }
   }
 }
@@ -123,6 +125,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setLastPage: (page) => {
       return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (msg) => {
+      return dispatch(showAlertPopup(msg));
     }
   }
 }

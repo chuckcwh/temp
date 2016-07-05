@@ -6,6 +6,7 @@ import Testimonials from '../components/Testimonials';
 import Features from '../components/Features';
 import Actions from '../components/Actions';
 import Download from '../components/Download';
+import AlertPopup from '../components/AlertPopup';
 
 export default class extends Component {
 
@@ -19,6 +20,7 @@ export default class extends Component {
         <Features />
         <Actions />
         <Download />
+        <AlertPopup />
       </div>
     );
   }

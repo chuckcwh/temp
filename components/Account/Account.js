@@ -5,6 +5,7 @@ import linkState from 'react-link-state';
 import './Account.scss';
 import Container from '../Container';
 import Link from '../Link';
+import FindBookingForm from '../FindBookingForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
 import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
@@ -46,7 +47,7 @@ class Account extends Component {
         <div className="Account-container">
           {/*
           <div className="Account-login Account-container-item">
-            <form id="AccountLoginForm" action="https://app.ebecare.com/login/" method="POST">
+            <form id="AccountFindBookingForm" action="https://app.ebecare.com/login/" method="POST">
               <h3>Already a Member?</h3>
               <input className="EmailInput" type="email" name="email" placeholder="Enter Email" />
               <input className="PasswordInput" type="password" name="password" placeholder="Enter Password" />
@@ -67,17 +68,7 @@ class Account extends Component {
           */}
           <div className="Account-find Account-container-item">
             <Loader className="spinner" loaded={(!(this.props.bookingFetching) && this.props.location && this.props.location.query && this.props.location.query.bid && this.props.location.query.email) ? false : true}>
-              <form ref={(c) => this._accountManageBookingForm = c}>
-                <h3>Have Guest Booking ID?</h3>
-                <input className="BookingIdInput" type="text" valueLink={linkState(this, 'bid')} placeholder="Booking ID*" required />
-                <input className="EmailInput" type="email" valueLink={linkState(this, 'email')} placeholder="Enter Email*" required />
-                <div className="Account-container-item-middle">
-                  <div className="LoginInsteadContainer">
-                    Have account? <a href="https://app.ebeecare.com/login/" className="LoginInsteadLink">Login instead</a>
-                  </div>
-                </div>
-                <button className="btn btn-primary" onClick={this._onClickFindBooking.bind(this)}>Find Booking</button>
-              </form>
+              <FindBookingForm />
             </Loader>
           </div>
         </div>
@@ -88,7 +79,9 @@ class Account extends Component {
           <div className="Account-forgot Account-container-item">
             <form ref={(c) => this._accountForgotPasswordForm = c}>
               <h3>Forgot Password?</h3>
-              <input className="EmailInput" type="email" placeholder="Enter Email*" />
+              <div className="IconInput EmailInput">
+                <input type="email" placeholder="Enter Email*" />
+              </div>
               <div className="Account-container-item-middle">
                 <div className="ForgotPasswordContainer">
                   <a href="/manage-booking" className="ForgotPasswordLink" onClick={Link.handleClick}>Remembered Password?</a>
@@ -119,24 +112,6 @@ class Account extends Component {
         this.props.showAlertPopup('Sorry, we are not able to find your booking.');
       }
     });
-  }
-
-  _onClickFindBooking(event) {
-    if (this._accountManageBookingForm.checkValidity()) {
-      event.preventDefault();
-
-      this.props.getBooking({
-        bid: this.state.bid,
-        email: this.state.email
-      }).then((res) => {
-        if (res.response && res.response.status < 1) {
-          this.props.showAlertPopup('Sorry, we are not able to find your booking.');
-        }
-      });
-    } else {
-      event.preventDefault();
-      this.props.showAlertPopup('Please fill up all required fields.');
-    }
   }
 
 }

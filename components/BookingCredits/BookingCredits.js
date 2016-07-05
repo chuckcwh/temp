@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import linkState from 'react-link-state';
 import './BookingCredits.scss';
 import Link from '../Link';
 // import BookingActions from '../../actions/BookingActions';

@@ -1,27 +1,42 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import classNames from 'classnames';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Select from 'react-select';
+import Loader from 'react-loader';
 import './Banner.scss';
 import Link from '../Link';
+import { fetchServices, getRankedServices, setOrderService, setLastPage, showAlertPopup } from '../../actions';
+import Location from '../../core/Location';
+import Util from '../../core/Util';
 
 const bgImagesCount = 2;
 
-export default class Banner extends Component {
+class Banner extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       bgImageIndex: 0,
-      bgImages: [0]
+      bgImages: [0],
+      option: null
     };
+  }
+
+  componentWillReceiveProps(props) {
+    const { allServices } = props;
   }
 
   componentDidMount() {
     // this._startSlideshow();
+    this.props.fetchServices();
+    this.props.getRankedServices();
   }
 
   render() {
+    let serviceOptions = [];
+    const { allServices, allServicesFetching, rankedServices, rankedServicesFetching } = this.props;
+
     return (
       <div className="Banner">
         <div className="SliderWrapper">
@@ -39,7 +54,20 @@ export default class Banner extends Component {
             <div className="Banner-item-text Banner-item-text-1">The Best Homecare Option</div>
             <div className="Banner-item-text Banner-item-text-2">Family Caregivers</div>
             <div className="Banner-item-text Banner-item-text-3">From SGD 30 / Visit</div>
-            <a href="/booking1" className="btn btn-primary Banner-item-button Banner-item-text-4" onClick={Link.handleClickQuery.bind(this, this.props.location && this.props.location.query)}>BOOK A CAREGIVER</a>
+            <div className="Banner-item-search">
+              <div className="Banner-item-input">
+                <Loader className="spinner" loaded={!rankedServicesFetching}>
+                  <Select
+                    name="service-search"
+                    placeholder="Select Service"
+                    value={(this.state.option && this.state.option.value) ? this.state.option.value : this.state.option}
+                    onChange={(val) => this.setState({option: val})}
+                    options={rankedServices && rankedServices.map(service => { return { label: service.name, value: service.id } })}
+                  />
+                </Loader>
+              </div>
+              {!rankedServicesFetching && <a href="/booking1" className="btn btn-secondary Banner-item-button" onClick={this._onClickSubmit.bind(this)}>FIND A CAREGIVER</a>}
+            </div>
           </div>
         </div>
       </div>
@@ -60,4 +88,48 @@ export default class Banner extends Component {
     });
   }
 
+  _onClickSubmit(event) {
+    event.preventDefault();
+
+    if (this.state.option) {
+      this.props.setOrderService(parseInt(this.state.option));
+      Util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
+
+      Location.push({ pathname: '/booking2' });
+    } else {
+      this.props.showAlertPopup('Please select a service.');
+    }
+  }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    allServices: state.allServices.data,
+    allServicesFetching: state.allServices.isFetching,
+    rankedServices: state.rankedServices.data,
+    rankedServicesFetching: state.rankedServices.isFetching,
+    lastPage: state.lastPage
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchServices: () => {
+      return dispatch(fetchServices());
+    },
+    getRankedServices: () => {
+      return dispatch(getRankedServices());
+    },
+    setOrderService: (service) => {
+      return dispatch(setOrderService(service));
+    },
+    setLastPage: (page) => {
+      return dispatch(setLastPage(page));
+    },
+    showAlertPopup: (msg) => {
+      return dispatch(showAlertPopup(msg));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Banner);

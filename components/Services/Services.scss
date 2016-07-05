@@ -102,6 +102,173 @@
     }
   }
 
+  .ServiceBody {
+
+    border-top: 1px solid $secondary-color;
+
+    .ServiceDesc-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .ServiceIcon-wrapper {
+        flex: 1;
+
+        .service-icon {
+          margin: 65px 30px 30px 30px;
+
+          @media (max-width: $screen-sm-min) {
+            margin: 35px 0 0 0;
+          }
+        }
+
+        @media (max-width: $screen-sm-min) {
+          text-align: center;
+        }
+      }
+
+      .ServiceContent-wrapper {
+        flex: 4;
+
+        .ServiceSubTypeTitle {
+          margin-top: 65px;
+          font-size: 65px;
+          color: $secondary-color;
+          word-break: break-word;
+          hyphens: auto;
+          flex: 1;
+
+          @media (max-width: $screen-sm-min) {
+            text-align: center;
+            margin: 0;
+          }
+        }
+
+        .ServiceSubTypeDesc {
+          margin-top: 25px;
+          margin-bottom: 65px;
+          line-height: 22px;
+          flex: 1;
+
+          @media (max-width: $screen-sm-min) {
+            text-align: center;
+            margin: 10px 0 35px;
+          }
+        }
+      }
+
+
+      h3 {
+        color: $secondary-color;
+      }
+
+      .react-sanfona {
+        border: 1px solid $border-color;
+        border-radius: 5px;
+
+        .react-sanfona-item {
+          .react-sanfona-item-title {
+            border-top: 1px solid $border-color;
+            color: $text-color;
+            font-weight: 600;
+            padding: 10px;
+            transition: background-color .3s;
+          }
+
+          .react-sanfona-item-body {
+            .react-sanfona-item-body-wrapper {
+              padding: 10px;
+              position: relative;
+            }
+          }
+
+          &.react-sanfona-item-expanded {
+            .react-sanfona-item-title {
+              background-color: $brand-color;
+              color: #fff;
+            }
+          }
+
+          &:first-child {
+            .react-sanfona-item-title {
+              border-top: none;
+            }
+          }
+        }
+      }
+
+      .ServiceItem {
+        color: $text-color;
+        font-size: 15px;
+
+        .ServiceItemDescription {
+          &-price {
+            font-style: italic;
+          }
+        }
+      }
+
+      @media (max-width: $screen-sm-min) {
+        flex-direction: column;
+      }
+    }
+
+
+
+    .OtherServices {
+
+      .OtherServicesTitle {
+        margin-top: 80px;
+        margin-bottom: 55px;
+        font-size: 35px;
+        color: $secondary-color;
+
+        @media (max-width: $screen-sm-min) {
+          text-align: center;
+          margin: 20px 0 0;
+        }
+      }
+
+      .OtherServicesList {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin: 0 0 2em 0;
+        padding: 20px 0 0;
+        list-style: none;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        @media (max-width: $screen-sm-min) {
+          padding: 0;
+          justify-content: center;
+        }
+
+        .OtherServicesItem {
+          padding: 10px 0;
+          width: calc(100% / 5);
+          text-align: center;
+
+          @media (max-width: $screen-xs-min) {
+            padding: 0;
+            width: calc(100% / 3);
+          }
+        }
+
+        .OtherServicesItemTitle {
+          color: $secondary-color;
+          font-size: 22px;
+          padding: 5px 10px;
+
+          @media (max-width: $screen-sm-min) {
+            font-size: 18px;
+            padding: 5px;
+          }
+        }
+      }
+    }
+  }
+
   .ServicesBody {
     margin-top: 50px;
     margin-bottom: 100px;

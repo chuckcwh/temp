@@ -58,6 +58,10 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'LOGIN_FAILURE'
 
+export const LOGIN_CLIENT_REQUEST = 'LOGIN_CLIENT_REQUEST'
+export const LOGIN_CLIENT_SUCCESS = 'LOGIN_CLIENT_SUCCESS'
+export const LOGIN_CLIENT_FAILURE = 'LOGIN_CLIENT_FAILURE'
+
 export const EMAIL_EDIT_REQUEST = 'EMAIL_EDIT_REQUEST'
 export const EMAIL_EDIT_SUCCESS = 'EMAIL_EDIT_SUCCESS'
 export const EMAIL_EDIT_FAILURE = 'EMAIL_EDIT_FAILURE'
@@ -101,6 +105,14 @@ export const RESEND_VERIFY_BOOKING_PIN_FAILURE = 'RESEND_VERIFY_BOOKING_PIN_FAIL
 export const STATS_SESSIONS_REQUEST = 'STATS_SESSIONS_REQUEST'
 export const STATS_SESSIONS_SUCCESS = 'STATS_SESSIONS_SUCCESS'
 export const STATS_SESSIONS_FAILURE = 'STATS_SESSIONS_FAILURE'
+
+export const STATS_SERVICES_REQUEST = 'STATS_SERVICES_REQUEST'
+export const STATS_SERVICES_SUCCESS = 'STATS_SERVICES_SUCCESS'
+export const STATS_SERVICES_FAILURE = 'STATS_SERVICES_FAILURE'
+
+export const STATS_SUBCATEGORIES_REQUEST = 'STATS_SUBCATEGORIES_REQUEST'
+export const STATS_SUBCATEGORIES_SUCCESS = 'STATS_SUBCATEGORIES_SUCCESS'
+export const STATS_SUBCATEGORIES_FAILURE = 'STATS_SUBCATEGORIES_FAILURE'
 
 function fetchAction(route) {
   return {
@@ -150,6 +162,12 @@ function fetchAction(route) {
     },
     login: {
       types: [ LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE ],
+      endpoint: 'mlogin',
+      method: 'post',
+      auth: 'app'
+    },
+    loginClient: {
+      types: [ LOGIN_CLIENT_REQUEST, LOGIN_CLIENT_SUCCESS, LOGIN_CLIENT_FAILURE ],
       endpoint: 'mlogin',
       method: 'post',
       auth: 'app'
@@ -255,6 +273,18 @@ function fetchAction(route) {
       endpoint: 'getTotalSessionsCount',
       method: 'get',
       auth: 'app'
+    },
+    getRankedServices: {
+      types: [ STATS_SERVICES_REQUEST, STATS_SERVICES_SUCCESS, STATS_SERVICES_FAILURE ],
+      endpoint: 'getRankedServices',
+      method: 'get',
+      auth: 'app'
+    },
+    getRankedSubcategories: {
+      types: [ STATS_SUBCATEGORIES_REQUEST, STATS_SUBCATEGORIES_SUCCESS, STATS_SUBCATEGORIES_FAILURE ],
+      endpoint: 'getRankedSubCategory',
+      method: 'get',
+      auth: 'app'
     }
   }[route]
 }
@@ -317,6 +347,10 @@ export function cancelBookingSession(params, booking) {
 
 export function login(params) {
   return fetch('login', params);
+}
+
+export function loginClient(params) {
+  return fetch('loginClient', params);
 }
 
 export function getUser() {
@@ -394,7 +428,15 @@ export function resendVerifyBookingPin(params) {
 }
 
 export function getTotalSessionsCount() {
-  return fetch('getTotalSessionsCount')
+  return fetch('getTotalSessionsCount');
+}
+
+export function getRankedServices() {
+  return fetch('getRankedServices');
+}
+
+export function getRankedSubcategories() {
+  return fetch('getRankedSubcategories');
 }
 
 export function clearBooking() {

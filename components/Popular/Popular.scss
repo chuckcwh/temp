@@ -1,0 +1,70 @@
+@import '../variables.scss';
+
+.Popular {
+  position: relative;
+  min-height: 200px;
+  padding: 20px 0;
+
+  .Popular-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 0 2em 0;
+    padding: 20px 0 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    @media (max-width: $screen-sm-min) {
+      padding: 0;
+    }
+
+    .Popular-item {
+      padding: 10px 0;
+      width: calc(100% / 4);
+      text-align: center;
+
+      @media (max-width: $screen-sm-min) {
+        padding: 0;
+        width: calc(100% / 3);
+      }
+
+      &.last-item {
+        @media (min-width: $screen-sm-min) {
+          display: none;
+        }
+      }
+
+
+      &.Popular-item-question {
+
+
+        .Popular-item-question-icon {
+          display: inline-block;
+          width: $popular-icon-size;
+          height: $popular-icon-size;
+
+          img {
+            width: 100%;
+          }
+        }
+      }
+
+      .Popular-item-icon {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .Popular-item-title {
+        color: $secondary-color;
+        font-size: 22px;
+        padding: 5px 10px;
+        
+        @media (max-width: $screen-sm-min) {
+          font-size: 18px;
+          padding: 5px;
+        }
+      }
+    }
+  }
+}

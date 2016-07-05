@@ -226,15 +226,15 @@ export default class BookingDetails extends Component {
           <div>
             <div className="TableRow">
               <div className="TableRowItem1">Name</div>
-              <div className="TableRowItem3">{this.props.booking.case.quotes[0].fullName}</div>
+              <div className="TableRowItem3">{this.props.booking && this.props.booking.case && this.props.booking.case.quotes && this.props.booking.case.quotes[0] && this.props.booking.case.quotes[0].fullName}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Email</div>
-              <div className="TableRowItem3">{this.props.booking.case.quotes[0].user.email}</div>
+              <div className="TableRowItem3">{this.props.booking && this.props.booking.case && this.props.booking.case.quotes && this.props.booking.case.quotes[0] && this.props.booking.case.quotes[0].user && this.props.booking.case.quotes[0].user.email}</div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Contact Number</div>
-              <div className="TableRowItem3">{this.props.booking.case.quotes[0].user.mobilePhone}</div>
+              <div className="TableRowItem3">{this.props.booking && this.props.booking.case && this.props.booking.case.quotes && this.props.booking.case.quotes[0] && this.props.booking.case.quotes[0].user && this.props.booking.case.quotes[0].user.mobilePhone}</div>
             </div>
           </div>
         </div>

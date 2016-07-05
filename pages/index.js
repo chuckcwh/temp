@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import Banner from '../components/Banner/Banner';
-import Features from '../components/Features/Features';
-import Actions from '../components/Actions/Actions';
-import Testimonials from '../components/Testimonials/Testimonials';
+import Banner from '../components/Banner';
+import Popular from '../components/Popular';
+import Partners from '../components/Partners';
+import Testimonials from '../components/Testimonials';
+import Features from '../components/Features';
+import Actions from '../components/Actions';
+import Download from '../components/Download';
+import AlertPopup from '../components/AlertPopup';
 
 export default class extends Component {
 
@@ -10,9 +14,13 @@ export default class extends Component {
     return (
       <div>
         <Banner location={this.props.location} />
+        <Popular />
+        <Partners />
+        <Testimonials location={this.props.location} />
         <Features />
         <Actions />
-        <Testimonials />
+        <Download />
+        <AlertPopup />
       </div>
     );
   }

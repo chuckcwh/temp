@@ -118,4 +118,10 @@
       flex-wrap: wrap;
     }
   }
+
+  .Copyright {
+    @media (max-width: $screen-sm-min) {
+      text-align: center;
+    }
+  }
 }

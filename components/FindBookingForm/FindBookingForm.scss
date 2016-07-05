@@ -1,0 +1,9 @@
+@import '../variables.scss';
+
+.FindBookingForm {
+	.FindBookingFormError {
+    padding: 5px 0;
+    color: $secondary-color;
+    font-size: 85%;
+  }
+}

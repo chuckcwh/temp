@@ -36,9 +36,6 @@ export default class Navigation extends Component {
             <a className={classNames('Navigation-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
           </li>
           <li className="Navigation-item">
-            <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>BECOME A PARTNER</a>
-          </li>
-          <li className="Navigation-item">
             <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>MANAGE BOOKING</a>
           </li>
           <li className="Navigation-item">
@@ -57,9 +54,6 @@ export default class Navigation extends Component {
               </li>
               <li className="Navigation-item">
                 <a className={classNames('Navigation-link', (this.props.path === '/faq') ? 'active' : '')} href="/faq" onClick={Link.handleClick}>FAQ</a>
-              </li>
-              <li className="Navigation-item">
-                <a className="Navigation-link Navigation-link-highlight" href={Util.partners}>BECOME A PARTNER</a>
               </li>
               <li className="Navigation-item">
                 <a className={classNames('Navigation-link', (this.props.path === '/booking-manage') ? 'active' : '')} href="/booking-manage" onClick={Link.handleClick}>MANAGE BOOKING</a>

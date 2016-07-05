@@ -1,0 +1,79 @@
+@import '../variables.scss';
+
+.Download {
+  padding: 0;
+}
+
+.Download-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px 0 0 0;
+
+  @media (max-width: $screen-lg-min) {
+    padding: 0;
+    flex-direction: column-reverse;
+  }
+
+  .Download-item {
+    display: inline-block;
+    // padding: 0 0.5em;
+    // width: 200px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+
+    .Download-item-image {
+      display: block;
+
+      @media (max-width: $screen-xs-min) {
+        width: 100%;
+      }
+    }
+
+    .Download-item-content {
+      text-align: center;
+
+      .Download-item-store-link {
+        & + & {
+          margin-left: 10px;
+        }
+
+        @media (max-width: $screen-xs-min) {
+          margin: 0;
+        }
+
+        .Download-item-store {
+          @media (max-width: $screen-xs-min) {
+            height: 40px;
+          }
+        }
+      }
+    }
+
+    @media (max-width: $screen-sm-min) {
+      width: 100%;
+    }
+
+    .Download-item-icon {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    .Download-item-title {
+      color: $secondary-color;
+      font-size: 22px;
+      padding: 5px 0 5px 0;
+    }
+
+    & + & {
+      @media (max-width: $screen-lg-min) {
+        margin-bottom: 20px;
+      }
+    }
+  }
+}

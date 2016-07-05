@@ -41,7 +41,7 @@ class ResendVerifyBookingPopup extends Component {
                   <div className="Account-container-item-middle">
                     <div className={this.state.error ? '' : 'hidden'}><span className="error">Mobile number does not match.</span></div>
                   </div>
-                  <button className="btn btn-primary" onClick={this._onClickSubmit.bind(this)}>Submit</button>
+                  <a href="#" className="btn btn-primary" onClick={this._onClickSubmit.bind(this)}>Submit</a>
                 </form>
               </div>
             </Loader>

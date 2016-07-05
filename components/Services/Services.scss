@@ -236,7 +236,7 @@
         margin: 0 0 2em 0;
         padding: 20px 0 0;
         list-style: none;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: flex-start;
 
         @media (max-width: $screen-sm-min) {
@@ -246,10 +246,12 @@
 
         .OtherServicesItem {
           padding: 10px 0;
+          width: calc(100% / 5);
           text-align: center;
 
-          @media (max-width: $screen-sm-min) {
+          @media (max-width: $screen-xs-min) {
             padding: 0;
+            width: calc(100% / 3);
           }
         }
 

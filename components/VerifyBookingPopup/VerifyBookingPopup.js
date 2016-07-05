@@ -32,7 +32,7 @@ class VerifyBookingPopup extends Component {
           <Popup ref={(c) => this._verifyBookingPopup = c} isOpen={this.props.visible} afterOpen={this._executeAfterModalOpen.bind(this)} hideCloseButton>
             <Loader className="spinner" loaded={this.state.pending ? false : true}>
               <div className="Account-login Account-container-item">
-                <form id="VerifyBookingForm" ref={(c) => this._verifyBookingForm = c} autoComplete="off">
+                <form id="VerifyBookingForm" ref={(c) => this._verifyBookingForm = c} autoComplete="off" onSubmit={this._onClickSubmit.bind(this)}>
                   <h3>Verify Booking</h3>
                   <p>Please enter the 4-digit PIN sent to your mobile phone.</p>
                   <input ref={(c) => this._startInput = c} className="PinInput" type="password" name="pin" valueLink={linkState(this, 'pin')} placeholder="Enter PIN" required />

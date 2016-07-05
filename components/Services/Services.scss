@@ -255,6 +255,13 @@
 
         .OtherServicesItemTitle {
           color: $secondary-color;
+          font-size: 22px;
+          padding: 5px 10px;
+
+          @media (max-width: $screen-sm-min) {
+            font-size: 18px;
+            padding: 5px;
+          }
         }
       }
     }

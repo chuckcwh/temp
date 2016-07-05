@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import classNames from 'classnames';
 import Select from 'react-select';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Loader from 'react-loader';
 import './Banner.scss';
 import Link from '../Link';
-import { fetchServices, getRankedServices } from '../../actions';
+import { fetchServices, getRankedServices, setOrderService, setLastPage } from '../../actions';
 import Location from '../../core/Location';
-import Loader from 'react-loader';
+import Util from '../../core/Util';
 
 const bgImagesCount = 2;
 
@@ -92,7 +92,10 @@ class Banner extends Component {
     event.preventDefault();
 
     if (this.state.option) {
-      Location.push({ pathname: '/booking1', query: {sid: this.state.option} });
+      this.props.setOrderService(parseInt(this.state.option));
+      Util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
+
+      Location.push({ pathname: '/booking2' });
     }
   }
 }
@@ -102,7 +105,8 @@ const mapStateToProps = (state) => {
     allServices: state.allServices.data,
     allServicesFetching: state.allServices.isFetching,
     rankedServices: state.rankedServices.data,
-    rankedServicesFetching: state.rankedServices.isFetching
+    rankedServicesFetching: state.rankedServices.isFetching,
+    lastPage: state.lastPage
   }
 }
 
@@ -113,6 +117,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     getRankedServices: () => {
       return dispatch(getRankedServices());
+    },
+    setOrderService: (service) => {
+      return dispatch(setOrderService(service));
+    },
+    setLastPage: (page) => {
+      return dispatch(setLastPage(page));
     }
   }
 }

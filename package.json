@@ -41,7 +41,6 @@
     "precss": "^1.2.3",
     "raw-loader": "^0.5.1",
     "react": "^0.14.0",
-    "react-addons-css-transition-group": "^0.14.8",
     "react-burger-menu": "^1.8.1",
     "react-datepicker": "^0.23.2",
     "react-datetime": "^2.1.0",

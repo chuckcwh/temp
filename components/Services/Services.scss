@@ -231,36 +231,33 @@
 
       .OtherServicesList {
         display: flex;
-        flex-direction: horizontal;
+        flex-direction: row;
         flex-wrap: wrap;
-        text-align: center;
+        margin: 0 0 2em 0;
+        padding: 20px 0 0;
+        list-style: none;
+        justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 100px;
 
         @media (max-width: $screen-sm-min) {
-          flex-direction: column;
+          padding: 0;
           justify-content: center;
         }
 
         .OtherServicesItem {
-          margin: 0px 35px 0px 35px;
+          padding: 10px 0;
+          text-align: center;
 
           @media (max-width: $screen-sm-min) {
-            margin: 10px auto 10px auto;
+            padding: 0;
           }
         }
 
         .OtherServicesItemTitle {
           color: $secondary-color;
-
         }
       }
-
-
-
-
     }
-
   }
 
   .ServicesBody {

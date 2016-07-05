@@ -124,8 +124,8 @@ class Services extends Component {
                       })
                     }
                     <div className="OtherServicesItem">
-                        <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="service-icon ebeecare"></div></a>
-                        <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="OtherServicesItemTitle">All Services</div></a>
+                      <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="service-icon ebeecare"></div></a>
+                      <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="OtherServicesItemTitle">All Services</div></a>
                     </div>
                   </div>
                 </div>

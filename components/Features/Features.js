@@ -17,7 +17,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Interview</div>
-                <div>Only qualified caregivers are invited to our interview workshop. We also allocate them into different specialities; wound care, dementia care &  etc.</div>
+                <div>Only qualified caregivers are invited to our interview workshop. We also allocate them into different specialities; wound care, dementia care, etc.</div>
               </div>
             </div>
             <div className="Features-item">
@@ -62,7 +62,7 @@ export default class Features extends Component {
               </div>
               <div className="Features-item-right">
                 <div className="Features-item-title">Safety Assurance</div>
-                <div className="Features-item-description">Each service is Insurance protected.</div>
+                <div className="Features-item-description">Each service is insurance protected.</div>
               </div>
             </div>
           </div>

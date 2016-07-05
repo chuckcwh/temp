@@ -420,6 +420,8 @@ input:disabled, textarea:disabled {
   margin: 0 auto;
 
   .Body {
+    overflow: hidden;
+    
     @media (max-width: $screen-sm-min) {
       margin-top: 57px;
     }

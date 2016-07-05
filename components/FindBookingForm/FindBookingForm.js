@@ -51,7 +51,7 @@ class FindBookingForm extends Component {
         </div>
         <div className="IconInput EmailInput">
           <span />
-          <input type="text" placeholder="Enter Mobile Number*" {...mobilePhone} />
+          <input type="text" placeholder="Mobile Number*" {...mobilePhone} />
         </div>
         <div className="Account-container-item-middle">
           {bid.touched && bid.error && <div className="FindBookingFormError">{bid.error}</div>}

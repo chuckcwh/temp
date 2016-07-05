@@ -9,7 +9,7 @@ export default class Features extends Component {
       <div className="Features">
         <Container>
           <h1 className="text-center">Quality & Trust</h1>
-          <p className="text-center featured">eBeeCare is the largest online local home healthcare provider in Singapore. Since 2015 our caregivers have provided over 50,000 hours of care for patients... and they are ready to serve you!</p>
+          <p className="text-center featured">eBeeCare is the largest online home health care provider in Singapore. Since 2015 our caregivers have provided over 2000 home care visits for patients … and they are ready to serve you!</p>
           <div className="Features-list">
             <div className="Features-item">
               <div className="Features-item-left">

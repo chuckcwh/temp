@@ -85,7 +85,7 @@ class Services extends Component {
                       {subcatServices && subcatServices[0] && subcatServices[0].subTypeDesc}
                     </div>
                     <div className="ServicesList">
-                      <Accordion activeItems={-1}>
+                      <Accordion activeItems={[undefined]} key={subcatServices[0].id}>
                         {
                           subcatServices && subcatServices.map(service => {
                             return (

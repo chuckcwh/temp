@@ -49,7 +49,7 @@ class FindBookingForm extends Component {
           <span />
           <input type="text" placeholder="Booking ID*" {...bid} />
         </div>
-        <div className="IconInput EmailInput">
+        <div className="IconInput PhoneInput">
           <span />
           <input type="text" placeholder="Mobile Number*" {...mobilePhone} />
         </div>

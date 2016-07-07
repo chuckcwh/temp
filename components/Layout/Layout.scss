@@ -269,6 +269,12 @@ input.btn-inline {
     }
   }
 
+  &.PhoneInput {
+    > span {
+      background: url('../phone.png') no-repeat 12.5px;
+    }
+  }
+
   & + & {
     border-top: none;
   }

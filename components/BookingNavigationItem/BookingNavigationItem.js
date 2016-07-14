@@ -5,12 +5,12 @@ import s from './BookingNavigationItem.css';
 import Link from '../Link';
 import history from '../../core/history';
 import { isNavigationAllowed } from '../../core/util';
-const location = history.getCurrentLocation();
 
 class BookingNavigationItem extends Component {
 
   render() {
-    const { location, lastPage, active, link, icon, text } = this.props;
+    const { lastPage, active, link, icon, text } = this.props;
+    const location = history.getCurrentLocation();
     if (link && isNavigationAllowed(link, lastPage)) {
       return (
         <li className={s.bookingNavigationItem}>

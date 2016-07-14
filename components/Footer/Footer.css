@@ -1,0 +1,125 @@
+@import '../variables.css';
+
+.footer {
+  margin: 0 auto;
+  padding: 40px 0 20px 0;
+  color: #ffffff;
+  background-color: var(--brand-color);
+  font-weight: 600;
+  font-size: 15px;
+  @apply --font-smoothing;
+
+  & a {
+    color: #ffffff;
+  }
+
+  & .footerList {
+    display: flex;
+    flex-direction: row;
+    margin: 0 0 5em 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    & .footerItem {
+      padding: 0 0.5em;
+
+      & .footerNav {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        justify-content: flex-end;
+        align-items: center;
+        text-align: left;
+
+        & .footerNavItem {
+          padding: 0 0.5em;
+          width: 100%;
+
+          & .footerNavLink {
+            display: inline-block;
+            float: left;
+            padding: 0.5em 0;
+            color: #ffffff;
+            font-size: 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            cursor: pointer;
+
+            &:hover {
+              color: var(--text-color);
+              text-decoration: none;
+            }
+
+            &.active {
+              color: var(--secondary-color);
+              font-weight: bold;
+              cursor: default;
+            }
+
+            &-highlight {
+              background-color: var(--secondary-color);
+              color: #fff;
+
+              &:hover {
+                border: none;
+                background-color: var(--brand-color);
+                color: #fff;
+              }
+            }
+
+            @media (--sm-viewport) {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+
+      & .footerMapsButton {
+        display: flex;
+        max-height: 32px;
+        flex-direction: row;
+        align-items: center;
+        background-color: #eee;
+
+        &:hover {
+          box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.25);
+        }
+
+        & .footerMapsLabel {
+          flex: 1;
+          text-align: center;
+          line-height: 0.75em;
+          padding: 5px;
+          color: var(--text-color);
+        }
+      }
+
+      & .footerSocialMedia {
+        color: #fbeaaa;
+        margin-left: 10px;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+
+      & .footerTel {
+        font-size: 25px;
+        font-weight: 700;
+      }
+    }
+
+    @media (--sm-viewport) {
+      flex-wrap: wrap;
+    }
+  }
+
+  & .footerCopyright {
+    @media (--sm-viewport) {
+      text-align: center;
+    }
+  }
+}

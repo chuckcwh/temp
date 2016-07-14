@@ -1,0 +1,20 @@
+@import '../variables.css';
+
+.bookingBankTransfer {
+  position: relative;
+  flex: 10;
+  font-size: 21px;
+  justify-content: center;
+
+  & .bookingBankTransferLogo {
+    margin: 0 10px;
+  }
+
+  & :global .rdt {
+    display: inline-block;
+
+    & :global .rdtPicker .rdtDay {
+    	cursor: pointer;
+    }
+  }
+}

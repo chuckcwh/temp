@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Popup from '../Popup';
-import './ConfirmPopup.scss';
+import s from './ConfirmPopup.css';
 import { hideConfirmPopup } from '../../actions';
 
 class ConfirmPopup extends Component {
 
   render() {
     return (
-      <div className="ConfirmPopup">
-        <Popup title="Confirmation" isOpen={this.props.visible} onCloseClicked={this._onClickCancel.bind(this)}>
+      <div className={s.confirmPopup}>
+        <Popup css={s} title="Confirmation" isOpen={this.props.visible} onCloseClicked={this._onClickCancel.bind(this)}>
           {this.props.message}
           {this.props.children}
-          <div className="ConfirmPopup-footer">
+          <div className={s.confirmPopupFooter}>
             <a className="btn btn-primary btn-small" href="#" onClick={this._onClickOk.bind(this)}>OK</a>
             <a className="btn btn-primary btn-small" href="#" onClick={this._onClickCancel.bind(this)}>Cancel</a>
           </div>

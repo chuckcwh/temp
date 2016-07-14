@@ -4,14 +4,15 @@ import linkState from 'react-link-state';
 import classNames from 'classnames';
 import moment from 'moment';
 import Loader from 'react-loader';
-import './BookingLocationUser.scss';
+import s from './BookingLocationUser.css';
 import Container from '../Container';
 import Link from '../Link';
 import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
 import { fetchLanguages, fetchAddress, getPatients, createPatient, getPatient, getUser, editPatient, editClient, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
-import Util from '../../core/Util';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingLocationUser extends Component {
 
@@ -182,19 +183,19 @@ class BookingLocationUser extends Component {
     }
     component = (
       <div>
-        <div className="BookingLocationUserBodyEditSection">
-          <div className="BookingLocationUserBodyEditSectionTitle">
+        <div className={s.bookingLocationUserBodyEditSection}>
+          <div className={s.bookingLocationUserBodyEditSectionTitle}>
             <h3>Contact Person Details</h3>
             {/*<a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>*/}
           </div>
           {userDetails}
         </div>
-        <div className="BookingLocationUserBodyEditSection">
-          <div className="BookingLocationUserBodyAddPatient">
+        <div className={s.bookingLocationUserBodyEditSection}>
+          <div className={s.bookingLocationUserBodyAddPatient}>
             <button className="btn btn-primary" onClick={this._onClickAddPatient.bind(this)}>Add New Patient</button>
             <span>or</span>
           </div>
-          <div className="BookingLocationUserBodySelectPatient">
+          <div className={s.bookingLocationUserBodySelectPatient}>
             <span>Select Existing Patient</span>
             <div className="select">
               <span></span>
@@ -209,8 +210,8 @@ class BookingLocationUser extends Component {
             </div>
           </div>
         </div>
-        <div className="BookingLocationUserBodyEditSection">
-          <div className="BookingLocationUserBodyEditSectionTitle">
+        <div className={s.bookingLocationUserBodyEditSection}>
+          <div className={s.bookingLocationUserBodyEditSectionTitle}>
             <h3>Patient Details</h3>
           </div>
           <Loader className="spinner" loaded={(this.props.patients && !this.state.savingPatient) ? true : false}>
@@ -221,7 +222,7 @@ class BookingLocationUser extends Component {
             <textarea name="additionalInfo" valueLink={linkState(this, 'additionalInfo')} />
           </div>
         </div>
-        <div className="BookingLocationUserBodyEditSection">
+        <div className={s.bookingLocationUserBodyEditSection}>
           <div className={classNames(!this.state.patientId ? 'hidden' : '')}>
             <a href="/booking3a" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
           </div>
@@ -229,10 +230,10 @@ class BookingLocationUser extends Component {
       </div>
     );
     return (
-      <div className="BookingLocationUser">
+      <div className={s.bookingLocationUser}>
         <Container>
-          <div className="BookingLocationUserWrapper">
-            <div className="BookingLocationUserBody">
+          <div className={s.bookingLocationUserWrapper}>
+            <div className={s.bookingLocationUserBody}>
               {component}
             </div>
             {this.props.children}
@@ -683,21 +684,24 @@ class BookingLocationUser extends Component {
 
   _onNext(event) {
     if (this.props.patients && this.state.patientId) {
-      Link.handleClickQuery(this.props.location && this.props.location.query, event);
+      event.preventDefault();
 
+      const location = history.getCurrentLocation();
       var booker =  {
         additionalInfo: this.state.additionalInfo
       };
       // console.log(booker);
-      var location = {
+      var orderLocation = {
         postalCode: this.props.patients[this.state.patientId].addresses[0].postalCode,
         address: this.props.patients[this.state.patientId].addresses[0].address,
         unitNumber: this.props.patients[this.state.patientId].addresses[0].unitNumber
       };
       this.props.setOrderBooker(booker);
-      this.props.setOrderLocation(location);
+      this.props.setOrderLocation(orderLocation);
       this.props.setOrderPatient(this.props.patients[this.state.patientId]);
-      Util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+      util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+
+      history.push({ pathname: '/booking3a', query: location.query });
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
@@ -706,7 +710,7 @@ class BookingLocationUser extends Component {
   }
 
   _getPatients(user, cb) {
-    cb = cb || () => {};
+    cb = cb || (() => {});
     this.props.getPatients({
       cid: user.clients[0].id
     }).then((res) => {
@@ -722,7 +726,6 @@ class BookingLocationUser extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     languages: state.languages.data,
     lastPage: state.lastPage,
     order: state.order,

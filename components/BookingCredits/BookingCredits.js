@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './BookingCredits.scss';
+import s from './BookingCredits.css';
 import Link from '../Link';
 // import BookingActions from '../../actions/BookingActions';
 
@@ -13,10 +13,10 @@ export default class BookingCredits extends Component {
 
   render() {
     return (
-      <div className="BookingCredits">
+      <div className={s.bookingCredits}>
         <div>
-          <img className="BookingCreditsLogo" src={require('../paypal.png')} />
-          <img className="BookingCreditsLogo" src={require('../visamaster.png')} />
+          <img className={s.bookingCreditsLogo} src={require('../paypal.png')} />
+          <img className={s.bookingCreditsLogo} src={require('../visamaster.png')} />
         </div>
         <p><b>Your Total Amount is SGD {this.props.booking.case.price}</b></p>
         <p>Please confirm your booking by clicking the "Confirm Booking" button below.<br/>You will be redirected to the Paypal page to complete your booking process.</p>

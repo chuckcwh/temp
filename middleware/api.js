@@ -1,8 +1,8 @@
 import { client } from '../utils/http'
 import { fetch } from 'isomorphic-fetch'
-import Util from '../core/Util'
+import util from '../core/util'
 
-const API_ROOT = Util.host + '/api/'
+const API_ROOT = util.host + '/api/'
 
 // Fetches an API response.
 // This makes every API response have the same shape, regardless of how nested it was.
@@ -10,14 +10,14 @@ function callApi(store, endpoint, method, data, auth) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
   let headers;
   if (auth === 'app') {
-    headers = { 'Authorization': 'Basic ' + window.btoa(Util.authKey + ':' + Util.authSecret) }
+    headers = { 'Authorization': 'Basic ' + window.btoa(util.authKey + ':' + util.authSecret) }
   } else if (auth === 'user') {
     headers = { 'Authorization': 'Basic ' + window.btoa(store.getState().user.data.id + ':' + store.getState().user.data.token) }
   } else if (auth === 'userParams') {
     headers = { 'Authorization': 'Basic ' + window.btoa(data.id + ':' + data.token) }
   }
   let request = client({
-    host: Util.host,
+    host: util.host,
     headers
   })
 

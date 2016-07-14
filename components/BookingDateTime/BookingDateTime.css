@@ -1,0 +1,51 @@
+@import '../variables.css';
+
+.bookingDateTime {
+  background-color: #f3f3f3;
+
+  & .bookingDateTimeNavWrapper {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--secondary-color);
+
+    @media (--sm-viewport) {
+      flex-direction: column;
+      border-bottom: none;
+    }
+
+    & .bookingDateTimeNav {
+      display: flex;
+      flex-direction: row;
+      margin: 0;
+      padding: 10px 0;
+      list-style: none;
+      justify-content: flex-start;
+      align-items: center;
+
+      @media (--lg-viewport) {
+        flex-wrap: wrap;
+      }
+
+      @media (--sm-viewport) {
+        justify-content: flex-start;
+      }
+    }
+  }
+
+  & .bookingDateTimeBody {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 50px;
+    padding-bottom: 100px;
+    background-color: #f3f3f3;
+
+    @media (--sm-viewport) {
+      flex-direction: column;
+    }
+  }
+}

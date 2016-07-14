@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import './BookingPatientForm.scss';
+import s from './BookingPatientForm.css';
 
 class BookingPatientForm extends Component {
 
@@ -21,14 +21,14 @@ class BookingPatientForm extends Component {
       submitting 
     } = this.props;
     return (
-      <form className="BookingPatientForm" onSubmit={handleSubmit(this.props.onNext)}>
+      <form className={s.bookingPatientForm} onSubmit={handleSubmit(this.props.onNext)}>
         {/*
-        <div className="BookingPatientFormSection">
+        <div className={s.bookingPatientFormSection}>
           <span>I&apos;m an existing customer</span>
           <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this._onClickLogin.bind(this)}>LOGIN</a>
         </div>
         */}
-        <div className="BookingPatientFormSection">
+        <div className={s.bookingPatientFormSection}>
           <div>Contact Details</div>
           {/*
           <div className="select">
@@ -38,51 +38,51 @@ class BookingPatientForm extends Component {
             </select>
           </div>
           */}
-          <div className="BookingPatientFormGroup">
+          <div className={s.bookingPatientFormGroup}>
             <input type="text" id="client_firstName" name="client_firstName" placeholder="First Name*" {...client_firstName} />
-            {client_firstName.touched && client_firstName.error && <div className="BookingPatientFormError">{client_firstName.error}</div>}
+            {client_firstName.touched && client_firstName.error && <div className={s.bookingPatientFormError}>{client_firstName.error}</div>}
           </div>
-          <div className="BookingPatientFormGroup">
+          <div className={s.bookingPatientFormGroup}>
             <input type="text" id="client_lastName" name="client_lastName" placeholder="Last Name*" {...client_lastName} />
-            {client_lastName.touched && client_lastName.error && <div className="BookingPatientFormError">{client_lastName.error}</div>}
+            {client_lastName.touched && client_lastName.error && <div className={s.bookingPatientFormError}>{client_lastName.error}</div>}
           </div>
-          <div className="BookingPatientFormGroup">
+          <div className={s.bookingPatientFormGroup}>
             <input type="email" id="client_contactEmail" name="client_contactEmail" placeholder="Email*" {...client_contactEmail} />
-            {client_contactEmail.touched && client_contactEmail.error && <div className="BookingPatientFormError">{client_contactEmail.error}</div>}
+            {client_contactEmail.touched && client_contactEmail.error && <div className={s.bookingPatientFormError}>{client_contactEmail.error}</div>}
           </div>
-          <div className="BookingPatientFormGroup">
+          <div className={s.bookingPatientFormGroup}>
             <input type="text" id="client_contactNumber" name="client_contactNumber" placeholder="Mobile Number*" {...client_contactNumber} />
-            {client_contactNumber.touched && client_contactNumber.error && <div className="BookingPatientFormError">{client_contactNumber.error}</div>}
+            {client_contactNumber.touched && client_contactNumber.error && <div className={s.bookingPatientFormError}>{client_contactNumber.error}</div>}
           </div>
         </div>
-        <div className="BookingPatientFormSection">
+        <div className={s.bookingPatientFormSection}>
           <div>
-            <span className="PatientDetailsLabel1">Patient Details</span>
-            <span className="PatientDetailsLabel2"> (
-              <input className="RememberMeCheckbox" type="checkbox" id="isPatient" name="isPatient" {...isPatient} />
-              <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
+            <span className={s.patientDetailsLabel1}>Patient Details</span>
+            <span className={s.patientDetailsLabel2}> (
+              <input className={s.rememberMeCheckbox} type="checkbox" id="isPatient" name="isPatient" {...isPatient} />
+              <label className={s.rememberMeCheckboxLabel} htmlFor="isPatient">
                 <span></span><span>Are you the patient?</span>
               </label>
               &nbsp;)
             </span>
           </div>
           <div>
-            <div className="BookingPatientFormGroup">
+            <div className={s.bookingPatientFormGroup}>
               <input type="text" id="patient_firstName" name="patient_firstName" placeholder="First Name*" {...patient_firstName} />
-              {patient_firstName.touched && patient_firstName.error && <div className="BookingPatientFormError">{patient_firstName.error}</div>}
+              {patient_firstName.touched && patient_firstName.error && <div className={s.bookingPatientFormError}>{patient_firstName.error}</div>}
             </div>
-            <div className="BookingPatientFormGroup">
+            <div className={s.bookingPatientFormGroup}>
               <input type="text" id="patient_lastName" name="patient_lastName" placeholder="Last Name*" {...patient_lastName} />
-              {patient_lastName.touched && patient_lastName.error && <div className="BookingPatientFormError">{patient_lastName.error}</div>}
+              {patient_lastName.touched && patient_lastName.error && <div className={s.bookingPatientFormError}>{patient_lastName.error}</div>}
             </div>
-            <div className="BookingPatientFormGroup">
+            <div className={s.bookingPatientFormGroup}>
               <div className="DateInput">
                 <input type="text" id="patient_dob" name="patient_dob" placeholder="Birth Date* (YYYY-MM-DD)" {...patient_dob} />
                 <span onClick={() => this.props.showDayPickerPopup(patient_dob.value, 'bookingLocationForm')}></span>
               </div>
-              {patient_dob.touched && patient_dob.error && <div className="BookingPatientFormError">{patient_dob.error}</div>}
+              {patient_dob.touched && patient_dob.error && <div className={s.bookingPatientFormError}>{patient_dob.error}</div>}
             </div>
-            <div className="BookingPatientFormGroup">
+            <div className={s.bookingPatientFormGroup}>
               <div className="radio radio-inline">
                 <input type="radio" id="patient_gender_male" name="patient_gender" {...patient_gender} value="Male" checked={patient_gender.value === 'Male'} />
                 <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
@@ -91,18 +91,18 @@ class BookingPatientForm extends Component {
                 <input type="radio" id="patient_gender_female" name="patient_gender" {...patient_gender} value="Female" checked={patient_gender.value === 'Female'} />
                 <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
               </div>
-              {patient_gender.touched && patient_gender.error && <div className="BookingPatientFormError">{patient_gender.error}</div>}
+              {patient_gender.touched && patient_gender.error && <div className={s.bookingPatientFormError}>{patient_gender.error}</div>}
             </div>
           </div>
           <div style={{marginTop: '40px'}}>
             <div>
               <div>Additional Info:</div>
               <textarea name="additionalInfo" placeholder="Please provide important notes about patient here." {...additionalInfo} value={additionalInfo.value || ''} />
-              {additionalInfo.touched && additionalInfo.error && <div className="BookingPatientFormError">{additionalInfo.error}</div>}
+              {additionalInfo.touched && additionalInfo.error && <div className={s.bookingPatientFormError}>{additionalInfo.error}</div>}
             </div>
           </div>
           <p className="small">This information will only be used to contact you regarding your booking.</p>
-          {submitFailed && invalid && <div className="BookingPatientFormError">You have one or more form field errors.</div>}
+          {submitFailed && invalid && <div className={s.bookingPatientFormError}>You have one or more form field errors.</div>}
           <button className="btn btn-primary" type="submit" disabled={submitting}>BOOK NOW</button>
         </div>
       </form>

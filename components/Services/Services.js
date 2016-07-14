@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Loader from 'react-loader';
 import { Accordion, AccordionItem } from 'react-sanfona';
-import './Services.scss';
+import s from './Services.css';
 import Container from '../Container';
 import Link from '../Link';
 import AlertPopup from '../AlertPopup';
 import { fetchServices, setOrderService, setLastPage } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import history from '../../core/history';
+import util from '../../core/util';
 import find from 'lodash/find';
 import shuffle from 'lodash/shuffle';
 
@@ -18,7 +18,7 @@ class Services extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter: Util.ALL_SERVICES
+      filter: util.ALL_SERVICES
     };
   }
 
@@ -27,19 +27,20 @@ class Services extends Component {
   }
 
   render() {
-    const { location, allServices, allServicesFetching } = this.props;
+    const { params, allServices, allServicesFetching } = this.props;
     const { filter } = this.state;
+    const location = history.getCurrentLocation();
 
-    const serviceTree = Util.appendAllServices(Util.parseCategories(allServices));
+    const serviceTree = util.appendAllServices(util.parseCategories(allServices));
     let serviceTreeHash = {};
     serviceTree.map(category => { serviceTreeHash[category.name] = category });
 
     let serviceContent;
-    if (location && location.query && location.query.subcat && allServices) {
-      const subcatClass = Util.getServiceIconClass(parseInt(location.query.subcat));
+    if (params && params.id && allServices) {
+      const subcatClass = util.getServiceIconClass(parseInt(params.id));
       const allServicesArr = Object.values(allServices);
       // services of same subtype category
-      const subcatServices = allServicesArr.filter((service) => (String(service.categoryObj) === location.query.subcat));
+      const subcatServices = allServicesArr.filter((service) => (String(service.categoryObj) === params.id));
       const otherSubcats = (function () {
         if (subcatServices && subcatServices.length) {
           // relationship between main categories and sub catergories
@@ -72,28 +73,28 @@ class Services extends Component {
         <div>
           <div>
             <Container>
-              <div className="ServiceBody">
-                <div className="ServiceDesc-wrapper">
-                  <div className="ServiceIcon-wrapper">
+              <div className={s.serviceSubcatBody}>
+                <div className={s.serviceDescWrapper}>
+                  <div className={s.serviceIconWrapper}>
                     <div className={'service-icon ' + subcatClass}></div>
                   </div>
-                  <div className="ServiceContent-wrapper">
-                    <div className="ServiceSubTypeTitle">
+                  <div className={s.serviceContentWrapper}>
+                    <div className={s.serviceSubTypeTitle}>
                       {subcatServices && subcatServices[0] && subcatServices[0].subType}
                     </div>
-                    <div className="ServiceSubTypeDesc">
+                    <div className={s.serviceSubTypeDesc}>
                       {subcatServices && subcatServices[0] && subcatServices[0].subTypeDesc}
                     </div>
-                    <div className="ServicesList">
+                    <div className={s.servicesList}>
                       <Accordion activeItems={[undefined]} key={subcatServices[0].id}>
                         {
                           subcatServices && subcatServices.map(service => {
                             return (
                               <AccordionItem title={service.name} key={service.id}>
-                                <div className="ServiceItem">
-                                  <div className="ServiceItemDescription">
+                                <div className={s.serviceItem}>
+                                  <div className={s.serviceItemDescription}>
                                     {service.description} ({parseFloat(service.duration)} hours)<br />
-                                    <span className="ServiceItemDescription-price">Starting from SGD {service.price} per session</span>
+                                    <span className={s.serviceItemDescriptionPrice}>Starting from SGD {service.price} per session</span>
                                   </div>
                                   <div>
                                     <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
@@ -107,25 +108,25 @@ class Services extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="OtherServices">
-                  <div className="OtherServicesTitle">
+                <div className={s.otherServices}>
+                  <div className={s.otherServicesTitle}>
                     Other services you might be interested in
                   </div>
-                  <div className="OtherServicesList">
+                  <div className={s.otherServicesList}>
                     {
                       otherSubcats && otherSubcats.map((service) => {
-                        const subcatClass = Util.getServiceIconClass(service.categoryObj);
+                        const subcatClass = util.getServiceIconClass(service.categoryObj);
                         return (
-                          <div className="OtherServicesItem" key={service.categoryObj}>
-                            <a href={'/services?subcat=' + service.categoryObj} onClick={this._onClickSubcat.bind(this, { subcat: service.categoryObj, subcatClass: subcatClass})}><div className={'service-icon ' + subcatClass}></div></a>
-                            <a href={'/services?subcat=' + service.categoryObj} onClick={this._onClickSubcat.bind(this, { subcat: service.categoryObj, subcatClass: subcatClass})}><div className="OtherServicesItemTitle">{service.subType}</div></a>
+                          <div className={s.otherServicesItem} key={service.categoryObj}>
+                            <Link to={`/services/${service.categoryObj}`}><div className={'service-icon ' + subcatClass}></div></Link>
+                            <Link to={`/services/${service.categoryObj}`}><div className={s.otherServicesItemTitle}>{service.subType}</div></Link>
                           </div>
                         );
                       })
                     }
-                    <div className="OtherServicesItem">
+                    <div className={s.otherServicesItem}>
                       <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="service-icon ebeecare"></div></a>
-                      <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="OtherServicesItemTitle">All Services</div></a>
+                      <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className={s.otherServicesItemTitle}>All Services</div></a>
                     </div>
                   </div>
                 </div>
@@ -137,15 +138,15 @@ class Services extends Component {
     } else {
       serviceContent = (
         <div>
-          <div className="ServicesNav-wrapper">
+          <div className={s.servicesNavWrapper}>
             <Container>
-              <ul className="ServicesNav">
+              <ul className={s.servicesNav}>
               {
                 serviceTree && serviceTree.map(category => {
                   const { name } = category;
                   return (
-                    <li className="ServicesNav-item" key={name}>
-                      <a className={classNames('ServicesNav-link', (filter === name) ? 'active' : '')} href="#" onClick={this._onClickFilter.bind(this, name)}>{name}<span className="ServicesNav-arrow"><div className="nav-caret"></div></span></a>
+                    <li className={s.servicesNavItem} key={name}>
+                      <a className={classNames(s.servicesNavLink, (filter === name) ? s.servicesNavLinkActive : '')} href="#" onClick={this._onClickFilter.bind(this, name)}>{name}<span className={s.servicesNavArrow}><div className="nav-caret"></div></span></a>
                     </li>
                   );
                 })
@@ -155,21 +156,21 @@ class Services extends Component {
           </div>
           <div>
             <Container>
-              <div className="ServicesBody">
+              <div className={s.servicesBody}>
                 {
                   serviceTreeHash[filter].children.map(subType => {
                     return (
                       <div key={subType.children[0].category + subType.name}>
-                        <h3>{this.state.filter === Util.ALL_SERVICES ? subType.children[0].category + ' > ' : ''}{subType.name}</h3>
+                        <h3>{this.state.filter === util.ALL_SERVICES ? subType.children[0].category + ' > ' : ''}{subType.name}</h3>
                         <Accordion activeItems={-1}>
                           {
                             subType.children.map((service) => {
                               return (
                                 <AccordionItem title={service.name} key={service.id}>
-                                  <div className="ServicesItem">
-                                    <div className="ServicesItemDescription">
+                                  <div className={s.servicesItem}>
+                                    <div className={s.servicesItemDescription}>
                                       {service.description} ({parseFloat(service.duration)} hours)<br />
-                                      <span className="ServicesItemDescription-price">Starting from SGD {service.price} per session</span>
+                                      <span className={s.servicesItemDescriptionPrice}>Starting from SGD {service.price} per session</span>
                                     </div>
                                     <div>
                                       <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
@@ -192,7 +193,7 @@ class Services extends Component {
     }
 
     return (
-      <div className="Services">
+      <div className={s.services}>
         <Container>
           <div>
             <h1 className="text-center">Services</h1>
@@ -205,16 +206,10 @@ class Services extends Component {
     );
   }
 
-  _onClickSubcat(state, event) {
-    event.preventDefault();
-
-    Location.push({ pathname: '/services', query: { subcat: state.subcat } });
-  }
-
   _onClickAllServices(event) {
     event.preventDefault();
 
-    Location.push({ pathname: '/services'});
+    history.push({ pathname: '/services'});
   }
 
   _onClickFilter(filter, event) {
@@ -229,16 +224,15 @@ class Services extends Component {
     event.preventDefault();
 
     this.props.setOrderService(service.id);
-    Util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
+    util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
 
-    Location.push({ pathname: '/booking2' });
+    history.push({ pathname: '/booking2' });
   }
 
 }
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     lastPage: state.lastPage,
     allServices: state.allServices.data,
     allServicesFetching: state.allServices.isFetching

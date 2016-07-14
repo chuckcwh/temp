@@ -1,0 +1,13 @@
+@import '../variables.css';
+
+.loginForm {
+  & .loginFormError {
+    padding: 5px 0;
+    color: var(--secondary-color);
+    font-size: 85%;
+  }
+}
+
+.accountContainerItemMiddle {
+  composes: accountContainerItemMiddle from '../Account/Account.css';
+}

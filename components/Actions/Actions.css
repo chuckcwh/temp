@@ -1,0 +1,98 @@
+@import '../variables.css';
+
+.actions {
+  background-color: var(--brand-color);
+
+  & .actionsStatistics {
+    padding-top: 60px;
+
+    h1 {
+      color: #fff;
+      font-weight: 100;
+      font-size: 40px;
+      margin: 0;
+      @apply --font-smoothing;
+
+      .lead {
+        font-size: 60px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  & .actionsList {
+    display: flex;
+    flex-direction: row;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    list-style: none;
+    justify-content: center;
+    align-items: flex-start;
+
+    @media (--sm-viewport) {
+      flex-wrap: wrap;
+    }
+
+    & .actionsItem {
+      flex: 1 1 280px;
+      padding: 20px 60px;
+      text-align: center;
+
+      @media (--sm-viewport) {
+        padding: 20px 0;
+
+        & + & {
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+    & .actionsItemTitle {
+      color: #ffffff;
+      font-weight: 100;
+      font-size: 40px;
+      text-transform: uppercase;
+      padding: 5px;
+      @apply --font-smoothing;
+    }
+
+    & .actionsItemButton {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px;
+      color: #ffffff;
+      font-weight: 100;
+      font-size: 26px;
+      text-transform: uppercase;
+      width: 260px;
+      border: 1px solid #ffffff;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        text-decoration: none;
+      }
+    }
+
+    & .actionsButton {
+      margin-top: 10px;
+    }
+
+    /*.Actions-item-button {
+      display: inline-block;
+      padding: 5px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 26px;
+      text-transform: uppercase;
+      width: 260px;
+      border: 1px solid #ffffff;
+      @mixin border-radius 5px;
+      @apply --font-smoothing;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+    }*/
+  }
+}

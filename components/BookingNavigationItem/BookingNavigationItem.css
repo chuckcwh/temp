@@ -1,0 +1,88 @@
+@import '../variables.css';
+
+.bookingNavigationItem {
+  margin: 0 0.5em;
+
+  & .bookingNavigationLink {
+    display: inline-block;
+    padding: 0.5em 1em;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 600;
+    text-decoration: none;
+
+    @media (--md-viewport) {
+      padding: 0.5em;
+      font-size: 20px;
+    }
+
+    & .bookingNavigationItemIcon {
+      display: inline-block;
+      width: 45px;
+      height: 51px;
+      background: url(../polygon-white.png) no-repeat center;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 51px;
+
+      @media (--sm-viewport) {
+        background-size: 75%;
+      }
+    }
+
+    & .bookingNavigationItemText {
+      vertical-align: middle;
+      margin-left: 25px;
+
+      @media (--md-viewport) {
+        margin-left: 10px;
+      }     
+
+      @media (--sm-viewport) {
+        margin-left: 10px;
+      }
+    }
+
+    &.bookingNavigationLinkActive {
+      color: var(--secondary-color);
+      text-decoration: none;
+
+      & .bookingNavigationItemIcon {
+        background: url(../polygon-orange.png) no-repeat center;
+
+        @media (--sm-viewport) {
+          background-size: 75%;
+        }
+      }
+    }
+
+    @media (--sm-viewport) {
+      font-size: 21px;
+      padding: 0 0.5em;
+    }
+  }
+
+  & .bookingNavigationLink {
+    &:hover, &.active {
+      color: var(--secondary-color);
+      text-decoration: none;
+
+      & .bookingNavigationItemIcon {
+        background: url(../polygon-orange.png) no-repeat center;
+
+        @media (--sm-viewport) {
+          background-size: 75%;
+        }
+      }
+    }
+  }
+
+  @media (--sm-viewport) {
+    width: 100%;
+    border-top: 1px solid #fff;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+}

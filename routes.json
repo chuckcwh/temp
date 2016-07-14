@@ -1,0 +1,70 @@
+[
+  {
+    "path": "/",
+    "page": "./pages/index"
+  },
+  {
+    "path": "/about",
+    "page": "./pages/about"
+  },
+  {
+    "path": "/services",
+    "page": "./pages/services"
+  },
+  {
+    "path": "/services/:id",
+    "page": "./pages/services"
+  },
+  {
+    "path": "/faq",
+    "page": "./pages/faq"
+  },
+  {
+    "path": "/privacy-policy",
+    "page": "./pages/privacy-policy"
+  },
+  {
+    "path": "/terms-of-service",
+    "page": "./pages/terms-of-service"
+  },
+  {
+    "path": "/terms-of-service-nurse",
+    "page": "./pages/terms-of-service-nurse"
+  },
+  {
+    "path": "/booking-manage",
+    "page": "./pages/booking-manage"
+  },
+  {
+    "path": "/booking1",
+    "page": "./pages/booking1"
+  },
+  {
+    "path": "/booking2",
+    "page": "./pages/booking2"
+  },
+  {
+    "path": "/booking3a",
+    "page": "./pages/booking3a"
+  },
+  {
+    "path": "/booking3b",
+    "page": "./pages/booking3b"
+  },
+  {
+    "path": "/booking3c",
+    "page": "./pages/booking3c"
+  },
+  {
+    "path": "/booking4",
+    "page": "./pages/booking4"
+  },
+  {
+    "path": "/booking5",
+    "page": "./pages/booking5"
+  },
+  {
+    "path": "/booking-confirmation",
+    "page": "./pages/booking-confirmation"
+  }
+]

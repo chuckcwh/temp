@@ -5,15 +5,6 @@ import merge from 'lodash/merge';
 import modal from './modal';
 import order from './order';
 
-const router = (state = {}, action) => {
-  switch (action.type) {
-    case ActionTypes.SET_ROUTER:
-      return action.router;
-    default:
-      return state;
-  }
-}
-
 const allServices = (state = {
   isFetching: false,
   didInvalidate: false,
@@ -371,7 +362,6 @@ const errorMessage = (state = null, action) => {
 }
 
 const bookingApp = combineReducers({
-  router,
   allServices,
   languages,
   booking,

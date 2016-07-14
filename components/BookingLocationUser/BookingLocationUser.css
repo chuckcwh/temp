@@ -1,0 +1,158 @@
+@import '../variables.css';
+
+.bookingLocationUser {
+  background-color: #f3f3f3;
+
+  & .bookingLocationUserWrapper {
+    display: flex;
+    flex-direction: row;
+    padding-top: 50px;
+    padding-bottom: 100px;
+
+    @media (--sm-viewport) {
+      flex-direction: column;
+    }
+  }
+
+  & .bookingLocationUserBody {
+    flex: 10;
+    font-size: 21px;
+
+    & input[type=radio] {
+      margin-top: 20px;
+    }
+
+    & textarea {
+      width: 100%;
+    }
+
+    & :global .select {
+      display: inline-block;
+    }
+
+    & .bookingLocationUserBodySection {
+      padding: 20px 0;
+      border-top: 1px solid var(--border-color);
+
+      &:first-child {
+        border: 0;
+      }
+
+      & :global .datepicker__input {
+        font: inherit;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      & .bookingLocationUserBodySectionTitle {
+        position: relative;
+
+        & a {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+      }
+    }
+
+    & .bookingLocationUserBodyEditSection {
+      padding: 20px 0;
+      /* border-top: 1px solid var(--border-color); */
+
+      &:first-child {
+        border: 0;
+      }
+
+      & h3 {
+        font-weight: normal;
+        font-size: 28px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      & .bookingLocationUserBodyEditSectionTitle {
+        position: relative;
+
+        & a {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+      }
+
+      & :global .datepicker__input {
+        font: inherit;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      & form a {
+        margin: 5px 5px 0 0; 
+      }
+    }
+
+    & .bookingLocationUserItem {
+      display: inline-block;
+      color: var(--text-color);
+      width: 100%;
+
+      @media (--sm-xviewport) {
+        width: 50%;
+      }
+
+      @media (min-width: $screen-lg-min) {
+        width: calc(100% / 3);
+      }
+
+      & .bookingLocationUserRadio {
+        // margin-right: 5px;
+      }
+
+      & .bookingLocationUserRadioLabel {
+        // cursor: pointer;
+      }
+    }
+
+    & .patientAddress {
+      display: flex;
+
+      & .patientAddressLeft {
+        flex: 1 0;
+      }
+
+      & .patientAddressRight {
+        flex: 1 0;
+      }
+
+      @media (--sm-viewport) {
+        flex-flow: row wrap;
+      }
+    }
+
+    & .bookingLocationUserBodyAddPatient {
+      padding: 20px 0;
+
+      & span {
+        margin: 0 10px;
+      }
+    }
+
+    & .bookingLocationUserBodySelectPatient {
+      background-color: var(--brand-color);
+      padding: 20px;
+
+      & :global .select {
+        margin: 0;
+      }
+
+      & > span {
+        color: #fff;
+        font-size: 25px;
+        margin: 0 10px;
+      }
+    }
+  }
+
+  & .bookingLocationUserSidebar {
+    flex: 1 1 auto;
+  }
+}

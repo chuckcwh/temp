@@ -1,4 +1,5 @@
 import { CALL_API } from '../middleware/api'
+import moment from 'moment';
 
 export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
@@ -333,12 +334,76 @@ export function createBooking(params) {
   return fetch('createBooking', params);
 }
 
+export function createBookingWithOrder(order, location) {
+  let dates = [];
+  for (let i = 0; i < order.sessions.length; i++) {
+    dates.push({
+      type: 'Schedule',
+      dateTimeStart: order.sessions[i].date + ' 00:00:00',
+      estTime: order.sessions[i].time,
+      price: order.sessions[i].price
+    });
+  }
+  return createBooking({
+    booking: {
+      client_contactEmail: order && order.booker && order.booker.client_contactEmail,
+      client_contactNumber: order && order.booker && order.booker.client_contactNumber,
+      client_firstName: order && order.booker && order.booker.client_firstName,
+      client_lastName: order && order.booker && order.booker.client_lastName,
+      patient_contactEmail: order && order.booker && order.booker.client_contactEmail,
+      patient_contactNumber: order && order.booker && order.booker.client_contactNumber,
+      patient_firstName: order && order.booker && order.booker.patient_firstName,
+      patient_lastName: order && order.booker && order.booker.patient_lastName,
+      patient_dob: moment(order && order.booker && order.booker.patient_dob).format('YYYY-MM-DD'),
+      patient_gender: order && order.booker && order.booker.patient_gender,
+      organization: location && location.query && location.query.organization || undefined
+    },
+    case: {
+      sid: order && order.service,
+      notes: order && order.booker && order.booker.additionalInfo,
+      price: order && order.sum && order.sum.toFixed(2),
+      dates: dates,
+      addresses: [{
+        address: order && order.location && order.location.address,
+        postalCode: order && order.location && order.location.postalCode,
+        unitNumber: order && order.location && order.location.unitNumber
+      }]
+    },
+    promoCode: order && order.promoCode && order.promoCode.code
+  });
+}
+
 export function editBooking(params) {
   return fetch('editBooking', params);
 }
 
 export function createCase(params) {
   return fetch('createCase', params);
+}
+
+export function createCaseWithOrder(order) {
+  let dates = [];
+  for (let i = 0; i < order.sessions.length; i++) {
+    dates.push({
+      type: 'Schedule',
+      dateTimeStart: order.sessions[i].date + ' 00:00:00',
+      estTime: order.sessions[i].time,
+      price: order.sessions[i].price
+    });
+  }
+  return createCase({
+    notes: order && order.booker && order.booker.additionalInfo,
+    price: order && order.sum && order.sum.toFixed(2),
+    pid: order && order.patient && order.patient.id,
+    sid: order && order.service,
+    dates: dates,
+    addresses: [{
+      address: order && order.location && order.location.address,
+      postalCode: order && order.location && order.location.postalCode,
+      unitNumber: order && order.location && order.location.unitNumber
+    }],
+    promoCode: order && order.promoCode && order.promoCode.code
+  })
 }
 
 export function cancelBookingSession(params, booking) {
@@ -510,12 +575,6 @@ export function fetchAddress(postalCode) {
       .then(address => dispatch(receiveGeocode(postalCode, address)),
         () => dispatch(failedReceiveGeocode(postalCode)))
   }
-}
-
-export const SET_ROUTER = 'SET_ROUTER'
-
-export const setRouter = (router) => {
-  return { type: SET_ROUTER, router }
 }
 
 export const SET_LAST_PAGE = 'SET_LAST_PAGE'

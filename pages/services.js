@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import Services from '../components/Services/Services';
+import Services from '../components/Services';
 
 export default class extends Component {
 
   render() {
     return (
       <div>
-        <Services />
+        <Services {...this.props} />
       </div>
     );
   }

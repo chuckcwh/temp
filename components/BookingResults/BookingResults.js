@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import assign from 'object-assign';
 import moment from 'moment';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
-import './BookingResults.scss';
+import s from './BookingResults.css';
 import Link from '../Link';
 import ConfirmPopup from '../ConfirmPopup';
-import { getSessions, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage, showAlertPopup, showConfirmPopup } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import { getSessions, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage, createCaseWithOrder, showAlertPopup, showConfirmPopup } from '../../actions';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingResults extends Component {
 
@@ -65,15 +64,15 @@ class BookingResults extends Component {
             }
           }
         }
-        sessions[i] = assign(session, {date: timeslot.date});
+        sessions[i] = Object.assign(session, {date: timeslot.date});
         if (session.time) {
           checkedData['session'+i] = true;
-          sum += Util.calcRate(sessions[i], this.props.order.promoCode, this.props.order.service);
+          sum += util.calcRate(sessions[i], this.props.order.promoCode, this.props.order.service);
         } else {
           session.disabled = true;
         }
       }
-      var state = assign({
+      var state = Object.assign({
         sessions: sessions
       }, checkedData);
       this.setState(state);
@@ -81,6 +80,11 @@ class BookingResults extends Component {
     }
     if (this.props.order.promoCode !== nextProps.order.promoCode) {
       this._updateSum(nextProps);
+    }
+    if (this.props.order.sessions !== nextProps.order.sessions) {
+      this.props.createCaseWithOrder(nextProps.order);
+      const location = history.getCurrentLocation();
+      history.push({ pathname: '/booking5', query: location && location.query });
     }
   }
 
@@ -108,7 +112,7 @@ class BookingResults extends Component {
       }
     }
     return (
-      <div className="BookingResults">
+      <div className={s.bookingResults}>
         <Loader className="spinner" loaded={this.props.sessionsFetching ? false : true}>
           <div>
           {
@@ -117,7 +121,7 @@ class BookingResults extends Component {
               promo = this.props.order.promoCode;
               rate = session.price;
               if (promo) {
-                discountedRate = Util.calcRate(session, this.props.order.promoCode, this.props.order.service).toFixed(2);
+                discountedRate = util.calcRate(session, this.props.order.promoCode, this.props.order.service).toFixed(2);
                 if (discountedRate == rate) {
                   // empty discountedRate if there is actually no discount
                   discountedRate = null;
@@ -135,12 +139,12 @@ class BookingResults extends Component {
                 );
               }
               return (
-                <div className="BookingResultsItem" key={index}>
-                  <input className="BookingResultsCheckbox" type="checkbox" id={index} name="time" checked={checkedLink('session'+index).value} disabled={session.disabled} onChange={handleChange('session'+index)} />
-                  <label className="BookingResultsCheckboxLabel" htmlFor={index}>
+                <div className={s.bookingResultsItem} key={index}>
+                  <input className={s.bookingResultsCheckbox} type="checkbox" id={index} name="time" checked={checkedLink('session'+index).value} disabled={session.disabled} onChange={handleChange('session'+index)} />
+                  <label className={s.bookingResultsCheckboxLabel} htmlFor={index}>
                     <span></span>
-                    <div className="BookingResultsCheckboxLabelMetaWrapper">
-                      <div className="BookingResultsCheckboxLabelMeta">
+                    <div className={s.bookingResultsCheckboxLabelMetaWrapper}>
+                      <div className={s.bookingResultsCheckboxLabelMeta}>
                         <span>{session ? moment(session.date, 'YYYY-MM-DD').format('DD MMM') : ''}</span>
                         <span>{session.time ? session.time : 'Not Available'}</span>
                         <span>{session.time ? priceText : ''}</span>
@@ -153,7 +157,7 @@ class BookingResults extends Component {
           }
           </div>
           <form ref={(c) => this._promoForm = c} autoComplete="off">
-            <div className="BookingPromoSection">
+            <div className={s.bookingPromoSection}>
               <div>
                 <input type="text" id="promoCode" name="promoCode" value={this.state.promoCode} onChange={this._onKeyPromo.bind(this)} placeholder="Promotion Code (Optional)" maxLength="50" disabled={this.state.disablePromo} required />
               </div>
@@ -170,8 +174,8 @@ class BookingResults extends Component {
         <ConfirmPopup onConfirmed={this._onConfirmed.bind(this)}>
           <div>
             <form ref={(c) => this._agreeForm = c}>
-              <input className="AgreeCheckbox" type="checkbox" id="agree" name="agree" checked={this.state.agree} onChange={this._onCheckedAgree.bind(this)} required />
-              <label className="AgreeCheckboxLabel" htmlFor="agree">
+              <input className={s.agreeCheckbox} type="checkbox" id="agree" name="agree" checked={this.state.agree} onChange={this._onCheckedAgree.bind(this)} required />
+              <label className={s.agreeCheckboxLabel} htmlFor="agree">
                 <span></span><span>By making this booking, I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>.</span>
               </label>
             </form>
@@ -246,18 +250,22 @@ class BookingResults extends Component {
         }
       }
 
-      Location.push({ pathname: '/booking5', query: this.props.location && this.props.location.query });
-
       // console.log(sessions);
       this.props.setOrderSessions(sessions);
       // console.log(this.state);
-      Util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
+      util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
+
+      // Delay execution till order is updated
+      // this.props.createCaseWithOrder(this.props.order);
+      // history.push({ pathname: '/booking5', query: location && location.query });
     } else {
       this.props.showAlertPopup('To continue, please accept our Terms of Service and Privacy Policy.');
     }
   }
 
   _onNext(event) {
+    const location = history.getCurrentLocation();
+
     var sessions = [];
     for (var i = 0; i < this.state.sessions.length; i++) {
       if (this.state['session'+i]) {
@@ -284,12 +292,12 @@ class BookingResults extends Component {
         }
       }
 
-      Location.push({ pathname: '/booking4', query: this.props.location && this.props.location.query });
+      history.push({ pathname: '/booking4', query: location && location.query });
 
       // console.log(sessions);
       this.props.setOrderSessions(sessions);
       // console.log(this.state);
-      Util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
+      util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
     }
   }
 
@@ -297,7 +305,7 @@ class BookingResults extends Component {
     var sum = 0;
     for (var i = 0; i < this.state.sessions.length; i++) {
       if (this.state['session'+i]) {
-        sum += Util.calcRate(this.state.sessions[i], props.order.promoCode, props.order.service);
+        sum += util.calcRate(this.state.sessions[i], props.order.promoCode, props.order.service);
       }
     }
     props.setOrderSum(sum);
@@ -307,7 +315,6 @@ class BookingResults extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     lastPage: state.lastPage,
     user: state.user.data,
     order: state.order,
@@ -335,6 +342,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setLastPage: (page) => {
       return dispatch(setLastPage(page));
+    },
+    createCaseWithOrder: (order) => {
+      return dispatch(createCaseWithOrder(order));
     },
     showAlertPopup: (message) => {
       return dispatch(showAlertPopup(message));

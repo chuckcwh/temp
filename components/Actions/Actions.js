@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './Actions.scss';
+import s from './Actions.css';
 import Container from '../Container';
 import Link from '../Link';
 import { getTotalSessionsCount } from '../../actions';
-import Util from '../../core/Util';
+import util from '../../core/util';
 
 class Actions extends Component {
 
@@ -29,24 +29,24 @@ class Actions extends Component {
       );
     }
     return (
-      <div className="Actions">
+      <div className={s.actions}>
         <Container>
           {/*<div className="Actions-statistics">
             {sessionsCountText}
           </div>*/}
-          <div className="Actions-list">
-            <div className="Actions-item">
+          <div className={s.actionsList}>
+            <div className={s.actionsItem}>
               <img src={require('./actions-1.png')} />
               {/*<div className="Actions-item-title">Book A Caregiver Online</div>*/}
-              <div className="Actions-button">
-                <a href="/booking1" className="Actions-item-button" onClick={Link.handleClick}>Find A Caregiver</a>
+              <div className={s.actionsButton}>
+                <Link to="/booking1" className={s.actionsItemButton}>Find A Caregiver</Link>
               </div>
             </div>
-            <div className="Actions-item">
+            <div className={s.actionsItem}>
               <img src={require('./actions-2.png')} />
               {/*<div className="Actions-item-title">Call Ebeecare Hotline</div>*/}
-              <div className="Actions-button">
-                <a href="#" className="Actions-item-button" onClick={this._handleContactUs.bind(this)}>Contact Us</a>
+              <div className={s.actionsButton}>
+                <a href="#" className={s.actionsItemButton} onClick={this._handleContactUs.bind(this)}>Contact Us</a>
               </div>
             </div>
           </div>

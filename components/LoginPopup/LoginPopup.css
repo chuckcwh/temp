@@ -1,0 +1,69 @@
+@import '../variables.css';
+
+.loginPopup {
+  & .popupDialog {
+    box-sizing: border-box;
+    height: 440px;
+    margin-top: -220px;
+    width: 370px;
+    margin-left: -185px;
+
+    & .popupTitle {
+      display: none;
+    }
+  }
+
+  & .accountContainerItem {
+    box-sizing: border-box;
+    width: 340px;
+    background-color: #fff;
+    padding: 40px;
+
+    & form {
+      display: inline-block;
+
+      & h3 {
+        color: var(--brand-color);
+        font-weight: normal;
+        font-size: 24px;
+        margin: 0 0 24px 0;
+        text-align: left;
+      }
+
+      & input {
+        margin: 0;
+        font-size: 21px;
+        border-radius: 0;
+      }
+
+      & input:not(:first-of-type) {
+        border-top: 0;
+      }
+
+      & :global a.btn {
+        width: 100%;
+      }
+
+      & .accountContainerItemMiddle {
+        height: 95px;
+        padding: 10px 0;
+
+        & .forgotPasswordContainer {
+          padding: 10px 0;
+
+          & .forgotPasswordLink {
+            color: var(--secondary-color);
+          }
+        }
+
+        & input[type=checkbox]:not(old) + label > span:first-child {
+          border-color: #ccc;
+        }
+
+        & input[type=checkbox]:not(old):checked + label > span {
+          color: var(--text-color);
+        }
+      }
+    }
+  }
+}

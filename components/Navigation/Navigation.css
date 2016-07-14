@@ -1,0 +1,149 @@
+@import '../variables.css';
+
+.navWrapper {
+  background-color: #FFF;
+  position: relative;
+
+  @media (--sm-viewport) {
+    z-index: 2;
+    position: fixed;
+    height: 57px;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.navigationWrapper {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+
+  & .navigation {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    justify-content: flex-end;
+    align-items: center;
+
+    @media (--lg-viewport) {
+      flex-wrap: wrap;
+    }
+
+    @media (--sm-viewport) {
+      display: none;
+    }
+  }
+}
+
+.navigationItem {
+  padding: 0 0.5em;
+
+  & .navigationLink {
+    display: inline-block;
+    padding: 0.5em 1em;
+    color: var(--text-color);
+    font-size: 15px;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      border-bottom: 3px solid var(--text-color);
+      color: var(--text-color);
+      text-decoration: none;
+    }
+
+    &.navigationLinkActive {
+      border-bottom: 3px solid var(--brand-color);
+      color: var(--brand-color);
+      font-weight: bold;
+    }
+
+    &-highlight {
+      background-color: var(--secondary-color);
+      color: #fff;
+      // border: 1px solid var(--secondary-color);
+      // border-radius: 5px;
+
+      &:hover {
+        // border: 1px solid var(--brand-color);
+        border: none;
+        background-color: var(--brand-color);
+        color: #fff;
+      }
+    }
+
+    @media (--sm-viewport) {
+      font-size: 18px;
+    }
+  }
+}
+
+/* Position and sizing of burger button */
+:global .bm-burger-button {
+  position: fixed;
+  width: 24px;
+  height: 20px;
+  right: 18.5px;
+  top: 18.5px;
+
+  @media (--sm-xviewport) {
+    display: none;
+  }
+}
+
+/* Color/shape of burger icon bars */
+:global .bm-burger-bars {
+  background: var(--brand-color);
+  height: 10% !important;
+}
+
+/* Position and sizing of clickable cross button */
+:global .bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+/* Color/shape of close button cross */
+:global .bm-cross {
+  background: var(--secondary-color);
+}
+
+/* General sidebar styles */
+:global .bm-menu {
+  background: #ffffff;
+  padding: 2.5em 1em 0;
+  font-size: 1.15em;
+}
+
+/* Morph shape necessary with bubble or elastic */
+:global .bm-morph-shape {
+  fill: #373a47;
+}
+
+/* Wrapper for item list */
+:global .bm-item-list {
+  color: #b8b7ad;
+  /* padding: 0.8em; */
+
+  & .navigationItem {
+    padding: 0;
+
+    & .navigationLink {
+      &.navigationLinkActive, &:hover {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+/* Styling of overlay */
+:global .bm-overlay {
+  background: rgba(0, 0, 0, 0.5) !important;
+}

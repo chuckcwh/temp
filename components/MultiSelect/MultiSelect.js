@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
-import './MultiSelect.scss';
+import 'react-select/dist/react-select.css';
+import s from './MultiSelect.css';
 
 class MultiSelect extends Component {
 
@@ -12,7 +13,7 @@ class MultiSelect extends Component {
     }
     const val = Array.isArray(value) ? value.map(JSON.stringify) : JSON.stringify(value)
     return (
-      <div className="MultiSelect">
+      <div className={s.multiSelect}>
         <Select 
           multi={true}
           options={options}

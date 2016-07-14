@@ -4,11 +4,12 @@ import linkState from 'react-link-state';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Loader from 'react-loader';
-import './BookingConfirmation.scss';
+import 'react-datepicker/dist/react-datepicker.css';
+import s from './BookingConfirmation.css';
 import Container from '../Container';
 import Link from '../Link';
 import { editBooking, setPostStatus } from '../../actions';
-import Util from '../../core/Util';
+import util from '../../core/util';
 
 class BookingConfirmation extends Component {
 
@@ -195,13 +196,13 @@ class BookingConfirmation extends Component {
     }
 
     return (
-      <div className="BookingConfirmation">
+      <div className={s.bookingConfirmation}>
         <Container>
           <Loader className="spinner" loaded={(this.props.booking && this.props.booking.id) ? true : false}>
-            <div className="BookingConfirmationWrapper">
-              <div className="BookingConfirmationBody">
-                <div className="BookingConfirmationBodySection">
-                  <div className="BookingConfirmationBodySectionTitle">
+            <div className={s.bookingConfirmationWrapper}>
+              <div className={s.bookingConfirmationBody}>
+                <div className={s.bookingConfirmationBodySection}>
+                  <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Contact Person Details</h3>
                     <a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
                   </div>
@@ -209,15 +210,15 @@ class BookingConfirmation extends Component {
                     {userDetails}
                   </Loader>
                 </div>
-                <div className="BookingConfirmationBodySection">
-                  <div className="BookingConfirmationBodySectionTitle">
+                <div className={s.bookingConfirmationBodySection}>
+                  <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Patient Details</h3>
                     {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
                   </div>
                   {patientDetails}
                 </div>
-                <div className="BookingConfirmationBodySection">
-                  <div className="BookingConfirmationBodySectionTitle">
+                <div className={s.bookingConfirmationBodySection}>
+                  <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Patient Location / Address</h3>
                     {/*<a href="#" className={this.state.editingAddress ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'address')}><img src={require('../pencil.png')} /></a>*/}
                   </div>
@@ -225,7 +226,7 @@ class BookingConfirmation extends Component {
                     {addressDetails}
                   </Loader>
                 </div>
-                <div className="BookingConfirmationFooter">
+                <div className={s.bookingConfirmationFooter}>
                   {paymentButton}
                 </div>
               </div>

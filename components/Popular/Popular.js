@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import './Popular.scss';
+import classNames from 'classnames';
+import s from './Popular.css';
 import Container from '../Container';
 import Link from '../Link';
 import { getRankedSubcategories } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import util from '../../core/util';
 
 class Popular extends Component {
 
@@ -17,43 +17,31 @@ class Popular extends Component {
   render() {
     const { rankedSubcategories, rankedSubcategoriesFetching } = this.props;
     return (
-      <div className="Popular">
+      <div className={s.popular}>
         <Container>
           <h1 className="text-center">Popular Services</h1>
           <Loader className="spinner" loaded={!rankedSubcategoriesFetching}>
-            <div className="Popular-list">
+            <div className={s.popularList}>
               {
                 rankedSubcategories && rankedSubcategories.map((subcategory, index) => {
-                  const subcatClass = Util.getServiceIconClass(subcategory.id);
+                  const subcatClass = util.getServiceIconClass(subcategory.id);
                   return (
-                    <div className={'Popular-item' + (index === 7 ? ' last-item' : '')} key={subcategory.id}>
-                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className={'service-icon ' + subcatClass}></div></a>
-                      <a href={'/services?subcat=' + subcategory.id} onClick={this._onClickSubcat.bind(this, {subcat: subcategory, subcatClass: subcatClass, rankedSubcategories: rankedSubcategories})}><div className="Popular-item-title">{subcategory.name}</div></a>
+                    <div className={s.popularItem + (index === 7 ? ' ' + s.lastItem : '')} key={subcategory.id}>
+                      <Link to={`/services/${subcategory.id}`}><div className={'service-icon ' + subcatClass}></div></Link>
+                      <Link to={`/services/${subcategory.id}`}><div className={s.popularItemTitle}>{subcategory.name}</div></Link>
                     </div>
                   )
                 })
               }
-              <div className="Popular-item Popular-item-question">
-                <a href='/services' onClick={this._onClickAllServices.bind(this)}><div className="service-icon questionmark"></div></a>
-                <a href='/services' onClick={this._onClickAllServices.bind(this)}><div className="Popular-item-title">Still not sure what you need?</div></a>
+              <div className={classNames(s.popularItem, s.popularItemQuestion)}>
+                <Link to='/services'><div className="service-icon questionmark"></div></Link>
+                <Link to='/services'><div className={s.popularItemTitle}>Still not sure what you need?</div></Link>
               </div>
             </div>
           </Loader>
         </Container>
       </div>
     );
-  }
-
-  _onClickSubcat(state, event) {
-    event.preventDefault();
-
-    Location.push({ pathname: '/services', query: { subcat: state.subcat.id } });
-  }
-
-  _onClickAllServices(event) {
-    event.preventDefault();
-
-    Location.push({ pathname: '/services'});
   }
 
 }

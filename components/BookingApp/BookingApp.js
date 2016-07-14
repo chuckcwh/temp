@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './BookingApp.scss';
+import s from './BookingApp.css';
 import Container from '../Container';
 import BookingNavigation from '../BookingNavigation';
 import BookingServices from '../BookingServices';
@@ -26,30 +26,31 @@ import Account from '../Account';
 import AlertPopup from '../AlertPopup';
 import LoginPopup from '../LoginPopup';
 import { fetchServicesIfNeeded, getBooking, getUserWithToken, setPostStatus } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingApp extends Component {
 
   constructor(props) {
     super(props);
-    const { location, lastPage } = props;
-    if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1 && !Util.isNavigationAllowed(location.pathname, lastPage)) {
-      Location.replace('');
+    const { lastPage } = props;
+    const location = history.getCurrentLocation();
+    if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1 && !util.isNavigationAllowed(location.pathname, lastPage)) {
+      history.replace('');
     }
   }
 
   componentDidMount() {
-    const { location } = this.props;
+    const location = history.getCurrentLocation();
     // if "bid" query parameter exists, must be booking manage/confirmation
-    if (location && location.query && location.query.bid && location.query.email) {
+    if (location && location.query && location.query.bid && location.query.mobilePhone) {
       if (location.query.token) {
         this.props.setPostStatus('payment-paypal');
       }
 
       this.props.getBooking({
         bid: location.query.bid,
-        email: location.query.email
+        mobilePhone: location.query.mobilePhone
       }).then((res) => {
         if (res.response && res.response.status >= 1) {
           const { data } = res.response;
@@ -58,7 +59,7 @@ class BookingApp extends Component {
             this.props.setPostStatus('success');
           } else if (data && data.case && data.case.status === 'Accepting Quotes') {
             // if booking is still pending service providers
-            Location.replace({ pathname: '/booking-manage', query: { bid: location.query.bid, email: location.query.email } });
+            history.replace({ pathname: '/booking-manage', query: { bid: location.query.bid, mobilePhone: location.query.mobilePhone } });
           }
         } else {
           console.error('Failed to obtain booking data.');
@@ -80,14 +81,17 @@ class BookingApp extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { location, lastPage } = props;
-    if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1 && !Util.isNavigationAllowed(location.pathname, lastPage)) {
-      Location.replace('');
+    const { lastPage } = props;
+    const location = history.getCurrentLocation();
+    if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1 && !util.isNavigationAllowed(location.pathname, lastPage)) {
+      history.replace('');
     }
   }
 
   render() {
-    const { location, postStatus, user } = this.props;
+    const { postStatus, user } = this.props;
+    const location = history.getCurrentLocation();
+
     var component;
     if (location && location.pathname === '/booking1') {
       component =
@@ -196,7 +200,7 @@ class BookingApp extends Component {
         );
       } else {
         component = (
-          <Account type="login" bid={this.props.booking && this.props.booking && this.props.booking.id} email={this.props.location && this.props.location.query && this.props.location.query.email} />
+          <Account type="login" bid={this.props.booking && this.props.booking && this.props.booking.id} mobilePhone={location && location.query && location.query.mobilePhone} />
         );
       }
     }
@@ -212,7 +216,6 @@ class BookingApp extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     booking: state.booking.data,
     bookingFetching: state.booking.isFetching,
     allServices: state.allServices,

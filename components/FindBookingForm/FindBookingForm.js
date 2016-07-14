@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import './FindBookingForm.scss';
+import s from './FindBookingForm.css';
+import sAccount from '../Account/Account.css';
 import { getBooking } from '../../actions';
 
 const submit = (values, dispatch) => {
@@ -43,7 +44,7 @@ class FindBookingForm extends Component {
       submitting
     } = this.props;
     return (
-      <form className="FindBookingForm" onSubmit={handleSubmit(submit)}>
+      <form className={s.findBookingForm} onSubmit={handleSubmit(submit)}>
         <h3>Have Guest Booking ID?</h3>
         <div className="IconInput BookingIdInput">
           <span />
@@ -53,12 +54,12 @@ class FindBookingForm extends Component {
           <span />
           <input type="text" placeholder="Mobile Number*" {...mobilePhone} />
         </div>
-        <div className="Account-container-item-middle">
-          {bid.touched && bid.error && <div className="FindBookingFormError">{bid.error}</div>}
-          {mobilePhone.touched && mobilePhone.error && <div className="FindBookingFormError">{mobilePhone.error}</div>}
-          {error && <div className="FindBookingFormError">{error}</div>}
-          <div className="LoginInsteadContainer">
-            Have account? <a href="https://app.ebeecare.com/login/" className="LoginInsteadLink">Login instead</a>
+        <div className={sAccount.accountContainerItemMiddle}>
+          {bid.touched && bid.error && <div className={s.findBookingFormError}>{bid.error}</div>}
+          {mobilePhone.touched && mobilePhone.error && <div className={s.findBookingFormError}>{mobilePhone.error}</div>}
+          {error && <div className={s.findBookingFormError}>{error}</div>}
+          <div className={sAccount.loginInsteadContainer}>
+            Have account? <a href="https://app.ebeecare.com/login/" className={sAccount.loginInsteadLink}>Login instead</a>
           </div>
         </div>
         <button className="btn btn-primary" type="submit" disabled={submitting}>Find Booking</button>

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import './Container.scss';
+import s from './Container.css';
 
 class Container extends Component {
 
@@ -9,7 +9,7 @@ class Container extends Component {
 
   render() {
     return (
-      <div className="Container">
+      <div className={s.container}>
         {this.props.children}
       </div>
     );

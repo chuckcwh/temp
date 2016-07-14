@@ -1,0 +1,49 @@
+@import '../variables.css';
+
+.bookingDate {
+  flex: 10;
+  font-size: 21px;
+  justify-content: center;
+
+  & :global .btn-inline {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  & .bookingDateTo {
+    display: inline-block;
+
+    @media (--md-viewport) {
+      display: block;
+      margin-top: 20px;
+    }
+  }
+
+  & input {
+    text-align: center;
+  }
+
+  & :global .DayPicker {
+    &:focus {
+      outline: none;
+    }
+
+    & :global .DayPicker-Day.DayPicker-Day--today {
+      color: var(--secondary-color);
+    }
+
+    & :global .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+      background-color: var(--secondary-color);
+    }
+
+    & :global .DayPicker-Day:focus {
+      outline: none;
+    }
+
+    & :global .DayPicker-Month:not(:first-of-type) {
+      @media (--sm-viewport) {
+        margin-top: 1rem;
+      }
+    }
+  }
+}

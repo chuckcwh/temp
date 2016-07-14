@@ -1,0 +1,79 @@
+@import '../variables.css';
+
+.download {
+  padding: 0;
+
+  & .downloadList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px 0 0 0;
+
+    @media (--lg-viewport) {
+      padding: 0;
+      flex-direction: column-reverse;
+    }
+
+    & .downloadItem {
+      display: inline-block;
+      /*padding: 0 0.5em;
+      width: 200px;*/
+      text-align: center;
+      margin: 0;
+      padding: 0;
+
+      & .downloadItemImage {
+        display: block;
+
+        @media (--xs-viewport) {
+          width: 100%;
+        }
+      }
+
+      & .downloadItemContent {
+        text-align: center;
+
+        & .downloadItemStoreLink {
+          &:not(:first-child) {
+            margin-left: 10px;
+          }
+
+          @media (--xs-viewport) {
+            margin: 0;
+          }
+
+          & .downloadItemStore {
+            @media (--xs-viewport) {
+              height: 40px;
+            }
+          }
+        }
+      }
+
+      @media (--sm-viewport) {
+        width: 100%;
+      }
+
+      & .downloadItemIcon {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      & .downloadItemTitle {
+        color: var(--secondary-color);
+        font-size: 22px;
+        padding: 5px 0 5px 0;
+      }
+
+      &:not(:first-child) {
+        @media (--lg-viewport) {
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+}

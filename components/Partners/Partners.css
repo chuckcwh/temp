@@ -1,0 +1,32 @@
+@import '../variables.css';
+
+.partners {
+  background-color: #f9f9f9;
+  border-top: 1px solid #f0f0f0;
+  padding: 5px 0;
+
+  & .partnersList {
+    text-align: center;
+
+    @media (max-width: 681px) {
+      padding: 0 20px;
+    }
+
+    & :global .slick-slider {
+      margin-bottom: 0;
+
+      & :global .slick-prev:before, & :global .slick-next:before {
+        color: #c3c3c3;
+
+        @media (min-width: 681px) {
+          display: none;
+        }
+      }
+    }
+
+    & .partnersLogo {
+      display: inline-block;
+      margin: 0 10px;
+    }
+  }
+}

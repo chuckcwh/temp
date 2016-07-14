@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './BookingLocation.scss';
+import s from './BookingLocation.css';
 import Container from '../Container';
 import BookingLocationForm from '../BookingLocationForm';
 import DayPickerPopup from '../DayPickerPopup';
 import { fetchAddress, setOrderLocation, setLastPage, showLoginPopup, showDayPickerPopup } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingLocation extends Component {
 
   render() {
     return (
-      <div className="BookingLocation">
+      <div className={s.bookingLocation}>
         <Container>
-          <div className="BookingLocationWrapper">
-            <div className="BookingLocationBody">
+          <div className={s.bookingLocationWrapper}>
+            <div className={s.bookingLocationBody}>
               <BookingLocationForm 
                 showLoginPopup={this.props.showLoginPopup}
                 fetchAddress={this.props.fetchAddress}
@@ -32,15 +32,16 @@ class BookingLocation extends Component {
 
   _onNext(values) {
     return new Promise((resolve) => {
-      var location = {
+      const location = history.getCurrentLocation();
+      var orderLocation = {
         postalCode: values.postalCode,
         address: values.address,
         unitNumber: values.unitNumber || undefined
       };
-      this.props.setOrderLocation(location);
-      Util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+      this.props.setOrderLocation(orderLocation);
+      util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
 
-      Location.push({ pathname: '/booking3a', query: this.props.location.query });
+      history.push({ pathname: '/booking3a', query: location.query });
       resolve();
     });
   }
@@ -49,7 +50,6 @@ class BookingLocation extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     lastPage: state.lastPage,
     order: state.order
   }

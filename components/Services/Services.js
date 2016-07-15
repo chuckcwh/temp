@@ -6,12 +6,14 @@ import { Accordion, AccordionItem } from 'react-sanfona';
 import s from './Services.css';
 import Container from '../Container';
 import Link from '../Link';
+import ServiceCard from '../ServiceCard';
 import AlertPopup from '../AlertPopup';
 import { fetchServices, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
 import find from 'lodash/find';
 import shuffle from 'lodash/shuffle';
+import groupBy from 'lodash/groupBy';
 
 class Services extends Component {
 
@@ -85,27 +87,17 @@ class Services extends Component {
                     <div className={s.serviceSubTypeDesc}>
                       {subcatServices && subcatServices[0] && subcatServices[0].subTypeDesc}
                     </div>
-                    <div className={s.servicesList}>
-                      <Accordion activeItems={[undefined]} key={subcatServices[0].id}>
-                        {
-                          subcatServices && subcatServices.map(service => {
-                            return (
-                              <AccordionItem title={service.name} key={service.id}>
-                                <div className={s.serviceItem}>
-                                  <div className={s.serviceItemDescription}>
-                                    {service.description} ({parseFloat(service.duration)} hours)<br />
-                                    <span className={s.serviceItemDescriptionPrice}>Starting from SGD {service.price} per session</span>
-                                  </div>
-                                  <div>
-                                    <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
-                                  </div>
-                                </div>
-                              </AccordionItem>
-                            );
-                          })
-                        }
-                      </Accordion>
-                    </div>
+                  </div>
+                </div>
+                <div className={s.serviceSubTypeListWrapper}>
+                  <div className={s.serviceSubTypeList}>
+                    {
+                      Object.values(groupBy(subcatServices, 'name')).map((serviceGroup) => {
+                        return (
+                          <ServiceCard serviceGroup={serviceGroup} allServices={allServices} allServicesFetching={allServicesFetching} onBook={this._onClickBook.bind(this)} key={subcatServices[0].id+serviceGroup[0].name}></ServiceCard>
+                        );
+                      })
+                    }
                   </div>
                 </div>
                 <div className={s.otherServices}>
@@ -160,27 +152,17 @@ class Services extends Component {
                 {
                   serviceTreeHash[filter].children.map(subType => {
                     return (
-                      <div key={subType.children[0].category + subType.name}>
-                        <h3>{this.state.filter === util.ALL_SERVICES ? subType.children[0].category + ' > ' : ''}{subType.name}</h3>
-                        <Accordion activeItems={-1}>
+                      <div className={s.servicesBodySubcatSection} key={subType.children[0].category + subType.name}>
+                        <h3 className={s.servicesBodySubcatSectionTitle}>{this.state.filter === util.ALL_SERVICES ? subType.children[0].category + ' > ' : ''}{subType.name}</h3>
+                        <div className={s.servicesBodySubcatSectionBody}>
                           {
-                            subType.children.map((service) => {
+                            Object.values(groupBy(subType.children, 'name')).map((serviceGroup) => {
                               return (
-                                <AccordionItem title={service.name} key={service.id}>
-                                  <div className={s.servicesItem}>
-                                    <div className={s.servicesItemDescription}>
-                                      {service.description} ({parseFloat(service.duration)} hours)<br />
-                                      <span className={s.servicesItemDescriptionPrice}>Starting from SGD {service.price} per session</span>
-                                    </div>
-                                    <div>
-                                      <button className="btn btn-primary btn-small" onClick={this._onClickBook.bind(this, service)}>Book Service</button>
-                                    </div>
-                                  </div>
-                                </AccordionItem>
+                                <ServiceCard serviceGroup={serviceGroup} allServices={allServices} allServicesFetching={allServicesFetching} onBook={this._onClickBook.bind(this)}></ServiceCard>
                               );
                             })
                           }
-                        </Accordion>
+                        </div>
                       </div>
                     );
                   })
@@ -220,10 +202,10 @@ class Services extends Component {
     });
   }
 
-  _onClickBook(service, event) {
+  _onClickBook(serviceId, event) {
     event.preventDefault();
 
-    this.props.setOrderService(service.id);
+    this.props.setOrderService(serviceId);
     util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
 
     history.push({ pathname: '/booking2' });

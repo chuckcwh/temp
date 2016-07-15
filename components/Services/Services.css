@@ -156,46 +156,6 @@
         }
       }
 
-
-      & h3 {
-        color: var(--secondary-color);
-      }
-
-      & :global .react-sanfona {
-        border: 1px solid var(--border-color);
-        border-radius: 5px;
-
-        & :global .react-sanfona-item {
-          & :global .react-sanfona-item-title {
-            border-top: 1px solid var(--border-color);
-            color: var(--text-color);
-            font-weight: 600;
-            padding: 10px;
-            transition: background-color .3s;
-          }
-
-          & :global .react-sanfona-item-body {
-            & :global .react-sanfona-item-body-wrapper {
-              padding: 10px;
-              position: relative;
-            }
-          }
-
-          &.react-sanfona-item-expanded {
-            & :global .react-sanfona-item-title {
-              background-color: var(--brand-color);
-              color: #fff;
-            }
-          }
-
-          &:first-child {
-            & :global .react-sanfona-item-title {
-              border-top: none;
-            }
-          }
-        }
-      }
-
       & .serviceItem {
         color: var(--text-color);
         font-size: 15px;
@@ -209,6 +169,18 @@
 
       @media (--sm-viewport) {
         flex-direction: column;
+      }
+    }
+
+    & .serviceSubTypeListWrapper {
+      & .serviceSubTypeList {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        @media (--md-viewport) {
+          justify-content: center;
+        }
       }
     }
 
@@ -269,41 +241,18 @@
     margin-top: 50px;
     margin-bottom: 100px;
 
-    & h3 {
-      color: var(--secondary-color);
-    }
+    & .servicesBodySubcatSection {
+      & .servicesBodySubcatSectionTitle {
+        color: var(--secondary-color);
+      }
 
-    & :global .react-sanfona {
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
+      & .servicesBodySubcatSectionBody {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
 
-      & :global .react-sanfona-item {
-        & :global .react-sanfona-item-title {
-          border-top: 1px solid var(--border-color);
-          color: var(--text-color);
-          font-weight: 600;
-          padding: 10px;
-          transition: background-color .3s;
-        }
-
-        & :global .react-sanfona-item-body {
-          & :global .react-sanfona-item-body-wrapper {
-            padding: 10px;
-            position: relative;
-          }
-        }
-
-        &.react-sanfona-item-expanded {
-          & :global .react-sanfona-item-title {
-            background-color: var(--brand-color);
-            color: #fff;
-          }
-        }
-
-        &:first-child {
-          & :global .react-sanfona-item-title {
-            border-top: none;
-          }
+        @media (--md-viewport) {
+          justify-content: center;
         }
       }
     }

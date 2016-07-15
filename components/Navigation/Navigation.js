@@ -39,6 +39,9 @@ export default class Navigation extends Component {
             <Link className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')} to="/faq">FAQ</Link>
           </li>
           <li className={s.navigationItem}>
+            <a className={s.navigationLink} href={util.blog}>BLOG</a>
+          </li>
+          <li className={s.navigationItem}>
             <Link className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')} to="/booking-manage">MANAGE BOOKING</Link>
           </li>
           <li className={s.navigationItem}>
@@ -57,6 +60,9 @@ export default class Navigation extends Component {
               </li>
               <li className={s.navigationItem}>
                 <Link className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')} to="/faq">FAQ</Link>
+              </li>
+              <li className={s.navigationItem}>
+                <a className={s.navigationLink} href={util.blog}>BLOG</a>
               </li>
               <li className={s.navigationItem}>
                 <Link className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')} to="/booking-manage">MANAGE BOOKING</Link>

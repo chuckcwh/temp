@@ -226,6 +226,7 @@ const u = {
 
   backend: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://app.ebeecare.com' : 'https://dev.ebeecare.com'),
   partners: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://www.ebeepartners.com' : 'http://staging.ebeepartners.com'),
+  blog: 'https://blog.ebeecare.com',
 
   isProduction: isProduction,
 

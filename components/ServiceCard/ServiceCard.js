@@ -36,7 +36,7 @@ export default class ServiceCard extends Component {
               {
                 service.duration.map((duration, key) => {
                   return (
-                    <LabelButton selected={this.state.selected === key} onClick={() => { this.setState({ selected: key }) }} key={service.id[this.state.selected]}>{`${parseFloat(duration)} hr${duration > 1 ? 's' : ''}`}</LabelButton>
+                    <LabelButton selected={this.state.selected === key} onClick={() => { this.setState({ selected: key }) }} key={service.id[key]}>{`${parseFloat(duration)} hr${duration > 1 ? 's' : ''}`}</LabelButton>
                   );
                 })
               }

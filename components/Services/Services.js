@@ -158,7 +158,7 @@ class Services extends Component {
                           {
                             Object.values(groupBy(subType.children, 'name')).map((serviceGroup) => {
                               return (
-                                <ServiceCard serviceGroup={serviceGroup} allServices={allServices} allServicesFetching={allServicesFetching} onBook={this._onClickBook.bind(this)}></ServiceCard>
+                                <ServiceCard serviceGroup={serviceGroup} allServices={allServices} allServicesFetching={allServicesFetching} onBook={this._onClickBook.bind(this)} key={serviceGroup[0]['id']} />
                               );
                             })
                           }

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
+import moment from 'moment';
 import s from './BookingPatientForm.css';
 
 class BookingPatientForm extends Component {
@@ -155,6 +156,8 @@ const validate = values => {
     errors.patient_dob = 'Required';
   } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.patient_dob)) {
     errors.patient_dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
+  } else if (moment().isSameOrBefore(values.patient_dob, 'day')) {
+    errors.patient_dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
   }
   if (!values.patient_gender) {
     errors.patient_gender = 'Required';
@@ -193,7 +196,6 @@ const mapStateToProps = (state) => {
       patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
       patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
       patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-      patient_dob_temp: undefined,
       patient_gender: order && order.booker && order.booker.patient_gender || undefined,
       additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
       isPatient: order && order.booker && order.booker.isPatient || undefined,

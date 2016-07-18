@@ -201,13 +201,11 @@ const sessions = (state = {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
       return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
+        isFetching: true
       })
     case ActionTypes.SESSIONS_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        didInvalidate: false,
         data: action.response.timeSlots,
         lastUpdated: action.response && action.response.receivedAt
       })

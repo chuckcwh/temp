@@ -14,7 +14,7 @@ class BookingPostSidebar extends Component {
     const { allServices, booking } = this.props;
     var service, loc, sessions, sum;
     if (allServices && booking && booking.case && booking.case.service) {
-      service = allServices[booking.case.service].name;
+      service = allServices[booking.case.service].name + ' (' + parseFloat(allServices[booking.case.service].duration) + ' hr' + (parseFloat(allServices[booking.case.service].duration) > 1 ? 's)' : ')');
     }
     if (booking && booking.case && booking.case.addresses && booking.case.addresses[0]) {
       loc = (<span>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].address}<br/>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].unitNumber}</span>);

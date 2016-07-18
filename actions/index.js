@@ -135,7 +135,8 @@ function fetchAction(route) {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
       endpoint: 'getBooking',
       method: 'get',
-      auth: 'app'
+      auth: 'app',
+      entity: 'booking'
     },
     createBooking: {
       types: [ BOOKING_CREATE_REQUEST, BOOKING_CREATE_SUCCESS, BOOKING_CREATE_FAILURE ],
@@ -177,13 +178,15 @@ function fetchAction(route) {
       types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
       endpoint: 'getUser',
       method: 'get',
-      auth: 'user'
+      auth: 'user',
+      entity: 'user'
     },
     getUserWithToken: {
       types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
       endpoint: 'getUser',
       method: 'get',
-      auth: 'userParams'
+      auth: 'userParams',
+      entity: 'user'
     },
     editClient: {
       types: [ CLIENT_EDIT_REQUEST, CLIENT_EDIT_SUCCESS, CLIENT_EDIT_FAILURE ],
@@ -195,13 +198,15 @@ function fetchAction(route) {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
       endpoint: 'getPatients',
       method: 'get',
-      auth: 'user'
+      auth: 'user',
+      entity: 'patients'
     },
     getPatient: {
       types: [ PATIENT_REQUEST, PATIENT_SUCCESS, PATIENT_FAILURE ],
       endpoint: 'getPatient',
       method: 'get',
-      auth: 'user'
+      auth: 'user',
+      entity: 'patient'
     },
     createPatient: {
       types: [ PATIENT_CREATE_REQUEST, PATIENT_CREATE_SUCCESS, PATIENT_CREATE_FAILURE ],
@@ -231,7 +236,8 @@ function fetchAction(route) {
       types: [ SESSIONS_REQUEST, SESSIONS_SUCCESS, SESSIONS_FAILURE ],
       endpoint: 'getAvailableSchedule',
       method: 'get',
-      auth: 'app'
+      auth: 'app',
+      entity: 'sessions'
     },
     getPromo: {
       types: [ PROMO_REQUEST, PROMO_SUCCESS, PROMO_FAILURE ],
@@ -273,19 +279,22 @@ function fetchAction(route) {
       types: [ STATS_SESSIONS_REQUEST, STATS_SESSIONS_SUCCESS, STATS_SESSIONS_FAILURE ],
       endpoint: 'getTotalSessionsCount',
       method: 'get',
-      auth: 'app'
+      auth: 'app',
+      entity: 'totalSessionsCount'
     },
     getRankedServices: {
       types: [ STATS_SERVICES_REQUEST, STATS_SERVICES_SUCCESS, STATS_SERVICES_FAILURE ],
       endpoint: 'getRankedServices',
       method: 'get',
-      auth: 'app'
+      auth: 'app',
+      entity: 'rankedServices'
     },
     getRankedSubcategories: {
       types: [ STATS_SUBCATEGORIES_REQUEST, STATS_SUBCATEGORIES_SUCCESS, STATS_SUBCATEGORIES_FAILURE ],
       endpoint: 'getRankedSubCategory',
       method: 'get',
-      auth: 'app'
+      auth: 'app',
+      entity: 'rankedSubcategories'
     }
   }[route]
 }

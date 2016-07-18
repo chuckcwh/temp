@@ -24,10 +24,6 @@ class Banner extends Component {
     };
   }
 
-  componentWillReceiveProps(props) {
-    const { allServices } = props;
-  }
-
   componentDidMount() {
     // this._startSlideshow();
     this.props.fetchServices();

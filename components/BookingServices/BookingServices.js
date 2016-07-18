@@ -99,7 +99,7 @@ class BookingServices extends Component {
                               <div className={classNames(s.bookingServicesItem, (service.id === selectedService) ? s.bookingServicesItemActive : '')} key={service.id}>
                                 <input className={s.bookingServicesRadio} type="radio" id={service.id} name="service" value={service.id} checked={service.id === selectedService} onChange={this._onSelect.bind(this)} required />
                                 <label className={s.bookingServicesRadioLabel} htmlFor={service.id}>
-                                  <span><span></span></span><span>{service.name}</span>
+                                  <span><span></span></span><span>{`${service.name} (${parseFloat(service.duration)} hr${parseFloat(service.duration) > 1 ? 's' : ''})`}</span>
                                 </label>
                                 <div className={s.bookingServicesItemDescription}>
                                   {service.description} ({parseFloat(service.duration)} hours)<br />

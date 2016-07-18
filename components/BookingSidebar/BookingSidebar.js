@@ -16,7 +16,7 @@ class BookingSidebar extends Component {
     const location = history.getCurrentLocation();
     var service, patientName, loc, dates, timeslots, sessions, sum;
     if (allServices && allServices.data && order && order.service) {
-      service = allServices.data[order.service].name;
+      service = allServices.data[order.service].name + ' (' + parseFloat(allServices.data[order.service].duration) + ' hr' + (parseFloat(allServices.data[order.service].duration) > 1 ? 's)' : ')');
     }
     if (order && order.patient && order.patient.fullName) {
       patientName = order.patient.fullName;

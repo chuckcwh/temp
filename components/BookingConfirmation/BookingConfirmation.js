@@ -170,7 +170,7 @@ class BookingConfirmation extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Unit Number</div>
               <div className="TableRowItem3">
-                <input type="text" id="unitNumber" name="unitNumber" valueLinkg={linkState(this, 'unitNumber')} placeholder="Enter Unit Number" />
+                <input type="text" id="unitNumber" name="unitNumber" valueLink={linkState(this, 'unitNumber')} placeholder="Enter Unit Number" />
               </div>
             </div>
             <div>

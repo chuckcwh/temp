@@ -1,2 +1,2 @@
-export client from './client'
-export * as response from './response'
+export client from './client';
+export * as response from './response';

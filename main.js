@@ -18,10 +18,12 @@ let routes = require('./routes.json'); // Loaded with utils/routes-loader.js
 const container = document.getElementById('container');
 
 function renderComponent(location, component) {
-  ReactDOM.render(<Provider store={store}><Layout>{component}</Layout></Provider>, container, () => {
-    // Scroll to the top
-    window.scrollTo(0, 0);
-  });
+  ReactDOM.render(
+    <Provider store={store}><Layout>{component}</Layout></Provider>,
+    container, () => {
+      // Scroll to the top
+      window.scrollTo(0, 0);
+    });
 }
 
 // Find and render a web page matching the current URL path,

@@ -12,7 +12,9 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 // TODO: Update configuration settings
 const config = {
   title: 'eBeeCare',                // Your website title
-  description: 'eBeeCare - Homecare booking platform to help you book and manage healthcare services for loved ones in an easy way.',
+  description:
+    'eBeeCare - Homecare booking platform to help you book ' +
+    'and manage healthcare services for loved ones in an easy way.',
   url: 'https://www.ebeecare.com',  // Your website URL
   test: 'ebeecare-testing',        // Firebase test project. See README.md -> How to Deploy
   project: 'ebeecare-dd582',        // Firebase project. See README.md -> How to Deploy

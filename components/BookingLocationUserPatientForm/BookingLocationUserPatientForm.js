@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames';
+import moment from 'moment';
 import s from './BookingLocationUserPatientForm.css';
 
 class BookingLocationUserPatientForm extends Component {
@@ -94,6 +95,8 @@ const validate = values => {
     errors.dob = 'Required';
   } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.dob)) {
     errors.dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
+  } else if (moment().isSameOrBefore(values.dob, 'day')) {
+    errors.dob = 'Date must be earlier than today';
   }
   if (!values.gender) {
     errors.gender = 'Required';

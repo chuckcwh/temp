@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import linkState from 'react-link-state';
 import classNames from 'classnames';
 import s from './Account.css';
 import Container from '../Container';

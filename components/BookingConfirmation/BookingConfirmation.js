@@ -31,7 +31,7 @@ class BookingConfirmation extends Component {
     if (this.state.editingUser) {
       userDetails = (
         <div>
-          <form ref={(c) => this._userDetailsForm = c}>
+          <form ref={(c) => this._userDetailsForm = c} onSubmit={this._onClickSave.bind(this, 'user')}>
             {/*
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
@@ -90,7 +90,7 @@ class BookingConfirmation extends Component {
     if (this.state.editingPatient) {
       patientDetails = (
         <div>
-          <form ref={(c) => this._patientDetailsForm = c}>
+          <form ref={(c) => this._patientDetailsForm = c} onSubmit={this._onClickSave.bind(this, 'patient')}>
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
               <div className="TableRowItem3">
@@ -154,7 +154,7 @@ class BookingConfirmation extends Component {
     if (this.state.editingAddress) {
       addressDetails = (
         <div>
-          <form ref={(c) => this._addressDetailsForm = c}>
+          <form ref={(c) => this._addressDetailsForm = c} onSubmit={this._onClickSave.bind(this, 'address')}>
             <div className="TableRow">
               <div className="TableRowItem1">Postal Code</div>
               <div className="TableRowItem3">

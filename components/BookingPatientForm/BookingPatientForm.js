@@ -157,7 +157,7 @@ const validate = values => {
   } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.patient_dob)) {
     errors.patient_dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
   } else if (moment().isSameOrBefore(values.patient_dob, 'day')) {
-    errors.patient_dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
+    errors.patient_dob = 'Date must be earlier than today';
   }
   if (!values.patient_gender) {
     errors.patient_gender = 'Required';

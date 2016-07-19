@@ -166,8 +166,7 @@ const patients = (state = {
   switch (action.type) {
     case ActionTypes.PATIENTS_REQUEST:
       return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
+        isFetching: true
       })
     case ActionTypes.PATIENTS_SUCCESS:
       let hash = {}, ids = []
@@ -177,7 +176,6 @@ const patients = (state = {
       })
       return Object.assign({}, state, {
         isFetching: false,
-        didInvalidate: false,
         data: hash,
         ids: ids,
         lastUpdated: action.response && action.response.receivedAt

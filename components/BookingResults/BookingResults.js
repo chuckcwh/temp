@@ -99,9 +99,11 @@ class BookingResults extends Component {
         this._updateSum(this.props);
       };
     }
-    var promoButton;
+    const { order } = this.props;
+    const orderPromoCode = order && order.promoCode;
+    let promoButton;
     if (this.state.showPromoButton) {
-      if (this.props.order.promoCode) {
+      if (order.promoCode) {
         promoButton = (
           <button className="btn btn-primary btn-small" onClick={this._onRemovePromo.bind(this)}>Remove</button>
         );
@@ -117,17 +119,16 @@ class BookingResults extends Component {
           <div>
           {
             this.state.sessions && this.state.sessions.map((session, index) => {
-              var promo, rate, discountedRate, priceText;
-              promo = this.props.order.promoCode;
+              let rate, discountedRate, priceText;
               rate = session.price;
-              if (promo) {
-                discountedRate = util.calcRate(session, this.props.order.promoCode, this.props.order.service).toFixed(2);
+              if (orderPromoCode) {
+                discountedRate = util.calcRate(session, order.promoCode, order.service).toFixed(2);
                 if (discountedRate == rate) {
                   // empty discountedRate if there is actually no discount
                   discountedRate = null;
                 }
               }
-              if (promo && discountedRate) {
+              if (orderPromoCode && discountedRate) {
                 priceText = (
                   <span>
                     <span className="strike-through nowrap">$ {rate}</span><span className="nowrap"> $ {discountedRate}</span>
@@ -159,7 +160,7 @@ class BookingResults extends Component {
           <form ref={(c) => this._promoForm = c} autoComplete="off">
             <div className={s.bookingPromoSection}>
               <div>
-                <input type="text" id="promoCode" name="promoCode" value={this.state.promoCode} onChange={this._onKeyPromo.bind(this)} placeholder="Promotion Code (Optional)" maxLength="50" disabled={this.state.disablePromo} required />
+                <input type="text" id="promoCode" name="promoCode" value={this.state.promoCode || ''} onChange={this._onKeyPromo.bind(this)} placeholder="Promotion Code (Optional)" maxLength="50" disabled={this.state.disablePromo} required />
               </div>
               <div>
                 {promoButton}

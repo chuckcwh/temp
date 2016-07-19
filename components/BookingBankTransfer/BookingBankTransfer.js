@@ -5,10 +5,11 @@ import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import moment from 'moment';
 import Datetime from 'react-datetime';
-import './BookingBankTransfer.scss';
+import 'react-datetime/css/react-datetime.css';
+import s from './BookingBankTransfer.css';
 import Link from '../Link';
 import { getBooking, createBankTransferTransaction, setPostStatus, showAlertPopup } from '../../actions';
-import Util from '../../core/Util';
+import util from '../../core/util';
 
 class BookingBankTransfer extends Component {
 
@@ -22,16 +23,11 @@ class BookingBankTransfer extends Component {
     };
   }
 
-  componentWillUnmount() {
-    this.serverRequest1 && this.serverRequest1.abort();
-    this.serverRequest2 && this.serverRequest2.abort();
-  }
-
   render() {
     return (
-      <div className="BookingBankTransfer">
+      <div className={s.bookingBankTransfer}>
         <Loader className="spinner" loaded={this.state.pending ? false : true}>
-          <form id="BookingBankTransferForm">
+          <form ref={(c) => this._bookingBankTransferForm = c}>
             <p className={classNames('error', this.state.error ? '' : 'hidden')}>Your bank transfer reference number was not accepted.</p>
             <p><b>Your Total Amount is SGD {this.props.booking.case.price}</b></p>
             <p>
@@ -63,8 +59,7 @@ class BookingBankTransfer extends Component {
   }
 
   _onConfirm(event) {
-    var form = document.getElementById('BookingBankTransferForm');
-    if (form.checkValidity()) {
+    if (this._bookingBankTransferForm.checkValidity()) {
       event.preventDefault();
 
       this.setState({
@@ -81,7 +76,7 @@ class BookingBankTransfer extends Component {
         if (res.response && res.response.status === 1) {
           this.props.getBooking({
             bid: this.props.booking.id,
-            email: this.props.booking.client_contactEmail
+            mobilePhone: this.props.booking.client_contactNumber
           });
 
           this.props.setPostStatus('success');

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import './BookingPostComplete.scss';
+import s from './BookingPostComplete.css';
 import Container from '../Container';
 import Link from '../Link';
 
@@ -29,8 +29,8 @@ class BookingPostComplete extends Component {
 
     // if (this.state.bookingStatus) {
       component = (
-        <div className="BookingPostCompleteBody">
-          <div className="BookingPostCompleteHeader">
+        <div className={s.bookingPostCompleteBody}>
+          <div className={s.bookingPostCompleteHeader}>
             THANK YOU FOR YOUR PAYMENT
           </div>
           <div>
@@ -45,16 +45,16 @@ class BookingPostComplete extends Component {
           <div>
             For further inquiries, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 9733 6938, Mon-Fri (9.00am - 6.00pm).
           </div>
-          <div className="BookingPostCompleteFooter">
-            <a href="/booking-manage" className="btn btn-primary" onClick={Link.handleClick}>Manage Booking</a>
-            <a href="/" className="btn btn-primary" onClick={Link.handleClick}>Back To Homepage</a>
+          <div className={s.bookingPostCompleteFooter}>
+            <Link to="/booking-manage" className="btn btn-primary">Manage Booking</Link>
+            <Link to="/" className="btn btn-primary">Back To Homepage</Link>
           </div>
         </div>
       );
     // } else if (this.state.bookingStatus < 1) {
     //   component = (
-    //     <div className="BookingPostCompleteBody">
-    //       <div className="BookingPostCompleteHeader">
+    //     <div className={s.bookingPostCompleteBody}>
+    //       <div className={s.bookingPostCompleteHeader}>
     //         TECHNICAL ERROR
     //       </div>
     //       <div>
@@ -64,14 +64,14 @@ class BookingPostComplete extends Component {
     //   );
     // } else {
     //   component = (
-    //     <div className="BookingPostCompleteBody">
+    //     <div className={s.bookingPostCompleteBody}>
     //       <Loader className="spinner" loaded={this.state.bookingId ? true : false} />
     //     </div>
     //   );
     // }
 
     return (
-      <div className="BookingPostComplete">
+      <div className={s.bookingPostComplete}>
         <Container>
           <Loader className="spinner" loaded={this.props.bookingFetching ? false : true}>
             {component}

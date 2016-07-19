@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import './BookingPostSidebar.scss';
+import s from './BookingPostSidebar.css';
 import { fetchServices } from '../../actions';
 
 class BookingPostSidebar extends Component {
@@ -12,12 +12,12 @@ class BookingPostSidebar extends Component {
 
   render() {
     const { allServices, booking } = this.props;
-    var service, location, sessions, sum;
+    var service, loc, sessions, sum;
     if (allServices && booking && booking.case && booking.case.service) {
-      service = allServices[booking.case.service].name;
+      service = allServices[booking.case.service].name + ' (' + parseFloat(allServices[booking.case.service].duration) + ' hr' + (parseFloat(allServices[booking.case.service].duration) > 1 ? 's)' : ')');
     }
     if (booking && booking.case && booking.case.addresses && booking.case.addresses[0]) {
-      location = (<span>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].address}<br/>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].unitNumber}</span>);
+      loc = (<span>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].address}<br/>{booking.case && booking.case.addresses && booking.case.addresses[0] && booking.case.addresses[0].unitNumber}</span>);
     }
     if (booking && booking.case && booking.case.dates) {
       sessions = booking.case.dates.filter((date) => date.status === 'Active');
@@ -26,39 +26,39 @@ class BookingPostSidebar extends Component {
       sum = parseFloat(booking.case.price);
     }
     return (
-      <div className="BookingPostSidebar">
-        <div className="BookingPostSidebarTitle">
+      <div className={s.bookingPostSidebar}>
+        <div className={s.bookingPostSidebarTitle}>
           Your Booking
         </div>
-        <div className="BookingPostSidebarContent">
-          <div className="BookingPostSidebarService">
-            <div className="BookingPostSidebarItem">{service}</div>
+        <div className={s.bookingPostSidebarContent}>
+          <div className={s.bookingPostSidebarService}>
+            <div className={s.bookingPostSidebarItem}>{service}</div>
           </div>
-          <div className="BookingPostSidebarLocation">
-            <div className="BookingPostSidebarItem">{location}</div>
+          <div className={s.bookingPostSidebarLocation}>
+            <div className={s.bookingPostSidebarItem}>{loc}</div>
           </div>
-          <div className="BookingPostSidebarTimings">
-            <div className="BookingPostSidebarItem">
+          <div className={s.bookingPostSidebarTimings}>
+            <div className={s.bookingPostSidebarItem}>
             {
               sessions && sessions.map(session => {
                 return (
                   <div key={session.id}>
-                    <span className="BookingPostSidebarItemLeft">{moment(session.dateTimeStart).format('D MMM')}</span>
-                    <span className="BookingPostSidebarItemRight">$ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}</span>
+                    <span className={s.bookingPostSidebarItemLeft}>{moment(session.dateTimeStart).format('D MMM')}</span>
+                    <span className={s.bookingPostSidebarItemRight}>$ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}</span>
                   </div>
                 );
               })
             }
             </div>
           </div>
-          <div className="BookingPostSidebarSlots">
-            <div className="BookingPostSidebarItem"></div>
+          <div className={s.bookingPostSidebarSlots}>
+            <div className={s.bookingPostSidebarItem}></div>
           </div>
         </div>
-        <div className="BookingPostSidebarFooter">
-          <div className="BookingPostSidebarPrice">
-            <span className="BookingPostSidebarPriceLabel">{typeof sum === 'number' ? 'Total Cost' : ''}</span>
-            <span className="BookingPostSidebarPriceCost">{typeof sum === 'number' ? ('SGD ' + sum.toFixed(2)) : ''}</span>
+        <div className={s.bookingPostSidebarFooter}>
+          <div className={s.bookingPostSidebarPrice}>
+            <span className={s.bookingPostSidebarPriceLabel}>{typeof sum === 'number' ? 'Total Cost' : ''}</span>
+            <span className={s.bookingPostSidebarPriceCost}>{typeof sum === 'number' ? ('SGD ' + sum.toFixed(2)) : ''}</span>
           </div>
         </div>
       </div>

@@ -1,0 +1,46 @@
+/*
+ * Scaffolding
+ * -------------------------------------------------------------------------- */
+:root {
+  --body-bg: #f3f3f3;
+  --body-bg: #ffffff;
+  --text-color: #444;
+  --border-color: #ccc;
+  --brand-color: #fdbc1d;
+  --secondary-color: #f78d00;
+
+  --popular-icon-size: 100px;
+  --popular-icon-multipler: 1.5;
+}
+
+/*
+ * Typography
+ * -------------------------------------------------------------------------- */
+:root {
+  --font-family-base: 'Proxima Nova', sans-serif;
+
+  --font-smoothing: {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/*
+ * Media queries breakpoints
+ * -------------------------------------------------------------------------- */
+:root {
+  --screen-xs-min: 414px;
+  --screen-sm-min: 768px;
+  --screen-md-min: 992px;
+  --screen-lg-min: 1200px;
+}
+
+@custom-media --xs-viewport (max-width: 414px);
+@custom-media --sm-viewport (max-width: 768px);
+@custom-media --md-viewport (max-width: 992px);
+@custom-media --lg-viewport (max-width: 1200px);
+@custom-media --xs-xviewport (min-width: 414px);
+@custom-media --sm-xviewport (min-width: 768px);
+@custom-media --md-xviewport (min-width: 992px);
+@custom-media --lg-xviewport (min-width: 1200px);

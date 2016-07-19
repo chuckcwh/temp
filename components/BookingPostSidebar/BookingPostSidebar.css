@@ -1,0 +1,58 @@
+@import '../variables.css';
+
+.bookingPostSidebar {
+  margin-left: 40px;
+  background-color: #ffffff;
+  flex: 5;
+  align-self: flex-start;
+
+  & .bookingPostSidebarTitle {
+    padding: 15px 25px;
+    border-bottom: 2px solid #f3f3f3;
+    font-size: 25px;
+  }
+
+  & .bookingPostSidebarContent {
+    padding: 15px 25px;
+    color: #969696;
+    font-size: 21px;
+
+    & .bookingPostSidebarService {
+      text-transform: uppercase;
+    }
+
+    & .bookingPostSidebarItem {
+      box-sizing: border-box;
+      width: 100%;
+      padding-right: 30px;
+      /* background: url(../pencil.png) no-repeat top right; */
+
+      & .bookingPostSidebarItemRight {
+        float: right;
+      }
+    }
+
+    & > div {
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  & .bookingPostSidebarFooter {
+    padding: 15px 25px;
+    border-top: 2px solid #f3f3f3;
+    font-size: 25px;
+
+    & .bookingPostSidebarPriceCost {
+      float: right;
+      color: var(--secondary-color);
+    }
+  }
+
+  @media (--sm-viewport) {
+    margin: 50px 0 0 0;
+  }
+}

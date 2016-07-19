@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import Loader from 'react-loader';
-import './InlineForm.scss';
+import s from './InlineForm.css';
 import MultiSelect from '../MultiSelect';
 import DayPickerPopup from '../DayPickerPopup';
 import { hideInlineForm } from '../../actions';
@@ -31,7 +31,7 @@ class InlineForm extends Component {
       inputs
     } = this.props;
     return (
-      <form className="InlineForm" onSubmit={handleSubmit(this._handleSubmit.bind(this))}>
+      <form className={s.inlineForm} onSubmit={handleSubmit(this._handleSubmit.bind(this))}>
         <Loader className="spinner" loaded={submitting ? false : true}>
           {Object.keys(fields).map(name => {
             const field = fields[name];
@@ -84,12 +84,12 @@ class InlineForm extends Component {
                 <div className="TableRowItem1">{input.label}</div>
                 <div className="TableRowItem3">
                   {inputField}
-                  {field.touched && field.error && <div className="InlineFormError">{field.error}</div>}
+                  {field.touched && field.error && <div className={s.inlineFormError}>{field.error}</div>}
                 </div>
               </div>
             )
           })}
-          {submitFailed && invalid && <div className="InlineFormError">{error}</div>}
+          {submitFailed && invalid && <div className={s.inlineFormError}>{error}</div>}
           <div>
             <button className="btn btn-primary" type="submit" disabled={submitting || pristine}>Save</button>
             <button className="btn btn-primary" onClick={this._handleCancel.bind(this)}>Cancel</button>

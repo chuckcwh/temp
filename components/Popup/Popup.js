@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import './Popup.scss';
+import s from './Popup.css';
 
 class Popup extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
@@ -48,22 +48,31 @@ class Popup extends Component {
  }
 
   render() {
+    // Combines with parent's styles for override
+    let css = {};
+    for (let style in s) {
+      css[style] = (this.props.css && this.props.css[style]) ? [
+        s[style],
+        this.props.css[style]
+      ].join(' ') : s[style];
+    }
+
     var overlay, closeButton;
 
     if (this.props.showOverlay) {
-      overlay = (<div onClick={() => this.onOverlayClicked()} className={classNames('PopupOverlay', (this.props.isOpen ? 'visible' : ''))}></div>);
+      overlay = (<div onClick={() => this.onOverlayClicked()} className={classNames(css.popupOverlay, (this.props.isOpen ? css.popupOverlayVisible : ''))}></div>);
     }
 
     if (!this.props.hideCloseButton) {
-      closeButton = (<a onClick={() => this.onCloseClicked()} role="button" className="PopupCloseButton">&times;</a>);
+      closeButton = (<a onClick={() => this.onCloseClicked()} role="button" className={css.popupCloseButton}>&times;</a>);
     }
 
     return (
-      <section className="Popup">
+      <section className={css.popup}>
         {overlay}
-        <div className={classNames('PopupDialog', (this.props.isOpen ? 'visible' : ''))}>
+        <div className={classNames(css.popupDialog, (this.props.isOpen ? css.popupDialogVisible : ''))}>
           {closeButton}
-          <h2 className="PopupTitle">{this.props.title}</h2>
+          <h2 className={css.popupTitle}>{this.props.title}</h2>
           {this.props.children}
         </div>
       </section>

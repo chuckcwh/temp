@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import linkState from 'react-link-state';
-import './LoginPopup.scss';
+import classNames from 'classnames';
+import s from './LoginPopup.css';
+import sAccount from '../Account/Account.css';
 import Link from '../Link';
 import LoginForm from '../LoginForm';
 import Popup from '../Popup';
 import { login, hideLoginPopup, destroyUser } from '../../actions';
-import Util from '../../core/Util';
+import util from '../../core/util';
 
 class LoginPopup extends Component {
 
@@ -23,9 +25,9 @@ class LoginPopup extends Component {
 
   render() {
     return (
-      <div className="LoginPopup">
-        <Popup isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
-          <div className="Account-login Account-container-item">
+      <div className={s.loginPopup}>
+        <Popup css={s} isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
+          <div className={classNames(sAccount.accountLogin, s.accountContainerItem)}>
             {this.props.visible && <LoginForm type="client" onSuccess={this._closePopup.bind(this)} />}
           </div>
         </Popup>

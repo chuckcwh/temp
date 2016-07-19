@@ -1,0 +1,22 @@
+@import '../variables.css';
+
+.labelButton {
+  cursor: pointer;
+  font-size: inherit;
+  background-color: #ccc;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 5px;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:not(:last-of-type) {
+    margin-right: 5px;
+  }
+
+  &.labelButtonSelected {
+    background-color: var(--brand-color);
+  }
+}

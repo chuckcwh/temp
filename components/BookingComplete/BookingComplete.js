@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import moment from 'moment';
-import './BookingComplete.scss';
+import s from './BookingComplete.css';
 import Container from '../Container';
 import Link from '../Link';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import { createBooking, createCase, getBooking, destroyOrder, showVerifyBookingPopup } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingComplete extends Component {
 
@@ -25,106 +25,72 @@ class BookingComplete extends Component {
   }
 
   componentDidMount() {
-    const { order, location, user } = this.props;
-    if (user && order && order.patient) {
-      var dates = [];
-      for (var i = 0; i < order.sessions.length; i++) {
-        dates.push({
-          type: 'Schedule',
-          dateTimeStart: order.sessions[i].date + ' 00:00:00',
-          estTime: order.sessions[i].time,
-          price: order.sessions[i].price
-        });
-      }
-      this.props.createCase({
-        notes: order && order.booker && order.booker.additionalInfo,
-        price: order && order.sum && order.sum.toFixed(2),
-        pid: order && order.patient && order.patient.id,
-        sid: order && order.service,
-        dates: dates,
-        addresses: [{
-          address: order && order.location && order.location.address,
-          postalCode: order && order.location && order.location.postalCode,
-          unitNumber: order && order.location && order.location.unitNumber
-        }],
-        promoCode: order && order.promoCode && order.promoCode.code
-      }).then((res) => {
-        if (res.response && res.response.case) {
-          // Destroy order
-          this.props.destroyOrder();
+    const { order, user, booking, caze } = this.props;
+    const location = history.getCurrentLocation();
+    if (user && order && order.patient && caze) {
+      // Destroy order
+      this.props.destroyOrder();
 
-          this.setState({
-            bookingStatus: res.response.status,
-            bookingAmt: res.response.case.price,
-            caseId: res.response.case.id
-          });
-        } else {
-          console.error('Failed to create case.');
-        }
+      this.setState({
+        bookingAmt: caze.price,
+        caseId: caze.id
       });
-    } else if (order && order.service && order.sessions && order.booker) {
-      var dates = [];
-      for (var i = 0; i < order.sessions.length; i++) {
-        dates.push({
-          type: 'Schedule',
-          dateTimeStart: order.sessions[i].date + ' 00:00:00',
-          estTime: order.sessions[i].time,
-          price: order.sessions[i].price
-        });
-      }
-      this.props.createBooking({
-        booking: {
-          client_contactEmail: order && order.booker && order.booker.client_contactEmail,
-          client_contactNumber: order && order.booker && order.booker.client_contactNumber,
-          client_firstName: order && order.booker && order.booker.client_firstName,
-          client_lastName: order && order.booker && order.booker.client_lastName,
-          patient_contactEmail: order && order.booker && order.booker.client_contactEmail,
-          patient_contactNumber: order && order.booker && order.booker.client_contactNumber,
-          patient_firstName: order && order.booker && order.booker.patient_firstName,
-          patient_lastName: order && order.booker && order.booker.patient_lastName,
-          patient_dob: moment(order && order.booker && order.booker.patient_dob).format('YYYY-MM-DD'),
-          patient_gender: order && order.booker && order.booker.patient_gender,
-          organization: location && location.query && location.query.organization || undefined
-        },
-        case: {
-          sid: order && order.service,
-          notes: order && order.booker && order.booker.additionalInfo,
-          price: order && order.sum && order.sum.toFixed(2),
-          dates: dates,
-          addresses: [{
-            address: order && order.location && order.location.address,
-            postalCode: order && order.location && order.location.postalCode,
-            unitNumber: order && order.location && order.location.unitNumber
-          }]
-        },
-        promoCode: order && order.promoCode && order.promoCode.code
-      }).then((res) => {
-        if (res.response && res.response.booking && res.response.booking.case) {
-          // Destroy order
-          this.props.destroyOrder();
+    } else if (order && order.service && order.sessions && order.booker && booking) {
+      // Destroy order
+      this.props.destroyOrder();
 
-          this.setState({
-            bookingStatus: res.response.status,
-            bookingId: res.response.booking.id,
-            bookingAmt: res.response.booking.case.price,
-            booking: res.response.booking
-          });
-
-          this.props.showVerifyBookingPopup(res.response.booking.id);
-        } else {
-          console.error('Failed to create booking.');
-        }
+      this.setState({
+        bookingId: booking.id,
+        bookingAmt: booking.case.price,
+        bookingHp: booking.client_contactNumber,
+        booking: booking
       });
+
+      this.props.showVerifyBookingPopup(booking.id);
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    const { order, user, booking, caze } = props;
+    const location = history.getCurrentLocation();
+    if (user && order && order.patient && caze) {
+      // Destroy order
+      this.props.destroyOrder();
+
+      this.setState({
+        bookingAmt: caze.price,
+        caseId: caze.id
+      });
+    } else if (order && order.service && order.sessions && order.booker && booking) {
+      // Destroy order
+      this.props.destroyOrder();
+
+      this.setState({
+        bookingId: booking.id,
+        bookingAmt: booking.case.price,
+        bookingHp: booking.client_contactNumber,
+        booking: booking
+      });
+
+      this.props.showVerifyBookingPopup(booking.id);
     }
   }
 
   render() {
     var component, identity, footer;
+    const { bookingFetching, cazeFetching } = this.props;
+    const location = history.getCurrentLocation();
 
-    if (this.state.bookingStatus) {
+    if (bookingFetching || cazeFetching) {
+      component = (
+        <div className={s.bookingCompleteBody}>
+          <Loader className="spinner" loaded={!(bookingFetching || cazeFetching)} />
+        </div>
+      );
+    } else {
       if (this.state.bookingId) {
         var bookingLink, activateText;
-        if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
+        if (location && location.query && location.query.widget == 'true') {
           bookingLink = (
             <div>
               <a href="#" className="btn btn-primary" style={{'color': '#fff'}} onClick={this._onClickClose.bind(this)}>Close Window</a>
@@ -133,7 +99,7 @@ class BookingComplete extends Component {
         } else if (this.state.bookingVerified) {
           bookingLink = (
             <div>
-              <a href={'/booking-manage?bid=' + this.state.bookingId + '&email=' + this.state.booking.client_contactEmail} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</a>
+              <Link to={{ pathname: '/booking-manage', query: { bid: this.state.bookingId, mobilePhone: this.state.booking.client_contactNumber } }} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</Link>
             </div>
           );
         } else {
@@ -160,24 +126,24 @@ class BookingComplete extends Component {
           <div>
             <b>CASE ID : {this.state.caseId}</b>
             <div>
-              <a href={Util.backend + '/case/' + this.state.caseId}>View Case</a>
+              <a href={util.backend + '/case/' + this.state.caseId}>View Case</a>
             </div>
           </div>
         );
       }
 
-      if (!(this.props.location && this.props.location.query && this.props.location.query.widget == 'true')) {
+      if (!(location && location.query && location.query.widget == 'true')) {
         footer = (
-          <div className="BookingCompleteFooter">
-            <a href="/booking1" className="btn btn-primary" onClick={Link.handleClick}>Make Another Booking</a>
-            <a href="/" className="btn btn-primary" onClick={Link.handleClick}>Back To Homepage</a>
+          <div className={s.bookingCompleteFooter}>
+            <Link to="/booking1" className="btn btn-primary">Make Another Booking</Link>
+            <Link to="/" className="btn btn-primary">Back To Homepage</Link>
           </div>
         );
       }
 
       component = (
-        <div className="BookingCompleteBody">
-          <div className="BookingCompleteHeader">
+        <div className={s.bookingCompleteBody}>
+          <div className={s.bookingCompleteHeader}>
             THANK YOU
           </div>
           <div>
@@ -193,27 +159,21 @@ class BookingComplete extends Component {
           {footer}
         </div>
       );
-    } else if (this.state.bookingStatus < 1) {
-      component = (
-        <div className="BookingCompleteBody">
-          <div className="BookingCompleteHeader">
-            TECHNICAL ERROR
-          </div>
-          <div>
-            Oops, there was an error creating your booking. Please contact us at <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or 6514 9729 immediately.
-          </div>
-        </div>
-      );
-    } else {
-      component = (
-        <div className="BookingCompleteBody">
-          <Loader className="spinner" loaded={this.state.bookingId ? true : false} />
-        </div>
-      );
+    // } else if (this.state.bookingStatus < 1) {
+    //   component = (
+    //     <div className={s.bookingCompleteBody}>
+    //       <div className={s.bookingCompleteHeader}>
+    //         TECHNICAL ERROR
+    //       </div>
+    //       <div>
+    //         Oops, there was an error creating your booking. Please contact us at <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or 6514 9729 immediately.
+    //       </div>
+    //     </div>
+    //   );
     }
 
     return (
-      <div className="BookingComplete">
+      <div className={s.bookingComplete}>
         <Container>
           {component}
         </Container>
@@ -225,14 +185,15 @@ class BookingComplete extends Component {
   _onVerified() {
     this.props.getBooking({
       bid: this.state.bookingId,
-      email: this.state.bookingEmail
+      mobilePhone: this.state.bookingHp
     }).then(() => {
       this.setState({
         bookingVerified: true
       });
 
       // Notify parent window of booking completion for embedded widget
-      if (this.props.location && this.props.location.query && this.props.location.query.widget == 'true') {
+      const location = history.getCurrentLocation();
+      if (location && location.query && location.query.widget == 'true') {
         window.parent.postMessage('completedBooking', '*');
       }
     });
@@ -245,7 +206,7 @@ class BookingComplete extends Component {
   _onClickViewBooking(event) {
     event.preventDefault();
 
-    Location.replace({ pathname: '/booking-manage', query: { bid: this.state.bookingId, email: this.state.bookingEmail } });
+    history.replace({ pathname: '/booking-manage', query: { bid: this.state.bookingId, mobilePhone: this.state.bookingHp } });
   }
 
   _onClickClose(event) {
@@ -256,9 +217,12 @@ class BookingComplete extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     order: state.order,
-    user: state.user.data
+    user: state.user.data,
+    booking: state.booking.data,
+    bookingFetching: state.booking.isFetching,
+    caze: state.caze.data,
+    cazeFetching: state.caze.isFetching
   }
 }
 

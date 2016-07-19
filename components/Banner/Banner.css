@@ -1,0 +1,251 @@
+@import '../variables.css';
+/*@import 'react-select/dist/react-select.css';*/
+
+.banner {
+  position: relative;
+  height: 500px;
+
+  & .sliderWrapper {
+    & :global .slick-slide {
+      position: relative;
+    }
+
+    & :global .slick-dots {
+      bottom: 0;
+
+      & li button:before {
+        color: white;
+      }
+    }
+  }
+
+  & .bannerItem {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+  }
+
+  & .bannerItemTextWrapper {
+    position: relative;
+    color: #fff;
+
+    & .bannerItemText {
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    }
+
+  }
+
+  & .bannerItem1 {
+    & .bannerItemText1 {
+      top: 90px;
+      font-size: 25px;
+    }
+
+    & .bannerItemText2 {
+      top: 150px;
+      font-weight: bold;
+      font-size: 60px;
+      text-transform: uppercase;
+    }
+
+    & .bannerItemText3 {
+      top: 300px;
+      font-size: 37px;
+    }
+
+    & .bannerItemText4 {
+      top: 360px;
+    }
+
+    & .bannerItemSearch {
+      position: relative;
+      top: 380px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      @media (--sm-viewport) {
+        flex-direction: column;
+        justify-content: space-between;
+        display: inline-flex;
+        margin: auto;
+        height: 100px;
+      }
+
+      & .bannerItemInput {
+        width: 260px;
+        margin: auto 20px auto 20px;
+
+        @media (--sm-viewport) {
+          width: 260px;
+        }
+
+        & :global .is-searchable {
+          text-align: center;
+          line-height: 40px
+        }
+
+      }
+
+      & .bannerItemButton {
+        margin: auto 20px auto 20px;
+
+        @media (--sm-viewport) {
+          margin: auto;
+        }
+      }
+
+      & :global .Select-control {
+        border-radius: 0px;
+        border-color: var(--secondary-color);
+        line-height: 40px;
+
+        & :global .Select-value {
+          line-height: 42px;
+        }
+
+        & :global .Select-clear-zone {
+          & :global .Select-clear {
+            font-size: 30px;
+            line-height: 48px;
+            @apply --font-smoothing;
+          }
+        }
+
+        & :global .Select-arrow-zone {
+          & :global .Select-arrow {
+            border: 0;
+            height: 100%;
+
+            background: #fff;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 25px;
+            pointer-events: none;
+          }
+
+          & :global .Select-arrow:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            margin-top: -5px;
+            pointer-events: none;
+            border-top: 9px solid var(--secondary-color);
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+          }
+
+          & :global .Select-arrow:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 7px;
+            margin-top: -5px;
+            pointer-events: none;
+            border-top: 7px solid #fff;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+          }
+        }
+      }
+
+      & :global .Select-placeholder {
+        line-height: 42px;
+
+        @media (--sm-viewport) {
+          width: 245px;
+        }
+      }
+
+      & :global .Select-input {
+        height: 42px;
+        border-radius: none;
+        line-height: 42px;
+      }
+
+      & :global .Select-menu-outer {
+        line-height: 25px;
+        border-radius: 0px;
+        border-color: var(--secondary-color);
+        width: 260px;
+
+        & :global .is-focused {
+          background-color: #fcf6e6;
+        }
+      }
+
+    }
+
+    @media (--sm-viewport) {
+      & .bannerItemText1 {
+        top: 50px;
+      }
+
+      & .bannerItemText2 {
+        top: 120px;
+        font-size: 52px;
+      }
+
+      & .bannerItemText3 {
+        top: 320px;
+      }
+
+      & .bannerItemText4 {
+        top: 400px;
+      }
+    }
+  }
+
+  & .bannerBg {
+    // position: absolute;
+    height: 500px;
+    // width: 100%;
+    background-color: var(--body-bg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &Text {
+      position: absolute;
+      width: 100%;
+      top: 245px;
+      text-align: center;
+      color: #ffffff;
+      font-size: 37px;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+
+      @media (--sm-viewport) {
+        top: 275px;
+      }
+    }
+  }
+
+  & .bannerBg0 {
+    background-image: url(./banner-1.jpg);
+
+    @media (--sm-viewport) {
+      background-position: -500px 0px;
+    }
+
+    @media (--xs-viewport) {
+      background-position: -550px 0px;
+    }
+  }
+
+  & .bannerBg1 {
+    background-image: url(./banner-2.jpg);
+
+    @media (--sm-viewport) {
+      background-position: 0px 0px;
+    }
+  }
+}

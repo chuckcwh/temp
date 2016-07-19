@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import moment from 'moment';
-import './DayPickerPopup.scss';
+import 'react-day-picker/lib/style.css';
+import s from './DayPickerPopup.css';
 import Popup from '../Popup';
 import { hideDayPickerPopup } from '../../actions';
 
@@ -55,8 +56,8 @@ class DayPickerPopup extends Component {
 
   render() {
     return (
-      <div className="DayPickerPopup">
-        <Popup title={this.props.title} isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
+      <div className={s.dayPickerPopup}>
+        <Popup css={s} title={this.props.title} isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
           <div className="YearNavigation">
             <DayPicker
               initialMonth={ this.state.initialMonth }

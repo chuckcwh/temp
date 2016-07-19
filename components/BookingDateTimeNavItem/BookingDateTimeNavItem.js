@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import './BookingDateTimeNavItem.scss';
+import s from './BookingDateTimeNavItem.css';
 import Link from '../Link';
-import { isNavigationAllowed } from '../../core/Util';
+import history from '../../core/history';
+import { isNavigationAllowed } from '../../core/util';
 
 class BookingDateTimeNavItem extends Component {
 
   render() {
-    const { location, lastPage, active, link, name } = this.props;
+    const { lastPage, active, link, name } = this.props;
+    const location = history.getCurrentLocation();
     if (link && isNavigationAllowed(link, lastPage)) {
       return (
-        <li className="BookingDateTimeNavItem">
-          <a className={classNames('BookingDateTimeNav-link', (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? 'active' : '')} href={'/' + link} onClick={Link.handleClick}>{name}<span className="BookingDateTimeNav-arrow"><div className="nav-caret"></div></span></a>
+        <li className={s.bookingDateTimeNavItem}>
+          <Link className={classNames(s.bookingDateTimeNavLink, (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? s.bookingDateTimeNavLinkActive : '')} to={{ pathname: '/' + link, query: this.props.location && this.props.location.query }}>{name}<span className={s.bookingDateTimeNavArrow}><div className="nav-caret"></div></span></Link>
         </li>
       );
     } else {
       return (
-        <li className="BookingDateTimeNavItem">
-          <span className={classNames('BookingDateTimeNav-link', (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? 'active' : '')}>{name}<span className="BookingDateTimeNav-arrow"><div className="nav-caret"></div></span></span>
+        <li className={s.bookingDateTimeNavItem}>
+          <span className={classNames(s.bookingDateTimeNavLink, (location && location.pathname && location.pathname.indexOf('/' + active)==0) ? s.bookingDateTimeNavLinkActive : '')}>{name}<span className={s.bookingDateTimeNavArrow}><div className="nav-caret"></div></span></span>
         </li>
       );
     }
@@ -28,7 +30,6 @@ class BookingDateTimeNavItem extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     lastPage: state.lastPage
   }
 }

@@ -4,14 +4,15 @@ import linkState from 'react-link-state';
 import classNames from 'classnames';
 import moment from 'moment';
 import Loader from 'react-loader';
-import './BookingLocationUser.scss';
+import s from './BookingLocationUser.css';
 import Container from '../Container';
 import Link from '../Link';
 import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
 import { fetchLanguages, fetchAddress, getPatients, createPatient, getPatient, getUser, editPatient, editClient, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation, setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
-import Util from '../../core/Util';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingLocationUser extends Component {
 
@@ -26,11 +27,16 @@ class BookingLocationUser extends Component {
   }
 
   componentDidMount() {
-    this._getPatients(this.props.user, () => {
-      if (this.props.order && this.props.order.patient && this.props.order.patient.id && this.props.patients && this.props.patients[this.props.order.patient.id]) {
-        this.setState({ patientId: this.props.order.patient.id });
-      }
-    });
+    if (this.props.order && this.props.order.patient && this.props.order.patient.id) {
+      this.setState({ patientId: this.props.order.patient.id });
+    }
+    !this.props.patients && this._getPatients(this.props.user);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.order && newProps.order.patient && newProps.order.patient.id && this.props.order && this.props.order.patient && this.props.order.patient.id && newProps.order.patient.id !== this.props.order.patient.id) {
+      this.setState({ patientId: newProps.order.patient.id });
+    }
   }
 
   render() {
@@ -69,102 +75,72 @@ class BookingLocationUser extends Component {
         </div>
       );
     } else if (this.props.patients && this.state.patientId) {
-      if (this.state.editingPatient) {
-        patientDetails = (
-          <div>
-            <div>
-              <input type="text" id="patient_firstName" name="patient_firstName" valueLink={linkState(this, 'patient_firstName')} placeholder="First Name*" maxLength="50" required />
-              <input type="text" id="patient_lastName" name="patient_lastName" valueLink={linkState(this, 'patient_lastName')} placeholder="Last Name*" maxLength="50" required />
-              <div className="DateInput">
-                <input type="text" id="patient_dob" name="patient_dob" value={this.state.patient_dob_temp ? this.state.patient_dob_temp : (this.state.patient_dob ? moment(this.state.patient_dob).format('YYYY-MM-DD') : '')} onChange={this._onChangeDob.bind(this)} onBlur={this._onBlurDob.bind(this)} placeholder="Birth Date* (YYYY-MM-DD)" pattern="\d{4}[-]\d{2}[-]\d{2}" required />
-                <span onClick={() => this.props.showDayPickerPopup(this.state.patient_dob)}></span>
-                <DayPickerPopup title="Date of Birth" onDayClick={this._onSelectDob.bind(this)} />
-              </div>
-              <div>
-                <div className="radio radio-inline">
-                  <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.state.patient_gender==='Male'} onChange={this._onSelectGender.bind(this, 'patient_gender')} value="Male" required />
-                  <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
-                </div>
-                <div className="radio radio-inline">
-                  <input type="radio" id="patient_gender_female" name="patient_gender" checked={this.state.patient_gender==='Female'} onChange={this._onSelectGender.bind(this, 'patient_gender')} value="Female" required />
-                  <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
-                </div>
-              </div>
-            </div>
-            <div style={{marginTop: '40px'}}>
-              <div>Additional Info:</div>
-              <textarea name="additionalInfo" valueLink={linkState(this, 'additionalInfo')} placeholder="Please provide important notes about patient here." />
+      patientDetails = (
+        <div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Full Name</div>
+            <div className="TableRowItem3">{this.props.patients[this.state.patientId].fullName}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientName')}><img src={require('../pencil.png')} /></a>
             </div>
           </div>
-        );
-      } else {
-        patientDetails = (
-          <div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Full Name</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].fullName}
-                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientName')}><img src={require('../pencil.png')} /></a>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Gender</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].gender}
-                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientGender')}><img src={require('../pencil.png')} /></a>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Date of Birth</div>
-              <div className="TableRowItem3">{moment(this.props.patients[this.state.patientId].dob).format('ll')}
-                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientDob')}><img src={require('../pencil.png')} /></a>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Age</div>
-              <div className="TableRowItem3">{moment().diff(moment(this.props.patients[this.state.patientId].dob), 'years')}</div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Language{this.props.patients[this.state.patientId].languages.length > 1 ? 's' : ''}</div>
-              <div className="TableRowItem3">{
-                this.props.patients[this.state.patientId].languages.map((language, index) => {
-                  return (index > 0) ? (
-                    <span key={language.id}>, {language.name}</span>
-                  ) : (
-                    <span key={language.id}>{language.name}</span>
-                  );
-                })
-              }
-                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientLanguages')}><img src={require('../pencil.png')} /></a>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Race</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].race}
-                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientRace')}><img src={require('../pencil.png')} /></a>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Religion</div>
-              <div className="TableRowItem3">{this.props.patients[this.state.patientId].religion}
-                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientReligion')}><img src={require('../pencil.png')} /></a>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Address</div>
-              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].address}
-                &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientLocation')}><img src={require('../pencil.png')} /></a>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Unit Number</div>
-              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].unitNumber}</div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Postal Code</div>
-              <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].postalCode}</div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Gender</div>
+            <div className="TableRowItem3">{this.props.patients[this.state.patientId].gender}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientGender')}><img src={require('../pencil.png')} /></a>
             </div>
           </div>
-        );
-      }
+          <div className="TableRow">
+            <div className="TableRowItem1">Date of Birth</div>
+            <div className="TableRowItem3">{moment(this.props.patients[this.state.patientId].dob).format('ll')}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientDob')}><img src={require('../pencil.png')} /></a>
+            </div>
+          </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Age</div>
+            <div className="TableRowItem3">{moment().diff(moment(this.props.patients[this.state.patientId].dob), 'years')}</div>
+          </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Language{this.props.patients[this.state.patientId].languages.length > 1 ? 's' : ''}</div>
+            <div className="TableRowItem3">{
+              this.props.patients[this.state.patientId].languages.map((language, index) => {
+                return (index > 0) ? (
+                  <span key={language.id}>, {language.name}</span>
+                ) : (
+                  <span key={language.id}>{language.name}</span>
+                );
+              })
+            }
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientLanguages')}><img src={require('../pencil.png')} /></a>
+            </div>
+          </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Race</div>
+            <div className="TableRowItem3">{this.props.patients[this.state.patientId].race}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientRace')}><img src={require('../pencil.png')} /></a>
+            </div>
+          </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Religion</div>
+            <div className="TableRowItem3">{this.props.patients[this.state.patientId].religion}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientReligion')}><img src={require('../pencil.png')} /></a>
+            </div>
+          </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Address</div>
+            <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].address}
+              &nbsp;<a href="#" onClick={this._onClickEdit.bind(this, 'patientLocation')}><img src={require('../pencil.png')} /></a>
+            </div>
+          </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Unit Number</div>
+            <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].unitNumber}</div>
+          </div>
+          <div className="TableRow">
+            <div className="TableRowItem1">Postal Code</div>
+            <div className="TableRowItem3">{this.props.patients && this.props.patients[this.state.patientId] && this.props.patients[this.state.patientId].addresses && this.props.patients[this.state.patientId].addresses[0] && this.props.patients[this.state.patientId].addresses[0].postalCode}</div>
+          </div>
+        </div>
+      );
     } else {
       // Add patient details
       patientDetails = (
@@ -182,19 +158,19 @@ class BookingLocationUser extends Component {
     }
     component = (
       <div>
-        <div className="BookingLocationUserBodyEditSection">
-          <div className="BookingLocationUserBodyEditSectionTitle">
+        <div className={s.bookingLocationUserBodyEditSection}>
+          <div className={s.bookingLocationUserBodyEditSectionTitle}>
             <h3>Contact Person Details</h3>
             {/*<a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>*/}
           </div>
           {userDetails}
         </div>
-        <div className="BookingLocationUserBodyEditSection">
-          <div className="BookingLocationUserBodyAddPatient">
+        <div className={s.bookingLocationUserBodyEditSection}>
+          <div className={s.bookingLocationUserBodyAddPatient}>
             <button className="btn btn-primary" onClick={this._onClickAddPatient.bind(this)}>Add New Patient</button>
             <span>or</span>
           </div>
-          <div className="BookingLocationUserBodySelectPatient">
+          <div className={s.bookingLocationUserBodySelectPatient}>
             <span>Select Existing Patient</span>
             <div className="select">
               <span></span>
@@ -209,11 +185,11 @@ class BookingLocationUser extends Component {
             </div>
           </div>
         </div>
-        <div className="BookingLocationUserBodyEditSection">
-          <div className="BookingLocationUserBodyEditSectionTitle">
+        <div className={s.bookingLocationUserBodyEditSection}>
+          <div className={s.bookingLocationUserBodyEditSectionTitle}>
             <h3>Patient Details</h3>
           </div>
-          <Loader className="spinner" loaded={(this.props.patients && !this.state.savingPatient) ? true : false}>
+          <Loader className="spinner" loaded={(!this.props.patientsFetching && !this.state.savingPatient) ? true : false}>
             {patientDetails}
           </Loader>
           <div style={{marginTop: '40px'}}>
@@ -221,7 +197,7 @@ class BookingLocationUser extends Component {
             <textarea name="additionalInfo" valueLink={linkState(this, 'additionalInfo')} />
           </div>
         </div>
-        <div className="BookingLocationUserBodyEditSection">
+        <div className={s.bookingLocationUserBodyEditSection}>
           <div className={classNames(!this.state.patientId ? 'hidden' : '')}>
             <a href="/booking3a" className="btn btn-primary" onClick={this._onNext.bind(this)}>NEXT</a>
           </div>
@@ -229,10 +205,10 @@ class BookingLocationUser extends Component {
       </div>
     );
     return (
-      <div className="BookingLocationUser">
+      <div className={s.bookingLocationUser}>
         <Container>
-          <div className="BookingLocationUserWrapper">
-            <div className="BookingLocationUserBody">
+          <div className={s.bookingLocationUserWrapper}>
+            <div className={s.bookingLocationUserBody}>
               {component}
             </div>
             {this.props.children}
@@ -683,21 +659,24 @@ class BookingLocationUser extends Component {
 
   _onNext(event) {
     if (this.props.patients && this.state.patientId) {
-      Link.handleClickQuery(this.props.location && this.props.location.query, event);
+      event.preventDefault();
 
+      const location = history.getCurrentLocation();
       var booker =  {
         additionalInfo: this.state.additionalInfo
       };
       // console.log(booker);
-      var location = {
+      var orderLocation = {
         postalCode: this.props.patients[this.state.patientId].addresses[0].postalCode,
         address: this.props.patients[this.state.patientId].addresses[0].address,
         unitNumber: this.props.patients[this.state.patientId].addresses[0].unitNumber
       };
       this.props.setOrderBooker(booker);
-      this.props.setOrderLocation(location);
+      this.props.setOrderLocation(orderLocation);
       this.props.setOrderPatient(this.props.patients[this.state.patientId]);
-      Util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+      util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+
+      history.push({ pathname: '/booking3a', query: location.query });
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
@@ -706,7 +685,7 @@ class BookingLocationUser extends Component {
   }
 
   _getPatients(user, cb) {
-    cb = cb || () => {};
+    cb = cb || (() => {});
     this.props.getPatients({
       cid: user.clients[0].id
     }).then((res) => {
@@ -722,13 +701,13 @@ class BookingLocationUser extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     languages: state.languages.data,
     lastPage: state.lastPage,
     order: state.order,
     user: state.user.data,
     client: state.user.data && state.user.data.clients && state.user.data.clients[0],
     patients: state.patients.data,
+    patientsFetching: state.patients.isFetching,
     patientIds: state.patients.ids,
     inlineForm: state.inlineForm,
     form: state.form

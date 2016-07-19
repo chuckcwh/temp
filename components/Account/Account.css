@@ -1,0 +1,85 @@
+@import '../variables.css';
+
+.account {
+  background-image: url(../../assets/images/background.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 60px 0;
+
+  & .accountContainer {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+
+    & .accountContainerItem {
+      position: relative;
+      min-height: 350px;
+      box-sizing: border-box;
+      width: 340px;
+      background-color: rgba(255, 255, 255, 0.9);
+      margin: 5px;
+      padding: 40px;
+
+      & form {
+        display: inline-block;
+
+        & h3 {
+          color: var(--brand-color);
+          font-weight: normal;
+          font-size: 24px;
+          margin: 0 0 24px 0;
+        }
+
+        & input {
+          margin: 0;
+          font-size: 21px;
+          border-radius: 0;
+        }
+
+        & :global a.btn {
+          width: 100%;
+        }
+      }
+    }
+
+    & .accountLogin {
+
+    }
+
+    & .accountFind {
+
+    }
+  }
+}
+
+/*
+  Extracted as it is being composed
+*/
+.accountContainerItemMiddle {
+  height: 95px;
+
+  & .loginInsteadContainer {
+    padding: 10px 0;
+
+    & .loginInsteadLink {
+      color: var(--secondary-color);
+    }
+  }
+
+  & .forgotPasswordContainer {
+    padding: 10px 0;
+
+    & .forgotPasswordLink {
+      color: var(--secondary-color);
+    }
+  }
+
+  & input[type=checkbox]:not(old) + label > span:first-child {
+    border-color: #ccc;
+  }
+
+  & input[type=checkbox]:not(old):checked + label > span {
+    color: var(--text-color);
+  }
+}

@@ -1,0 +1,21 @@
+@import '../variables.css';
+
+.bookingPatient {
+  background-color: #f3f3f3;
+
+  & .bookingPatientWrapper {
+    display: flex;
+    flex-direction: row;
+    padding-top: 50px;
+    padding-bottom: 100px;
+
+    @media (--sm-viewport) {
+      flex-direction: column;
+    }
+  }
+
+  & .bookingPatientBody {
+    flex: 10;
+    font-size: 21px;
+  }
+}

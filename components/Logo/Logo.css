@@ -1,0 +1,16 @@
+@import '../variables.css';
+
+.logo {
+  flex: 1;
+
+  & img {
+    width: 170px;
+    margin: 10px 0;
+
+    @media (--sm-viewport) {
+      width: 160px;
+      height: 42px;
+      margin: 5px 25px;
+    }
+  }
+}

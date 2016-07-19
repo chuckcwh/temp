@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import './CloseButton.scss';
+import s from './CloseButton.css';
 
 class CloseButton extends Component {
 
   render() {
     return (
-      <a onClick={() => this.props.onCloseClicked()} role="button" className="CloseButton">&times;</a>
+      <a onClick={() => this.props.onCloseClicked()} role="button" className={s.closeButton}>&times;</a>
     );
   }
 }

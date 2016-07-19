@@ -219,13 +219,14 @@ export function getServiceIconClass(serviceId) {
   return subcatClass;
 }
 
-const util = {
-  host: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://api.ebeecare.com' : 'http://dev.ebeecare.com'),
+const u = {
+  host: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://api.ebeecare.com' : 'https://dev.ebeecare.com'),
   authKey: 'secret',
   authSecret: 'secret0nlyWeilsonKnowsShhh852~',
 
-  backend: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://app.ebeecare.com' : 'http://dev.ebeecare.com'),
+  backend: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://app.ebeecare.com' : 'https://dev.ebeecare.com'),
   partners: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://www.ebeepartners.com' : 'http://staging.ebeepartners.com'),
+  blog: 'https://blog.ebeecare.com',
 
   isProduction: isProduction,
 
@@ -245,4 +246,4 @@ const util = {
   getServiceIconClass: getServiceIconClass
 };
 
-export default util;
+export default u;

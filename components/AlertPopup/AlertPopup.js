@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Popup from '../Popup';
-import './AlertPopup.scss';
+import s from './AlertPopup.css';
 import { hideAlertPopup } from '../../actions';
 
 class AlertPopup extends Component {
 
   render() {
     return (
-      <div className="AlertPopup">
-        <Popup title="Alert" isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)}>
+      <div className={s.alertPopup}>
+        <Popup css={s} title="Alert" isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)}>
           {this.props.message}
           {this.props.children}
-          <div className="AlertPopup-footer">
+          <div className={s.alertPopupFooter}>
             <a className="btn btn-primary btn-small" href="#" onClick={this._closePopup.bind(this)}>OK</a>
           </div>
         </Popup>

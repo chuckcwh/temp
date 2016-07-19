@@ -1,0 +1,10 @@
+@import '../variables.css';
+
+.closeButton {
+  cursor: pointer;
+  font-size: 1.8em;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

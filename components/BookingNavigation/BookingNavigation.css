@@ -1,0 +1,33 @@
+@import '../variables.css';
+
+.bookingNavigationWrapper {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--brand-color);
+
+  & .bookingNavigation {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+
+    @media (--lg-viewport) {
+      flex-wrap: wrap;
+    }
+
+    @media (--sm-viewport) {
+      justify-content: flex-start
+    }
+  }
+
+  @media (--sm-viewport) {
+    flex-direction: column;
+  }
+}

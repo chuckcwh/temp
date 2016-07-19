@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import './BookingLocationForm.scss';
+import classNames from 'classnames';
+import s from './BookingLocationForm.css';
 
 class BookingLocationForm extends Component {
 
@@ -21,8 +22,8 @@ class BookingLocationForm extends Component {
       submitting 
     } = this.props;
     return (
-      <form className="BookingLocationForm" onSubmit={handleSubmit(this.props.onNext)}>
-        <div className="BookingLocationFormSection">
+      <form className={s.bookingLocationForm} onSubmit={handleSubmit(this.props.onNext)}>
+        <div className={s.bookingLocationFormSection}>
           <span>I&apos;m an existing customer</span>
           <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this._onClickLogin.bind(this)}>LOGIN</a>
           {/*
@@ -31,28 +32,28 @@ class BookingLocationForm extends Component {
           */}
           <p className="small">You can import pre-existing patient information.</p>
         </div>
-        <div className="BookingLocationFormSection">
+        <div className={s.bookingLocationFormSection}>
           <div>Continue booking as guest</div>
-          <div className="PatientAddress">
-            <div className="PatientAddressLeft inline">
-              <div className="BookingLocationFormGroup">
+          <div className={s.patientAddress}>
+            <div className={classNames(s.patientAddressLeft, 'inline')}>
+              <div className={s.bookingLocationFormGroup}>
                 <input type="text" id="postalCode" name="postalCode" placeholder="Enter Postal Code*" {...postalCode} />
-                {postalCode.touched && postalCode.error && <div className="BookingLocationFormError">{postalCode.error}</div>}
+                {postalCode.touched && postalCode.error && <div className={s.bookingLocationFormError}>{postalCode.error}</div>}
               </div>
-              <div className="BookingLocationFormGroup">
+              <div className={s.bookingLocationFormGroup}>
                 <input type="text" id="unitNumber" name="unitNumber" placeholder="Enter Unit Number" {...unitNumber} />
-                {unitNumber.touched && unitNumber.error && <div className="BookingLocationFormError">{unitNumber.error}</div>}
+                {unitNumber.touched && unitNumber.error && <div className={s.bookingLocationFormError}>{unitNumber.error}</div>}
               </div>
             </div>
-            <div className="PatientAddressRight inline">
-              <div>
+            <div className={classNames(s.patientAddressRight, 'inline')}>
+              <div className={s.bookingLocationFormGroup}>
                 <textarea id="address" name="address" placeholder="Enter Address*" {...address} />
-                {address.touched && address.error && <div className="BookingLocationFormError">{address.error}</div>}
+                {address.touched && address.error && <div className={s.bookingLocationFormError}>{address.error}</div>}
               </div>
             </div>
           </div>
           <div style={{padding: '20px 0'}}>
-            {submitFailed && invalid && <div className="BookingLocationFormError">You have one or more form field errors.</div>}
+            {submitFailed && invalid && <div className={s.bookingLocationFormError}>You have one or more form field errors.</div>}
             <button className="btn btn-primary" type="submit" disabled={submitting}>NEXT</button>
           </div>
         </div>

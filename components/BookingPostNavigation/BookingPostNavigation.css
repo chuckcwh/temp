@@ -1,0 +1,111 @@
+@import '../variables.css';
+
+.bookingPostNavigationWrapper {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  list-style: none;
+  justify-content: space-between;
+  alignItems: center;
+  background-color: var(--brand-color);
+
+  @media (--sm-viewport) {
+    flex-direction: column;
+  }
+}
+
+.bookingPostNavigation {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: flex-start;
+  alignItems: center;
+
+  @media (--lg-viewport) {
+    flex-wrap: wrap;
+  }
+
+  @media (--sm-viewport) {
+    justify-content: flex-start;
+  }
+
+  & .bookingPostNavigationItem {
+    margin: 0 0.5em;
+
+    & .bookingPostNavigationLink {
+      display: inline-block;
+      padding: 0.5em 1em;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 600;
+      text-decoration: none;
+
+      & .bookingPostNavigationItemIcon {
+        display: inline-block;
+        width: 45px;
+        height: 51px;
+        background: url(../polygon-white.png) no-repeat center;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 51px;
+
+        @media (--sm-viewport) {
+          background-size: 75%;
+        }
+      }
+
+      & .bookingPostNavigationItemText {
+        vertical-align: middle;
+        margin-left: 25px;
+
+        @media (--sm-viewport) {
+          margin-left: 10px;
+        }
+      }
+
+      &.bookingPostNavigationLinkActive {
+        color: var(--secondary-color);
+        text-decoration: none;
+
+        & .bookingPostNavigationItemIcon {
+          background: url(../polygon-orange.png) no-repeat center;
+
+          @media (--sm-viewport) {
+            background-size: 75%;
+          }
+        }
+      }
+
+      @media (--sm-viewport) {
+        font-size: 21px;
+        padding: 0 0.5em;
+      }
+    }
+
+    & a.bookingPostNavigationLink {
+      &:hover {
+        color: var(--secondary-color);
+        text-decoration: none;
+
+        & .bookingPostNavigationItemIcon {
+          background: url(../polygon-orange.png) no-repeat center;
+
+          @media (--sm-viewport) {
+            background-size: 75%;
+          }
+        }
+      }
+    }
+
+    @media (--sm-viewport) {
+      width: 100%;
+      border-top: 1px solid #fff;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
+  }
+}

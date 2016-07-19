@@ -1,0 +1,83 @@
+@import '../variables.css';
+
+.bookingLocationUserPatientForm {
+  background-color: #f3f3f3;
+
+  flex: 10;
+  font-size: 21px;
+
+  & input[type=radio] {
+    margin-top: 20px;
+  }
+
+  & textarea {
+    width: 100%;
+  }
+
+  & :global .select {
+    display: inline-block;
+  }
+
+  & .bookingLocationUserPatientFormGroup {
+    display: inline-block;
+    vertical-align: top;
+
+    & :global .radio {
+      margin-top: 20px;
+    }
+
+    & .bookingLocationUserPatientFormError {
+      padding: 5px 15px;
+      color: var(--secondary-color);
+      font-size: 85%;
+    }
+  }
+
+  & .bookingLocationUserPatientFormError {
+    padding: 5px 0;
+    color: var(--secondary-color);
+  }
+
+  &:first-child {
+    border: 0;
+  }
+
+  & :global .datepicker__input {
+    font: inherit;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  & .bookingLocationUserPatientFormSectionTitle {
+    position: relative;
+
+    & a {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  & .patientDetailsLabel2 {
+    @media (--sm-viewport) {
+      display: block;
+    }
+  }
+
+  & .patientAddress {
+    display: flex;
+
+    & .patientAddressLeft {
+      flex: 1 0;
+    }
+
+    & .patientAddressRight {
+      flex: 1 0;
+    }
+
+    @media (--sm-viewport) {
+      flex-flow: row wrap;
+      flex-direction: column;
+    }
+  }
+}

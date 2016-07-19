@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import './BookingPayment.scss';
+import s from './BookingPayment.css';
 import Container from '../Container';
 import Link from '../Link';
 import { setPostStatus } from '../../actions';
+import history from '../../core/history';
 
 class BookingPayment extends Component {
 
   render() {
-    const { location, booking, postStatus } = this.props;
+    const { booking, postStatus } = this.props;
+    const location = history.getCurrentLocation();
     var bankTransferItem;
     var dates = booking && booking.case && booking.case.dates;
     if (dates) {
@@ -27,30 +29,30 @@ class BookingPayment extends Component {
       earliestDate.setDate(earliestDate.getDate() - 3);
       if (earliestDate > new Date()) {
         bankTransferItem = (
-          <li className="BookingPaymentNav-item">
-            <a className={classNames('BookingPaymentNav-link', (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-bank') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'bank')}>Bank Transfer<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
+          <li className={s.bookingPaymentNavItem}>
+            <a className={classNames(s.bookingPaymentNavLink, (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-bank') ? s.bookingPaymentNavLinkActive : '')} href="#" onClick={this._onClick.bind(this, 'bank')}>Bank Transfer<span className={s.bookingPaymentNavArrow}><div className="nav-caret"></div></span></a>
           </li>
         );
       }
     }
     return (
-      <div className="BookingPayment">
-        <div className="BookingPaymentNav-wrapper">
+      <div className={s.bookingPayment}>
+        <div className={s.bookingPaymentNavWrapper}>
           <Container>
-            <ul className="BookingPaymentNav">
-              <li className="BookingPaymentNav-item">
-                <a className={classNames('BookingPaymentNav-link', (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-paypal') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'paypal')}>Paypal (Credit/Debit)<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
+            <ul className={s.bookingPaymentNav}>
+              <li className={s.bookingPaymentNavItem}>
+                <a className={classNames(s.bookingPaymentNavLink, (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-paypal') ? s.bookingPaymentNavLinkActive : '')} href="#" onClick={this._onClick.bind(this, 'paypal')}>Paypal (Credit/Debit)<span className={s.bookingPaymentNavArrow}><div className="nav-caret"></div></span></a>
               </li>
               {bankTransferItem}
-              {/*<li className="BookingPaymentNav-item">
-                <a className={classNames('BookingPaymentNav-link', (this.props.path === '/booking-confirmation' && this.props.postStatus === 'payment-credits') ? 'active' : '')} href="#" onClick={this._onClick.bind(this, 'credits')}>eBeeCare Credits<span className="BookingPaymentNav-arrow"><div className="nav-caret"></div></span></a>
+              {/*<li className={s.bookingPaymentNavItem}>
+                <a className={classNames(s.bookingPaymentNavLink, (this.props.path === '/booking-confirmation' && this.props.postStatus === 'payment-credits') ? s.bookingPaymentNavLinkActive : '')} href="#" onClick={this._onClick.bind(this, 'credits')}>eBeeCare Credits<span className={s.bookingPaymentNavArrow}><div className="nav-caret"></div></span></a>
               </li>*/}
             </ul>
           </Container>
         </div>
         <div>
           <Container>
-            <div className="BookingPaymentBody">
+            <div className={s.bookingPaymentBody}>
               {this.props.children}
             </div>
           </Container>
@@ -69,7 +71,6 @@ class BookingPayment extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     booking: state.booking.data,
     postStatus: state.postStatus
   }

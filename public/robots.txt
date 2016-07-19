@@ -1,0 +1,13 @@
+# www.robotstxt.org/
+
+# Allow crawling of all content
+User-agent: *
+Disallow: /booking1
+Disallow: /booking2
+Disallow: /booking3
+Disallow: /booking3a
+Disallow: /booking3b
+Disallow: /booking3c
+Disallow: /booking4
+Disallow: /booking-manage
+Disallow: /booking-confirmation

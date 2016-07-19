@@ -4,10 +4,12 @@ import DayPicker, { DateUtils } from 'react-day-picker';
 import some from 'lodash/some';
 import remove from 'lodash/remove';
 import moment from 'moment';
-import './BookingDate.scss';
+import 'react-day-picker/lib/style.css';
+import s from './BookingDate.css';
 import Link from '../Link';
 import { setOrderDates, setLastPage, showAlertPopup } from '../../actions';
-import Util from '../../core/Util';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingDate extends Component {
 
@@ -26,7 +28,7 @@ class BookingDate extends Component {
       );
     }
     return (
-      <div className="BookingDate">
+      <div className={s.bookingDate}>
         <div className="text-center">
           {/*
           <DateRangePicker numberOfCalendars={2} selectionType="range" singleDateRange={true} minimumDate={minimumDate} value={this.state.range} onSelect={this._handleSelect.bind(this)} />
@@ -92,12 +94,15 @@ class BookingDate extends Component {
   }
 
   _onNext(event) {
+    const location = history.getCurrentLocation();
     if (this.state.selectedDates.length) {
-      Link.handleClickQuery(this.props.location && this.props.location.query, event);
+      event.preventDefault();
 
       // this.props.booking.range = this.state.range;
       this.props.setOrderDates(this.state.selectedDates);
-      Util.isNextLastPage('booking3a', this.props.lastPage) && this.props.setLastPage('booking3a');
+      util.isNextLastPage('booking3a', this.props.lastPage) && this.props.setLastPage('booking3a');
+
+      history.push({ pathname: '/booking3b', query: location.query });
     } else {
       event.preventDefault();
       // alert('Please select a date range.');
@@ -109,7 +114,6 @@ class BookingDate extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     lastPage: state.lastPage,
     order: state.order
   }

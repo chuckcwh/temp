@@ -1,0 +1,56 @@
+@import '../variables.css';
+
+.inlineForm {
+  background-color: #f3f3f3;
+
+  position: relative;
+  min-height: 50px;
+  flex: 10;
+  font-size: 21px;
+
+  & input {
+    margin-top: 0;
+  }
+
+  & input[type=radio] {
+    margin-top: 20px;
+  }
+
+  & :global .DateInput {
+    margin: 0;
+  }
+
+  & textarea {
+    width: 100%;
+  }
+
+  & .inlineFormError {
+    padding: 5px 15px;
+    color: var(--secondary-color);
+    font-size: 85%;
+  }
+
+  & button {
+    margin: 5px;
+  }
+
+  & :global .select {
+    display: inline-block;
+    margin: 0;
+  }
+
+  & .inlineFormSection {
+    padding: 20px 0;
+    border-top: 1px solid var(--border-color);
+
+    & .inlineFormGroup {
+      display: inline-block;
+      vertical-align: top;
+
+      & :global .radio {
+        margin-top: 20px;
+      }
+      
+    }
+  }
+}

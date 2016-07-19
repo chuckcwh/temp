@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import './Logo.scss';
+import s from './Logo.css';
 import Link from '../Link';
 
 export default class extends Component {
 
   render() {
     return (
-      <div className="Logo">
-        <a href="/" onClick={Link.handleClick}>
+      <div className={s.logo}>
+        <Link to="/">
           <img src={require('./logo.png')} />
-        </a>
+        </Link>
       </div>
     );
   }

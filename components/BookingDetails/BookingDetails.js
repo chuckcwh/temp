@@ -3,84 +3,51 @@ import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import moment from 'moment';
 import Loader from 'react-loader';
-import './BookingDetails.scss';
+import s from './BookingDetails.css';
 import Container from '../Container';
 import Link from '../Link';
+import InlineForm from '../InlineForm';
 import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
-import { getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession, showConfirmPopup } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import { fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession, showConfirmPopup, showInlineForm } from '../../actions';
+import history from '../../core/history';
+import util from '../../core/util';
 
-export default class BookingDetails extends Component {
+class BookingDetails extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      booking: this.props.booking,
-      editingUser: false,
-      editingPatient: false,
-      editingAddress: false
+      editing: false,
     };
+  }
+
+  componentDidMount() {
+    this.props.fetchServices();
   }
 
   render() {
     var userDetails, patientDetails, addressDetails, sessionDetails, caregiverSection, paymentButton;
-    if (this.state.editingUser) {
-      userDetails = (
-        <div>
-          <form ref={(c) => this._userDetailsForm = c}>
-            <div className="TableRow">
-              <div className="TableRowItem1">First Name</div>
-              <div className="TableRowItem3">
-                <input type="text" id="client_firstName" name="client_firstName" valueLink={linkState(this, 'client_firstName')} placeholder="First Name*" maxLength="50" required />
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Last Name</div>
-              <div className="TableRowItem3">
-                <input type="text" id="client_lastName" name="client_lastName" valueLink={linkState(this, 'client_lastName')} placeholder="Last Name*" maxLength="50" required />
-              </div>
-            </div>
-            {/*
-            <div className="TableRow">
-              <div className="TableRowItem1">Email</div>
-              <div className="TableRowItem3">
-                <input type="email" id="client_contactEmail" name="client_contactEmail" value={this.props.booking.client_contactEmail} placeholder="Email*" maxLength="50" required />
-              </div>
-            </div>
-            */}
-            <div className="TableRow">
-              <div className="TableRowItem1">Contact Number</div>
-              <div className="TableRowItem3">
-                <input type="text" id="client_contactNumber" name="client_contactNumber" valueLink={linkState(this, 'client_contactNumber')} placeholder="Contact Number*" maxLength="8" required />
-              </div>
-            </div>
-            <div>
-              <a href="#" className="btn btn-primary" onClick={this._onClickSave.bind(this, 'user')}>Save</a>
-              <a href="#" className="btn btn-primary" onClick={this._onClickStopEdit.bind(this, 'user')}>Cancel</a>
-            </div>
-          </form>
-        </div>
-      );
+    if (this.state.editing && this.props.inlineForm && /^(userDetails)$/i.test(this.props.inlineForm.name)) {
+      userDetails = <InlineForm />;
     } else {
       userDetails = (
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking.client_firstName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_firstName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking.client_lastName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_lastName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{this.props.booking.client_contactEmail}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactEmail}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Contact Number</div>
-            <div className="TableRowItem3">{this.props.booking.client_contactNumber}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactNumber}</div>
           </div>
         </div>
       );
@@ -92,24 +59,24 @@ export default class BookingDetails extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">First Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="patient_firstName" name="patient_firstName" value={this.props.booking.patient_firstName} placeholder="First Name*" maxLength="50" required />
+                <input type="text" id="patient_firstName" name="patient_firstName" value={this.props.booking && this.props.booking.patient_firstName} placeholder="First Name*" maxLength="50" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Last Name</div>
               <div className="TableRowItem3">
-                <input type="text" id="patient_lastName" name="patient_lastName" value={this.props.booking.patient_lastName} placeholder="Last Name*" maxLength="50" required />
+                <input type="text" id="patient_lastName" name="patient_lastName" value={this.props.booking && this.props.booking.patient_lastName} placeholder="Last Name*" maxLength="50" required />
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Gender</div>
               <div className="TableRowItem3">
                 <div className="radio radio-inline">
-                  <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.props.booking.patient_gender==='Male'} value="Male" required />
+                  <input type="radio" id="patient_gender_male" name="patient_gender" checked={this.props.booking && this.props.booking.patient_gender==='Male'} value="Male" required />
                   <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
                 </div>
                 <div className="radio radio-inline">
-                  <input type="radio" id="patient_gender_female" name="patient_gender" checked={this.props.booking.patient_gender==='Female'} value="Female" required />
+                  <input type="radio" id="patient_gender_female" name="patient_gender" checked={this.props.booking && this.props.booking.patient_gender==='Female'} value="Female" required />
                   <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
                 </div>
               </div>
@@ -132,23 +99,23 @@ export default class BookingDetails extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking.patient_firstName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_firstName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking.patient_lastName}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_lastName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Gender</div>
-            <div className="TableRowItem3">{this.props.booking.patient_gender}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_gender}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Date of Birth</div>
-            <div className="TableRowItem3">{moment(this.props.booking.patient_dob, 'YYYY-MM-DD').format('ll')}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_dob && moment(this.props.booking.patient_dob, 'YYYY-MM-DD').format('ll')}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Additional Notes</div>
-            <div className="TableRowItem3">{this.props.booking.case && this.props.booking.case.notes}</div>
+            <div className="TableRowItem3">{this.props.booking && this.props.booking.case && this.props.booking.case.notes}</div>
           </div>
         </div>
       );
@@ -185,8 +152,8 @@ export default class BookingDetails extends Component {
     } else {
       addressDetails = (
         <div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}</div>
-          <div>{this.props.booking.case && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</div>
+          <div>{this.props.booking && this.props.booking.case && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}</div>
+          <div>{this.props.booking && this.props.booking.case && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}</div>
         </div>
       );
     }
@@ -195,12 +162,12 @@ export default class BookingDetails extends Component {
         <div className="TableRow TableRowHeader">
           <div className="TableRowItem2">Date</div>
           <div className="TableRowItem2">Session</div>
-          <div className="TableRowItem2">{(this.props.booking.case && this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs</div>
+          <div className="TableRowItem2">{(this.props.booking && this.props.booking.case && this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs</div>
           <div className="TableRowItem2">Status</div>
           <div className="TableRowItem1"></div>
         </div>
         {
-          this.props.booking.case.dates.map(session => {
+          this.props.booking && this.props.booking.case && this.props.booking.case.dates && this.props.booking.case.dates.map(session => {
             return (
               <div className="TableRow" key={session.id}>
                 <div className="TableRowItem2">{moment(session.dateTimeStart).format('D MMM')}</div>
@@ -219,8 +186,8 @@ export default class BookingDetails extends Component {
     // show caregiver section only if case has been paid
     if (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid) {
       caregiverSection = (
-        <div className="BookingDetailsBodySection">
-          <div className="BookingDetailsBodySectionTitle">
+        <div className={s.bookingDetailsBodySection}>
+          <div className={s.bookingDetailsBodySectionTitle}>
             <h3>Caregiver Details</h3>
           </div>
           <div>
@@ -249,11 +216,11 @@ export default class BookingDetails extends Component {
 
     // set booking status
     var bookingStatus = '';
-    if (this.props.booking.case.status === 'Accepting Quotes') {
+    if (this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Accepting Quotes') {
       bookingStatus = 'Awaiting Caregiver';
-    } else if (this.props.booking.case.status === 'Closed' && this.props.booking.case.isPaid) {
+    } else if (this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Closed' && this.props.booking.case.isPaid) {
       bookingStatus = 'Paid & Confirmed';
-    } else if (this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) {
+    } else if (this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) {
       bookingStatus = 'Awaiting Payment';
 
       if (this.props.booking.case.transactions && this.props.booking.case.transactions.length) {
@@ -264,24 +231,24 @@ export default class BookingDetails extends Component {
         }
       }
     } else {
-      bookingStatus = this.props.booking.case.status;
+      bookingStatus = this.props.booking && this.props.booking.case && this.props.booking.case.status;
     }
 
     return (
-      <div className="BookingDetails">
+      <div className={s.bookingDetails}>
         <Container>
           <Loader className="spinner" loaded={this.props.bookingFetching ? false : true}>
-            <div className="BookingDetailsWrapper">
-              <div className="BookingDetailsBody">
-                <div className="BookingDetailsBodyActions">
-                  <span className="BookingDetailsFooter">
+            <div className={s.bookingDetailsWrapper}>
+              <div className={s.bookingDetailsBody}>
+                <div className={s.bookingDetailsBodyActions}>
+                  <span className={s.bookingDetailsFooter}>
                     {paymentButton}
                   </span>
-                  <span className="BookingDetailsFooter">
+                  <span className={s.bookingDetailsFooter}>
                     <a href="/booking-manage" className="btn btn-primary" onClick={this._onClickManageBooking.bind(this)}>VIEW ANOTHER</a>
                   </span>
                 </div>
-                <h2>Booking ID: #{this.state.booking.id}</h2>
+                <h2>Booking ID: #{this.props.booking && this.props.booking.id}</h2>
                 <div className="">
                   <div>
                     <div className="TableRow">
@@ -290,26 +257,34 @@ export default class BookingDetails extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="BookingDetailsBodyColumnWrapper">
-                  <div className="BookingDetailsBodyColumn">
-                    <div className="BookingDetailsBodySection">
-                      <div className="BookingDetailsBodySectionTitle">
+                <div className="">
+                  <div>
+                    <div className="TableRow">
+                      <div className="TableRowItem1">Service</div>
+                      <div className="TableRowItem3">{this.props.allServices && this.props.booking && this.props.booking.case && this.props.booking.case.service && this.props.allServices[this.props.booking.case.service] && this.props.allServices[this.props.booking.case.service].name}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className={s.bookingDetailsBodyColumnWrapper}>
+                  <div className={s.bookingDetailsBodyColumn}>
+                    <div className={s.bookingDetailsBodySection}>
+                      <div className={s.bookingDetailsBodySectionTitle}>
                         <h3>Contact Person Details</h3>
-                        <a href="#" className={(this.state.editingUser || this.props.booking.case.isPaid) ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
+                        <a href="#" className={(this.state.editingUser || (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid)) ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'userDetails')}><img src={require('../pencil.png')} /></a>
                       </div>
                       <Loader className="spinner" loaded={!this.state.updatingUser ? true : false}>
                         {userDetails}
                       </Loader>
                     </div>
-                    <div className="BookingDetailsBodySection">
-                      <div className="BookingDetailsBodySectionTitle">
+                    <div className={s.bookingDetailsBodySection}>
+                      <div className={s.bookingDetailsBodySectionTitle}>
                         <h3>Patient Details</h3>
                         {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
                       </div>
                       {patientDetails}
                     </div>
-                    <div className="BookingDetailsBodySection">
-                      <div className="BookingDetailsBodySectionTitle">
+                    <div className={s.bookingDetailsBodySection}>
+                      <div className={s.bookingDetailsBodySectionTitle}>
                         <h3>Patient Location / Address</h3>
                         {/*<a href="#" className={this.state.editingAddress ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'address')}><img src={require('../pencil.png')} /></a>*/}
                       </div>
@@ -318,10 +293,10 @@ export default class BookingDetails extends Component {
                       </Loader>
                     </div>
                   </div>
-                  <div className="BookingDetailsBodyColumn">
+                  <div className={s.bookingDetailsBodyColumn}>
                     {caregiverSection}
-                    <div className="BookingDetailsBodySection">
-                      <div className="BookingDetailsBodySectionTitle">
+                    <div className={s.bookingDetailsBodySection}>
+                      <div className={s.bookingDetailsBodySectionTitle}>
                         <h3>Session Details</h3>
                         {/*<a href="#" className={this.state.editingPatient ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'patient')}><img src={require('../pencil.png')} /></a>*/}
                       </div>
@@ -329,7 +304,7 @@ export default class BookingDetails extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="BookingDetailsFooter">
+                <div className={s.bookingDetailsFooter}>
                   <span>
                     {paymentButton}
                   </span>
@@ -349,29 +324,80 @@ export default class BookingDetails extends Component {
 
   _onClickEdit(entity, event) {
     event.preventDefault();
+    this.setState({ editing: true });
 
     switch (entity) {
-      case 'user':
-        this.setState({
-          client_firstName: this.props.booking.client_firstName,
-          client_lastName: this.props.booking.client_lastName,
-          client_contactNumber: this.props.booking.client_contactNumber,
-
-          editingUser: true});
-        break;
-      case 'patient':
-        this.setState({editingPatient: true});
-        break;
-      case 'address':
-        this.setState({
-          postalCode: this.props.booking.case.addresses[0].postalCode,
-          address: this.props.booking.case.addresses[0].address,
-          unitNumber: this.props.booking.case.addresses[0].unitNumber,
-
-          editingAddress: true
+      case 'userDetails':
+        this.props.showInlineForm({
+          name: 'userDetails',
+          inputs: {
+            client_firstName: {
+              label: 'First Name',
+              type: 'text',
+              initialValue: this.props.booking && this.props.booking.client_firstName
+            },
+            client_lastName: {
+              label: 'Last Name',
+              type: 'text',
+              initialValue: this.props.booking && this.props.booking.client_lastName
+            },
+            client_contactNumber: {
+              label: 'Contact Number',
+              type: 'text',
+              initialValue: this.props.booking && this.props.booking.client_contactNumber
+            },
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.client_firstName) {
+              errors.client_firstName = 'Required';
+            }
+            if (!values.client_lastName) {
+              errors.client_lastName = 'Required';
+            }
+            if (!values.client_contactNumber) {
+              errors.client_contactNumber = 'Required';
+            } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.client_contactNumber)) {
+              errors.client_contactNumber = 'Invalid mobile phone';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'userDetails'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
+      default:
+        break;
     }
+  }
+
+  _onClickSave(entity, values, dispatch) {
+    return new Promise((resolve, reject) => {
+      switch (entity) {
+        case 'userDetails':
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            booking: {
+              client_firstName: values.client_firstName,
+              client_lastName: values.client_lastName,
+              client_contactNumber: values.client_contactNumber
+            }
+          }).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              resolve();
+              this.setState({ editing: false });
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => {
+            reject({ _error: reason });
+          });
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   _onClickStopEdit(entity, event) {
@@ -386,67 +412,6 @@ export default class BookingDetails extends Component {
         break;
       case 'address':
         this.setState({editingAddress: false});
-        break;
-    }
-  }
-
-  _onClickSave(entity, event) {
-    event.preventDefault();
-
-    switch (entity) {
-      case 'user':
-        if (this._userDetailsForm.checkValidity()) {
-          this.setState({updatingUser: true});
-          this.props.editBooking({
-            bid: this.props.booking && this.props.booking.id,
-            token: this.props.booking && this.props.booking.token,
-            booking: {
-              client_firstName: this.state.client_firstName,
-              client_lastName: this.state.client_lastName,
-              client_contactNumber: this.state.client_contactNumber
-            }
-          }).then((res) => {
-            if (res.response.status === 1) {
-              this.setState({
-                editingUser: false,
-                updatingUser: false
-              });
-            } else {
-              console.error('Failed to edit booking.');
-            }
-          });
-        }
-        break;
-      case 'patient':
-        if (this._patientDetailsForm.checkValidity()) {
-          this.setState({editingPatient: false});
-        }
-        break;
-      case 'address':
-        if (this._addressDetailsForm.checkValidity()) {
-          this.setState({updatingAddress: true});
-          this.props.editBooking({
-            bid: this.props.booking && this.props.booking.id,
-            token: this.props.booking && this.props.booking.token,
-            case: {
-              addresses: [{
-                id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
-                address: this.state.address,
-                postalCode: this.state.postalCode,
-                unitNumber: this.state.unitNumber
-              }]
-            }
-          }).then((res) => {
-            if (res.response.status === 1) {
-              this.setState({
-                editingAddress: false,
-                updatingAddress: false
-              });
-            } else {
-              console.error('Failed to edit booking.');
-            }
-          });
-        }
         break;
     }
   }
@@ -500,15 +465,18 @@ export default class BookingDetails extends Component {
   };
 
   _onClickManageBooking(event) {
-    Link.handleClick(event);
-
     this.props.clearBooking();
+
+    event.preventDefault();
+    history.push('/booking-manage');
   }
 
   _onClickPay(event) {
+    const location = history.getCurrentLocation();
+
     // Link.handleClick(event);
     event.preventDefault();
-    Location.push({ pathname: '/booking-confirmation', query: this.props.location.query });
+    history.push({ pathname: '/booking-confirmation', query: location.query });
 
     this.props.setPostStatus('confirmation');
   }
@@ -533,14 +501,19 @@ export default class BookingDetails extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
+    allServices: state.allServices.data,
+    allServicesFetching: state.allServices.isFetching,
     booking: state.booking.data,
-    bookingFetching: state.booking.isFetching
+    bookingFetching: state.booking.isFetching,
+    inlineForm: state.inlineForm,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchServices: () => {
+      return dispatch(fetchServices());
+    },
     getBooking: (params) => {
       return dispatch(getBooking(params));
     },
@@ -558,6 +531,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     showConfirmPopup: (body, accept) => {
       return dispatch(showConfirmPopup(body, accept));
+    },
+    showInlineForm: (params) => {
+      return dispatch(showInlineForm(params));
     }
   }
 }

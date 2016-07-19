@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Loader from 'react-loader';
 import { reduxForm } from 'redux-form';
-import './LoginForm.scss';
+import s from './LoginForm.css';
+import sAccount from '../Account/Account.css';
 import { login, loginClient } from '../../actions';
 
 const submit = (props) => {
@@ -62,7 +63,7 @@ class LoginForm extends Component {
       type
     } = this.props;
     return (
-      <form className="LoginForm" onSubmit={handleSubmit(submit(this.props))}>
+      <form className={s.loginForm} onSubmit={handleSubmit(submit(this.props))}>
         <Loader className="spinner" loaded={!submitting}>
           <h3>eBeeCare {type === 'client' ? 'Client ' : ''}Login</h3>
           <div className="IconInput EmailInput">
@@ -73,10 +74,10 @@ class LoginForm extends Component {
             <span />
             <input type="password" placeholder="Enter Password" {...password} />
           </div>
-          <div className="Account-container-item-middle">
-            {email.touched && email.error && <div className="LoginFormError">{email.error}</div>}
-            {password.touched && password.error && <div className="LoginFormError">{password.error}</div>}
-            {error && <div className="LoginFormError">{error}</div>}
+          <div className={s.accountContainerItemMiddle}>
+            {email.touched && email.error && <div className={s.loginFormError}>{email.error}</div>}
+            {password.touched && password.error && <div className={s.loginFormError}>{password.error}</div>}
+            {error && <div className={s.loginFormError}>{error}</div>}
           </div>
           <button className="btn btn-primary" type="submit" disabled={submitting}>Login</button>
         </Loader>

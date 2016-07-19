@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './BookingPatient.scss';
+import s from './BookingPatient.css';
 import Container from '../Container';
 import BookingPatientForm from '../BookingPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
 import ConfirmPopup from '../ConfirmPopup';
-import { setOrderBooker, setLastPage, showLoginPopup, showDayPickerPopup, showAlertPopup, showConfirmPopup } from '../../actions';
-import Location from '../../core/Location';
-import Util from '../../core/Util';
+import { setOrderBooker, setLastPage, createBookingWithOrder, showLoginPopup, showDayPickerPopup, showAlertPopup, showConfirmPopup } from '../../actions';
+import history from '../../core/history';
+import util from '../../core/util';
 
 class BookingPatient extends Component {
 
@@ -18,12 +18,21 @@ class BookingPatient extends Component {
     };
   }
 
+  componentWillReceiveProps(props) {
+    if (props.order.booker !== this.props.order.booker) {
+      props.createBookingWithOrder(props.order, location);
+      util.isNextLastPage('booking4', props.lastPage) && props.setLastPage('booking4');
+      const location = history.getCurrentLocation();
+      history.push({ pathname: '/booking5', query: location && location.query });
+    }
+  }
+
   render() {
     return (
-      <div className="BookingPatient">
+      <div className={s.bookingPatient}>
         <Container>
-          <div className="BookingPatientWrapper">
-            <div className="BookingPatientBody">
+          <div className={s.bookingPatientWrapper}>
+            <div className={s.bookingPatientBody}>
               <BookingPatientForm 
                 showDayPickerPopup={this.props.showDayPickerPopup} 
                 showLoginPopup={this.props.showLoginPopup}
@@ -38,8 +47,8 @@ class BookingPatient extends Component {
         <ConfirmPopup onConfirmed={this._onConfirmed.bind(this)}>
           <div>
             <form ref={(c) => this._agreeForm = c}>
-              <input className="AgreeCheckbox" type="checkbox" id="agree" name="agree" checked={this.state.agree} onChange={this._onCheckedAgree.bind(this)} required />
-              <label className="AgreeCheckboxLabel" htmlFor="agree">
+              <input className={s.agreeCheckbox} type="checkbox" id="agree" name="agree" checked={this.state.agree} onChange={this._onCheckedAgree.bind(this)} required />
+              <label className={s.agreeCheckboxLabel} htmlFor="agree">
                 <span></span><span>By making this booking, I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>.</span>
               </label>
             </form>
@@ -75,9 +84,11 @@ class BookingPatient extends Component {
       };
       // console.log(user);
       this.props.setOrderBooker(user);
-      Util.isNextLastPage('booking4', this.props.lastPage) && this.props.setLastPage('booking4');
-
-      Location.push({ pathname: '/booking5', query: this.props.location && this.props.location.query });
+      
+      // Delay execution till order is officially updated
+      // this.props.createBookingWithOrder(this.props.order, location);
+      // util.isNextLastPage('booking4', this.props.lastPage) && this.props.setLastPage('booking4');
+      // history.push({ pathname: '/booking5', query: location && location.query });
     } else {
       this.props.showAlertPopup('To continue, please accept our Terms of Service and Privacy Policy.');
     }
@@ -96,7 +107,6 @@ class BookingPatient extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     lastPage: state.lastPage,
     order: state.order
   }
@@ -109,6 +119,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setLastPage: (page) => {
       return dispatch(setLastPage(page));
+    },
+    createBookingWithOrder: (order, location) => {
+      return dispatch(createBookingWithOrder(order, location));
     },
     showLoginPopup: () => {
       return dispatch(showLoginPopup());

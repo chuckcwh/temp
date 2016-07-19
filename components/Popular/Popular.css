@@ -1,0 +1,70 @@
+@import '../variables.css';
+
+.popular {
+  position: relative;
+  min-height: 200px;
+  padding: 20px 0;
+
+  & .popularList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 0 2em 0;
+    padding: 20px 0 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    @media (--sm-viewport) {
+      padding: 0;
+    }
+
+    & .popularItem {
+      padding: 10px 0;
+      width: calc(100% / 4);
+      text-align: center;
+
+      @media (--sm-viewport) {
+        padding: 0;
+        width: calc(100% / 3);
+      }
+
+      &.lastItem {
+        @media (--sm-xviewport) {
+          display: none;
+        }
+      }
+
+
+      &.popularItemQuestion {
+
+
+        & .popularItemQuestionIcon {
+          display: inline-block;
+          width: $popular-icon-size;
+          height: $popular-icon-size;
+
+          img {
+            width: 100%;
+          }
+        }
+      }
+
+      & .popularItemIcon {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      & .popularItemTitle {
+        color: var(--secondary-color);
+        font-size: 22px;
+        padding: 5px 10px;
+        
+        @media (--sm-viewport) {
+          font-size: 18px;
+          padding: 5px;
+        }
+      }
+    }
+  }
+}

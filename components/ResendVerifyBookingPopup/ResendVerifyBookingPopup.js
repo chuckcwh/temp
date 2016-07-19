@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import linkState from 'react-link-state';
 import Loader from 'react-loader';
-import './ResendVerifyBookingPopup.scss';
+import classNames from 'classnames';
+import s from './ResendVerifyBookingPopup.css';
 import Link from '../Link';
 import Popup from '../Popup';
 import { resendVerifyBookingPin, hideResendVerifyBookingPopup, showAlertPopup } from '../../actions';
-import Util from '../../core/Util';
+import util from '../../core/util';
 
 class ResendVerifyBookingPopup extends Component {
 
@@ -30,15 +31,15 @@ class ResendVerifyBookingPopup extends Component {
   render() {
     return (
       <div>
-        <div className="ResendVerifyBookingPopup">
-          <Popup isOpen={this.props.visible} afterOpen={this._executeAfterModalOpen.bind(this)} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
+        <div className={s.resendVerifyBookingPopup}>
+          <Popup css={s} isOpen={this.props.visible} afterOpen={this._executeAfterModalOpen.bind(this)} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
             <Loader className="spinner" loaded={this.state.pending ? false : true}>
-              <div className="Account-login Account-container-item">
-                <form id="ResendVerifyBookingForm" ref={(c) => this._resendVerifyBookingForm = c} autoComplete="off">
+              <div className={classNames(s.accountLogin, s.accountContainerItem)}>
+                <form id="ResendVerifyBookingForm" ref={(c) => this._resendVerifyBookingForm = c} autoComplete="off" onSubmit={this._onClickSubmit.bind(this)}>
                   <h3>Resend Booking PIN</h3>
                   <p>Please enter your mobile number.</p>
                   <input ref={(c) => this._startInput = c} className="HpInput" type="text" name="pin" valueLink={linkState(this, 'hp')} placeholder="Enter mobile number" pattern="\d{8}" required />
-                  <div className="Account-container-item-middle">
+                  <div className={s.accountContainerItemMiddle}>
                     <div className={this.state.error ? '' : 'hidden'}><span className="error">Mobile number does not match.</span></div>
                   </div>
                   <a href="#" className="btn btn-primary" onClick={this._onClickSubmit.bind(this)}>Submit</a>
@@ -63,7 +64,7 @@ class ResendVerifyBookingPopup extends Component {
       }).then((res) => {
         this.setState({pending: false});
         if (err) {
-          return console.error(Util.host + '/api/resendBookingPin', status, err.toString());
+          return console.error(util.host + '/api/resendBookingPin', status, err.toString());
         }
         if (res.response && res.response.status === 1) {
           // console.log(res.response);

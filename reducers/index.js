@@ -5,15 +5,6 @@ import merge from 'lodash/merge';
 import modal from './modal';
 import order from './order';
 
-const router = (state = {}, action) => {
-  switch (action.type) {
-    case ActionTypes.SET_ROUTER:
-      return action.router;
-    default:
-      return state;
-  }
-}
-
 const allServices = (state = {
   isFetching: false,
   didInvalidate: false,
@@ -175,8 +166,7 @@ const patients = (state = {
   switch (action.type) {
     case ActionTypes.PATIENTS_REQUEST:
       return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
+        isFetching: true
       })
     case ActionTypes.PATIENTS_SUCCESS:
       let hash = {}, ids = []
@@ -186,7 +176,6 @@ const patients = (state = {
       })
       return Object.assign({}, state, {
         isFetching: false,
-        didInvalidate: false,
         data: hash,
         ids: ids,
         lastUpdated: action.response && action.response.receivedAt
@@ -210,13 +199,11 @@ const sessions = (state = {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
       return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
+        isFetching: true
       })
     case ActionTypes.SESSIONS_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        didInvalidate: false,
         data: action.response.timeSlots,
         lastUpdated: action.response && action.response.receivedAt
       })
@@ -371,7 +358,6 @@ const errorMessage = (state = null, action) => {
 }
 
 const bookingApp = combineReducers({
-  router,
   allServices,
   languages,
   booking,

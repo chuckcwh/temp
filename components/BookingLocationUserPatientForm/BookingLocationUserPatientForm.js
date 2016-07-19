@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import './BookingLocationUserPatientForm.scss';
+import classNames from 'classnames';
+import moment from 'moment';
+import s from './BookingLocationUserPatientForm.css';
 
 class BookingLocationUserPatientForm extends Component {
 
@@ -21,26 +23,26 @@ class BookingLocationUserPatientForm extends Component {
       submitting 
     } = this.props;
     return (
-      <form className="BookingLocationUserPatientForm" onSubmit={handleSubmit(this.props.onFilled)}>
+      <form className={s.bookingLocationUserPatientForm} onSubmit={handleSubmit(this.props.onFilled)}>
         <div>
           <div>
-            <input className="RememberMeCheckbox" type="checkbox" id="isPatient" {...isPatient} />
-            <label className="RememberMeCheckboxLabel" htmlFor="isPatient">
+            <input className={s.rememberMeCheckbox} type="checkbox" id="isPatient" {...isPatient} />
+            <label className={s.rememberMeCheckboxLabel} htmlFor="isPatient">
               <span></span><span>Are you the patient?</span>
             </label>
           </div>
-          <div className="BookingLocationUserPatientFormGroup">
+          <div className={s.bookingLocationUserPatientFormGroup}>
             <input type="text" id="fullName" name="fullName" placeholder="Full Name*" {...fullName} disabled={isPatient.value === true} />
-            {fullName.touched && fullName.error && <div className="BookingLocationUserPatientFormError">{fullName.error}</div>}
+            {fullName.touched && fullName.error && <div className={s.bookingLocationUserPatientFormError}>{fullName.error}</div>}
           </div>
-          <div className="BookingLocationUserPatientFormGroup">
+          <div className={s.bookingLocationUserPatientFormGroup}>
             <div className="DateInput">
               <input type="text" id="dob" name="dob" placeholder="Birth Date* (YYYY-MM-DD)" {...dob} />
               <span onClick={() => this.props.showDayPickerPopup(dob.value, 'bookingLocationUserPatientForm')}></span>
             </div>
-            {dob.touched && dob.error && <div className="BookingLocationUserPatientFormError">{dob.error}</div>}
+            {dob.touched && dob.error && <div className={s.bookingLocationUserPatientFormError}>{dob.error}</div>}
           </div>
-          <div className="BookingLocationUserPatientFormGroup">
+          <div className={s.bookingLocationUserPatientFormGroup}>
             <div className="radio radio-inline">
               <input type="radio" id="gender_male" name="gender" {...gender} value="Male" checked={gender.value === 'Male'} />
               <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
@@ -49,32 +51,32 @@ class BookingLocationUserPatientForm extends Component {
               <input type="radio" id="gender_female" name="gender" {...gender} value="Female" checked={gender.value === 'Female'} />
               <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
             </div>
-            {gender.touched && gender.error && <div className="BookingLocationUserPatientFormError">{gender.error}</div>}
+            {gender.touched && gender.error && <div className={s.bookingLocationUserPatientFormError}>{gender.error}</div>}
           </div>
         </div>
         <div>
           <div style={{marginTop: '40px'}}>Patient Location / Address</div>
-          <div className="PatientAddress">
-            <div className="PatientAddressLeft inline">
-              <div className="BookingLocationUserPatientFormGroup">
+          <div className={s.patientAddress}>
+            <div className={classNames(s.patientAddressLeft, 'inline')}>
+              <div className={s.bookingLocationUserPatientFormGroup}>
                 <input type="text" id="postalCode" name="postalCode" placeholder="Enter Postal Code*" {...postalCode} />
-                {postalCode.touched && postalCode.error && <div className="BookingLocationUserPatientFormError">{postalCode.error}</div>}
+                {postalCode.touched && postalCode.error && <div className={s.bookingLocationUserPatientFormError}>{postalCode.error}</div>}
               </div>
-              <div className="BookingLocationUserPatientFormGroup">
+              <div className={s.bookingLocationUserPatientFormGroup}>
                 <input type="text" id="unitNumber" name="unitNumber" placeholder="Enter Unit Number" {...unitNumber} />
-                {unitNumber.touched && unitNumber.error && <div className="BookingLocationUserPatientFormError">{unitNumber.error}</div>}
+                {unitNumber.touched && unitNumber.error && <div className={s.bookingLocationUserPatientFormError}>{unitNumber.error}</div>}
               </div>
             </div>
-            <div className="PatientAddressRight inline">
+            <div className={classNames(s.patientAddressRight, 'inline')}>
               <div>
                 <textarea id="address" name="address" placeholder="Enter Address*" {...address} />
-                {address.touched && address.error && <div className="BookingLocationUserPatientFormError">{address.error}</div>}
+                {address.touched && address.error && <div className={s.bookingLocationUserPatientFormError}>{address.error}</div>}
               </div>
             </div>
           </div>
           <p className="small">This information will only be used to contact you regarding your booking.</p>
         </div>
-        {submitFailed && invalid && <div className="BookingLocationUserPatientFormError">You have one or more form field errors.</div>}
+        {submitFailed && invalid && <div className={s.bookingLocationUserPatientFormError}>You have one or more form field errors.</div>}
         <button className="btn btn-primary" type="submit">Save Patient</button>
       </form>
     );
@@ -93,6 +95,8 @@ const validate = values => {
     errors.dob = 'Required';
   } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.dob)) {
     errors.dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
+  } else if (moment().isSameOrBefore(values.dob, 'day')) {
+    errors.dob = 'Date must be earlier than today';
   }
   if (!values.gender) {
     errors.gender = 'Required';

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import './BookingSidebar.scss';
+import s from './BookingSidebar.css';
 import Link from '../Link';
+import history from '../../core/history';
 
 class BookingSidebar extends Component {
 
@@ -12,15 +13,16 @@ class BookingSidebar extends Component {
 
   render() {
     const { allServices, order } = this.props;
-    var service, patientName, location, dates, timeslots, sessions, sum;
+    const location = history.getCurrentLocation();
+    var service, patientName, loc, dates, timeslots, sessions, sum;
     if (allServices && allServices.data && order && order.service) {
-      service = allServices.data[order.service].name;
+      service = allServices.data[order.service].name + ' (' + parseFloat(allServices.data[order.service].duration) + ' hr' + (parseFloat(allServices.data[order.service].duration) > 1 ? 's)' : ')');
     }
     if (order && order.patient && order.patient.fullName) {
       patientName = order.patient.fullName;
     }
     if (order && order.location && order.location.postalCode) {
-      location = (<span>{order.location.address}<br/>{order.location.unitNumber}</span>);
+      loc = (<span>{order.location.address}<br/>{order.location.unitNumber}</span>);
     }
     if (order && order.dates) {
       dates = order.dates;
@@ -29,34 +31,34 @@ class BookingSidebar extends Component {
     if (order && order.timeslots) {
       timeslots = order.timeslots;
     }
-    if (this.props.location.pathname.indexOf('booking4') > -1 && order && order.sessions) {
+    if (location.pathname.indexOf('booking4') > -1 && order && order.sessions) {
       sessions = order.sessions;
     }
-    if ((this.props.location.pathname.indexOf('booking3c') > -1 || this.props.location.pathname.indexOf('booking4') > -1) && order && typeof order.sum === 'number') {
+    if ((location.pathname.indexOf('booking3c') > -1 || location.pathname.indexOf('booking4') > -1) && order && typeof order.sum === 'number') {
       sum = order.sum;
     }
     return (
-      <div className="BookingSidebar">
-        <div className="BookingSidebarTitle">
+      <div className={s.bookingSidebar}>
+        <div className={s.bookingSidebarTitle}>
           Your Booking
         </div>
-        <div className="BookingSidebarContent">
-          <a href="/booking1" onClick={Link.handleClick}>
-            <div className="BookingSidebarService">
-              <div className="BookingSidebarItem">{service}</div>
+        <div className={s.bookingSidebarContent}>
+          <Link to={{ pathname: '/booking1', query: location && location.query }}>
+            <div className={s.bookingSidebarService}>
+              <div className={s.bookingSidebarItem}>{service}</div>
             </div>
-          </a>
-          <a href="/booking2" onClick={Link.handleClick}>
-            <div className="BookingSidebarLocation">
-              <div className="BookingSidebarItem">
+          </Link>
+          <Link to={{ pathname: '/booking2', query: location && location.query }}>
+            <div className={s.bookingSidebarLocation}>
+              <div className={s.bookingSidebarItem}>
                 <div>{patientName}</div>
-                <div>{location}</div>
+                <div>{loc}</div>
               </div>
             </div>
-          </a>
-          <a href="/booking3a" onClick={Link.handleClick}>
-            <div className="BookingSidebarDates">
-              <div className="BookingSidebarItem">
+          </Link>
+          <Link to={{ pathname: '/booking3a', query: location && location.query }}>
+            <div className={s.bookingSidebarDates}>
+              <div className={s.bookingSidebarItem}>
               {
                 dates && dates.map(date => {
                   return (
@@ -66,10 +68,10 @@ class BookingSidebar extends Component {
               }
               </div>
             </div>
-          </a>
-          <a href="/booking3b" onClick={Link.handleClick}>
-            <div className="BookingSidebarTimings">
-              <div className="BookingSidebarItem">
+          </Link>
+          <Link to={{ pathname: '/booking3b', query: location && location.query }}>
+            <div className={s.bookingSidebarTimings}>
+              <div className={s.bookingSidebarItem}>
               {
                 timeslots && timeslots.map(timeslot => {
                   if (timeslot === 'Morning') {
@@ -89,10 +91,10 @@ class BookingSidebar extends Component {
               }
               </div>
             </div>
-          </a>
-          <a href="/booking3c" onClick={Link.handleClick}>
-            <div className="BookingSidebarSlots">
-              <div className="BookingSidebarItem">
+          </Link>
+          <Link to={{ pathname: '/booking3c', query: location && location.query }}>
+            <div className={s.bookingSidebarSlots}>
+              <div className={s.bookingSidebarItem}>
               {
                 sessions && sessions.map((session, index) => {
                   return (
@@ -102,12 +104,12 @@ class BookingSidebar extends Component {
               }
               </div>
             </div>
-          </a>
+          </Link>
         </div>
-        <div className="BookingSidebarFooter">
-          <div className="BookingSidebarPrice">
-            <span className="BookingSidebarPriceLabel">{typeof sum === 'number' ? 'Estimated Costs' : ''}</span>
-            <span className="BookingSidebarPriceCost">{typeof sum === 'number' ? ('SGD ' + sum.toFixed(2)) : ''}</span>
+        <div className={s.bookingSidebarFooter}>
+          <div className={s.bookingSidebarPrice}>
+            <span className={s.bookingSidebarPriceLabel}>{typeof sum === 'number' ? 'Estimated Costs' : ''}</span>
+            <span className={s.bookingSidebarPriceCost}>{typeof sum === 'number' ? ('SGD ' + sum.toFixed(2)) : ''}</span>
           </div>
         </div>
       </div>
@@ -118,7 +120,6 @@ class BookingSidebar extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    location: state.router && state.router.location,
     allServices: state.allServices,
     order: state.order
   }

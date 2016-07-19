@@ -97,6 +97,10 @@
 
         & :global .nav-caret {
           display: block;
+
+          &::after {
+            border-top-color: #f3f3f3;
+          }
         }
 
         @media (--sm-viewport) {

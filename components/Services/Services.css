@@ -245,6 +245,10 @@
     & .servicesBodySubcatSection {
       & .servicesBodySubcatSectionTitle {
         color: var(--secondary-color);
+
+        & a {
+          color: var(--secondary-color);
+        }
       }
 
       & .servicesBodySubcatSectionBody {

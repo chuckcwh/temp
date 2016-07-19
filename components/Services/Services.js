@@ -153,7 +153,11 @@ class Services extends Component {
                   serviceTreeHash[filter].children.map(subType => {
                     return (
                       <div className={s.servicesBodySubcatSection} key={subType.children[0].category + subType.name}>
-                        <h2 className={s.servicesBodySubcatSectionTitle}>{this.state.filter === util.ALL_SERVICES ? subType.children[0].category + ' > ' : ''}{subType.name}</h2>
+                        <h2 className={s.servicesBodySubcatSectionTitle}>
+                          {this.state.filter === util.ALL_SERVICES && <a href="#" onClick={this._onClickFilter.bind(this, subType.children[0].category)}>{subType.children[0].category}</a>}
+                          {this.state.filter === util.ALL_SERVICES ? ' > ' : ''}
+                          {subType.name}
+                        </h2>
                         <div className={s.servicesBodySubcatSectionBody}>
                           {
                             Object.values(groupBy(subType.children, 'name')).map((serviceGroup) => {

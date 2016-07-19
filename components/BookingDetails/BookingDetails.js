@@ -6,9 +6,10 @@ import Loader from 'react-loader';
 import s from './BookingDetails.css';
 import Container from '../Container';
 import Link from '../Link';
+import InlineForm from '../InlineForm';
 import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
-import { fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession, showConfirmPopup } from '../../actions';
+import { fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession, showConfirmPopup, showInlineForm } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
 
@@ -17,9 +18,7 @@ class BookingDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editingUser: false,
-      editingPatient: false,
-      editingAddress: false
+      editing: false,
     };
   }
 
@@ -29,43 +28,8 @@ class BookingDetails extends Component {
 
   render() {
     var userDetails, patientDetails, addressDetails, sessionDetails, caregiverSection, paymentButton;
-    if (this.state.editingUser) {
-      userDetails = (
-        <div>
-          <form ref={(c) => this._userDetailsForm = c}>
-            <div className="TableRow">
-              <div className="TableRowItem1">First Name</div>
-              <div className="TableRowItem3">
-                <input type="text" id="client_firstName" name="client_firstName" valueLink={linkState(this, 'client_firstName')} placeholder="First Name*" maxLength="50" required />
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Last Name</div>
-              <div className="TableRowItem3">
-                <input type="text" id="client_lastName" name="client_lastName" valueLink={linkState(this, 'client_lastName')} placeholder="Last Name*" maxLength="50" required />
-              </div>
-            </div>
-            {/*
-            <div className="TableRow">
-              <div className="TableRowItem1">Email</div>
-              <div className="TableRowItem3">
-                <input type="email" id="client_contactEmail" name="client_contactEmail" value={this.props.booking.client_contactEmail} placeholder="Email*" maxLength="50" required />
-              </div>
-            </div>
-            */}
-            <div className="TableRow">
-              <div className="TableRowItem1">Contact Number</div>
-              <div className="TableRowItem3">
-                <input type="text" id="client_contactNumber" name="client_contactNumber" valueLink={linkState(this, 'client_contactNumber')} placeholder="Contact Number*" maxLength="8" required />
-              </div>
-            </div>
-            <div>
-              <a href="#" className="btn btn-primary" onClick={this._onClickSave.bind(this, 'user')}>Save</a>
-              <a href="#" className="btn btn-primary" onClick={this._onClickStopEdit.bind(this, 'user')}>Cancel</a>
-            </div>
-          </form>
-        </div>
-      );
+    if (this.state.editing && this.props.inlineForm && /^(userDetails)$/i.test(this.props.inlineForm.name)) {
+      userDetails = <InlineForm />;
     } else {
       userDetails = (
         <div>
@@ -306,7 +270,7 @@ class BookingDetails extends Component {
                     <div className={s.bookingDetailsBodySection}>
                       <div className={s.bookingDetailsBodySectionTitle}>
                         <h3>Contact Person Details</h3>
-                        <a href="#" className={(this.state.editingUser || (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid)) ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
+                        <a href="#" className={(this.state.editingUser || (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid)) ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'userDetails')}><img src={require('../pencil.png')} /></a>
                       </div>
                       <Loader className="spinner" loaded={!this.state.updatingUser ? true : false}>
                         {userDetails}
@@ -360,29 +324,80 @@ class BookingDetails extends Component {
 
   _onClickEdit(entity, event) {
     event.preventDefault();
+    this.setState({ editing: true });
 
     switch (entity) {
-      case 'user':
-        this.setState({
-          client_firstName: this.props.booking.client_firstName,
-          client_lastName: this.props.booking.client_lastName,
-          client_contactNumber: this.props.booking.client_contactNumber,
-
-          editingUser: true});
-        break;
-      case 'patient':
-        this.setState({editingPatient: true});
-        break;
-      case 'address':
-        this.setState({
-          postalCode: this.props.booking.case.addresses[0].postalCode,
-          address: this.props.booking.case.addresses[0].address,
-          unitNumber: this.props.booking.case.addresses[0].unitNumber,
-
-          editingAddress: true
+      case 'userDetails':
+        this.props.showInlineForm({
+          name: 'userDetails',
+          inputs: {
+            client_firstName: {
+              label: 'First Name',
+              type: 'text',
+              initialValue: this.props.booking && this.props.booking.client_firstName
+            },
+            client_lastName: {
+              label: 'Last Name',
+              type: 'text',
+              initialValue: this.props.booking && this.props.booking.client_lastName
+            },
+            client_contactNumber: {
+              label: 'Contact Number',
+              type: 'text',
+              initialValue: this.props.booking && this.props.booking.client_contactNumber
+            },
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.client_firstName) {
+              errors.client_firstName = 'Required';
+            }
+            if (!values.client_lastName) {
+              errors.client_lastName = 'Required';
+            }
+            if (!values.client_contactNumber) {
+              errors.client_contactNumber = 'Required';
+            } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.client_contactNumber)) {
+              errors.client_contactNumber = 'Invalid mobile phone';
+            }
+            return errors;
+          },
+          ok: this._onClickSave.bind(this, 'userDetails'),
+          cancel: () => { this.setState({ editing: false }); }
         });
         break;
+      default:
+        break;
     }
+  }
+
+  _onClickSave(entity, values, dispatch) {
+    return new Promise((resolve, reject) => {
+      switch (entity) {
+        case 'userDetails':
+          this.props.editBooking({
+            bid: this.props.booking && this.props.booking.id,
+            token: this.props.booking && this.props.booking.token,
+            booking: {
+              client_firstName: values.client_firstName,
+              client_lastName: values.client_lastName,
+              client_contactNumber: values.client_contactNumber
+            }
+          }).then((res) => {
+            if (res && res.response && res.response.status === 1) {
+              resolve();
+              this.setState({ editing: false });
+            } else {
+              reject({ _error: res.response.message });
+            }
+          }, (reason) => {
+            reject({ _error: reason });
+          });
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   _onClickStopEdit(entity, event) {
@@ -397,67 +412,6 @@ class BookingDetails extends Component {
         break;
       case 'address':
         this.setState({editingAddress: false});
-        break;
-    }
-  }
-
-  _onClickSave(entity, event) {
-    event.preventDefault();
-
-    switch (entity) {
-      case 'user':
-        if (this._userDetailsForm.checkValidity()) {
-          this.setState({updatingUser: true});
-          this.props.editBooking({
-            bid: this.props.booking && this.props.booking.id,
-            token: this.props.booking && this.props.booking.token,
-            booking: {
-              client_firstName: this.state.client_firstName,
-              client_lastName: this.state.client_lastName,
-              client_contactNumber: this.state.client_contactNumber
-            }
-          }).then((res) => {
-            if (res.response.status === 1) {
-              this.setState({
-                editingUser: false,
-                updatingUser: false
-              });
-            } else {
-              console.error('Failed to edit booking.');
-            }
-          });
-        }
-        break;
-      case 'patient':
-        if (this._patientDetailsForm.checkValidity()) {
-          this.setState({editingPatient: false});
-        }
-        break;
-      case 'address':
-        if (this._addressDetailsForm.checkValidity()) {
-          this.setState({updatingAddress: true});
-          this.props.editBooking({
-            bid: this.props.booking && this.props.booking.id,
-            token: this.props.booking && this.props.booking.token,
-            case: {
-              addresses: [{
-                id: this.props.booking && this.props.booking.case && this.props.booking.case.addresses && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].id,
-                address: this.state.address,
-                postalCode: this.state.postalCode,
-                unitNumber: this.state.unitNumber
-              }]
-            }
-          }).then((res) => {
-            if (res.response.status === 1) {
-              this.setState({
-                editingAddress: false,
-                updatingAddress: false
-              });
-            } else {
-              console.error('Failed to edit booking.');
-            }
-          });
-        }
         break;
     }
   }
@@ -550,7 +504,8 @@ const mapStateToProps = (state) => {
     allServices: state.allServices.data,
     allServicesFetching: state.allServices.isFetching,
     booking: state.booking.data,
-    bookingFetching: state.booking.isFetching
+    bookingFetching: state.booking.isFetching,
+    inlineForm: state.inlineForm,
   }
 }
 
@@ -576,6 +531,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     showConfirmPopup: (body, accept) => {
       return dispatch(showConfirmPopup(body, accept));
+    },
+    showInlineForm: (params) => {
+      return dispatch(showInlineForm(params));
     }
   }
 }

@@ -71,6 +71,10 @@
       bottom: 15px;
       text-align: center;
     }
+
+    @media (--xs-viewport) {
+      height: 270px;
+    }
   }
 
   @media (--xs-viewport) {

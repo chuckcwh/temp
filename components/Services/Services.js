@@ -11,7 +11,6 @@ import AlertPopup from '../AlertPopup';
 import { fetchServices, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
-import find from 'lodash/find';
 import shuffle from 'lodash/shuffle';
 import groupBy from 'lodash/groupBy';
 
@@ -29,20 +28,18 @@ class Services extends Component {
   }
 
   render() {
-    const { params, allServices, allServicesFetching } = this.props;
+    const { params, allServices, servicesTree, servicesTreeHash, servicesSubtypesHash, allServicesFetching } = this.props;
     const { filter } = this.state;
     const location = history.getCurrentLocation();
 
-    const serviceTree = util.appendAllServices(util.parseCategories(allServices));
-    let serviceTreeHash = {};
-    serviceTree.map(category => { serviceTreeHash[category.name] = category });
-
     let serviceContent;
     if (params && params.id && allServices) {
+      const isIdSlug = !util.isInt(params.id);
+      const id = isIdSlug ? params.id : parseInt(params.id);
       const subcatClass = util.getServiceIconClass(parseInt(params.id));
       const allServicesArr = Object.values(allServices);
-      // services of same subtype category
-      const subcatServices = allServicesArr.filter((service) => (String(service.categoryObj) === params.id));
+      // services under subcat
+      const subcatServices = servicesSubtypesHash[params.id];
       const otherSubcats = (function () {
         if (subcatServices && subcatServices.length) {
           // relationship between main categories and sub catergories
@@ -57,13 +54,14 @@ class Services extends Component {
           allServicesArr.forEach((service) => {
             for (let mainCat in map) {
               if (service.category === mainCat) {
-                if (!(find(map[mainCat], (servic) => (servic.subType === service.subType))) && service.subType !==  subCat) {
+                if (!(map[mainCat].find((servic) => (servic.subType === service.subType))) && service.subType !==  subCat) {
                   // push the entire service obj for useful attributes
                   map[mainCat].push(service);
                 }
               }
             }
           });
+          // const map = allServicesArr.reduce();
           if (map[mainCat].length > 4) {
             return shuffle(map[mainCat]).slice(0, 4);
           } else {
@@ -134,7 +132,7 @@ class Services extends Component {
             <Container>
               <ul className={s.servicesNav}>
               {
-                serviceTree && serviceTree.map(category => {
+                servicesTree && servicesTree.map(category => {
                   const { name } = category;
                   return (
                     <li className={s.servicesNavItem} key={name}>
@@ -150,7 +148,7 @@ class Services extends Component {
             <Container>
               <div className={s.servicesBody}>
                 {
-                  serviceTreeHash[filter].children.map(subType => {
+                  servicesTreeHash[filter].children.map(subType => {
                     return (
                       <div className={s.servicesBodySubcatSection} key={subType.children[0].category + subType.name}>
                         <h2 className={s.servicesBodySubcatSectionTitle}>
@@ -185,7 +183,7 @@ class Services extends Component {
             <h1 className="text-center">Services</h1>
           </div>
         </Container>
-        <Loader className="spinner" loaded={allServicesFetching ? false : true}>
+        <Loader className="spinner" loaded={!allServicesFetching}>
           {serviceContent}
         </Loader>
       </div>
@@ -221,7 +219,10 @@ const mapStateToProps = (state) => {
   return {
     lastPage: state.lastPage,
     allServices: state.allServices.data,
-    allServicesFetching: state.allServices.isFetching
+    allServicesFetching: state.allServices.isFetching,
+    servicesTree: state.allServices.servicesTree,
+    servicesTreeHash: state.allServices.servicesTreeHash,
+    servicesSubtypesHash: state.allServices.subTypesHash,
   }
 }
 

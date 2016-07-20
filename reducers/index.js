@@ -4,12 +4,17 @@ import { reducer as form } from 'redux-form';
 import merge from 'lodash/merge';
 import modal from './modal';
 import order from './order';
+import util from '../core/util';
+import sortBy from 'lodash/sortBy';
 
 const allServices = (state = {
   isFetching: false,
   didInvalidate: false,
   data: null,
-  ids: null
+  ids: null,
+  servicesTree: null,
+  servicesTreeHash: null,
+  subTypesHash: null,
 }, action) => {
   switch (action.type) {
     case ActionTypes.SERVICES_REQUEST:
@@ -18,16 +23,30 @@ const allServices = (state = {
         didInvalidate: false
       })
     case ActionTypes.SERVICES_SUCCESS:
-      let hash = {}, ids = []
+      let servicesHash = {}, ids = [], subTypesHash = {}
       action.response && action.response.services.forEach((service) => {
-        hash[service.id] = service
+        servicesHash[service.id] = service
         ids.push(service.id)
+        const subtypeId = parseInt(service.categoryObj)
+        if (subtypeId) {
+          if (!subTypesHash[subtypeId]) subTypesHash[subtypeId] = []
+          subTypesHash[subtypeId].push(service);
+        }
       })
+      Object.keys(subTypesHash).map((subTypeKey) => {
+        subTypesHash[subTypeKey] = sortBy(subTypesHash[subTypeKey], ['subTypeOrder', 'name'])
+      })
+      const servicesTree = util.appendAllServices(util.parseCategories(servicesHash))
+      let serviceTreeHash = {};
+      servicesTree.map(category => { serviceTreeHash[category.name] = category })
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        data: hash,
+        data: servicesHash,
         ids: ids,
+        servicesTree: servicesTree,
+        servicesTreeHash: serviceTreeHash,
+        subTypesHash: subTypesHash,
         lastUpdated: action.response && action.response.receivedAt
       })
     default:

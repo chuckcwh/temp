@@ -21,6 +21,10 @@ function renderComponent(location, component) {
   ReactDOM.render(
     <Provider store={store}><Layout>{component}</Layout></Provider>,
     container, () => {
+      // Track the page view event via Google Analytics
+      window.ga('set', 'page', location.pathname);
+      window.ga('send', 'pageview');
+      
       // Scroll to the top
       window.scrollTo(0, 0);
     });

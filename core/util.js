@@ -219,6 +219,10 @@ export function getServiceIconClass(serviceId) {
   return subcatClass;
 }
 
+export function isInt(value) {
+  return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+}
+
 const u = {
   host: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://api.ebeecare.com' : 'https://dev.ebeecare.com'),
   authKey: 'secret',
@@ -243,7 +247,9 @@ const u = {
   appendAllServices: appendAllServices,
 
   calcRate: calcRate,
-  getServiceIconClass: getServiceIconClass
+  getServiceIconClass: getServiceIconClass,
+
+  isInt: isInt,
 };
 
 export default u;

@@ -19,7 +19,11 @@
     </script>
     <script src="https://www.google-analytics.com/analytics.js" async defer></script>
     <%_ } _%>
+    <%_ if (!debug) { _%>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkUQpAve5whKluoO3evi9GZfGeH0Sa2D0" async defer></script>
+    <%_ } else { _%>
     <script src="https://maps.googleapis.com/maps/api/js" async defer></script>
+    <%_ } _%>
     <%_ if (!debug) { _%>
     <script>
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();

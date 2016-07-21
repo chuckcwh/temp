@@ -22,11 +22,11 @@ function renderComponent(location, component) {
     <Provider store={store}><Layout>{component}</Layout></Provider>,
     container, () => {
       // Track the page view event via Google Analytics
-      window.ga('set', 'page', location.pathname);
-      window.ga('send', 'pageview');
+      window && window.ga && window.ga('set', 'page', location.pathname);
+      window && window.ga && window.ga('send', 'pageview');
 
       // Scroll to the top
-      window.scrollTo(0, 0);
+      window && window.scrollTo(0, 0);
     });
 }
 

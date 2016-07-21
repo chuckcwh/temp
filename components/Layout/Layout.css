@@ -18,6 +18,7 @@ h1 {
 }
 
 h2 {
+  color: var(--brand-color);
   font-weight: normal;
 }
 
@@ -642,5 +643,25 @@ input:disabled, textarea:disabled {
   }
   :global .service-icon.breast {
     background-position: calc(var(--popular-icon-size) * -2) calc(var(--popular-icon-size) * -4);
+  }
+}
+
+:global .video-container {
+  text-align: center;
+
+  @media (--sm-viewport) {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+
+    & :global iframe, & :global object, & :global embed {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 }

@@ -21,12 +21,16 @@ function renderComponent(location, component) {
   ReactDOM.render(
     <Provider store={store}><Layout>{component}</Layout></Provider>,
     container, () => {
-      // Track the page view event via Google Analytics
-      window && window.ga && window.ga('set', 'page', location.pathname);
-      window && window.ga && window.ga('send', 'pageview');
+      if (typeof window !== 'undefined') {
+        // Track the page view event via Google Analytics
+        if (window.ga) {
+          window.ga('set', 'page', location.pathname);
+          window.ga('send', 'pageview');
+        }
 
-      // Scroll to the top
-      window && window.scrollTo(0, 0);
+        // Scroll to the top
+        window.scrollTo(0, 0);
+      }
     });
 }
 

@@ -1,26 +1,22 @@
-export function json(request){
-  return new Promise((resolve, reject)=>{
-    request.then((response)=>{
-      return response.json();
+export function json(request) {
+  return new Promise((resolve, reject) => {
+    request.then((response) => response.json())
+    .then((data) => {
+      resolve(data);
     })
-    .then((json)=>{
-      resolve(json);
-    })
-    .catch((e)=>{
+    .catch((e) => {
       reject(e);
     });
   });
 }
 
-export function body(request){
-  return new Promise((resolve, reject)=>{
-    request.then((response)=>{
-      return response.body();
+export function body(request) {
+  return new Promise((resolve, reject) => {
+    request.then((response) => response.body())
+    .then((data) => {
+      resolve(data);
     })
-    .then((body)=>{
-      resolve(body);
-    })
-    .catch((e)=>{
+    .catch((e) => {
       reject(e);
     });
   });

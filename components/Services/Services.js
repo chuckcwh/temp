@@ -148,7 +148,7 @@ class Services extends Component {
             <Container>
               <div className={s.servicesBody}>
                 {
-                  servicesTreeHash[filter].children.map(subType => {
+                  servicesTreeHash && servicesTreeHash[filter].children.map(subType => {
                     return (
                       <div className={s.servicesBodySubcatSection} key={subType.children[0].category + subType.name}>
                         <h2 className={s.servicesBodySubcatSectionTitle}>

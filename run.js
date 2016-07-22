@@ -3,11 +3,13 @@
 const fs = require('fs');
 const del = require('del');
 const ejs = require('ejs');
+const btoa = require('btoa');
 const webpack = require('webpack');
 const firebase = require('firebase-tools');
 const browserSync = require('browser-sync');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const fetch = require('isomorphic-fetch');
 
 // TODO: Update configuration settings
 const config = {
@@ -19,6 +21,9 @@ const config = {
   test: 'ebeecare-testing',        // Firebase test project. See README.md -> How to Deploy
   project: 'ebeecare-dd582',        // Firebase project. See README.md -> How to Deploy
   trackingID: 'UA-73367021-1',      // Google Analytics Site's ID
+  apiHost: 'https://api.ebeecare.com',
+  apiAuthKey: 'secret',
+  apiAuthSecret: 'secret0nlyWeilsonKnowsShhh852~',
 };
 
 const tasks = new Map(); // The collection of automation tasks ('clean', 'build', 'publish', etc.)
@@ -57,8 +62,28 @@ tasks.set('sitemap', () => {
     .map(x => ({ loc: x.path }));
   const template = fs.readFileSync('./public/sitemap.ejs', 'utf8');
   const render = ejs.compile(template, { filename: './public/sitemap.ejs' });
-  const output = render({ config, urls });
-  fs.writeFileSync('public/sitemap.xml', output, 'utf8');
+  return new Promise((resolve, reject) => {
+    fetch(config.apiHost + '/api/getRankedSubCategory', {
+      headers: {
+        'Authorization': 'Basic ' + btoa(config.apiAuthKey + ':' + config.apiAuthSecret)
+      }
+    }).then((response) => {
+      if (response.status >= 400) {
+        reject(new Error('Bad response from server'));
+      }
+      return response.json();
+    }).then((json) => {
+      if (json.status !== 1) {
+        reject(new Error('Bad data from server'));
+      }
+      const subCategories = json.subCategories.filter(function(subCategory) {
+        return subCategory.slug && subCategory.slug.length;
+      });
+      const output = render({ config, urls, subCategories });
+      fs.writeFileSync('public/sitemap.xml', output, 'utf8');
+      resolve();
+    });
+  });
 });
 
 //

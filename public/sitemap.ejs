@@ -5,4 +5,9 @@
     <loc><%= config.url %><%= url.loc %></loc>
   </url>
   <%_ }); _%>
+  <%_ subCategories.forEach(subCategory => { _%>
+  <url>
+    <loc><%= config.url %>/services/<%= subCategory.slug %></loc>
+  </url>
+  <%_ }); _%>
 </urlset>

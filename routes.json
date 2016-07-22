@@ -4,6 +4,10 @@
     "page": "./pages/index"
   },
   {
+    "path": "/error",
+    "page": "./pages/error"
+  },
+  {
     "path": "/about",
     "page": "./pages/about"
   },

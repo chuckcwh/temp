@@ -108,8 +108,8 @@ class Services extends Component {
                         const subcatClass = util.getServiceIconClass(service.categoryObj);
                         return (
                           <div className={s.otherServicesItem} key={service.categoryObj}>
-                            <Link to={`/services/${service.categoryObj}`}><div className={'service-icon ' + subcatClass}></div></Link>
-                            <Link to={`/services/${service.categoryObj}`}><div className={s.otherServicesItemTitle}>{service.subType}</div></Link>
+                            <Link to={`/services/${service.subTypeSlug ? service.subTypeSlug : service.categoryObj}`}><div className={'service-icon ' + subcatClass}></div></Link>
+                            <Link to={`/services/${service.subTypeSlug ? service.subTypeSlug : service.categoryObj}`}><div className={s.otherServicesItemTitle}>{service.subType}</div></Link>
                           </div>
                         );
                       })

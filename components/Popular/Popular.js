@@ -27,8 +27,8 @@ class Popular extends Component {
                   const subcatClass = util.getServiceIconClass(subcategory.id);
                   return (
                     <div className={s.popularItem + (index === 7 ? ' ' + s.lastItem : '')} key={subcategory.id}>
-                      <Link to={`/services/${subcategory.id}`}><div className={'service-icon ' + subcatClass}></div></Link>
-                      <Link to={`/services/${subcategory.id}`}><div className={s.popularItemTitle}>{subcategory.name}</div></Link>
+                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}><div className={'service-icon ' + subcatClass}></div></Link>
+                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}><div className={s.popularItemTitle}>{subcategory.name}</div></Link>
                     </div>
                   )
                 })

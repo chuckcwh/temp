@@ -15,6 +15,7 @@ const allServices = (state = {
   servicesTree: null,
   servicesTreeHash: null,
   subTypesHash: null,
+  subTypesHashBySlug: null,
 }, action) => {
   switch (action.type) {
     case ActionTypes.SERVICES_REQUEST:
@@ -23,18 +24,26 @@ const allServices = (state = {
         didInvalidate: false
       })
     case ActionTypes.SERVICES_SUCCESS:
-      let servicesHash = {}, ids = [], subTypesHash = {}
+      let servicesHash = {}, ids = [], subTypesHash = {}, subTypesHashBySlug = {}
       action.response && action.response.services.forEach((service) => {
         servicesHash[service.id] = service
         ids.push(service.id)
-        const subtypeId = parseInt(service.categoryObj)
+        const subtypeId = parseInt(service['subTypeId'])
         if (subtypeId) {
           if (!subTypesHash[subtypeId]) subTypesHash[subtypeId] = []
           subTypesHash[subtypeId].push(service);
         }
+        const subtypeSlug = service['subTypeSlug']
+        if (subtypeSlug) {
+          if (!subTypesHashBySlug[subtypeSlug]) subTypesHashBySlug[subtypeSlug] = []
+          subTypesHashBySlug[subtypeSlug].push(service);
+        }
       })
       Object.keys(subTypesHash).map((subTypeKey) => {
         subTypesHash[subTypeKey] = sortBy(subTypesHash[subTypeKey], ['subTypeOrder', 'name'])
+      })
+      Object.keys(subTypesHashBySlug).map((subTypeKey) => {
+        subTypesHashBySlug[subTypeKey] = sortBy(subTypesHashBySlug[subTypeKey], ['subTypeOrder', 'name'])
       })
       const servicesTree = util.appendAllServices(util.parseCategories(servicesHash))
       let serviceTreeHash = {};
@@ -47,6 +56,7 @@ const allServices = (state = {
         servicesTree: servicesTree,
         servicesTreeHash: serviceTreeHash,
         subTypesHash: subTypesHash,
+        subTypesHashBySlug: subTypesHashBySlug,
         lastUpdated: action.response && action.response.receivedAt
       })
     default:

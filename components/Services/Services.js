@@ -28,7 +28,7 @@ class Services extends Component {
   }
 
   render() {
-    const { params, allServices, servicesTree, servicesTreeHash, servicesSubtypesHash, allServicesFetching } = this.props;
+    const { params, allServices, servicesTree, servicesTreeHash, servicesSubtypesHash, servicesSubtypesHashBySlug, allServicesFetching } = this.props;
     const { filter } = this.state;
     const location = history.getCurrentLocation();
 
@@ -36,10 +36,10 @@ class Services extends Component {
     if (params && params.id && allServices) {
       const isIdSlug = !util.isInt(params.id);
       const id = isIdSlug ? params.id : parseInt(params.id);
-      const subcatClass = util.getServiceIconClass(parseInt(params.id));
       const allServicesArr = Object.values(allServices);
       // services under subcat
-      const subcatServices = servicesSubtypesHash[params.id];
+      const subcatServices = isIdSlug ? servicesSubtypesHashBySlug[params.id] : servicesSubtypesHash[params.id];
+      const subcatClass = util.getServiceIconClass(parseInt(Object.values(subcatServices)[0].subTypeId));
       const otherSubcats = (function () {
         if (subcatServices && subcatServices.length) {
           // relationship between main categories and sub catergories
@@ -223,6 +223,7 @@ const mapStateToProps = (state) => {
     servicesTree: state.allServices.servicesTree,
     servicesTreeHash: state.allServices.servicesTreeHash,
     servicesSubtypesHash: state.allServices.subTypesHash,
+    servicesSubtypesHashBySlug: state.allServices.subTypesHashBySlug,
   }
 }
 

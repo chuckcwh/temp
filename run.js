@@ -62,11 +62,12 @@ tasks.set('sitemap', () => {
     .map(x => ({ loc: x.path }));
   const template = fs.readFileSync('./public/sitemap.ejs', 'utf8');
   const render = ejs.compile(template, { filename: './public/sitemap.ejs' });
+  const authString = `${config.apiAuthKey}:${config.apiAuthSecret}`;
   return new Promise((resolve, reject) => {
-    fetch(config.apiHost + '/api/getRankedSubCategory', {
+    fetch(`${config.apiHost}/api/getRankedSubCategory`, {
       headers: {
-        'Authorization': 'Basic ' + btoa(config.apiAuthKey + ':' + config.apiAuthSecret)
-      }
+        Authorization: `Basic ${btoa(authString)}`,
+      },
     }).then((response) => {
       if (response.status >= 400) {
         reject(new Error('Bad response from server'));
@@ -76,9 +77,9 @@ tasks.set('sitemap', () => {
       if (json.status !== 1) {
         reject(new Error('Bad data from server'));
       }
-      const subCategories = json.subCategories.filter(function(subCategory) {
-        return subCategory.slug && subCategory.slug.length;
-      });
+      const subCategories = json.subCategories.filter(
+        (subCategory) => subCategory.slug && subCategory.slug.length
+      );
       const output = render({ config, urls, subCategories });
       fs.writeFileSync('public/sitemap.xml', output, 'utf8');
       resolve();

@@ -204,7 +204,7 @@ class BookingConfirmation extends Component {
                 <div className={s.bookingConfirmationBodySection}>
                   <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Contact Person Details</h3>
-                    <a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>
+                    {/*<a href="#" className={this.state.editingUser ? 'hidden' : ''} onClick={this._onClickEdit.bind(this, 'user')}><img src={require('../pencil.png')} /></a>*/}
                   </div>
                   <Loader className="spinner" loaded={!this.state.updatingUser ? true : false}>
                     {userDetails}

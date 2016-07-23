@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import Services from '../components/Services';
 
-export default class extends Component {
+class ServicesPage extends Component {
+
+  componentDidMount() {
+    document.title = 'eBeeCare | Services';
+  }
 
   render() {
     return (
@@ -12,3 +16,5 @@ export default class extends Component {
   }
 
 }
+
+export default ServicesPage;

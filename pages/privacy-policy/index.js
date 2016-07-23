@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Container from '../../components/Container';
 import { title, html } from './index.md';
 
-class TermsOfServicePage extends Component {
+class PrivacyPolicyPage extends Component {
 
   componentDidMount() {
     document.title = `eBeeCare | ${title}`;
@@ -20,4 +20,4 @@ class TermsOfServicePage extends Component {
 
 }
 
-export default TermsOfServicePage;
+export default PrivacyPolicyPage;

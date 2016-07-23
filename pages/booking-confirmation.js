@@ -3,6 +3,10 @@ import BookingApp from '../components/BookingApp/BookingApp';
 
 export default class extends Component {
 
+  componentDidMount() {
+    document.title = 'eBeeCare | Booking Confirmation';
+  }
+
   render() {
     return (
       <BookingApp />

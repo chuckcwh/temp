@@ -8,15 +8,19 @@ import Actions from '../components/Actions';
 import Download from '../components/Download';
 import AlertPopup from '../components/AlertPopup';
 
-export default class extends Component {
+class HomePage extends Component {
+
+  componentDidMount() {
+    document.title = 'eBeeCare | Home';
+  }
 
   render() {
     return (
       <div>
-        <Banner location={this.props.location} />
+        <Banner />
         <Popular />
         <Partners />
-        <Testimonials location={this.props.location} />
+        <Testimonials />
         <Features />
         <Actions />
         <Download />
@@ -26,3 +30,5 @@ export default class extends Component {
   }
 
 }
+
+export default HomePage;

@@ -5,7 +5,7 @@ import { title, html } from './index.md';
 class AboutPage extends Component {
 
   componentDidMount() {
-    document.title = 'eBeeCare | ' + title;
+    document.title = `eBeeCare | ${title}`;
   }
 
   render() {

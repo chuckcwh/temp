@@ -11,7 +11,7 @@ export const PAGE_ORDERS = [
   'booking4',
   'booking5',
   'booking-confirmation',
-  'booking-payment'
+  'booking-payment',
 ];
 
 export const ALL_SERVICES = 'All Services';
@@ -22,97 +22,99 @@ export const SERVICES_CATEGORY_ORDER = [
   'Nursing Care',
   'Medical',
   'TCM',
-  'Mother Care'
+  'Mother Care',
 ];
 
+export function getCookies() {
+  let pairs;
+  const cookies = {};
+  if (typeof document !== 'undefined' && document && document.cookie) {
+    pairs = document.cookie.split(';');
+    for (let i = 0; i < pairs.length; i++) {
+      const pair = pairs[i].split('=');
+      if (pair[0]) pair[0] = pair[0].trim();
+      cookies[pair[0]] = unescape(pair[1]);
+    }
+    return cookies;
+  }
+  return {};
+}
+
 export function isProduction() {
-  return (typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1);
+  return (typeof window !== 'undefined' &&
+    window.location.hostname.indexOf('www.ebeecare.com') > -1);
 }
 
 export function isLoggedInBackend() {
-  if (isProduction() && getCookies()['sessionid']) {
+  if (isProduction() && getCookies().sessionid) {
     return true;
-  } else if (!isProduction() && getCookies()['ebeecare_session_dev']) {
+  } else if (!isProduction() && getCookies().ebeecare_session_dev) {
     return true;
-  } else return false;
+  }
+  return false;
 }
 
 export function isNavigationAllowed(path, lastPage) {
-  if (path.charAt(0) === '/') {
-    path = path.substring(1);
-  }
-  if (path === 'booking5' && lastPage === 'booking3c') return true;
-  return (PAGE_ORDERS.indexOf(lastPage) + 1) >= PAGE_ORDERS.indexOf(path);
+  const newPath = (path.charAt(0) === '/') ? path.substring(1) : path;
+  if (newPath === 'booking5' && lastPage === 'booking3c') return true;
+  return (PAGE_ORDERS.indexOf(lastPage) + 1) >= PAGE_ORDERS.indexOf(newPath);
 }
 
 export function isNextLastPage(path, lastPage) {
   return PAGE_ORDERS.indexOf(lastPage) + 1 === PAGE_ORDERS.indexOf(path);
 }
 
-export function getCookies() {
-  if (typeof document !== 'undefined' && document && document.cookie) {
-    var pairs = document.cookie.split(';');
-    var cookies = {};
-    for (var i = 0; i < pairs.length; i++) {
-      var pair = pairs[i].split('=');
-      if (pair[0]) pair[0] = pair[0].trim();
-      cookies[pair[0]] = unescape(pair[1]);
-    }
-    return cookies;
-  } else {
-    return {};
-  }
-}
-
-//
-// Output
-// 
-// [{
-//   name: CATEGORY_1,
-//   children: [{
-//     name: SUB_CATEGORY_1,
-//     children: [{
-//       id: SERVICE_ID_1,
-//       ...service
-//     }]
-//   }]
-// }]
-export function parseCategories(services) {
-  if (!services) return [];
-  return parseCategoriesLevel(Object.values(services), 0);
-}
-
 function parseCategoriesLevel(services, index) {
   const terms = ['category', 'subType', 'service'];
-  let name = terms[index], order = name + 'Order';
-  if (name === 'service') name = 'name';
-  let hash = {};
+  let name = terms[index];
+  const order = `${name}Order`;
+  const id = `${name}Id`;
+  const slug = `${name}Slug`;
   if (index === 2) {
-    services = sortBy(services, [order, name]);
-    return services;
+    name = 'name';
+    return sortBy(services, [order, name]);
   }
-  services.forEach((service, i) => {
+  const hash = {};
+  services.forEach((service) => {
     if (!hash[service[name]]) {
       hash[service[name]] = [];
     }
     hash[service[name]].push(service);
   });
-  let output = [];
-  for (var i in hash) {
-    output.push({ name: i, order: hash[i][0][order], children: parseCategoriesLevel(hash[i], index+1) });
-  }
-  output = sortBy(output, ['order', 'name'])
-  return output;
+  const output = Object.keys(hash).map((i) => ({
+    id: hash[i][0][id],
+    name: i,
+    slug: hash[i][0][slug],
+    order: hash[i][0][order],
+    children: parseCategoriesLevel(hash[i], index + 1),
+  }));
+  return sortBy(output, ['order', 'name']);
+}
+
+/*
+Output
+
+[{
+  name: CATEGORY_1,
+  children: [{
+    name: SUB_CATEGORY_1,
+    children: [{
+      id: SERVICE_ID_1,
+      ...service
+    }]
+  }]
+}]
+ */
+export function parseCategories(services) {
+  if (!services) return [];
+  return parseCategoriesLevel(Object.values(services), 0);
 }
 
 export function appendAllServices(tree) {
-  let t = {
+  const t = {
     name: ALL_SERVICES,
-    children: []
-  }
-  for (var i in tree) {
-    t.children = t.children.concat(tree[i].children);
-  }
+    children: Object.values(tree).reduce((result, node) => result.concat(node.children), []),
+  };
   tree.unshift(t);
 
   return tree;
@@ -121,7 +123,7 @@ export function appendAllServices(tree) {
 export function calcRate(session, promo, sid) {
   if (promo && promo.discountedRate) {
     // verify promo is applicable to session
-    var isPromoApplicable =
+    const isPromoApplicable =
       promo.services.some(elem => elem === sid) &&
       promo.dates.some(elem =>
         elem.type === 'Scheduled' &&
@@ -136,12 +138,10 @@ export function calcRate(session, promo, sid) {
       );
     if (isPromoApplicable) {
       return parseFloat(session.price) * (100 - parseFloat(promo.discountedRate)) / 100;
-    } else {
-      return parseFloat(session.price);
     }
-  } else {
     return parseFloat(session.price);
   }
+  return parseFloat(session.price);
 }
 
 export function getServiceIconClass(serviceId) {
@@ -155,7 +155,7 @@ export function getServiceIconClass(serviceId) {
       break;
     case 12:
       subcatClass = 'physiotherapy';
-      break
+      break;
     case 13:
       subcatClass = 'elderly';
       break;
@@ -220,7 +220,7 @@ export function getServiceIconClass(serviceId) {
 }
 
 export function isInt(value) {
-  return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+  return !isNaN(value) && ((x) => (x | 0) === x)(parseFloat(value));
 }
 
 const u = {
@@ -232,24 +232,24 @@ const u = {
   partners: ((typeof window !== 'undefined' && window.location.hostname.indexOf('www.ebeecare.com') > -1) ? 'https://www.ebeepartners.com' : 'http://staging.ebeepartners.com'),
   blog: 'https://blog.ebeecare.com',
 
-  isProduction: isProduction,
+  getCookies,
 
-  isLoggedInBackend: isLoggedInBackend,
-  isNavigationAllowed: isNavigationAllowed,
-  isNextLastPage: isNextLastPage,
+  isProduction,
 
-  getCookies: getCookies,
+  isLoggedInBackend,
+  isNavigationAllowed,
+  isNextLastPage,
 
-  ALL_SERVICES: ALL_SERVICES,
-  SERVICES_CATEGORY_ORDER: SERVICES_CATEGORY_ORDER,
+  ALL_SERVICES,
+  SERVICES_CATEGORY_ORDER,
 
-  parseCategories: parseCategories,
-  appendAllServices: appendAllServices,
+  parseCategories,
+  appendAllServices,
 
-  calcRate: calcRate,
-  getServiceIconClass: getServiceIconClass,
+  calcRate,
+  getServiceIconClass,
 
-  isInt: isInt,
+  isInt,
 };
 
 export default u;

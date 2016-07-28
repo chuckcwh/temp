@@ -113,7 +113,10 @@ DayPickerPopup.propTypes = {
   title: React.PropTypes.string,
 
   visible: React.PropTypes.bool,
-  value: React.PropTypes.string,
+  value: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.object,
+  ]),
   source: React.PropTypes.string,
 
   hideDayPickerPopup: React.PropTypes.func,

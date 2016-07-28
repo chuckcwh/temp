@@ -63,7 +63,8 @@
         position: relative;
         min-height: 150px;
         padding: 20px 0;
-        // border-top: 1px solid var(--border-color);
+
+        /* border-top: 1px solid var(--border-color); */
 
         &:first-child {
           border: 0;
@@ -92,7 +93,7 @@
         }
 
         & form a {
-          margin: 5px 5px 0 0; 
+          margin: 5px 5px 0 0;
         }
       }
 
@@ -110,11 +111,11 @@
         }
 
         & .bookingDetailsRadio {
-          // margin-right: 5px;
+          /* margin-right: 5px; */
         }
 
         & .bookingDetailsRadioLabel {
-          // cursor: pointer;
+          /* cursor: pointer; */
         }
       }
 

@@ -3,7 +3,6 @@ import { reduxForm } from 'redux-form';
 import Loader from 'react-loader';
 import s from './InlineForm.css';
 import MultiSelect from '../MultiSelect';
-import DayPickerPopup from '../DayPickerPopup';
 import { hideInlineForm } from '../../actions';
 
 class InlineForm extends Component {
@@ -16,23 +15,54 @@ class InlineForm extends Component {
     }
   }
 
+  handleSubmit = () => {
+    if (this.props.onSave) {
+      return this.props.onSave.apply(this, arguments).then(() => {
+        this.props.hideInlineForm();
+      });
+    } else if (this.props.ok) {
+      return this.props.ok.apply(this, arguments).then(() => {
+        this.props.hideInlineForm();
+      });
+    }
+    return new Promise((resolve) => {
+      this.props.hideInlineForm();
+      resolve();
+    });
+
+    // this.props.onSave && this.props.onSave.apply(this, arguments).then(() => {
+    //   this.props.hideInlineForm();
+    // });
+    // this.props.ok && this.props.ok.apply(this, arguments).then(() => {
+    //   this.props.hideInlineForm();
+    // });
+  };
+
+  handleCancel = (event) => {
+    event.preventDefault();
+
+    this.props.hideInlineForm && this.props.hideInlineForm();
+    this.props.onCancel && this.props.onCancel();
+    this.props.cancel && this.props.cancel();
+  };
+
   render() {
-    const { 
+    const {
       fields,
       invalid,
-      handleSubmit, 
-      onCancel,
-      onBlur,
-      onChange,
+      handleSubmit,
+      // onCancel,
+      // onBlur,
+      // onChange,
       pristine,
       submitFailed,
       submitting,
       error,
-      inputs
+      inputs,
     } = this.props;
     return (
-      <form className={s.inlineForm} onSubmit={handleSubmit(this._handleSubmit.bind(this))}>
-        <Loader className="spinner" loaded={submitting ? false : true}>
+      <form className={s.inlineForm} onSubmit={handleSubmit(this.handleSubmit)}>
+        <Loader className="spinner" loaded={!submitting}>
           {Object.keys(fields).map(name => {
             const field = fields[name];
             const input = inputs[name];
@@ -49,7 +79,10 @@ class InlineForm extends Component {
                 inputField = (
                   <div className="DateInput">
                     <input type="text" id={name} name={name} placeholder={input.placeholder || input.label} {...field} />
-                    <span onClick={() => this.props.showDayPickerPopup && this.props.showDayPickerPopup(field.value, 'inlineForm')}></span>
+                    <span
+                      onClick={() =>
+                        this.props.showDayPickerPopup && this.props.showDayPickerPopup(field.value, 'inlineForm')}
+                    ></span>
                   </div>
                 );
                 break;
@@ -60,11 +93,9 @@ class InlineForm extends Component {
                     <select id={name} name={name} {...field} value={field.value || ''}>
                       <option value="">-- Select --</option>
                       {
-                        input.options.map((option) => {
-                          return (
-                            <option value={option.value}>{option.label}</option>
-                          )
-                        })
+                        input.options.map((option) => (
+                          <option value={option.value}>{option.label}</option>
+                        ))
                       }
                     </select>
                   </div>
@@ -72,11 +103,13 @@ class InlineForm extends Component {
                 break;
               case 'multiselect':
                 inputField = (
-                  <MultiSelect 
+                  <MultiSelect
                     options={input.options}
                     {...field}
                   />
-                )
+                );
+                break;
+              default:
                 break;
             }
             return (
@@ -87,54 +120,28 @@ class InlineForm extends Component {
                   {field.touched && field.error && <div className={s.inlineFormError}>{field.error}</div>}
                 </div>
               </div>
-            )
+            );
           })}
           {submitFailed && invalid && <div className={s.inlineFormError}>{error}</div>}
           <div>
             <button className="btn btn-primary" type="submit" disabled={submitting || pristine}>Save</button>
-            <button className="btn btn-primary" onClick={this._handleCancel.bind(this)}>Cancel</button>
+            <button className="btn btn-primary" onClick={this.handleCancel}>Cancel</button>
           </div>
         </Loader>
       </form>
     );
   }
 
-  _handleSubmit() {
-    if (this.props.onSave) {
-      return this.props.onSave.apply(this, arguments).then(() => {
-        this.props.hideInlineForm();
-      });
-    } else if (this.props.ok) {
-      return this.props.ok.apply(this, arguments).then(() => {
-        this.props.hideInlineForm();
-      });
-    } else return new Promise((resolve, reject) => {
-      this.props.hideInlineForm();
-      resolve();
-    });
-    
-    // this.props.onSave && this.props.onSave.apply(this, arguments).then(() => {
-    //   this.props.hideInlineForm();
-    // });
-    // this.props.ok && this.props.ok.apply(this, arguments).then(() => {
-    //   this.props.hideInlineForm();
-    // });
-  }
-
-  _handleCancel(event) {
-    event.preventDefault();
-
-    this.props.hideInlineForm && this.props.hideInlineForm();
-    this.props.onCancel && this.props.onCancel();
-    this.props.cancel && this.props.cancel();
-  }
-
 }
 
 InlineForm.propTypes = {
+  fetchAddress: PropTypes.func,
+  showDayPickerPopup: PropTypes.func,
+
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   onSave: PropTypes.func,
@@ -144,38 +151,38 @@ InlineForm.propTypes = {
   error: PropTypes.string,
   inputs: PropTypes.object.isRequired,
 
-  fetchAddress: PropTypes.func,
-  showDayPickerPopup: PropTypes.func
-}
+  initialValues: PropTypes.object,
+  validate: PropTypes.func,
+  ok: PropTypes.func,
+  cancel: PropTypes.func,
+
+  hideInlineForm: PropTypes.func,
+};
 
 const reduxFormConfig = {
   form: 'inlineForm',
-  destroyOnUnmount: true
-}
+  destroyOnUnmount: true,
+};
 
 const mapStateToProps = (state) => {
-  const initialValues = {};
-  if (state.inlineForm && state.inlineForm.inputs) {
-    for (var field in state.inlineForm.inputs) {
-      state.inlineForm.inputs[field] && (initialValues[field] = state.inlineForm.inputs[field]['initialValue']);
+  const initialValues = Object.keys(state.inlineForm.inputs).reduce((result, field) => {
+    if (state.inlineForm.inputs[field] && state.inlineForm.inputs[field].initialValue) {
+      result[field] = state.inlineForm.inputs[field].initialValue;
     }
-  }
+    return result;
+  }, {});
   return {
+    initialValues,
     fields: Object.keys(state.inlineForm.inputs),
     inputs: state.inlineForm.inputs,
-    initialValues: initialValues,
     validate: state.inlineForm.validate,
     ok: state.inlineForm.ok,
-    cancel: state.inlineForm.cancel
-  }
-}
+    cancel: state.inlineForm.cancel,
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    hideInlineForm: () => {
-      return dispatch(hideInlineForm());
-    }
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+  hideInlineForm: () => dispatch(hideInlineForm()),
+});
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(InlineForm);

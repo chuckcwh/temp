@@ -13,7 +13,7 @@
       background-color: #fff;
       border: 1px solid var(--border-color);
       color: var(--text-color);
-      margin: 5px 5px 5px 5px;
+      margin: 5px;
 
       &-icon {
         border-right: 1px solid var(--border-color);
@@ -41,13 +41,13 @@
 
         background: #fff;
         position: absolute;
-        right: 0px;
-        top: 0px;
+        right: 0;
+        top: 0;
         width: 25px;
         pointer-events: none;
       }
 
-      & :global .Select-arrow:before {
+      & :global .Select-arrow::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -59,7 +59,7 @@
         border-right: 9px solid transparent;
       }
 
-      & :global .Select-arrow:after {
+      & :global .Select-arrow::after {
         content: '';
         position: absolute;
         top: 50%;

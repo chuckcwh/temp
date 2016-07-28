@@ -50,7 +50,7 @@
     }
   }
 
-  & bookingDateTimeNavLink {
+  & .bookingDateTimeNavLink {
     &:hover {
       color: var(--secondary-color);
       text-decoration: none;

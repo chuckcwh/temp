@@ -13,19 +13,25 @@ class BookingLocationForm extends Component {
     }
   }
 
+  onClickLogin = (event) => {
+    event.preventDefault();
+
+    this.props.showLoginPopup();
+  };
+
   render() {
-    const { 
-      fields: { postalCode, unitNumber, address }, 
+    const {
+      fields: { postalCode, unitNumber, address },
       invalid,
-      handleSubmit, 
+      handleSubmit,
       submitFailed,
-      submitting 
+      submitting,
     } = this.props;
     return (
       <form className={s.bookingLocationForm} onSubmit={handleSubmit(this.props.onNext)}>
         <div className={s.bookingLocationFormSection}>
           <span>I&apos;m an existing customer</span>
-          <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this._onClickLogin.bind(this)}>LOGIN</a>
+          <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this.onClickLogin}>LOGIN</a>
           {/*
           <span>or</span>
           <a href="/booking2" className="btn btn-primary btn-small btn-inline">REGISTER</a>
@@ -52,19 +58,13 @@ class BookingLocationForm extends Component {
               </div>
             </div>
           </div>
-          <div style={{padding: '20px 0'}}>
+          <div style={{ padding: '20px 0' }}>
             {submitFailed && invalid && <div className={s.bookingLocationFormError}>You have one or more form field errors.</div>}
             <button className="btn btn-primary" type="submit" disabled={submitting}>NEXT</button>
           </div>
         </div>
       </form>
     );
-  }
-
-  _onClickLogin(event) {
-    event.preventDefault();
-
-    this.props.showLoginPopup();
   }
 
 }
@@ -80,7 +80,7 @@ const validate = values => {
     errors.address = 'Required';
   }
   return errors;
-}
+};
 
 BookingLocationForm.propTypes = {
   fields: PropTypes.object.isRequired,
@@ -90,14 +90,14 @@ BookingLocationForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
   showLoginPopup: PropTypes.func.isRequired,
   fetchAddress: PropTypes.func.isRequired,
-  onNext: PropTypes.func.isRequired
-}
+  onNext: PropTypes.func.isRequired,
+};
 
 const reduxFormConfig = {
   form: 'bookingLocationForm',
   fields: ['postalCode', 'unitNumber', 'address'],
-  validate: validate
-}
+  validate,
+};
 
 const mapStateToProps = (state) => {
   const { order } = state;
@@ -106,8 +106,8 @@ const mapStateToProps = (state) => {
       postalCode: order && order.location && order.location.postalCode || undefined,
       address: order && order.location && order.location.address || undefined,
       unitNumber: order && order.location && order.location.unitNumber || undefined,
-    }
-  }
-}
+    },
+  };
+};
 
 export default reduxForm(reduxFormConfig, mapStateToProps)(BookingLocationForm);

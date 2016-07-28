@@ -36,7 +36,7 @@
 
       @media (--md-viewport) {
         margin-left: 10px;
-      }     
+      }
 
       @media (--sm-viewport) {
         margin-left: 10px;
@@ -63,7 +63,8 @@
   }
 
   & .bookingNavigationLink {
-    &:hover, &.active {
+    &:hover,
+    &.bookingNavigationLinkActive {
       color: var(--secondary-color);
       text-decoration: none;
 

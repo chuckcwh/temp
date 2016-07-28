@@ -11,6 +11,7 @@
       font-weight: 100;
       font-size: 40px;
       margin: 0;
+
       @apply --font-smoothing;
 
       .lead {
@@ -48,11 +49,12 @@
     }
 
     & .actionsItemTitle {
-      color: #ffffff;
+      color: #fff;
       font-weight: 100;
       font-size: 40px;
       text-transform: uppercase;
       padding: 5px;
+
       @apply --font-smoothing;
     }
 
@@ -60,12 +62,12 @@
       display: inline-block;
       margin-top: 10px;
       padding: 5px;
-      color: #ffffff;
+      color: #fff;
       font-weight: 100;
       font-size: 26px;
       text-transform: uppercase;
       width: 260px;
-      border: 1px solid #ffffff;
+      border: 1px solid #fff;
       border-radius: 5px;
 
       &:hover {
@@ -78,7 +80,7 @@
       margin-top: 10px;
     }
 
-    /*.Actions-item-button {
+    /* .Actions-item-button {
       display: inline-block;
       padding: 5px;
       color: #ffffff;
@@ -93,6 +95,6 @@
       &:hover {
         background-color: rgba(255, 255, 255, 0.25);
       }
-    }*/
+    } */
   }
 }

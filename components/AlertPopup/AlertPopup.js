@@ -6,39 +6,42 @@ import { hideAlertPopup } from '../../actions';
 
 class AlertPopup extends Component {
 
+  closePopup = () => {
+    this.props.hideAlertPopup();
+  };
+
   render() {
     return (
       <div className={s.alertPopup}>
-        <Popup css={s} title="Alert" isOpen={this.props.visible} onCloseClicked={this._closePopup.bind(this)}>
+        <Popup css={s} title="Alert" isOpen={this.props.visible} onCloseClicked={this.closePopup}>
           {this.props.message}
           {this.props.children}
           <div className={s.alertPopupFooter}>
-            <a className="btn btn-primary btn-small" href="#" onClick={this._closePopup.bind(this)}>OK</a>
+            <a className="btn btn-primary btn-small" href="#" onClick={this.closePopup}>OK</a>
           </div>
         </Popup>
       </div>
     );
   }
 
-  _closePopup() {
-    this.props.hideAlertPopup();
-  }
-
 }
 
-const mapStateToProps = (state) => {
-  return {
-    visible: state.modal.alert && state.modal.alert.visible,
-    message: state.modal.alert && state.modal.alert.message
-  }
-}
+AlertPopup.propTypes = {
+  children: React.PropTypes.node,
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    hideAlertPopup: () => {
-      return dispatch(hideAlertPopup());
-    }
-  }
-}
+  visible: React.PropTypes.bool,
+  message: React.PropTypes.node,
+
+  hideAlertPopup: React.PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  visible: state.modal.alert && state.modal.alert.visible,
+  message: state.modal.alert && state.modal.alert.message,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  hideAlertPopup: () => dispatch(hideAlertPopup()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlertPopup);

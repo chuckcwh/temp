@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin: 0 0 2em 0;
+    margin: 0 0 2em;
     padding: 20px 0 0;
     list-style: none;
     justify-content: space-between;
@@ -35,14 +35,12 @@
         }
       }
 
-
       &.popularItemQuestion {
-
 
         & .popularItemQuestionIcon {
           display: inline-block;
-          width: $popular-icon-size;
-          height: $popular-icon-size;
+          width: var(--popular-icon-size);
+          height: var(--popular-icon-size);
 
           img {
             width: 100%;
@@ -59,7 +57,7 @@
         color: var(--secondary-color);
         font-size: 22px;
         padding: 5px 10px;
-        
+
         @media (--sm-viewport) {
           font-size: 18px;
           padding: 5px;

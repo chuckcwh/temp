@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Loader from 'react-loader';
-import { Accordion, AccordionItem } from 'react-sanfona';
 import s from './Services.css';
 import Container from '../Container';
 import Link from '../Link';
 import ServiceCard from '../ServiceCard';
-import AlertPopup from '../AlertPopup';
 import { fetchServices, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
@@ -19,7 +17,7 @@ class Services extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter: util.ALL_SERVICES
+      filter: util.ALL_SERVICES,
     };
   }
 
@@ -27,48 +25,75 @@ class Services extends Component {
     this.props.fetchServices();
   }
 
+  onClickAllServices = (event) => {
+    event.preventDefault();
+
+    history.push({ pathname: '/services' });
+  };
+
+  onClickFilter = (filter) => (event) => {
+    event.preventDefault();
+
+    this.setState({
+      filter,
+    });
+  };
+
+  onClickBook = (serviceId) => (event) => {
+    event.preventDefault();
+
+    this.props.setOrderService(serviceId);
+    util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
+
+    history.push({ pathname: '/booking2' });
+  };
+
   render() {
-    const { params, allServices, servicesTree, servicesTreeHash, servicesSubtypesHash, servicesSubtypesHashBySlug, allServicesFetching } = this.props;
+    const { params, allServices, servicesTree, servicesTreeHash,
+      servicesSubtypesHash, servicesSubtypesHashBySlug, allServicesFetching } = this.props;
     const { filter } = this.state;
-    const location = history.getCurrentLocation();
 
     let serviceContent;
     if (params && params.id && allServices) {
       const isIdSlug = !util.isInt(params.id);
-      const id = isIdSlug ? params.id : parseInt(params.id);
+      // const id = isIdSlug ? params.id : parseInt(params.id);
       const allServicesArr = Object.values(allServices);
       // services under subcat
-      const subcatServices = isIdSlug ? servicesSubtypesHashBySlug[params.id] : servicesSubtypesHash[params.id];
-      const subcatClass = util.getServiceIconClass(parseInt(Object.values(subcatServices)[0].subTypeId));
-      const otherSubcats = (function () {
+      const subcatServices = isIdSlug
+        ? servicesSubtypesHashBySlug[params.id]
+        : servicesSubtypesHash[params.id];
+      const subcatClass = util.getServiceIconClass(
+        parseInt(Object.values(subcatServices)[0].subTypeId, 10));
+      const otherSubcats = (function getOtherSubcats() {
         if (subcatServices && subcatServices.length) {
           // relationship between main categories and sub catergories
           const mainCat = subcatServices[0].category;
           const subCat = subcatServices[0].subType;
-          let map = {};
+          const map = {};
           allServicesArr.forEach((service) => {
             if (!map[service.category]) {
               map[service.category] = [];
             }
           });
           allServicesArr.forEach((service) => {
-            for (let mainCat in map) {
-              if (service.category === mainCat) {
-                if (!(map[mainCat].find((servic) => (servic.subType === service.subType))) && service.subType !==  subCat) {
+            Object.keys(map).forEach((currentCat) => {
+              if (service.category === currentCat) {
+                if (!(map[currentCat].find((servic) =>
+                  (servic.subType === service.subType))) && service.subType !== subCat) {
                   // push the entire service obj for useful attributes
-                  map[mainCat].push(service);
+                  map[currentCat].push(service);
                 }
               }
-            }
+            });
           });
           // const map = allServicesArr.reduce();
           if (map[mainCat].length > 4) {
             return shuffle(map[mainCat]).slice(0, 4);
-          } else {
-            return map[mainCat];
           }
-        } else return [];
-      })();
+          return map[mainCat];
+        }
+        return [];
+      }());
       serviceContent = (
         <div>
           <div>
@@ -76,7 +101,7 @@ class Services extends Component {
               <div className={s.serviceSubcatBody}>
                 <div className={s.serviceDescWrapper}>
                   <div className={s.serviceIconWrapper}>
-                    <div className={'service-icon ' + subcatClass}></div>
+                    <div className={`service-icon ${subcatClass}`}></div>
                   </div>
                   <div className={s.serviceContentWrapper}>
                     <div className={s.serviceSubTypeTitle}>
@@ -90,11 +115,14 @@ class Services extends Component {
                 <div className={s.serviceSubTypeListWrapper}>
                   <div className={s.serviceSubTypeList}>
                     {
-                      Object.values(groupBy(subcatServices, 'name')).map((serviceGroup) => {
-                        return (
-                          <ServiceCard serviceGroup={serviceGroup} allServices={allServices} allServicesFetching={allServicesFetching} onBook={this._onClickBook.bind(this)} key={subcatServices[0].id+serviceGroup[0].name}></ServiceCard>
-                        );
-                      })
+                      Object.values(groupBy(subcatServices, 'name')).map((serviceGroup) =>
+                        <ServiceCard
+                          serviceGroup={serviceGroup}
+                          allServicesFetching={allServicesFetching}
+                          onBook={this.onClickBook}
+                          key={subcatServices[0].id + serviceGroup[0].name}
+                        />
+                      )
                     }
                   </div>
                 </div>
@@ -105,18 +133,26 @@ class Services extends Component {
                   <div className={s.otherServicesList}>
                     {
                       otherSubcats && otherSubcats.map((service) => {
-                        const subcatClass = util.getServiceIconClass(service.categoryObj);
+                        const otherSubcatClass = util.getServiceIconClass(service.categoryObj);
                         return (
                           <div className={s.otherServicesItem} key={service.categoryObj}>
-                            <Link to={`/services/${service.subTypeSlug ? service.subTypeSlug : service.categoryObj}`}><div className={'service-icon ' + subcatClass}></div></Link>
-                            <Link to={`/services/${service.subTypeSlug ? service.subTypeSlug : service.categoryObj}`}><div className={s.otherServicesItemTitle}>{service.subType}</div></Link>
+                            <Link to={`/services/${service.subTypeSlug ? service.subTypeSlug : service.categoryObj}`}>
+                              <div className={`service-icon ${otherSubcatClass}`}></div>
+                            </Link>
+                            <Link to={`/services/${service.subTypeSlug ? service.subTypeSlug : service.categoryObj}`}>
+                              <div className={s.otherServicesItemTitle}>{service.subType}</div>
+                            </Link>
                           </div>
                         );
                       })
                     }
                     <div className={s.otherServicesItem}>
-                      <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className="service-icon ebeecare"></div></a>
-                      <a href="/services" onClick={this._onClickAllServices.bind(this)}><div className={s.otherServicesItemTitle}>All Services</div></a>
+                      <a href="/services" onClick={this.onClickAllServices}>
+                        <div className="service-icon ebeecare"></div>
+                      </a>
+                      <a href="/services" onClick={this.onClickAllServices}>
+                        <div className={s.otherServicesItemTitle}>All Services</div>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -136,7 +172,17 @@ class Services extends Component {
                   const { name } = category;
                   return (
                     <li className={s.servicesNavItem} key={name}>
-                      <a className={classNames(s.servicesNavLink, (filter === name) ? s.servicesNavLinkActive : '')} href="#" onClick={this._onClickFilter.bind(this, name)}>{name}<span className={s.servicesNavArrow}><div className="nav-caret"></div></span></a>
+                      <a
+                        className={classNames(s.servicesNavLink,
+                          (filter === name) ? s.servicesNavLinkActive : '')}
+                        href="#"
+                        onClick={this.onClickFilter(name)}
+                      >
+                        {name}
+                        <span className={s.servicesNavArrow}>
+                          <div className="nav-caret"></div>
+                        </span>
+                      </a>
                     </li>
                   );
                 })
@@ -148,26 +194,34 @@ class Services extends Component {
             <Container>
               <div className={s.servicesBody}>
                 {
-                  servicesTreeHash && servicesTreeHash[filter].children.map(subType => {
-                    return (
-                      <div className={s.servicesBodySubcatSection} key={subType.children[0].category + subType.name}>
-                        <h2 className={s.servicesBodySubcatSectionTitle}>
-                          {this.state.filter === util.ALL_SERVICES && <a href="#" onClick={this._onClickFilter.bind(this, subType.children[0].category)}>{subType.children[0].category}</a>}
-                          {this.state.filter === util.ALL_SERVICES ? ' > ' : ''}
-                          {subType.name}
-                        </h2>
-                        <div className={s.servicesBodySubcatSectionBody}>
-                          {
-                            Object.values(groupBy(subType.children, 'name')).map((serviceGroup) => {
-                              return (
-                                <ServiceCard serviceGroup={serviceGroup} allServices={allServices} allServicesFetching={allServicesFetching} onBook={this._onClickBook.bind(this)} key={serviceGroup[0]['id']} />
-                              );
-                            })
-                          }
-                        </div>
+                  servicesTreeHash && servicesTreeHash[filter].children.map(subType => (
+                    <div
+                      className={s.servicesBodySubcatSection}
+                      key={subType.children[0].category + subType.name}
+                    >
+                      <h2 className={s.servicesBodySubcatSectionTitle}>
+                        {this.state.filter === util.ALL_SERVICES &&
+                          <a href="#" onClick={this.onClickFilter(subType.children[0].category)}>
+                            {subType.children[0].category}
+                          </a>}
+                        {this.state.filter === util.ALL_SERVICES ? ' > ' : ''}
+                        {subType.name}
+                      </h2>
+                      <div className={s.servicesBodySubcatSectionBody}>
+                        {
+                          Object.values(groupBy(subType.children, 'name')).map((serviceGroup) => (
+                            <ServiceCard
+                              serviceGroup={serviceGroup}
+                              allServices={allServices}
+                              allServicesFetching={allServicesFetching}
+                              onBook={this.onClickBook}
+                              key={serviceGroup[0].id}
+                            />
+                          ))
+                        }
                       </div>
-                    );
-                  })
+                    </div>
+                  ))
                 }
               </div>
             </Container>
@@ -190,55 +244,38 @@ class Services extends Component {
     );
   }
 
-  _onClickAllServices(event) {
-    event.preventDefault();
-
-    history.push({ pathname: '/services'});
-  }
-
-  _onClickFilter(filter, event) {
-    event.preventDefault();
-
-    this.setState({
-      filter: filter
-    });
-  }
-
-  _onClickBook(serviceId, event) {
-    event.preventDefault();
-
-    this.props.setOrderService(serviceId);
-    util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
-
-    history.push({ pathname: '/booking2' });
-  }
-
 }
 
-const mapStateToProps = (state) => {
-  return {
-    lastPage: state.lastPage,
-    allServices: state.allServices.data,
-    allServicesFetching: state.allServices.isFetching,
-    servicesTree: state.allServices.servicesTree,
-    servicesTreeHash: state.allServices.servicesTreeHash,
-    servicesSubtypesHash: state.allServices.subTypesHash,
-    servicesSubtypesHashBySlug: state.allServices.subTypesHashBySlug,
-  }
-}
+Services.propTypes = {
+  params: React.PropTypes.object,
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchServices: () => {
-      return dispatch(fetchServices());
-    },
-    setOrderService: (service) => {
-      return dispatch(setOrderService(service));
-    },
-    setLastPage: (page) => {
-      return dispatch(setLastPage(page));
-    }
-  }
-}
+  lastPage: React.PropTypes.string,
+  allServices: React.PropTypes.object,
+  allServicesFetching: React.PropTypes.bool,
+  servicesTree: React.PropTypes.array,
+  servicesTreeHash: React.PropTypes.object,
+  servicesSubtypesHash: React.PropTypes.object,
+  servicesSubtypesHashBySlug: React.PropTypes.object,
+
+  fetchServices: React.PropTypes.func,
+  setOrderService: React.PropTypes.func,
+  setLastPage: React.PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  lastPage: state.lastPage,
+  allServices: state.allServices.data,
+  allServicesFetching: state.allServices.isFetching,
+  servicesTree: state.allServices.servicesTree,
+  servicesTreeHash: state.allServices.servicesTreeHash,
+  servicesSubtypesHash: state.allServices.subTypesHash,
+  servicesSubtypesHashBySlug: state.allServices.subTypesHashBySlug,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchServices: () => dispatch(fetchServices()),
+  setOrderService: (service) => dispatch(setOrderService(service)),
+  setLastPage: (page) => dispatch(setLastPage(page)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Services);

@@ -7,10 +7,8 @@ import Container from '../Container';
 import Link from '../Link';
 import FindBookingForm from '../FindBookingForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
 import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
 
 class Account extends Component {
 
@@ -21,18 +19,8 @@ class Account extends Component {
       mobilePhone: this.props.mobilePhone || undefined,
       pin: undefined,
       resend: false,
-      resent: false
+      resent: false,
     };
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({
-      bid: props.bid || this.state.bid,
-      mobilePhone: props.mobilePhone || this.state.mobilePhone
-    });
-    if (props.booking && props.booking.id && !props.booking.isHPVerified) {
-      this.props.showVerifyBookingPopup(props.booking.id);
-    }
   }
 
   componentDidMount() {
@@ -41,9 +29,30 @@ class Account extends Component {
     }
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      bid: props.bid || this.state.bid,
+      mobilePhone: props.mobilePhone || this.state.mobilePhone,
+    });
+    if (props.booking && props.booking.id && !props.booking.isHPVerified) {
+      this.props.showVerifyBookingPopup(props.booking.id);
+    }
+  }
+
+  onVerified = () => {
+    this.props.getBooking({
+      bid: this.state.bid,
+      mobilePhone: this.state.mobilePhone,
+    }).then((res) => {
+      if (res.response && res.response.status < 1) {
+        this.props.showAlertPopup('Sorry, we are not able to find your booking.');
+      }
+    });
+  };
+
   render() {
     const location = history.getCurrentLocation();
-    var components;
+    let components;
     if (this.props.type === 'login') {
       components = (
         <div className={s.accountContainer}>
@@ -69,7 +78,11 @@ class Account extends Component {
           </div>
           */}
           <div className={classNames(s.accountFind, s.accountContainerItem)}>
-            <Loader className="spinner" loaded={(!(this.props.bookingFetching) && location && location.query && location.query.bid && location.query.mobilePhone) ? false : true}>
+            <Loader
+              className="spinner"
+              loaded={(!(!(this.props.bookingFetching) && location && location.query
+                && location.query.bid && location.query.mobilePhone))}
+            >
               <FindBookingForm />
             </Loader>
           </div>
@@ -79,7 +92,7 @@ class Account extends Component {
       components = (
         <div className={s.accountContainer}>
           <div className={classNames(s.accountForgot, s.accountContainerItem)}>
-            <form ref={(c) => this._accountForgotPasswordForm = c}>
+            <form ref={(c) => (this.accountForgotPasswordForm = c)}>
               <h3>Forgot Password?</h3>
               <div className="IconInput EmailInput">
                 <input type="email" placeholder="Enter Email*" />
@@ -100,48 +113,41 @@ class Account extends Component {
         <Container>
           {components}
         </Container>
-        <VerifyBookingPopup onVerified={this._onVerified.bind(this)} />
+        <VerifyBookingPopup onVerified={this.onVerified} />
       </div>
     );
   }
 
-  _onVerified() {
-    this.props.getBooking({
-      bid: this.state.bid,
-      mobilePhone: this.state.mobilePhone
-    }).then((res) => {
-      if (res.response && res.response.status < 1) {
-        this.props.showAlertPopup('Sorry, we are not able to find your booking.');
-      }
-    });
-  }
-
 }
 
+Account.propTypes = {
+  bid: React.PropTypes.string,
+  mobilePhone: React.PropTypes.string,
+  type: React.PropTypes.string,
 
-const mapStateToProps = (state) => {
-  return {
-    booking: state.booking.data,
-    user: state.user,
-    patient: state.patient
-  }
-}
+  booking: React.PropTypes.object,
+  bookingFetching: React.PropTypes.bool,
+  user: React.PropTypes.object,
+  patient: React.PropTypes.object,
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getBooking: (params) => {
-      return dispatch(getBooking(params));
-    },
-    setLastPage: (page) => {
-      return dispatch(setLastPage(page));
-    },
-    showAlertPopup: (message) => {
-      return dispatch(showAlertPopup(message));
-    },
-    showVerifyBookingPopup: (bookingId) => {
-      return dispatch(showVerifyBookingPopup(bookingId));
-    }
-  }
-}
+  getBooking: React.PropTypes.func,
+  setLastPage: React.PropTypes.func,
+  showAlertPopup: React.PropTypes.func,
+  showVerifyBookingPopup: React.PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  booking: state.booking.data,
+  bookingFetching: state.booking.isFetching,
+  user: state.user,
+  patient: state.patient,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getBooking: (params) => dispatch(getBooking(params)),
+  setLastPage: (page) => dispatch(setLastPage(page)),
+  showAlertPopup: (message) => dispatch(showAlertPopup(message)),
+  showVerifyBookingPopup: (bookingId) => dispatch(showVerifyBookingPopup(bookingId)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Account);

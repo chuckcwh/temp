@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import moment from 'moment';
 import s from './BookingComplete.css';
 import Container from '../Container';
 import Link from '../Link';
@@ -14,37 +13,27 @@ class BookingComplete extends Component {
 
   constructor(props) {
     super(props);
+    const { order, booking, caze, user } = props;
     this.state = {
       bookingStatus: undefined,
-      booking: undefined,
-      bookingId: undefined,
-      bookingAmt: undefined,
+      booking: order && order.service && order.sessions && order.booker && booking,
+      bookingId: order && order.service && order.sessions && order.booker && booking && booking.id,
+      bookingAmt: (user && order && order.patient && caze && caze.price)
+        || (order && order.service && order.sessions && order.booker && booking && booking.case && booking.case.price),
+      bookingHp: order && order.service && order.sessions && order.booker && booking && booking.client_contactNumber,
       caseId: undefined,
-      bookingVerified: false
+      bookingVerified: false,
     };
   }
 
   componentDidMount() {
     const { order, user, booking, caze } = this.props;
-    const location = history.getCurrentLocation();
     if (user && order && order.patient && caze) {
       // Destroy order
       this.props.destroyOrder();
-
-      this.setState({
-        bookingAmt: caze.price,
-        caseId: caze.id
-      });
     } else if (order && order.service && order.sessions && order.booker && booking) {
       // Destroy order
       this.props.destroyOrder();
-
-      this.setState({
-        bookingId: booking.id,
-        bookingAmt: booking.case.price,
-        bookingHp: booking.client_contactNumber,
-        booking: booking
-      });
 
       this.props.showVerifyBookingPopup(booking.id);
     }
@@ -52,14 +41,13 @@ class BookingComplete extends Component {
 
   componentWillReceiveProps(props) {
     const { order, user, booking, caze } = props;
-    const location = history.getCurrentLocation();
     if (user && order && order.patient && caze) {
       // Destroy order
       this.props.destroyOrder();
 
       this.setState({
         bookingAmt: caze.price,
-        caseId: caze.id
+        caseId: caze.id,
       });
     } else if (order && order.service && order.sessions && order.booker && booking) {
       // Destroy order
@@ -69,15 +57,42 @@ class BookingComplete extends Component {
         bookingId: booking.id,
         bookingAmt: booking.case.price,
         bookingHp: booking.client_contactNumber,
-        booking: booking
+        booking,
       });
 
       this.props.showVerifyBookingPopup(booking.id);
     }
   }
 
+  onVerified = () => {
+    this.props.getBooking({
+      bid: this.state.bookingId,
+      mobilePhone: this.state.bookingHp,
+    }).then(() => {
+      this.setState({
+        bookingVerified: true,
+      });
+
+      // Notify parent window of booking completion for embedded widget
+      const location = history.getCurrentLocation();
+      if (location && location.query && location.query.widget === 'true') {
+        window.parent.postMessage('completedBooking', '*');
+      }
+    });
+  };
+
+  onClickActivateBooking = () => {
+    this.props.showVerifyBookingPopup(this.state.bookingId);
+  };
+
+  onClickClose = () => {
+    window.parent.postMessage('closeebkwidget', '*');
+  };
+
   render() {
-    var component, identity, footer;
+    let component,
+      identity,
+      footer;
     const { bookingFetching, cazeFetching } = this.props;
     const location = history.getCurrentLocation();
 
@@ -89,23 +104,34 @@ class BookingComplete extends Component {
       );
     } else {
       if (this.state.bookingId) {
-        var bookingLink, activateText;
-        if (location && location.query && location.query.widget == 'true') {
+        let bookingLink,
+          activateText;
+        if (location && location.query && location.query.widget === 'true') {
           bookingLink = (
             <div>
-              <a href="#" className="btn btn-primary" style={{'color': '#fff'}} onClick={this._onClickClose.bind(this)}>Close Window</a>
+              <a href="#" className="btn btn-primary" style={{ color: '#fff' }} onClick={this.onClickClose}>Close Window</a>
             </div>
           );
         } else if (this.state.bookingVerified) {
           bookingLink = (
             <div>
-              <Link to={{ pathname: '/booking-manage', query: { bid: this.state.bookingId, mobilePhone: this.state.booking.client_contactNumber } }} className="btn btn-primary" style={{'color': '#fff'}}>View Booking</Link>
+              <Link
+                to={{ pathname: '/booking-manage',
+                  query: { bid: this.state.bookingId, mobilePhone: this.state.booking.client_contactNumber } }}
+                className="btn btn-primary"
+                style={{ color: '#fff' }}
+              >View Booking</Link>
             </div>
           );
         } else {
           bookingLink = (
             <div>
-              <a href="#" className="btn btn-primary" onClick={this._onClickActivateBooking.bind(this)} style={{'color': '#fff'}}>Activate Booking</a>
+              <a
+                href="#"
+                className="btn btn-primary"
+                onClick={this.onClickActivateBooking}
+                style={{ color: '#fff' }}
+              >Activate Booking</a>
             </div>
           );
           activateText = (
@@ -126,13 +152,13 @@ class BookingComplete extends Component {
           <div>
             <b>CASE ID : {this.state.caseId}</b>
             <div>
-              <a href={util.backend + '/case/' + this.state.caseId}>View Case</a>
+              <a href={`${util.backend}/case/${this.state.caseId}`}>View Case</a>
             </div>
           </div>
         );
       }
 
-      if (!(location && location.query && location.query.widget == 'true')) {
+      if (!(location && location.query && location.query.widget === 'true')) {
         footer = (
           <div className={s.bookingCompleteFooter}>
             <Link to="/booking1" className="btn btn-primary">Make Another Booking</Link>
@@ -154,7 +180,9 @@ class BookingComplete extends Component {
             ESTIMATED AMOUNT : SGD {parseFloat(this.state.bookingAmt).toFixed(2)}
           </div>
           <div>
-            For inquiries on your order, please email <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
+            For inquiries on your order, please email
+            <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a>
+            or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
           </div>
           {footer}
         </div>
@@ -166,7 +194,9 @@ class BookingComplete extends Component {
     //         TECHNICAL ERROR
     //       </div>
     //       <div>
-    //         Oops, there was an error creating your booking. Please contact us at <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> or 6514 9729 immediately.
+    //        Oops, there was an error creating your booking.
+    //        Please contact us at <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a>
+    //        or 6514 9729 immediately.
     //       </div>
     //     </div>
     //   );
@@ -177,73 +207,43 @@ class BookingComplete extends Component {
         <Container>
           {component}
         </Container>
-        <VerifyBookingPopup onVerified={this._onVerified.bind(this)} />
+        <VerifyBookingPopup onVerified={this.onVerified} />
       </div>
     );
   }
 
-  _onVerified() {
-    this.props.getBooking({
-      bid: this.state.bookingId,
-      mobilePhone: this.state.bookingHp
-    }).then(() => {
-      this.setState({
-        bookingVerified: true
-      });
-
-      // Notify parent window of booking completion for embedded widget
-      const location = history.getCurrentLocation();
-      if (location && location.query && location.query.widget == 'true') {
-        window.parent.postMessage('completedBooking', '*');
-      }
-    });
-  }
-
-  _onClickActivateBooking(event) {
-    this.props.showVerifyBookingPopup(this.state.bookingId);
-  }
-
-  _onClickViewBooking(event) {
-    event.preventDefault();
-
-    history.replace({ pathname: '/booking-manage', query: { bid: this.state.bookingId, mobilePhone: this.state.bookingHp } });
-  }
-
-  _onClickClose(event) {
-    window.parent.postMessage('closeebkwidget', '*');
-  }
-
 }
 
-const mapStateToProps = (state) => {
-  return {
-    order: state.order,
-    user: state.user.data,
-    booking: state.booking.data,
-    bookingFetching: state.booking.isFetching,
-    caze: state.caze.data,
-    cazeFetching: state.caze.isFetching
-  }
-}
+BookingComplete.propTypes = {
+  order: React.PropTypes.object,
+  user: React.PropTypes.object,
+  booking: React.PropTypes.object,
+  bookingFetching: React.PropTypes.bool,
+  caze: React.PropTypes.object,
+  cazeFetching: React.PropTypes.bool,
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    createBooking: (booking) => {
-      return dispatch(createBooking(booking));
-    },
-    createCase: (caze) => {
-      return dispatch(createCase(caze));
-    },
-    getBooking: (params) => {
-      return dispatch(getBooking(params));
-    },
-    destroyOrder: () => {
-      return dispatch(destroyOrder());
-    },
-    showVerifyBookingPopup: (bookingId) => {
-      return dispatch(showVerifyBookingPopup(bookingId));
-    }
-  }
-}
+  createBooking: React.PropTypes.func,
+  createCase: React.PropTypes.func,
+  getBooking: React.PropTypes.func,
+  destroyOrder: React.PropTypes.func,
+  showVerifyBookingPopup: React.PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  order: state.order,
+  user: state.user.data,
+  booking: state.booking.data,
+  bookingFetching: state.booking.isFetching,
+  caze: state.caze.data,
+  cazeFetching: state.caze.isFetching,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  createBooking: (booking) => dispatch(createBooking(booking)),
+  createCase: (caze) => dispatch(createCase(caze)),
+  getBooking: (params) => dispatch(getBooking(params)),
+  destroyOrder: () => dispatch(destroyOrder()),
+  showVerifyBookingPopup: (bookingId) => dispatch(showVerifyBookingPopup(bookingId)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookingComplete);

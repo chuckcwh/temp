@@ -46,8 +46,10 @@ const allServices = (state = {
         subTypesHashBySlug[subTypeKey] = sortBy(subTypesHashBySlug[subTypeKey], ['subTypeOrder', 'name'])
       })
       const servicesTree = util.appendAllServices(util.parseCategories(servicesHash))
-      let serviceTreeHash = {};
-      servicesTree.map(category => { serviceTreeHash[category.name] = category })
+      const serviceTreeHash = servicesTree.reduce((result, category) => {
+        result[category.name] = category;
+        return result;
+      }, {});
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,

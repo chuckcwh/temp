@@ -26,7 +26,7 @@
         color: var(--brand-color);
         font-weight: normal;
         font-size: 24px;
-        margin: 0 0 24px 0;
+        margin: 0 0 24px;
         text-align: left;
       }
 
@@ -55,11 +55,11 @@
           }
         }
 
-        & input[type=checkbox]:not(old) + label > span:first-child {
+        & input[type=checkbox] + label > span:first-child {
           border-color: #ccc;
         }
 
-        & input[type=checkbox]:not(old):checked + label > span {
+        & input[type=checkbox]:checked + label > span {
           color: var(--text-color);
         }
       }

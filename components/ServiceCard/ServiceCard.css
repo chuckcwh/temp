@@ -16,7 +16,7 @@
     }
   }
 
-  &:before {
+  &::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -28,7 +28,7 @@
   }
 
   &:hover {
-    &:before {
+    &::before {
       opacity: 1;
     }
   }

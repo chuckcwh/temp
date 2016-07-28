@@ -26,16 +26,24 @@ class Popular extends Component {
                 rankedSubcategories && rankedSubcategories.map((subcategory, index) => {
                   const subcatClass = util.getServiceIconClass(subcategory.id);
                   return (
-                    <div className={s.popularItem + (index === 7 ? ' ' + s.lastItem : '')} key={subcategory.id}>
-                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}><div className={'service-icon ' + subcatClass}></div></Link>
-                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}><div className={s.popularItemTitle}>{subcategory.name}</div></Link>
+                    <div className={classNames(s.popularItem, (index === 7 ? s.lastItem : undefined))} key={subcategory.id}>
+                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}>
+                        <div className={classNames('service-icon', subcatClass)}></div>
+                      </Link>
+                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}>
+                        <div className={s.popularItemTitle}>{subcategory.name}</div>
+                      </Link>
                     </div>
-                  )
+                  );
                 })
               }
               <div className={classNames(s.popularItem, s.popularItemQuestion)}>
-                <Link to='/services'><div className="service-icon questionmark"></div></Link>
-                <Link to='/services'><div className={s.popularItemTitle}>Still not sure what you need?</div></Link>
+                <Link to="/services">
+                  <div className="service-icon questionmark"></div>
+                </Link>
+                <Link to="/services">
+                  <div className={s.popularItemTitle}>Still not sure what you need?</div>
+                </Link>
               </div>
             </div>
           </Loader>
@@ -46,19 +54,20 @@ class Popular extends Component {
 
 }
 
-const mapStateToProps = (state) => {
-  return {
-    rankedSubcategories: state.rankedSubcategories.data && state.rankedSubcategories.data.slice(0, 8),
-    rankedSubcategoriesFetching: state.rankedSubcategories.isFetching
-  }
-}
+Popular.propTypes = {
+  rankedSubcategories: React.PropTypes.array,
+  rankedSubcategoriesFetching: React.PropTypes.bool,
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getRankedSubcategories: () => {
-      return dispatch(getRankedSubcategories());
-    }
-  }
-}
+  getRankedSubcategories: React.PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  rankedSubcategories: state.rankedSubcategories.data && state.rankedSubcategories.data.slice(0, 8),
+  rankedSubcategoriesFetching: state.rankedSubcategories.isFetching,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getRankedSubcategories: () => dispatch(getRankedSubcategories()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Popular);

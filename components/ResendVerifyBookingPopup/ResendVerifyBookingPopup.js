@@ -4,10 +4,8 @@ import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import classNames from 'classnames';
 import s from './ResendVerifyBookingPopup.css';
-import Link from '../Link';
 import Popup from '../Popup';
 import { resendVerifyBookingPin, hideResendVerifyBookingPopup, showAlertPopup } from '../../actions';
-import util from '../../core/util';
 
 class ResendVerifyBookingPopup extends Component {
 
@@ -16,7 +14,7 @@ class ResendVerifyBookingPopup extends Component {
     this.state = {
       hp: undefined,
       error: undefined,
-      pending: false
+      pending: false,
     };
   }
 
@@ -24,53 +22,26 @@ class ResendVerifyBookingPopup extends Component {
     this.setState({
       hp: props.hp,
       error: props.error,
-      pending: props.pending
+      pending: props.pending,
     });
   }
 
-  render() {
-    return (
-      <div>
-        <div className={s.resendVerifyBookingPopup}>
-          <Popup css={s} isOpen={this.props.visible} afterOpen={this._executeAfterModalOpen.bind(this)} onCloseClicked={this._closePopup.bind(this)} onOverlayClicked={this._closePopup.bind(this)}>
-            <Loader className="spinner" loaded={this.state.pending ? false : true}>
-              <div className={classNames(s.accountLogin, s.accountContainerItem)}>
-                <form id="ResendVerifyBookingForm" ref={(c) => this._resendVerifyBookingForm = c} autoComplete="off" onSubmit={this._onClickSubmit.bind(this)}>
-                  <h3>Resend Booking PIN</h3>
-                  <p>Please enter your mobile number.</p>
-                  <input ref={(c) => this._startInput = c} className="HpInput" type="text" name="pin" valueLink={linkState(this, 'hp')} placeholder="Enter mobile number" pattern="\d{8}" required />
-                  <div className={s.accountContainerItemMiddle}>
-                    <div className={this.state.error ? '' : 'hidden'}><span className="error">Mobile number does not match.</span></div>
-                  </div>
-                  <a href="#" className="btn btn-primary" onClick={this._onClickSubmit.bind(this)}>Submit</a>
-                </form>
-              </div>
-            </Loader>
-          </Popup>
-        </div>
-      </div>
-    );
-  }
-
-  _onClickSubmit(event) {
-    if (this._resendVerifyBookingForm.checkValidity()) {
+  onClickSubmit = (event) => {
+    if (this.resendVerifyBookingForm.checkValidity()) {
       event.preventDefault();
 
-      this.setState({pending: true});
+      this.setState({ pending: true });
 
       this.props.resendVerifyBookingPin({
         bid: this.props.bookingId,
-        contactNumber: this.state.hp
+        contactNumber: this.state.hp,
       }).then((res) => {
-        this.setState({pending: false});
-        if (err) {
-          return console.error(util.host + '/api/resendBookingPin', status, err.toString());
-        }
+        this.setState({ pending: false });
         if (res.response && res.response.status === 1) {
           // console.log(res.response);
 
           this.setState({
-            error: undefined
+            error: undefined,
           });
 
           this.props.showAlertPopup('Your PIN has been resent.');
@@ -80,51 +51,92 @@ class ResendVerifyBookingPopup extends Component {
           this.props.onResent && this.props.onResent();
         } else {
           this.setState({
-            error: true
+            error: true,
           });
-          console.error('Failed to resend booking pin.');
+          // console.error('Failed to resend booking pin.');
         }
+        return;
       });
-
-      // this.setState({
-      //   pin: undefined
+      // .catch((err) => {
+      //   return console.error('/api/resendBookingPin', err.toString());
       // });
     }
-  }
+  };
 
-  _closePopup() {
+  closePopup = () => {
     this.props.hideResendVerifyBookingPopup();
-  }
+  };
 
-  _executeAfterModalOpen() {
-    this._startInput && this._startInput.focus();
+  executeAfterModalOpen = () => {
+    this.startInput && this.startInput.focus();
+  };
+
+  render() {
+    return (
+      <div>
+        <div className={s.resendVerifyBookingPopup}>
+          <Popup
+            css={s}
+            isOpen={this.props.visible}
+            afterOpen={this.executeAfterModalOpen}
+            onCloseClicked={this.closePopup}
+            onOverlayClicked={this.closePopup}
+          >
+            <Loader className="spinner" loaded={!this.state.pending}>
+              <div className={classNames(s.accountLogin, s.accountContainerItem)}>
+                <form
+                  ref={(c) => (this.resendVerifyBookingForm = c)}
+                  autoComplete="off"
+                  onSubmit={this.onClickSubmit}
+                >
+                  <h3>Resend Booking PIN</h3>
+                  <p>Please enter your mobile number.</p>
+                  <input
+                    ref={(c) => (this.startInput = c)}
+                    className="HpInput"
+                    type="text"
+                    valueLink={linkState(this, 'hp')}
+                    placeholder="Enter mobile number"
+                    pattern="\d{8}"
+                    required
+                  />
+                  <div className={s.accountContainerItemMiddle}>
+                    <div className={this.state.error ? '' : 'hidden'}>
+                      <span className="error">Mobile number does not match.</span>
+                    </div>
+                  </div>
+                  <a href="#" className="btn btn-primary" onClick={this.onClickSubmit}>Submit</a>
+                </form>
+              </div>
+            </Loader>
+          </Popup>
+        </div>
+      </div>
+    );
   }
 
 }
 
 ResendVerifyBookingPopup.propTypes = {
-  onResent: React.PropTypes.func
+  onResent: React.PropTypes.func,
+
+  visible: React.PropTypes.bool,
+  bookingId: React.PropTypes.string,
+
+  resendVerifyBookingPin: React.PropTypes.func,
+  hideResendVerifyBookingPopup: React.PropTypes.func,
+  showAlertPopup: React.PropTypes.func,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    visible: state.modal.resendVerifyBooking.visible,
-    bookingId: state.modal.resendVerifyBooking.bookingId
-  }
-}
+const mapStateToProps = (state) => ({
+  visible: state.modal.resendVerifyBooking.visible,
+  bookingId: state.modal.resendVerifyBooking.bookingId,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    resendVerifyBookingPin: (params) => {
-      return dispatch(resendVerifyBookingPin(params));
-    },
-    hideResendVerifyBookingPopup: () => {
-      return dispatch(hideResendVerifyBookingPopup());
-    },
-    showAlertPopup: (message) => {
-      return dispatch(showAlertPopup(message));
-    }
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+  resendVerifyBookingPin: (params) => dispatch(resendVerifyBookingPin(params)),
+  hideResendVerifyBookingPopup: () => dispatch(hideResendVerifyBookingPopup()),
+  showAlertPopup: (message) => dispatch(showAlertPopup(message)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResendVerifyBookingPopup);

@@ -10,7 +10,7 @@
     margin: 0;
     list-style: none;
     justify-content: space-between;
-    alignItems: center;
+    align-items: center;
     border-top: 1px solid var(--secondary-color);
     border-bottom: 1px solid var(--secondary-color);
 
@@ -27,7 +27,7 @@
     padding: 10px 0;
     list-style: none;
     justify-content: space-between;
-    alignItems: center;
+    align-items: center;
 
     @media (--lg-viewport) {
       flex-wrap: wrap;
@@ -114,10 +114,10 @@
         flex: 1;
 
         & :global .service-icon {
-          margin: 65px 30px 30px 30px;
+          margin: 65px 30px 30px;
 
           @media (--sm-viewport) {
-            margin: 35px 0 0 0;
+            margin: 35px 0 0;
           }
         }
 
@@ -201,11 +201,11 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        margin: 0 0 2em 0;
+        margin: 0 0 2em;
         padding: 20px 0 0;
         list-style: none;
         justify-content: flex-start;
-        alignItems: flex-start;
+        align-items: flex-start;
 
         @media (--sm-viewport) {
           padding: 0;

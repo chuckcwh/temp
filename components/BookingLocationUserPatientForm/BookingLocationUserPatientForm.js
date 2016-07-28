@@ -15,12 +15,12 @@ class BookingLocationUserPatientForm extends Component {
   }
 
   render() {
-    const { 
-      fields: { fullName, dob, gender, additionalInfo, postalCode, unitNumber, address, isPatient }, 
+    const {
+      fields: { fullName, dob, gender, postalCode, unitNumber, address, isPatient },
       invalid,
-      handleSubmit, 
+      handleSubmit,
       submitFailed,
-      submitting 
+      submitting,
     } = this.props;
     return (
       <form className={s.bookingLocationUserPatientForm} onSubmit={handleSubmit(this.props.onFilled)}>
@@ -55,7 +55,7 @@ class BookingLocationUserPatientForm extends Component {
           </div>
         </div>
         <div>
-          <div style={{marginTop: '40px'}}>Patient Location / Address</div>
+          <div style={{ marginTop: '40px' }}>Patient Location / Address</div>
           <div className={s.patientAddress}>
             <div className={classNames(s.patientAddressLeft, 'inline')}>
               <div className={s.bookingLocationUserPatientFormGroup}>
@@ -77,7 +77,7 @@ class BookingLocationUserPatientForm extends Component {
           <p className="small">This information will only be used to contact you regarding your booking.</p>
         </div>
         {submitFailed && invalid && <div className={s.bookingLocationUserPatientFormError}>You have one or more form field errors.</div>}
-        <button className="btn btn-primary" type="submit">Save Patient</button>
+        <button className="btn btn-primary" type="submit" disabled={submitting}>Save Patient</button>
       </form>
     );
   }
@@ -110,7 +110,7 @@ const validate = values => {
     errors.address = 'Required';
   }
   return errors;
-}
+};
 
 BookingLocationUserPatientForm.propTypes = {
   fields: PropTypes.object.isRequired,
@@ -122,40 +122,19 @@ BookingLocationUserPatientForm.propTypes = {
   showAlertPopup: PropTypes.func.isRequired,
   fetchAddress: PropTypes.func.isRequired,
   onFilled: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
-}
+  user: PropTypes.object.isRequired,
+};
 
 const reduxFormConfig = {
   form: 'bookingLocationUserPatientForm',
-  fields: ['userName', 'fullName', 'dob', 'gender', 'additionalInfo', 'postalCode', 'unitNumber', 'address', 'isPatient'],
-  validate: validate
-}
+  fields: ['userName', 'fullName', 'dob', 'gender', 'postalCode', 'unitNumber', 'address', 'isPatient'],
+  validate,
+};
 
-const mapStateToProps = (state) => {
-  // const { order } = state;
-  return {
-    initialValues: {
-      userName: state.user.data && state.user.data.clients && state.user.data.clients[0] && state.user.data.clients[0].fullName
-    }
-    // initialValues: {
-    //   client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-    //   client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-    //   client_firstName: order && order.booker && order.booker.client_firstName || undefined,
-    //   client_lastName: order && order.booker && order.booker.client_lastName || undefined,
-    //   patient_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-    //   patient_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-    //   patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
-    //   patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
-    //   patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-    //   patient_dob_temp: undefined,
-    //   patient_gender: order && order.booker && order.booker.patient_gender || undefined,
-    //   additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
-    //   isPatient: order && order.booker && order.booker.isPatient || undefined,
-    //   postalCode: order && order.location && order.location.postalCode || undefined,
-    //   address: order && order.location && order.location.address || undefined,
-    //   unitNumber: order && order.location && order.location.unitNumber || undefined,
-    // }
-  }
-}
+const mapStateToProps = (state) => ({
+  initialValues: {
+    userName: state.user.data && state.user.data.clients && state.user.data.clients[0] && state.user.data.clients[0].fullName,
+  },
+});
 
 export default reduxForm(reduxFormConfig, mapStateToProps)(BookingLocationUserPatientForm);

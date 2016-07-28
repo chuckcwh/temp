@@ -58,6 +58,7 @@
     & .bookingLocationUserBodyEditSection {
       position: relative;
       padding: 20px 0;
+
       /* border-top: 1px solid var(--border-color); */
 
       &:first-child {
@@ -87,7 +88,7 @@
       }
 
       & form a {
-        margin: 5px 5px 0 0; 
+        margin: 5px 5px 0 0;
       }
     }
 
@@ -105,11 +106,11 @@
       }
 
       & .bookingLocationUserRadio {
-        // margin-right: 5px;
+        /* margin-right: 5px; */
       }
 
       & .bookingLocationUserRadioLabel {
-        // cursor: pointer;
+        /* cursor: pointer; */
       }
     }
 

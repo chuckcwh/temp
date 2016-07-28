@@ -29,7 +29,8 @@
 
     & .bookingResultsCheckboxLabel {
       display: block;
-      // margin-left: 100px;
+
+      /* margin-left: 100px; */
 
       & > span {
         float: left;

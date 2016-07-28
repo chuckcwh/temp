@@ -14,7 +14,7 @@
     display: inline-block;
 
     & :global .rdtPicker .rdtDay {
-    	cursor: pointer;
+      cursor: pointer;
     }
   }
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { slide as Menu } from 'react-burger-menu';
 import s from './Navigation.css';
@@ -14,13 +13,13 @@ export default class Navigation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false
+      visible: false,
     };
   }
 
   render() {
     const location = history.getCurrentLocation();
-    var accountText;
+    let accountText;
     if (util.isLoggedInBackend()) {
       accountText = 'DASHBOARD';
     } else {
@@ -30,19 +29,31 @@ export default class Navigation extends Component {
       <div className={s.navWrapper}>
         <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
           <li className={s.navigationItem}>
-            <Link className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')} to="/about">ABOUT</Link>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')}
+              to="/about"
+            >ABOUT</Link>
           </li>
           <li className={s.navigationItem}>
-            <Link className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')} to="/services">SERVICES</Link>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')}
+              to="/services"
+            >SERVICES</Link>
           </li>
           <li className={s.navigationItem}>
-            <Link className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')} to="/faq">FAQ</Link>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')}
+              to="/faq"
+            >FAQ</Link>
           </li>
           <li className={s.navigationItem}>
             <a className={s.navigationLink} href={util.blog}>BLOG</a>
           </li>
           <li className={s.navigationItem}>
-            <Link className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')} to="/booking-manage">MANAGE BOOKING</Link>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')}
+              to="/booking-manage"
+            >MANAGE BOOKING</Link>
           </li>
           <li className={s.navigationItem}>
             <a className={s.navigationLink} href={util.backend}>{accountText}</a>
@@ -53,19 +64,31 @@ export default class Navigation extends Component {
             <Logo />
             <ul className={classNames(s.navigation, this.state.visible ? 'visible' : '')} role="menu">
               <li className={s.navigationItem}>
-                <Link className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')} to="/about">ABOUT</Link>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')}
+                  to="/about"
+                >ABOUT</Link>
               </li>
               <li className={s.navigationItem}>
-                <Link className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')} to="/services">SERVICES</Link>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')}
+                  to="/services"
+                >SERVICES</Link>
               </li>
               <li className={s.navigationItem}>
-                <Link className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')} to="/faq">FAQ</Link>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')}
+                  to="/faq"
+                >FAQ</Link>
               </li>
               <li className={s.navigationItem}>
                 <a className={s.navigationLink} href={util.blog}>BLOG</a>
               </li>
               <li className={s.navigationItem}>
-                <Link className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')} to="/booking-manage">MANAGE BOOKING</Link>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')}
+                  to="/booking-manage"
+                >MANAGE BOOKING</Link>
               </li>
               <li className={s.navigationItem}>
                 <a className={s.navigationLink} href={util.backend}>{accountText}</a>

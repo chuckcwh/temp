@@ -1,31 +1,24 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import s from './MultiSelect.css';
 
-class MultiSelect extends Component {
-
-  render() {
-    const { onBlur, onChange, options, value, ...rest } = this.props
-    const parse = event => {
-      // console.log(event);
-      return event;
-    }
-    const val = Array.isArray(value) ? value.map(JSON.stringify) : JSON.stringify(value)
-    return (
-      <div className={s.multiSelect}>
-        <Select 
-          multi={true}
-          options={options}
-          onBlur={event => onBlur(parse(value))}
-          onChange={event => onChange(parse(event))}
-          value={value}
-          {...rest}
-        />
-      </div>
-    )
-  }
-}
+const MultiSelect = (props) => {
+  const { onBlur, onChange, options, value, ...rest } = props;
+  // const val = Array.isArray(value) ? value.map(JSON.stringify) : JSON.stringify(value);
+  return (
+    <div className={s.multiSelect}>
+      <Select
+        multi
+        options={options}
+        onBlur={() => onBlur(value)}
+        onChange={event => onChange(event)}
+        value={value}
+        {...rest}
+      />
+    </div>
+  );
+};
 
 MultiSelect.propTypes = {
   onBlur: PropTypes.func.isRequired,
@@ -34,10 +27,10 @@ MultiSelect.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([
       React.PropTypes.string,
-      React.PropTypes.number
-    ])
+      React.PropTypes.number,
+    ]),
   })),
-  value: PropTypes.any // array or individual value
+  value: PropTypes.any,
 };
 
 export default MultiSelect;

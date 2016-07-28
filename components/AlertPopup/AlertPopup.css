@@ -1,7 +1,7 @@
 @import '../variables.css';
 
 .alertPopup {
-	& .popupDialog {
+  & .popupDialog {
     box-sizing: border-box;
     width: 25%;
     margin-left: -12.5%;

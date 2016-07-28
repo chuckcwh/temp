@@ -1,19 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import s from './CloseButton.css';
 
-class CloseButton extends Component {
-
-  render() {
-    return (
-      <a onClick={() => this.props.onCloseClicked()} role="button" className={s.closeButton}>&times;</a>
-    );
-  }
-}
-
-CloseButton.displayName = 'CloseButton';
+const CloseButton = (props) => (
+  <a onClick={() => props.onCloseClicked()} role="button" className={s.closeButton}>&times;</a>
+);
 
 CloseButton.propTypes = {
-  onCloseClicked: React.PropTypes.func
+  onCloseClicked: React.PropTypes.func,
 };
 
 export default CloseButton;

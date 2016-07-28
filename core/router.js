@@ -39,6 +39,9 @@ function matchURI(route, path) {
 // Find the route matching the specified location (context), fetch the required data,
 // instantiate and return a React component
 function resolve(routes, context) {
+  // if (context.error) {
+  //   console.error(context.error);
+  // }
   for (const route of routes) {
     const params = matchURI(route, context.error ? '/error' : context.pathname);
 

@@ -9,11 +9,11 @@
   }
 
   & .testimonialsList {
-    /*display: flex;
+    /* display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: flex-start;*/
-    margin: 0 0 20px 0;
+    align-items: flex-start; */
+    margin: 0 0 20px;
     list-style: none;
 
     @media (--sm-viewport) {
@@ -28,7 +28,7 @@
       display: inline-block;
       position: relative;
       background-color: #fff;
-      margin: 0 15px 65px 15px;
+      margin: 0 15px 65px;
       padding: 0;
       width: 300px;
       height: 280px;
@@ -37,7 +37,7 @@
       line-height: 1.5em;
 
       @media (--sm-viewport) {
-        margin: 0 0 65px 0;
+        margin: 0 0 65px;
       }
 
       & .testimonialsWrapper {

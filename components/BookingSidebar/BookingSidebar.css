@@ -2,7 +2,7 @@
 
 .bookingSidebar {
   margin-left: 40px;
-  background-color: #ffffff;
+  background-color: #fff;
   flex: 5;
   align-self: flex-start;
 
@@ -59,7 +59,7 @@
   }
 
   @media (--sm-viewport) {
-    margin: 50px 0 0 0;
+    margin: 50px 0 0;
     width: 100%;
   }
 }

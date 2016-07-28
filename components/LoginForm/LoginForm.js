@@ -2,65 +2,62 @@ import React, { Component, PropTypes } from 'react';
 import Loader from 'react-loader';
 import { reduxForm } from 'redux-form';
 import s from './LoginForm.css';
-import sAccount from '../Account/Account.css';
 import { login, loginClient } from '../../actions';
 
-const submit = (props) => {
-  return (values, dispatch) => {
-    return new Promise((resolve, reject) => {
-      const errors = {};
-      if (!values.email) {
-        errors.email = 'Email is required';
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address';
-      }
-      if (!values.password) {
-        errors.password = 'Password is required';
-      }
-      if (errors.email || errors.password) {
-        reject(errors);
+const submit = (props) => (values, dispatch) => (
+  new Promise((resolve, reject) => {
+    const errors = {};
+    if (!values.email) {
+      errors.email = 'Email is required';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      errors.email = 'Invalid email address';
+    }
+    if (!values.password) {
+      errors.password = 'Password is required';
+    }
+    if (errors.email || errors.password) {
+      reject(errors);
+    } else {
+      if (props.type === 'client') {
+        dispatch(loginClient({
+          email: values.email,
+          password: values.password,
+        })).then((res) => {
+          if (res && res.response && res.response.user && res.response.user.type === 'Client') {
+            props.onSuccess && props.onSuccess();
+            resolve();
+          } else {
+            props.onFailure && props.onFailure();
+            reject({ _error: 'Failed to login.' });
+          }
+        });
       } else {
-        if (props.type === 'client') {
-          dispatch(loginClient({
-            email: values.email,
-            password: values.password
-          })).then((res) => {
-            if (res && res.response && res.response.user && res.response.user.type === 'Client') {
-              props.onSuccess && props.onSuccess();
-              resolve();
-            } else {
-              props.onFailure && props.onFailure();
-              reject({ _error: 'Failed to login.' });
-            }
-          });;
-        } else {
-          dispatch(login({
-            email: values.email,
-            password: values.password
-          })).then((res) => {
-            if (res && res.response && res.response.user) {
-              props.onSuccess && props.onSuccess();
-              resolve();
-            } else {
-              props.onFailure && props.onFailure();
-              reject({ _error: 'Failed to login.' });
-            }
-          });
-        }
+        dispatch(login({
+          email: values.email,
+          password: values.password,
+        })).then((res) => {
+          if (res && res.response && res.response.user) {
+            props.onSuccess && props.onSuccess();
+            resolve();
+          } else {
+            props.onFailure && props.onFailure();
+            reject({ _error: 'Failed to login.' });
+          }
+        });
       }
-    });
-  }
-}
+    }
+  })
+);
 
 class LoginForm extends Component {
 
   render() {
-    const { 
-      fields: { email, password }, 
+    const {
+      fields: { email, password },
       error,
-      handleSubmit, 
+      handleSubmit,
       submitting,
-      type
+      type,
     } = this.props;
     return (
       <form className={s.loginForm} onSubmit={handleSubmit(submit(this.props))}>
@@ -68,7 +65,7 @@ class LoginForm extends Component {
           <h3>eBeeCare {type === 'client' ? 'Client ' : ''}Login</h3>
           <div className="IconInput EmailInput">
             <span />
-            <input type="email" placeholder="Enter Email" {...email} ref={(c) => { this._startInput = c }} autoFocus={true} />
+            <input type="email" placeholder="Enter Email" {...email} ref={(c) => (this.startInput = c)} autoFocus />
           </div>
           <div className="IconInput PasswordInput">
             <span />
@@ -95,13 +92,13 @@ LoginForm.propTypes = {
   type: PropTypes.string,
   focused: PropTypes.bool,
   onSuccess: PropTypes.func,
-  onFailure: PropTypes.func
-}
+  onFailure: PropTypes.func,
+};
 
 const reduxFormConfig = {
   form: 'loginForm',
   fields: ['email', 'password'],
-  destroyOnUnmount: true
-}
+  destroyOnUnmount: true,
+};
 
 export default reduxForm(reduxFormConfig)(LoginForm);

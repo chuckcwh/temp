@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import s from './Logo.css';
 import Link from '../Link';
 
-export default class extends Component {
+const image = require('./logo.png');
 
-  render() {
-    return (
-      <div className={s.logo}>
-        <Link to="/">
-          <img src={require('./logo.png')} />
-        </Link>
-      </div>
-    );
-  }
+const Logo = () => (
+  <div className={s.logo}>
+    <Link to="/">
+      <img src={image} alt="eBeeCare" />
+    </Link>
+  </div>
+);
 
-}
+export default Logo;

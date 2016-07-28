@@ -8,7 +8,8 @@
     margin-bottom: 50px;
     column-count: 2;
 
-    h3, h3 a {
+    h3,
+    h3 a {
       color: var(--secondary-color);
       font-weight: 600;
     }
@@ -33,7 +34,7 @@
         flex: 0 0 140px;
 
         & .featuresItemIcon {
-          padding: 10px 20px 0 20px;
+          padding: 10px 20px 0;
 
           @media (--sm-viewport) {
             padding: 0 20%;
@@ -52,7 +53,7 @@
         & .featuresItemTitle {
           color: var(--secondary-color);
           font-size: 22px;
-          padding: 5px 0 5px 0;
+          padding: 5px 0;
 
           @media (--sm-viewport) {
             padding-top: 0;

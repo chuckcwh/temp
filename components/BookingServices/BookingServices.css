@@ -115,7 +115,8 @@
     margin-bottom: 100px;
     column-count: 3;
 
-    & h3, & h3 a {
+    & h3,
+    & h3 a {
       color: var(--secondary-color);
       font-weight: 600;
     }
@@ -132,7 +133,7 @@
         width: 100%;
 
         & .bookingServicesRadio {
-          // margin-right: 5px;
+          /* margin-right: 5px; */
         }
 
         & .bookingServicesRadioLabel {

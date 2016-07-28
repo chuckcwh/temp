@@ -25,7 +25,6 @@
     }
 
     & .bookingPostCompleteFooter {
-      
       & :global a.btn-primary {
         color: #fff;
         text-transform: none;

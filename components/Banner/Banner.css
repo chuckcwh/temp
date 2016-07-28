@@ -1,5 +1,4 @@
 @import '../variables.css';
-/*@import 'react-select/dist/react-select.css';*/
 
 .banner {
   position: relative;
@@ -13,7 +12,7 @@
     & :global .slick-dots {
       bottom: 0;
 
-      & li button:before {
+      & li button::before {
         color: white;
       }
     }
@@ -81,7 +80,7 @@
 
       & .bannerItemInput {
         width: 260px;
-        margin: auto 20px auto 20px;
+        margin: auto 20px;
 
         @media (--sm-viewport) {
           width: 260px;
@@ -89,13 +88,13 @@
 
         & :global .is-searchable {
           text-align: center;
-          line-height: 40px
+          line-height: 40px;
         }
 
       }
 
       & .bannerItemButton {
-        margin: auto 20px auto 20px;
+        margin: auto 20px;
 
         @media (--sm-viewport) {
           margin: auto;
@@ -103,7 +102,7 @@
       }
 
       & :global .Select-control {
-        border-radius: 0px;
+        border-radius: 0;
         border-color: var(--secondary-color);
         line-height: 40px;
 
@@ -115,6 +114,7 @@
           & :global .Select-clear {
             font-size: 30px;
             line-height: 48px;
+
             @apply --font-smoothing;
           }
         }
@@ -126,13 +126,13 @@
 
             background: #fff;
             position: absolute;
-            right: 0px;
-            top: 0px;
+            right: 0;
+            top: 0;
             width: 25px;
             pointer-events: none;
           }
 
-          & :global .Select-arrow:before {
+          & :global .Select-arrow::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -144,7 +144,7 @@
             border-right: 9px solid transparent;
           }
 
-          & :global .Select-arrow:after {
+          & :global .Select-arrow::after {
             content: '';
             position: absolute;
             top: 50%;
@@ -174,7 +174,7 @@
 
       & :global .Select-menu-outer {
         line-height: 25px;
-        border-radius: 0px;
+        border-radius: 0;
         border-color: var(--secondary-color);
         width: 260px;
 
@@ -206,9 +206,7 @@
   }
 
   & .bannerBg {
-    // position: absolute;
     height: 500px;
-    // width: 100%;
     background-color: var(--body-bg);
     background-position: center;
     background-size: cover;
@@ -219,7 +217,7 @@
       width: 100%;
       top: 245px;
       text-align: center;
-      color: #ffffff;
+      color: #fff;
       font-size: 37px;
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 
@@ -233,11 +231,11 @@
     background-image: url(./banner-1.jpg);
 
     @media (--sm-viewport) {
-      background-position: -500px 0px;
+      background-position: -500px 0;
     }
 
     @media (--xs-viewport) {
-      background-position: -550px 0px;
+      background-position: -550px 0;
     }
   }
 
@@ -245,7 +243,7 @@
     background-image: url(./banner-2.jpg);
 
     @media (--sm-viewport) {
-      background-position: 0px 0px;
+      background-position: 0 0;
     }
   }
 }

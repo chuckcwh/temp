@@ -15,7 +15,8 @@
     & :global .slick-slider {
       margin-bottom: 0;
 
-      & :global .slick-prev:before, & :global .slick-next:before {
+      & :global .slick-prev::before,
+      & :global .slick-next::before {
         color: #c3c3c3;
 
         @media (min-width: 681px) {

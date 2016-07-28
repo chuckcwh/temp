@@ -9,7 +9,7 @@
     margin: 0;
     list-style: none;
     justify-content: space-between;
-    alignItems: center;
+    align-items: center;
     border-bottom: 1px solid var(--secondary-color);
 
     @media (--sm-viewport) {
@@ -25,7 +25,7 @@
     padding: 10px 0;
     list-style: none;
     justify-content: flex-start;
-    alignItems: center;
+    align-items: center;
 
     @media (--lg-viewport) {
       flex-wrap: wrap;

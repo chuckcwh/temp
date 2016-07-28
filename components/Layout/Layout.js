@@ -1,38 +1,34 @@
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
+import React, { PropTypes } from 'react';
 import '../../assets/fonts/proxima-nova.css';
 import s from './Layout.css';
-import Container from '../Container';
 import Navigation from '../Navigation';
 import Footer from '../Footer';
 import history from '../../core/history';
 
-export default class Layout extends Component {
-
-  static propTypes = {
-    children: PropTypes.element.isRequired,
-  };
-
-  render() {
-    const location = history.getCurrentLocation();
-    if (location && location.query && location.query.widget == 'true') {
-      return (
-        <div className={s.layout}>
-          <div className={s.body}>
-            {this.props.children}
-          </div>
+const Layout = (props) => {
+  const location = history.getCurrentLocation();
+  if (location && location.query && location.query.widget === 'true') {
+    return (
+      <div className={s.layout}>
+        <div className={s.body}>
+          {props.children}
         </div>
-      );
-    } else {
-      return (
-        <div className={s.layout}>
-          <Navigation pullRight={true} />
-          <div className={s.body}>
-            {this.props.children}
-          </div>
-          <Footer />
-        </div>
-      );
-    }
+      </div>
+    );
   }
-}
+  return (
+    <div className={s.layout}>
+      <Navigation pullRight />
+      <div className={s.body}>
+        {props.children}
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+Layout.propTypes = {
+  children: PropTypes.element.isRequired,
+};
+
+export default Layout;

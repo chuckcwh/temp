@@ -1,8 +1,8 @@
 @import 'normalize.css';
-
 @import '../variables.css';
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background-color: var(--body-bg);
@@ -32,8 +32,8 @@ strong {
 
 hr {
   border: 0;
-  border-top: 1px solid #E0DFDF;
-  border-bottom: 1px solid #FEFEFE;
+  border-top: 1px solid #e0dfdf;
+  border-bottom: 1px solid #fefefe;
   background: transparent url(./divider.png) no-repeat center 0;
   height: 6px;
 }
@@ -47,105 +47,118 @@ a {
   }
 }
 
-:global a.btn, :global button.btn {
+:global a.btn,
+:global button.btn {
   text-decoration: none;
   border: 0;
-  cursor:pointer;
+  cursor: pointer;
   text-align: center;
 }
 
-:global a.btn-primary, :global button.btn-primary {
+:global a.btn-primary,
+:global button.btn-primary {
   display: inline-block;
   background-color: var(--secondary-color);
   text-decoration: none;
   color: #fff;
   width: 260px;
-  padding: 0.3em 0 0.3em 0;
+  padding: 0.3em 0;
   font-size: 25px;
-  @apply --font-smoothing;
   cursor: pointer;
-  /*border-bottom: 2px solid #cb760a;
+
+  @apply --font-smoothing;
+
+  /* border-bottom: 2px solid #cb760a;
   box-shadow: inset 0 -2px #cb760a;
   &:hover {
     background-color: #cb760a;
-  }*/
+  } */
 }
 
-:global a.btn-secondary, :global button.btn-secondary {
+:global a.btn-secondary,
+:global button.btn-secondary {
   display: inline-block;
   background-color: #f2635f;
   text-decoration: none;
   color: #fff;
   width: 260px;
-  padding: 0.3em 0 0.3em 0;
+  padding: 0.3em 0;
   font-size: 25px;
-  @apply --font-smoothing;
   cursor: pointer;
   border-bottom: 2px solid #cd5551;
   box-shadow: inset 0 -2px #cd5551;
+
+  @apply --font-smoothing;
+
   &:hover {
     background-color: #cd5551;
   }
 }
 
-:global a.btn-primary:disabled, :global button.btn-primary:disabled, :global a.btn-secondary:disabled, :global button.btn-secondary:disabled {
+:global a.btn-primary:disabled,
+:global button.btn-primary:disabled,
+:global a.btn-secondary:disabled,
+:global button.btn-secondary:disabled {
   background-color: #969696;
   cursor: default;
 }
 
-:global a.btn-small, :global button.btn-small {
+:global a.btn-small,
+:global button.btn-small {
   width: 150px;
   font-size: 21px;
-  padding: 0.25em 0 0.25em 0;
+  padding: 0.25em 0;
 }
 
-:global a.btn-inline, :global button.btn-inline {
+:global a.btn-inline,
+:global button.btn-inline {
   margin-left: 20px;
   margin-right: 20px;
 }
 
-:global input[type=checkbox], :global input[type=radio] {
+:global input[type=checkbox],
+:global input[type=radio] {
   cursor: pointer;
 }
 
-:global input[type=checkbox]:not(old) {
-  width     : 2em;
-  margin    : 0;
-  padding   : 0;
-  font-size : 1em;
-  opacity   : 0;
+:global input[type=checkbox] {
+  width: 2em;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  opacity: 0;
 
   & + label {
-    display     : inline-block;
-    margin-left : -2em;
-    line-height : 1.5em;
-    cursor      : pointer;
+    display: inline-block;
+    margin-left: -2em;
+    line-height: 1.5em;
+    cursor: pointer;
 
     & > span:first-child {
-      display          : inline-block;
-      width            : 0.875em;
-      height           : 0.875em;
-      margin           : 0.25em 0.5em 0.25em 0.25em;
-      border           : 0.0625em solid var(--secondary-color);
-      border-radius    : 0;
-      background       : transparent;
-      vertical-align   : bottom;
-      cursor           : pointer;
+      display: inline-block;
+      width: 0.875em;
+      height: 0.875em;
+      margin: 0.25em 0.5em 0.25em 0.25em;
+      border: 0.0625em solid var(--secondary-color);
+      border-radius: 0;
+      background: transparent;
+      vertical-align: bottom;
+      cursor: pointer;
     }
   }
 
   &:checked + label > span {
     color: var(--secondary-color);
 
-    &:first-child:before {
-      content     : '✓';
-      display     : block;
-      width       : 1em;
-      color       : var(--secondary-color);
-      font-size   : 0.875em;
-      line-height : 1em;
-      text-align  : center;
-      font-weight : bold;
+    &:first-child::before {
+      content: '✓';
+      display: block;
+      width: 1em;
+      color: var(--secondary-color);
+      font-size: 0.875em;
+      line-height: 1em;
+      text-align: center;
+      font-weight: bold;
     }
   }
 
@@ -154,29 +167,30 @@ a {
   }
 }
 
-:global input[type=radio]:not(old) {
-  width     : 2em;
-  margin    : 0;
-  padding   : 0;
-  font-size : 1em;
-  opacity   : 0;
+:global input[type=radio] {
+  width: 2em;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  opacity: 0;
 
   & + label {
-    display     : inline-block;
-    margin-left : -2em;
-    line-height : 1.5em;
-    cursor      : pointer;
+    display: inline-block;
+    margin-left: -2em;
+    line-height: 1.5em;
+    cursor: pointer;
 
     & > span:first-child {
-      display          : inline-block;
-      width            : 0.875em;
-      height           : 0.875em;
-      margin           : 0.25em 0.5em 0.25em 0.25em;
-      /*border           : 0.0625em solid var(--secondary-color);*/
-      border           : 1px solid var(--secondary-color);
-      border-radius    : 50%;
-      vertical-align   : bottom;
-      cursor           : pointer;
+      display: inline-block;
+      width: 0.875em;
+      height: 0.875em;
+      margin: 0.25em 0.5em 0.25em 0.25em;
+      border: 1px solid var(--secondary-color);
+      border-radius: 50%;
+      vertical-align: bottom;
+      cursor: pointer;
+
+      /* border: 0.0625em solid var(--secondary-color); */
     }
   }
 
@@ -185,19 +199,22 @@ a {
   }
 
   &:checked + label > span:first-child > span {
-    display          : block;
-    width            : 0.4em;
-    height           : 0.4em;
-    margin           : 0.175em;
-    /*border           : 0.0625em solid var(--secondary-color);*/
-    border           : 1px solid var(--secondary-color);
-    border-radius    : 50%;
-    background       : var(--secondary-color);
-    cursor           : pointer;
+    display: block;
+    width: 0.4em;
+    height: 0.4em;
+    margin: 0.175em;
+    border: 1px solid var(--secondary-color);
+    border-radius: 50%;
+    background: var(--secondary-color);
+    cursor: pointer;
+
+    /* border: 0.0625em solid var(--secondary-color); */
   }
 }
 
-input[type=text], input[type=email], input[type=password] {
+input[type=text],
+input[type=email],
+input[type=password] {
   width: 230px;
   margin: 20px 20px 0 0;
   padding: 15px;
@@ -234,7 +251,7 @@ input[type=text], input[type=email], input[type=password] {
 
   & > span {
     position: absolute;
-    display: inline;
+    display: inline-block;
     width: 50px;
     height: 55px;
   }
@@ -328,7 +345,8 @@ textarea {
   }
 }
 
-input:disabled, textarea:disabled {
+input:disabled,
+textarea:disabled {
   color: #969696;
   background-color: #f3f3f3;
 }
@@ -366,7 +384,7 @@ input:disabled, textarea:disabled {
     pointer-events: none;
   }
 
-  & > span:before {
+  & > span::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -378,7 +396,7 @@ input:disabled, textarea:disabled {
     border-right: 10px solid transparent;
   }
 
-  & > span:after {
+  & > span::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -404,7 +422,7 @@ input:disabled, textarea:disabled {
   position: relative;
 }
 
-:global .nav-caret:before {
+:global .nav-caret::before {
   content: '';
   position: absolute;
   top: 0;
@@ -414,12 +432,12 @@ input:disabled, textarea:disabled {
   border-right: 10px solid transparent;
 }
 
-:global .nav-caret:after {
+:global .nav-caret::after {
   content: '';
   position: absolute;
   left: 1px;
   top: 0;
-  border-top: 9px solid #ffffff;
+  border-top: 9px solid #fff;
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
 }
@@ -429,7 +447,7 @@ input:disabled, textarea:disabled {
 
   & .body {
     overflow: hidden;
-    
+
     @media (--sm-viewport) {
       margin-top: 57px;
     }
@@ -461,7 +479,7 @@ input:disabled, textarea:disabled {
 }
 
 :global .error {
-  color: #FF0000;
+  color: #f00;
 }
 
 :global .featured {
@@ -496,72 +514,95 @@ input:disabled, textarea:disabled {
   background-repeat: no-repeat;
   background-size: calc(var(--popular-icon-size) * 5 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.physiotherapy {
   background-position: calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.heart {
   background-position: calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.stethoscope {
   background-position: calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.syringe {
   background-position: calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.bandage {
   background-position: calc(var(--popular-icon-size) * -4 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.report {
   background-position: calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.motherchild {
   background-position: calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.housecall {
   background-position: calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.stomach {
   background-position: calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.lung {
   background-position: calc(var(--popular-icon-size) * -4 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.headheart {
   background-position: calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.diabetic {
   background-position: calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.drip {
   background-position: calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.nutrition {
   background-position: calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.headdots {
   background-position: calc(var(--popular-icon-size) * -4 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.needle {
   background-position: calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.urinary {
   background-position: calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.elderly {
   background-position: calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.ebeecare {
   background-position: calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.questionmark {
   background-position: calc(var(--popular-icon-size) * -4 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -3 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.homeheart {
   background-position: calc(var(--popular-icon-size) * 0 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -4 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.baby {
   background-position: calc(var(--popular-icon-size) * -1 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -4 * var(--popular-icon-multipler));
 }
+
 :global .service-icon.breast {
   background-position: calc(var(--popular-icon-size) * -2 * var(--popular-icon-multipler)) calc(var(--popular-icon-size) * -4 * var(--popular-icon-multipler));
 }
@@ -656,7 +697,9 @@ input:disabled, textarea:disabled {
     height: 0;
     overflow: hidden;
 
-    & :global iframe, & :global object, & :global embed {
+    & :global iframe,
+    & :global object,
+    & :global embed {
       position: absolute;
       top: 0;
       left: 0;

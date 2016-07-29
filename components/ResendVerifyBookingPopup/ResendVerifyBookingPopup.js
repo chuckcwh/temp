@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import classNames from 'classnames';
 import s from './ResendVerifyBookingPopup.css';
@@ -95,7 +94,8 @@ class ResendVerifyBookingPopup extends Component {
                     ref={(c) => (this.startInput = c)}
                     className="HpInput"
                     type="text"
-                    valueLink={linkState(this, 'hp')}
+                    value={this.state.hp}
+                    onChange={(e) => this.setState({ hp: e.target.value })}
                     placeholder="Enter mobile number"
                     pattern="\d{8}"
                     required

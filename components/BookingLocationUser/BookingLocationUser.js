@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import linkState from 'react-link-state';
 import classNames from 'classnames';
 import moment from 'moment';
 import Loader from 'react-loader';
@@ -707,7 +706,7 @@ class BookingLocationUser extends Component {
           <div style={{ marginTop: '40px' }}>
             <div>Additional Info:</div>
             <textarea
-              onChange={(e) => { this.setState({ additionalInfo: e.target.value }) }}
+              onChange={(e) => this.setState({ additionalInfo: e.target.value })}
               value={this.state.additionalInfo}
             />
           </div>

@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import linkState from 'react-link-state';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Loader from 'react-loader';
@@ -254,7 +253,8 @@ class BookingConfirmation extends Component {
                   type="text"
                   id="client_contactNumber"
                   name="client_contactNumber"
-                  valueLink={linkState(this, 'client_contactNumber')}
+                  value={this.state.client_contactNumber}
+                  onChange={(e) => this.setState({ client_contactNumber: e.target.value })}
                   placeholder="Contact Number*"
                   maxLength="8"
                   required
@@ -418,7 +418,8 @@ class BookingConfirmation extends Component {
                 <textarea
                   id="address"
                   name="address"
-                  valueLink={linkState(this, 'address')}
+                  value={this.state.address}
+                  onChange={(e) => this.setState({ address: e.target.value })}
                   placeholder="Enter Address*"
                   required
                 />
@@ -431,7 +432,8 @@ class BookingConfirmation extends Component {
                   type="text"
                   id="unitNumber"
                   name="unitNumber"
-                  valueLink={linkState(this, 'unitNumber')}
+                  value={this.state.unitNumber}
+                  onChange={(e) => this.setState({ unitNumber: e.target.value })}
                   placeholder="Enter Unit Number"
                 />
               </div>

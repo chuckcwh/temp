@@ -2,10 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import linkState from 'react-link-state';
 import moment from 'moment';
 import Loader from 'react-loader';
-import DatePicker from 'react-datepicker';
 import s from './BookingDetails.css';
 import Container from '../Container';
 import InlineForm from '../InlineForm';
@@ -214,6 +212,7 @@ class BookingDetails extends Component {
       sessionDetails,
       caregiverSection,
       paymentButton;
+    const { booking, bookingFetching } = this.props;
     if (this.state.editing && this.props.inlineForm && /^(userDetails)$/i.test(this.props.inlineForm.name)) {
       userDetails = <InlineForm />;
     } else {
@@ -221,210 +220,212 @@ class BookingDetails extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_firstName}</div>
+            <div className="TableRowItem3">{booking && booking.client_firstName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_lastName}</div>
+            <div className="TableRowItem3">{booking && booking.client_lastName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactEmail}</div>
+            <div className="TableRowItem3">{booking && booking.client_contactEmail}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Contact Number</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactNumber}</div>
+            <div className="TableRowItem3">{booking && booking.client_contactNumber}</div>
           </div>
         </div>
       );
     }
-    if (this.state.editingPatient) {
-      patientDetails = (
-        <div>
-          <form>
-            <div className="TableRow">
-              <div className="TableRowItem1">First Name</div>
-              <div className="TableRowItem3">
-                <input
-                  type="text"
-                  id="patient_firstName"
-                  name="patient_firstName"
-                  value={this.props.booking && this.props.booking.patient_firstName}
-                  placeholder="First Name*"
-                  maxLength="50"
-                  required
-                />
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Last Name</div>
-              <div className="TableRowItem3">
-                <input
-                  type="text"
-                  id="patient_lastName"
-                  name="patient_lastName"
-                  value={this.props.booking && this.props.booking.patient_lastName}
-                  placeholder="Last Name*"
-                  maxLength="50"
-                  required
-                />
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Gender</div>
-              <div className="TableRowItem3">
-                <div className="radio radio-inline">
-                  <input
-                    type="radio"
-                    id="patient_gender_male"
-                    name="patient_gender"
-                    checked={this.props.booking && this.props.booking.patient_gender === 'Male'}
-                    value="Male"
-                    required
-                  />
-                  <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
-                </div>
-                <div className="radio radio-inline">
-                  <input
-                    type="radio"
-                    id="patient_gender_female"
-                    name="patient_gender"
-                    checked={this.props.booking && this.props.booking.patient_gender === 'Female'}
-                    value="Female"
-                    required
-                  />
-                  <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
-                </div>
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Date of Birth</div>
-              <div className="TableRowItem3">
-                <DatePicker
-                  selected={moment(this.props.booking.patient_dob)}
-                  maxDate={moment()}
-                  dateFormat="YYYY-MM-DD"
-                  showYearDropdown
-                  onChange={this.onSelectDob}
-                  placeholderText="Date of Birth* (Y-M-D)"
-                />
-              </div>
-            </div>
-            <div>
-              <a href="#" className="btn btn-primary" onClick={this.onClickSave('patient')}>Save</a>
-              <a href="#" className="btn btn-primary" onClick={this.onClickStopEdit('patient')}>Cancel</a>
-            </div>
-          </form>
+    // if (this.state.editingPatient) {
+    //   patientDetails = (
+    //     <div>
+    //       <form>
+    //         <div className="TableRow">
+    //           <div className="TableRowItem1">First Name</div>
+    //           <div className="TableRowItem3">
+    //             <input
+    //               type="text"
+    //               id="patient_firstName"
+    //               name="patient_firstName"
+    //               value={booking && booking.patient_firstName}
+    //               placeholder="First Name*"
+    //               maxLength="50"
+    //               required
+    //             />
+    //           </div>
+    //         </div>
+    //         <div className="TableRow">
+    //           <div className="TableRowItem1">Last Name</div>
+    //           <div className="TableRowItem3">
+    //             <input
+    //               type="text"
+    //               id="patient_lastName"
+    //               name="patient_lastName"
+    //               value={booking && booking.patient_lastName}
+    //               placeholder="Last Name*"
+    //               maxLength="50"
+    //               required
+    //             />
+    //           </div>
+    //         </div>
+    //         <div className="TableRow">
+    //           <div className="TableRowItem1">Gender</div>
+    //           <div className="TableRowItem3">
+    //             <div className="radio radio-inline">
+    //               <input
+    //                 type="radio"
+    //                 id="patient_gender_male"
+    //                 name="patient_gender"
+    //                 checked={booking && booking.patient_gender === 'Male'}
+    //                 value="Male"
+    //                 required
+    //               />
+    //               <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
+    //             </div>
+    //             <div className="radio radio-inline">
+    //               <input
+    //                 type="radio"
+    //                 id="patient_gender_female"
+    //                 name="patient_gender"
+    //                 checked={booking && booking.patient_gender === 'Female'}
+    //                 value="Female"
+    //                 required
+    //               />
+    //               <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
+    //             </div>
+    //           </div>
+    //         </div>
+    //         <div className="TableRow">
+    //           <div className="TableRowItem1">Date of Birth</div>
+    //           <div className="TableRowItem3">
+    //             <DatePicker
+    //               selected={moment(booking.patient_dob)}
+    //               maxDate={moment()}
+    //               dateFormat="YYYY-MM-DD"
+    //               showYearDropdown
+    //               onChange={this.onSelectDob}
+    //               placeholderText="Date of Birth* (Y-M-D)"
+    //             />
+    //           </div>
+    //         </div>
+    //         <div>
+    //           <a href="#" className="btn btn-primary" onClick={this.onClickSave('patient')}>Save</a>
+    //           <a href="#" className="btn btn-primary" onClick={this.onClickStopEdit('patient')}>Cancel</a>
+    //         </div>
+    //       </form>
+    //     </div>
+    //   );
+    // } else {
+    patientDetails = (
+      <div>
+        <div className="TableRow">
+          <div className="TableRowItem1">First Name</div>
+          <div className="TableRowItem3">{booking && booking.patient_firstName}</div>
         </div>
-      );
-    } else {
-      patientDetails = (
-        <div>
-          <div className="TableRow">
-            <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_firstName}</div>
-          </div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_lastName}</div>
-          </div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Gender</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_gender}</div>
-          </div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Date of Birth</div>
-            <div className="TableRowItem3">
-              {this.props.booking && this.props.booking.patient_dob
-                && moment(this.props.booking.patient_dob, 'YYYY-MM-DD').format('ll')}
-            </div>
-          </div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Additional Notes</div>
-            <div className="TableRowItem3">
-              {this.props.booking && this.props.booking.case && this.props.booking.case.notes}
-            </div>
+        <div className="TableRow">
+          <div className="TableRowItem1">Last Name</div>
+          <div className="TableRowItem3">{booking && booking.patient_lastName}</div>
+        </div>
+        <div className="TableRow">
+          <div className="TableRowItem1">Gender</div>
+          <div className="TableRowItem3">{booking && booking.patient_gender}</div>
+        </div>
+        <div className="TableRow">
+          <div className="TableRowItem1">Date of Birth</div>
+          <div className="TableRowItem3">
+            {booking && booking.patient_dob
+              && moment(booking.patient_dob, 'YYYY-MM-DD').format('ll')}
           </div>
         </div>
-      );
-    }
-    if (this.state.editingAddress) {
-      addressDetails = (
-        <div>
-          <form>
-            <div className="TableRow">
-              <div className="TableRowItem1">Postal Code</div>
-              <div className="TableRowItem3">
-                <input
-                  type="text"
-                  id="postalCode"
-                  name="postalCode"
-                  onChange={this.onChangePostalCode}
-                  value={this.state.postalCode}
-                  placeholder="Enter Postal Code*"
-                  required
-                />
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Address</div>
-              <div className="TableRowItem3">
-                <textarea
-                  id="address"
-                  name="address"
-                  valueLink={linkState(this, 'address')}
-                  placeholder="Enter Address*"
-                  required
-                />
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Unit Number</div>
-              <div className="TableRowItem3">
-                <input
-                  type="text"
-                  id="unitNumber"
-                  name="unitNumber"
-                  valueLink={linkState(this, 'unitNumber')}
-                  placeholder="Enter Unit Number"
-                />
-              </div>
-            </div>
-            <div>
-              <a href="#" className="btn btn-primary" onClick={this.onClickSave('address')}>Save</a>
-              <a href="#" className="btn btn-primary" onClick={this.onClickStopEdit('address')}>Cancel</a>
-            </div>
-          </form>
-        </div>
-      );
-    } else {
-      addressDetails = (
-        <div>
-          <div>
-            {this.props.booking && this.props.booking.case
-              && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].address}
-          </div>
-          <div>
-            {this.props.booking && this.props.booking.case
-              && this.props.booking.case.addresses[0] && this.props.booking.case.addresses[0].unitNumber}
+        <div className="TableRow">
+          <div className="TableRowItem1">Additional Notes</div>
+          <div className="TableRowItem3">
+            {booking && booking.case && booking.case.notes}
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+    // }
+    // if (this.state.editingAddress) {
+    //   addressDetails = (
+    //     <div>
+    //       <form>
+    //         <div className="TableRow">
+    //           <div className="TableRowItem1">Postal Code</div>
+    //           <div className="TableRowItem3">
+    //             <input
+    //               type="text"
+    //               id="postalCode"
+    //               name="postalCode"
+    //               onChange={this.onChangePostalCode}
+    //               value={this.state.postalCode}
+    //               placeholder="Enter Postal Code*"
+    //               required
+    //             />
+    //           </div>
+    //         </div>
+    //         <div className="TableRow">
+    //           <div className="TableRowItem1">Address</div>
+    //           <div className="TableRowItem3">
+    //             <textarea
+    //               id="address"
+    //               name="address"
+    //               value={this.state.address}
+    //               onChange={(e) => this.setState({ address: e.target.value })}
+    //               placeholder="Enter Address*"
+    //               required
+    //             />
+    //           </div>
+    //         </div>
+    //         <div className="TableRow">
+    //           <div className="TableRowItem1">Unit Number</div>
+    //           <div className="TableRowItem3">
+    //             <input
+    //               type="text"
+    //               id="unitNumber"
+    //               name="unitNumber"
+    //               value={this.state.unitNumber}
+    //               onChange={(e) => this.setState({ unitNumber: e.target.value })}
+    //               placeholder="Enter Unit Number"
+    //             />
+    //           </div>
+    //         </div>
+    //         <div>
+    //           <a href="#" className="btn btn-primary" onClick={this.onClickSave('address')}>Save</a>
+    //           <a href="#" className="btn btn-primary" onClick={this.onClickStopEdit('address')}>Cancel</a>
+    //         </div>
+    //       </form>
+    //     </div>
+    //   );
+    // } else {
+    addressDetails = (
+      <div>
+        <div>
+          {booking && booking.case
+            && booking.case.addresses[0] && booking.case.addresses[0].address}
+        </div>
+        <div>
+          {booking && booking.case
+            && booking.case.addresses[0] && booking.case.addresses[0].unitNumber}
+        </div>
+      </div>
+    );
+    // }
     sessionDetails = (
       <div>
         <div className="TableRow TableRowHeader">
           <div className="TableRowItem2">Date</div>
           <div className="TableRowItem2">Session</div>
           <div className="TableRowItem2">
-            {(this.props.booking && this.props.booking.case && this.props.booking.case.isPaid) ? '' : 'Estimated '}Costs
+            {(booking && booking.case && booking.case.isPaid) ? '' : 'Estimated '}Costs
           </div>
           <div className="TableRowItem2">Status</div>
           <div className="TableRowItem1"></div>
         </div>
         {
-          this.props.booking && this.props.booking.case && this.props.booking.case.dates
-            && this.props.booking.case.dates.map(session => (
+          booking && booking.case && booking.case.dates
+            && booking.case.dates.map(session => (
               <div className="TableRow" key={session.id}>
                 <div className="TableRowItem2">{moment(session.dateTimeStart).format('D MMM')}</div>
                 <div className="TableRowItem2">{session.estTime}</div>
@@ -442,7 +443,7 @@ class BookingDetails extends Component {
       </div>
     );
     // show caregiver section only if case has been paid
-    if (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid) {
+    if (booking && booking.case && booking.case.isPaid) {
       caregiverSection = (
         <div className={s.bookingDetailsBodySection}>
           <div className={s.bookingDetailsBodySectionTitle}>
@@ -452,30 +453,30 @@ class BookingDetails extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Name</div>
               <div className="TableRowItem3">
-                {this.props.booking && this.props.booking.case
-                  && this.props.booking.case.quotes
-                  && this.props.booking.case.quotes[0]
-                  && this.props.booking.case.quotes[0].fullName}
+                {booking && booking.case
+                  && booking.case.quotes
+                  && booking.case.quotes[0]
+                  && booking.case.quotes[0].fullName}
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Email</div>
               <div className="TableRowItem3">
-                {this.props.booking && this.props.booking.case
-                  && this.props.booking.case.quotes
-                  && this.props.booking.case.quotes[0]
-                  && this.props.booking.case.quotes[0].user
-                  && this.props.booking.case.quotes[0].user.email}
+                {booking && booking.case
+                  && booking.case.quotes
+                  && booking.case.quotes[0]
+                  && booking.case.quotes[0].user
+                  && booking.case.quotes[0].user.email}
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Contact Number</div>
               <div className="TableRowItem3">
-                {this.props.booking && this.props.booking.case
-                  && this.props.booking.case.quotes
-                  && this.props.booking.case.quotes[0]
-                  && this.props.booking.case.quotes[0].user
-                  && this.props.booking.case.quotes[0].user.mobilePhone}
+                {booking && booking.case
+                  && booking.case.quotes
+                  && booking.case.quotes[0]
+                  && booking.case.quotes[0].user
+                  && booking.case.quotes[0].user.mobilePhone}
               </div>
             </div>
           </div>
@@ -483,9 +484,9 @@ class BookingDetails extends Component {
       );
     }
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
-    if ((this.props.booking && this.props.booking.case
-      && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid
-      && this.props.booking.case.transactions && !this.props.booking.case.transactions.length)
+    if ((booking && booking.case
+      && booking.case.status === 'Closed' && !booking.case.isPaid
+      && booking.case.transactions && !booking.case.transactions.length)
       && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
         <a href="#" className="btn btn-primary" onClick={this.onClickPay}>GO TO PAYMENT</a>
@@ -494,17 +495,17 @@ class BookingDetails extends Component {
 
     // set booking status
     let bookingStatus = '';
-    if (this.props.booking && this.props.booking.case && this.props.booking.case.status === 'Accepting Quotes') {
+    if (booking && booking.case && booking.case.status === 'Accepting Quotes') {
       bookingStatus = 'Awaiting Caregiver';
-    } else if (this.props.booking && this.props.booking.case
-      && this.props.booking.case.status === 'Closed' && this.props.booking.case.isPaid) {
+    } else if (booking && booking.case
+      && booking.case.status === 'Closed' && booking.case.isPaid) {
       bookingStatus = 'Paid & Confirmed';
-    } else if (this.props.booking && this.props.booking.case
-      && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid) {
+    } else if (booking && booking.case
+      && booking.case.status === 'Closed' && !booking.case.isPaid) {
       bookingStatus = 'Awaiting Payment';
 
-      if (this.props.booking.case.transactions && this.props.booking.case.transactions.length) {
-        Object.values(this.props.booking.case.transactions).forEach((transaction) => {
+      if (booking.case.transactions && booking.case.transactions.length) {
+        Object.values(booking.case.transactions).forEach((transaction) => {
           if (transaction.type === 'Payment'
             && transaction.method === 'Bank'
             && transaction.status === 'Pending') {
@@ -513,13 +514,13 @@ class BookingDetails extends Component {
         });
       }
     } else {
-      bookingStatus = this.props.booking && this.props.booking.case && this.props.booking.case.status;
+      bookingStatus = booking && booking.case && booking.case.status;
     }
 
     return (
       <div className={s.bookingDetails}>
         <Container>
-          <Loader className="spinner" loaded={!this.props.bookingFetching}>
+          <Loader className="spinner" loaded={!bookingFetching}>
             <div className={s.bookingDetailsWrapper}>
               <div className={s.bookingDetailsBody}>
                 <div className={s.bookingDetailsBodyActions}>
@@ -530,7 +531,7 @@ class BookingDetails extends Component {
                     <a href="/booking-manage" className="btn btn-primary" onClick={this.onClickManageBooking}>VIEW ANOTHER</a>
                   </span>
                 </div>
-                <h2>Booking ID: #{this.props.booking && this.props.booking.id}</h2>
+                <h2>Booking ID: #{booking && booking.id}</h2>
                 <div className="">
                   <div>
                     <div className="TableRow">
@@ -544,9 +545,9 @@ class BookingDetails extends Component {
                     <div className="TableRow">
                       <div className="TableRowItem1">Service</div>
                       <div className="TableRowItem3">
-                        {this.props.allServices && this.props.booking && this.props.booking.case
-                          && this.props.booking.case.service && this.props.allServices[this.props.booking.case.service]
-                          && this.props.allServices[this.props.booking.case.service].name}
+                        {this.props.allServices && booking && booking.case
+                          && booking.case.service && this.props.allServices[booking.case.service]
+                          && this.props.allServices[booking.case.service].name}
                       </div>
                     </div>
                   </div>
@@ -559,7 +560,7 @@ class BookingDetails extends Component {
                         <a
                           href="#"
                           className={(this.state.editingUser
-                            || (this.props.booking && this.props.booking.case && this.props.booking.case.isPaid))
+                            || (booking && booking.case && booking.case.isPaid))
                               ? 'hidden' : ''}
                           onClick={this.onClickEdit('userDetails')}
                         ><img src={imgPencil} alt="Edit" /></a>

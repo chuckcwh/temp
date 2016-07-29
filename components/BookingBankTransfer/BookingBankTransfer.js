@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
@@ -101,7 +100,8 @@ class BookingBankTransfer extends Component {
               type="text"
               id="ref"
               name="ref"
-              valueLink={linkState(this, 'ref')}
+              value={this.state.ref}
+              onChange={(e) => this.setState({ ref: e.target.value })}
               placeholder="Reference Number*"
               required
             />

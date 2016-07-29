@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import classNames from 'classnames';
 import s from './VerifyBookingPopup.css';
@@ -85,7 +84,8 @@ class VerifyBookingPopup extends Component {
                     ref={(c) => (this.startInput = c)}
                     className="PinInput"
                     type="password"
-                    valueLink={linkState(this, 'pin')}
+                    value={this.state.pin}
+                    onChange={(e) => this.setState({ pin: e.target.value })}
                     placeholder="Enter PIN"
                     required
                   />

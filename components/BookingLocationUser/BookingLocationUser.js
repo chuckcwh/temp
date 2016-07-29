@@ -26,6 +26,7 @@ class BookingLocationUser extends Component {
       savingPatient: false,
 
       patientId: props.order && props.order.patient && props.order.patient.id,
+      additionalInfo: props.order && props.order.booker && props.order.booker.additionalInfo,
     };
   }
 
@@ -705,7 +706,10 @@ class BookingLocationUser extends Component {
           </Loader>
           <div style={{ marginTop: '40px' }}>
             <div>Additional Info:</div>
-            <textarea name="additionalInfo" valueLink={linkState(this, 'additionalInfo')} />
+            <textarea
+              onChange={(e) => { this.setState({ additionalInfo: e.target.value }) }}
+              value={this.state.additionalInfo}
+            />
           </div>
         </div>
         <div className={s.bookingLocationUserBodyEditSection}>

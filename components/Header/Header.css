@@ -1,0 +1,82 @@
+@import '../variables.css';
+
+.header {
+  background-color: var(--brand-color);
+  border: none;
+  margin-bottom: 35px;
+  margin-top: 0px;
+  min-height: 50px;
+  padding: 0;
+  padding: 28px;
+  position: relative;
+  text-align: left;
+
+  & h2 {
+    border: none;
+    color: #fff;
+    display: inline-block;
+    font-weight: 200;
+    margin: 0 0 -25px;
+    min-height: 37px;
+    padding: 0 0 17px;
+    position: relative;
+    font-size: 2.0em;
+    font-weight: bold;
+  }
+
+  & .headerBar {
+    color: #fff;
+    font-size: 18px;
+
+    & .headerTitle {
+      display: inline-block;
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 48px;
+      max-width: 600px;
+    }
+
+    & .headerMenu {
+      float: right;
+      display: inline-block;
+
+      & .headerMenuItem {
+        vertical-align: middle;
+        display: inline-block;
+        padding-right: 25px;
+        padding-left: 25px;
+
+        & img {
+          display: inline-block;
+          float: left;
+          width: 45px;
+          height: 45px;
+        }
+
+        & .headerMenuItemContent {
+          text-align: left;
+          display: inline-block;
+          margin: 0 0 10px 25px;
+
+          & .headerMenuItemText {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 22px;
+
+            @apply --font-smoothing;
+
+            & a {
+              font-weight: 700;
+              color: #fff;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        &:not(:first-of-type) {
+          border-left: 1px solid #FFF;
+        }
+      }
+    }
+  }
+}

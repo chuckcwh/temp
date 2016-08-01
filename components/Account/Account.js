@@ -6,6 +6,7 @@ import s from './Account.css';
 import Container from '../Container';
 import Link from '../Link';
 import FindBookingForm from '../FindBookingForm';
+import LoginForm from '../LoginForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
@@ -53,30 +54,9 @@ class Account extends Component {
   render() {
     const location = history.getCurrentLocation();
     let components;
-    if (this.props.type === 'login') {
+    if (this.props.type === 'find-booking') {
       components = (
         <div className={s.accountContainer}>
-          {/*
-          <div className={classNames(s.accountLogin, s.accountContainerItem)}>
-            <form id="AccountFindBookingForm" action="https://app.ebecare.com/login/" method="POST">
-              <h3>Already a Member?</h3>
-              <input className="EmailInput" type="email" name="email" placeholder="Enter Email" />
-              <input className="PasswordInput" type="password" name="password" placeholder="Enter Password" />
-              <div className={s.accountContainerItemMiddle}>
-                <div className={s.forgotPasswordContainer}>
-                  <Link to="/forgot-password" className={s.forgotPasswordLink}>Forgot Password?</Link>
-                </div>
-                <div>
-                  <input className="RememberMeCheckbox" type="checkbox" id="remember" name="remember" />
-                  <label className="RememberMeCheckboxLabel" htmlFor="remember">
-                    <span></span><span>Remember me</span>
-                  </label>
-                </div>
-              </div>
-              <a href="#" className="btn btn-primary" onClick={this._onClickLogin.bind(this)}>Login</a>
-            </form>
-          </div>
-          */}
           <div className={classNames(s.accountFind, s.accountContainerItem)}>
             <Loader
               className="spinner"
@@ -85,6 +65,14 @@ class Account extends Component {
             >
               <FindBookingForm />
             </Loader>
+          </div>
+        </div>
+      );
+    } else if (this.props.type === 'login') {
+      components = (
+        <div className={s.accountContainer}>
+          <div className={classNames(s.accountLogin, s.accountContainerItem)}>
+            <LoginForm />
           </div>
         </div>
       );

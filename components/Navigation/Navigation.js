@@ -91,7 +91,12 @@ export default class Navigation extends Component {
                 >MANAGE BOOKING</Link>
               </li>
               <li className={s.navigationItem}>
-                <a className={s.navigationLink} href={util.backend}>{accountText}</a>
+                {/* <a className={s.navigationLink} href={util.backend}>{accountText}</a> */}
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/login') ? s.navigationLinkActive : '')}
+                  to="/login"
+                >LOGIN</Link>
+              </li>
               </li>
             </ul>
           </div>

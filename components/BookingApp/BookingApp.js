@@ -214,7 +214,7 @@ class BookingApp extends Component {
       } else {
         component = (
           <Account
-            type="login"
+            type="find-booking"
             bid={this.props.booking && this.props.booking && this.props.booking.id}
             mobilePhone={location && location.query && location.query.mobilePhone}
           />

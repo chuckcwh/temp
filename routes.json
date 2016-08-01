@@ -36,6 +36,10 @@
     "page": "./pages/terms-of-service-nurse"
   },
   {
+    "path": "/login",
+    "page": "./pages/login"
+  },
+  {
     "path": "/booking-manage",
     "page": "./pages/booking-manage"
   },

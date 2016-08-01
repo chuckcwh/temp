@@ -4,13 +4,13 @@ import Account from '../components/Account';
 export default class extends Component {
 
   componentDidMount() {
-    document.title = 'eBeeCare | Forgot Password';
+    document.title = 'eBeeCare | Login';
   }
 
   render() {
     return (
       <div>
-        <Account type="forgot-password" />
+        <Account type="login" />
       </div>
     );
   }

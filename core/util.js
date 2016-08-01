@@ -40,6 +40,18 @@ export function getCookies() {
   return {};
 }
 
+export function getUserNameFromUser(user) {
+  let userName;
+  if (user && user.type === 'Client' && user.clients && user.clients.length && user.clients[0] && user.clients[0].fullName) {
+    userName = user.clients[0].fullName;
+  } else if (user && user.type === 'Nurse' && user.nurses && user.nurses.length && user.nurses[0] && user.nurses[0].fullName) {
+    userName = user.nurses[0].fullName;
+  } else if (user && user.type === 'Admin') {
+    userName = user.email;
+  }
+  return userName;
+}
+
 export function isProduction() {
   return (typeof window !== 'undefined' &&
     window.location.hostname.indexOf('www.ebeecare.com') > -1);
@@ -242,6 +254,7 @@ const u = {
   blog: 'https://blog.ebeecare.com',
 
   getCookies,
+  getUserNameFromUser,
 
   isProduction,
 

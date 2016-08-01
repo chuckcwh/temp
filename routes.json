@@ -74,5 +74,9 @@
   {
     "path": "/booking-confirmation",
     "page": "./pages/booking-confirmation"
+  },
+  {
+    "path": "/dashboard",
+    "page": "./pages/dashboard"
   }
 ]

@@ -148,6 +148,46 @@ const caze = (state = {
   }
 }
 
+const cazes = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: null,
+  ids: null
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.CASES_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case ActionTypes.CASES_SUCCESS:
+      let hash = {}, ids = []
+      action.response && action.response.cases.forEach((caze) => {
+        hash[caze.id] = caze
+        ids.push(caze.id)
+      })
+      return Object.assign({}, state, {
+        isFetching: false,
+        data: hash,
+        ids: ids,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    default:
+      return state
+  }
+}
+
+const cazesByClient = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.CASES_REQUEST:
+    case ActionTypes.CASES_SUCCESS:
+      return Object.assign({}, state, {
+        [action.data.cid]: cazes(state[action.data.cid], action)
+      })
+    default:
+      return state
+  }
+}
+
 const user = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -217,6 +257,19 @@ const patients = (state = {
         newState.data[action.response.patient.id] = action.response.patient
         return newState
       }
+    default:
+      return state
+  }
+}
+
+const patientsByClient = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.PATIENTS_REQUEST:
+    case ActionTypes.PATIENTS_SUCCESS:
+    case ActionTypes.PATIENT_SUCCESS:
+      return Object.assign({}, state, {
+        [action.data.cid]: patients(state[action.data.cid], action)
+      })
     default:
       return state
   }
@@ -393,8 +446,9 @@ const bookingApp = combineReducers({
   languages,
   booking,
   caze,
+  cazesByClient,
   user,
-  patients,
+  patientsByClient,
   sessions,
   // paypal,
   totalSessionsCount,

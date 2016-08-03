@@ -773,10 +773,19 @@ const mapStateToProps = (state) => ({
   lastPage: state.lastPage,
   order: state.order,
   user: state.user.data,
-  client: state.user.data && state.user.data.clients && state.user.data.clients[0],
-  patients: state.patients.data,
-  patientsFetching: state.patients.isFetching,
-  patientIds: state.patients.ids,
+  client: state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
+  patients: state.user.data && state.user.data.clients && state.user.data.clients.length
+    && state.user.data.clients[0] && state.user.data.clients[0].id
+    && state.patientsByClient[state.user.data.clients[0].id]
+    && state.patientsByClient[state.user.data.clients[0].id].data,
+  patientsFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
+    && state.user.data.clients[0] && state.user.data.clients[0].id
+    && state.patientsByClient[state.user.data.clients[0].id]
+    && state.patientsByClient[state.user.data.clients[0].id].isFetching,
+  patientIds: state.user.data && state.user.data.clients && state.user.data.clients.length
+    && state.user.data.clients[0] && state.user.data.clients[0].id
+    && state.patientsByClient[state.user.data.clients[0].id]
+    && state.patientsByClient[state.user.data.clients[0].id].ids,
   inlineForm: state.inlineForm,
   form: state.form,
 });

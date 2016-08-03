@@ -72,7 +72,7 @@ class Account extends Component {
       components = (
         <div className={s.accountContainer}>
           <div className={classNames(s.accountLogin, s.accountContainerItem)}>
-            <LoginForm />
+            <LoginForm {...this.props} />
           </div>
         </div>
       );

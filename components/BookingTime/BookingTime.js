@@ -93,7 +93,7 @@ class BookingTime extends Component {
 
 BookingTime.propTypes = {
   lastPage: React.PropTypes.string.isRequired,
-  order: React.PropTypes.string.isRequired,
+  order: React.PropTypes.object.isRequired,
 
   setOrderTimeslots: React.PropTypes.func,
   setLastPage: React.PropTypes.func,

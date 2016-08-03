@@ -1,0 +1,108 @@
+@import '../variables.css';
+
+.dashboardNextAppt {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  & .dashboardNextApptCalendar {
+    flex: 1;
+
+    & :global .DayPicker {
+      width: 450px;
+      padding: 0;
+
+      @apply --font-smoothing;
+
+      &:focus {
+        outline: none;
+      }
+
+      & :global .DayPicker-NavBar {
+        height: 45px;
+
+        & :global .DayPicker-NavButton {
+          height: 100%;
+        }
+
+        & :global .DayPicker-NavButton--prev {
+          background-image: url(../../assets/images/calendar-prev.png);
+        }
+
+        & :global .DayPicker-NavButton--next {
+          background-image: url(../../assets/images/calendar-next.png);
+        }
+      }
+
+      & :global .DayPicker-Month {
+        width: 100%;
+        margin: 0;
+
+        & :global .DayPicker-Caption {
+          height: 45px;
+          background-color: var(--brand-color);
+          color: #fff;
+          font-size: 20px;
+          font-weight: 700;
+          line-height: 48px;
+        }
+
+        & :global .DayPicker-Weekdays {
+          height: 45px;
+          background-color: var(--brand-color);
+          color: #fff;
+          font-size: 20px;
+
+          & abbr[title] {
+            border: 0;
+            color: #fff;
+          }
+        }
+
+        & :global .DayPicker-Body {
+          & :global .DayPicker-Week {
+            height: 60px;
+
+            & :global .DayPicker-Day {
+              background-color: #f6f6f6;
+              border-top: 1px solid #fff;
+              border-bottom: 1px solid #fff;
+              border-left: 1px solid #f6f6f6;
+              border-right: 1px solid #f6f6f6;
+              font-size: 20px;
+              color: #999;
+
+              &:global(.DayPicker-Day--today) {
+                background-color: #F8E4AC;
+              }
+
+              &:focus {
+                outline: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  & .dashboardNextApptInfo {
+    flex: 1;
+    line-height: 25px;
+
+    @apply --font-smoothing;
+
+    & .dashboardNextApptInfoTitle {
+      font-size: 21px;
+    }
+
+    & .dashboardNextApptInfoDesc {
+      font-size: 15px;
+
+      & .dashboardNextApptInfoDescHighlight {
+        color: var(--secondary-color);
+        font-weight: 700;
+      }
+    }
+  }
+}

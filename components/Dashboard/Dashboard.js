@@ -7,11 +7,12 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import ServiceCard from '../ServiceCard';
+import DashboardStatButton from '../DashboardStatButton';
+import DashboardNextAppt from '../DashboardNextAppt';
 import { fetchServices, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
 import shuffle from 'lodash/shuffle';
-import groupBy from 'lodash/groupBy';
 
 class Dashboard extends Component {
 
@@ -27,16 +28,92 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { params, allServices, servicesTree, servicesTreeHash,
-      servicesSubtypesHash, servicesSubtypesHashBySlug, allServicesFetching } = this.props;
+    const { user } = this.props;
     const { filter } = this.state;
+    let dashboardStats,
+      dashboardBody;
+    if (user) {
+      if (user.type === 'Client') {
+        dashboardStats = (
+          <div className={s.dashboardStatsWrapper}>
+            <DashboardStatButton
+              className="blah"
+              color="blue"
+              icon="bell"
+              text="Next Appointment"
+              stat={`0`}
+            />
+            <DashboardStatButton
+              color="green"
+              icon="hourglass"
+              text="Pending Confirmation"
+              stat={`0`}
+            />
+            <DashboardStatButton
+              color="red"
+              icon="coin"
+              text="Pending Payment"
+              stat={`$ ${0}`}
+            />
+            <DashboardStatButton
+              color="orange"
+              icon="checklist"
+              text="Appointments"
+              stat={`146`}
+            />
+          </div>
+        );
+        dashboardBody = (
+          <div className={s.dashboardBody}>
+            <DashboardNextAppt />
 
+            <div className="dashboard-pending-confirmation"></div>
+
+            <div className="dashboard-all-appointment"></div>
+
+            <div className="dashboard-pending-payment"></div>
+          </div>
+        );
+      } else if (user.type === 'Nurse') {
+        dashboardStats = (
+          <div className={s.dashboardStatsWrapper}>
+            <DashboardStatButton
+              color="blue"
+              icon="bell"
+              text="Available Cases"
+              stat={`0`}
+            />
+            <DashboardStatButton
+              color="orange"
+              icon="hourglass"
+              text="Ongoing Cases"
+              stat={`0`}
+            />
+            <DashboardStatButton
+              color="green"
+              icon="checklist"
+              text="Completed Cases"
+              stat={`0`}
+            />
+            <DashboardStatButton
+              color="red"
+              icon="coin"
+              text="Total Credits"
+              stat={`$ ${0}`}
+            />
+          </div>
+        );
+      }
+    }
     return (
       <div className={s.dashboard}>
         <Header />
-        <Loader className="spinner" loaded={true}>
-          
-        </Loader>
+        <Container>
+          <div>
+            {dashboardStats}
+            {dashboardBody}
+          </div>
+        </Container>
       </div>
     );
   }
@@ -46,7 +123,7 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   params: React.PropTypes.object,
 
-  lastPage: React.PropTypes.string,
+  user: React.PropTypes.object,
   allServices: React.PropTypes.object,
   allServicesFetching: React.PropTypes.bool,
   servicesTree: React.PropTypes.array,
@@ -60,7 +137,7 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  lastPage: state.lastPage,
+  user: state.user.data,
   allServices: state.allServices.data,
   allServicesFetching: state.allServices.isFetching,
   servicesTree: state.allServices.dashboardTree,

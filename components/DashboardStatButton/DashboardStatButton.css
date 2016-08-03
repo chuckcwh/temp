@@ -1,0 +1,121 @@
+@import '../variables.css';
+
+.dashboardStatButton {
+  display: inline-block;
+  width: 280px;
+
+  &:hover {
+    text-decoration: none;
+  }
+  
+  & .dashboardStat {
+    cursor: pointer;
+    position: relative;
+
+    &::before,
+    &::after {
+      display: table;
+      line-height: 0;
+      content: "";
+    }
+
+    &::after {
+      clear: both;
+    }
+
+    & .dashboardStatVisual {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      padding: 10px 15px;
+      background-size: 60px 60px;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &:global(.bell) {
+        background-image: url(../../assets/images/bell.png);
+      }
+
+      &:global(.hourglass) {
+        background-image: url(../../assets/images/hourglass.png);
+      }
+
+      &:global(.coin) {
+        background-image: url(../../assets/images/coin.png);
+      }
+
+      &:global(.checklist) {
+        background-image: url(../../assets/images/checklist.png);
+      }
+    }
+
+    & .dashboardStatDetails {
+      display: table;
+      height: 100px;
+      margin-left: 110px;
+      padding-right: 15px;
+      text-decoration: none;
+
+      & .dashboardStatDetailsDesc {
+        display: table-cell;
+        vertical-align: middle;
+        color: #fff;
+        text-align: left;
+        letter-spacing: 0px;
+        font-size: 22px;
+        font-weight: 300;
+
+        @apply --font-smoothing;
+      }
+    }
+
+    & .dashboardStatMore {
+      display: block;
+      clear: both;
+      padding: 5px 10px;
+      text-transform: uppercase;
+      color: #fff;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 22px;
+      background-color: rgba(0, 0, 0, 0.2);
+
+      @apply --font-smoothing;
+    }
+
+    &:global(.blue) {
+      background-color: #21a1de;
+
+      &:hover {
+        background-color: color(#21a1de l(+5%));
+      }
+    }
+
+    &:global(.green) {
+      background-color: #00b42e;
+
+      &:hover {
+        background-color: color(#00b42e l(+5%));
+      }
+    }
+
+    &:global(.red) {
+      background-color: #e95900;
+
+      &:hover {
+        background-color: color(#e95900 l(+5%));
+      }
+    }
+
+    &:global(.orange) {
+      background-color: #fda738;
+
+      &:hover {
+        background-color: color(#fda738 l(+5%));
+      }
+    }
+  }
+}

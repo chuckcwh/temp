@@ -4,6 +4,41 @@
   min-height: 400px;
   position: relative;
 
+  & .dashboardStatsWrapper {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 40px;
+
+    & > a {
+      flex: 1;
+    }
+  }
+
+  & .dashboardBody {
+    margin-bottom: 40px;
+    
+    & .dashboardNextAppt {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      & .dashboardNextApptCalendar {
+        flex: 1;
+      }
+
+      & .dashboardNextApptInfo {
+        flex: 1;
+      }
+    }
+  }
+}
+
+/*.dashboard {
+  min-height: 400px;
+  position: relative;
+
   & .dashboardNavWrapper {
     display: flex;
     flex-direction: row;
@@ -278,4 +313,4 @@
     padding-bottom: 100px;
     text-align: center;
   }
-}
+}*/

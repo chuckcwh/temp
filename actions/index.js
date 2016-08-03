@@ -26,6 +26,10 @@ export const BOOKING_SESSION_CANCEL_REQUEST = 'BOOKING_SESSION_CANCEL_REQUEST'
 export const BOOKING_SESSION_CANCEL_SUCCESS = 'BOOKING_SESSION_CANCEL_SUCCESS'
 export const BOOKING_SESSION_CANCEL_FAILURE = 'BOOKING_SESSION_CANCEL_FAILURE'
 
+export const CASES_REQUEST = 'CASES_REQUEST'
+export const CASES_SUCCESS = 'CASES_SUCCESS'
+export const CASES_FAILURE = 'CASES_FAILURE'
+
 export const CASE_CREATE_REQUEST = 'CASE_CREATE_REQUEST'
 export const CASE_CREATE_SUCCESS = 'CASE_CREATE_SUCCESS'
 export const CASE_CREATE_FAILURE = 'CASE_CREATE_FAILURE'
@@ -155,6 +159,13 @@ function fetchAction(route) {
       endpoint: 'cancelCaseSession',
       method: 'post',
       auth: 'app'
+    },
+    getCases: {
+      types: [ CASES_REQUEST, CASES_SUCCESS, CASES_FAILURE ],
+      endpoint: 'getCases',
+      method: 'get',
+      auth: 'user',
+      entity: 'cases'
     },
     createCase: {
       types: [ CASE_CREATE_REQUEST, CASE_CREATE_SUCCESS, CASE_CREATE_FAILURE ],
@@ -384,6 +395,10 @@ export function createBookingWithOrder(order, location) {
 
 export function editBooking(params) {
   return fetch('editBooking', params);
+}
+
+export function getCases(params) {
+  return fetch('getCases', params);
 }
 
 export function createCase(params) {

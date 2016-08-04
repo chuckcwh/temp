@@ -25,6 +25,9 @@
   }
 
   & .headerBar {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     color: #fff;
     font-size: 18px;
 
@@ -34,11 +37,15 @@
       font-weight: 600;
       line-height: 48px;
       max-width: 600px;
+
+      @media(--sm-viewport) {
+        flex:1 100%;
+      }
+
     }
 
     & .headerMenu {
-      float: right;
-      display: inline-block;
+
 
       & .headerMenuItem {
         vertical-align: middle;

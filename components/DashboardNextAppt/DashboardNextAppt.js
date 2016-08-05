@@ -222,7 +222,9 @@ class DashboardNextAppt extends Component {
           />
         </div>
         <div className={s.dashboardNextApptInfo}>
-          {content}
+          <Loader className="spinner" loaded={!this.props.cazesFetching}>
+            {content}
+          </Loader>
         </div>
       </div>
     );

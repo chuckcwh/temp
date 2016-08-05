@@ -14,9 +14,7 @@ const Header = (props) => {
     <div className={s.header}>
       <Container>
         <div className={s.headerBar}>
-          <div className={s.headerTitle}>
-            <div>Dashboard</div>
-          </div>
+          <div className={s.headerTitle}>Dashboard</div>
           <div className={s.headerMenu}>
             <div className={s.headerMenuItem}>
               <img src={imgProfile} alt="Profile" />

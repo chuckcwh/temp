@@ -7,9 +7,11 @@
 
   & .dashboardNextApptCalendar {
     flex: 1;
+    max-width: 100%;
 
     & :global .DayPicker {
       width: 450px;
+      max-width: 100%;
       padding: 0;
 
       @apply --font-smoothing;
@@ -89,6 +91,8 @@
   & .dashboardNextApptInfo {
     flex: 1;
     line-height: 25px;
+    position: relative;
+    min-height: 300px;
 
     @apply --font-smoothing;
 

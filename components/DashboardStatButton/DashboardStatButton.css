@@ -49,6 +49,13 @@
       &:global(.checklist) {
         background-image: url(../../assets/images/checklist.png);
       }
+
+      @media (--md-viewport) {
+        width: 40px;
+        height: 40px;
+        padding: 5px;
+        background-size: 30px 30px;
+      }
     }
 
     & .dashboardStatDetails {
@@ -57,6 +64,12 @@
       margin-left: 110px;
       padding-right: 15px;
       text-decoration: none;
+
+      @media (--md-viewport) {
+        height: 50px;
+        margin-left: 50px;
+        padding-right: 5px;
+      }
 
       & .dashboardStatDetailsDesc {
         display: table-cell;
@@ -68,6 +81,10 @@
         font-weight: 300;
 
         @apply --font-smoothing;
+
+        @media (--md-viewport) {
+          font-size: 15px;
+        }
       }
     }
 
@@ -78,12 +95,18 @@
       text-transform: uppercase;
       color: #fff;
       text-align: center;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       line-height: 22px;
       background-color: rgba(0, 0, 0, 0.2);
 
       @apply --font-smoothing;
+
+      @media (--md-viewport) {
+        height: 20px;
+        padding: 0;
+        line-height: 20px;
+      }
     }
 
     &:global(.blue) {

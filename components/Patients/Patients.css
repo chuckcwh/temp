@@ -1,7 +1,6 @@
 @import '../variables.css';
 
 .addPatient{
-  min-height: 300px;
   margin-bottom: 30px;
   padding: 12px 0;
   background-color: #FBF8F1;

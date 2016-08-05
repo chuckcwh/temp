@@ -25,6 +25,11 @@
 
         & :global .DayPicker-NavButton {
           height: 100%;
+          background-position: center;
+
+          @media (--sm-viewport) {
+            background-size: 60% 60%;
+          }
         }
 
         & :global .DayPicker-NavButton--prev {
@@ -33,6 +38,10 @@
 
         & :global .DayPicker-NavButton--next {
           background-image: url(../../assets/images/calendar-next.png);
+        }
+
+        @media (--sm-viewport) {
+          height: 30px;
         }
       }
 
@@ -47,6 +56,12 @@
           font-size: 20px;
           font-weight: 700;
           line-height: 48px;
+
+          @media (--sm-viewport) {
+            height: 30px;
+            font-size: 15px;
+            line-height: 36px;
+          }
         }
 
         & :global .DayPicker-Weekdays {
@@ -58,6 +73,11 @@
           & abbr[title] {
             border: 0;
             color: #fff;
+          }
+
+          @media (--sm-viewport) {
+            height: 30px;
+            font-size: 15px;
           }
         }
 
@@ -81,6 +101,15 @@
               &:focus {
                 outline: none;
               }
+
+              @media (--sm-viewport) {
+                padding: 0;
+                font-size: 15px;
+              }
+            }
+
+            @media (--sm-viewport) {
+              height: 40px;
             }
           }
         }

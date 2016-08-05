@@ -165,81 +165,80 @@ class Navigation extends Component {
           </Container>
         </div>
       );
-    } else {
-      return (
-        <div className={s.navWrapper}>
-          <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
-            <li className={s.navigationItem}>
-              <Link
-                className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')}
-                to="/about"
-              >ABOUT</Link>
-            </li>
-            <li className={s.navigationItem}>
-              <Link
-                className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')}
-                to="/services"
-              >SERVICES</Link>
-            </li>
-            <li className={s.navigationItem}>
-              <Link
-                className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')}
-                to="/faq"
-              >FAQ</Link>
-            </li>
-            <li className={s.navigationItem}>
-              <a className={s.navigationLink} href={util.blog}>BLOG</a>
-            </li>
-            <li className={s.navigationItem}>
-              <Link
-                className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')}
-                to="/booking-manage"
-              >MANAGE BOOKING</Link>
-            </li>
-          </Menu>
-          <Container>
-            <div className={s.navigationWrapper}>
-              <Logo />
-              <ul className={classNames(s.navigation, this.state.visible ? 'visible' : '')} role="menu">
-                <li className={s.navigationItem}>
-                  <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')}
-                    to="/about"
-                  >ABOUT</Link>
-                </li>
-                <li className={s.navigationItem}>
-                  <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')}
-                    to="/services"
-                  >SERVICES</Link>
-                </li>
-                <li className={s.navigationItem}>
-                  <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')}
-                    to="/faq"
-                  >FAQ</Link>
-                </li>
-                <li className={s.navigationItem}>
-                  <a className={s.navigationLink} href={util.blog}>BLOG</a>
-                </li>
-                <li className={s.navigationItem}>
-                  <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')}
-                    to="/booking-manage"
-                  >MANAGE BOOKING</Link>
-                </li>
-                <li className={s.navigationItem}>
-                  <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/login') ? s.navigationLinkActive : '')}
-                    to="/login"
-                  >LOGIN</Link>
-                </li>
-              </ul>
-            </div>
-          </Container>
-        </div>
-      );
     }
+    return (
+      <div className={s.navWrapper}>
+        <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
+          <li className={s.navigationItem}>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')}
+              to="/about"
+            >ABOUT</Link>
+          </li>
+          <li className={s.navigationItem}>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')}
+              to="/services"
+            >SERVICES</Link>
+          </li>
+          <li className={s.navigationItem}>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')}
+              to="/faq"
+            >FAQ</Link>
+          </li>
+          <li className={s.navigationItem}>
+            <a className={s.navigationLink} href={util.blog}>BLOG</a>
+          </li>
+          <li className={s.navigationItem}>
+            <Link
+              className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')}
+              to="/booking-manage"
+            >MANAGE BOOKING</Link>
+          </li>
+        </Menu>
+        <Container>
+          <div className={s.navigationWrapper}>
+            <Logo />
+            <ul className={classNames(s.navigation, this.state.visible ? 'visible' : '')} role="menu">
+              <li className={s.navigationItem}>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/about') ? s.navigationLinkActive : '')}
+                  to="/about"
+                >ABOUT</Link>
+              </li>
+              <li className={s.navigationItem}>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/services') ? s.navigationLinkActive : '')}
+                  to="/services"
+                >SERVICES</Link>
+              </li>
+              <li className={s.navigationItem}>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/faq') ? s.navigationLinkActive : '')}
+                  to="/faq"
+                >FAQ</Link>
+              </li>
+              <li className={s.navigationItem}>
+                <a className={s.navigationLink} href={util.blog}>BLOG</a>
+              </li>
+              <li className={s.navigationItem}>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/booking-manage') ? s.navigationLinkActive : '')}
+                  to="/booking-manage"
+                >MANAGE BOOKING</Link>
+              </li>
+              <li className={s.navigationItem}>
+                <Link
+                  className={classNames(s.navigationLink, (location.pathname === '/login') ? s.navigationLinkActive : '')}
+                  to="/login"
+                >LOGIN</Link>
+              </li>
+            </ul>
+          </div>
+        </Container>
+      </div>
+    );
   }
 
 }

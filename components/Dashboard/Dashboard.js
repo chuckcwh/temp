@@ -41,13 +41,13 @@ class Dashboard extends Component {
               color="blue"
               icon="bell"
               text="Next Appointment"
-              stat={`0`}
+              stat={'0'}
             />
             <DashboardStatButton
               color="green"
               icon="hourglass"
               text="Pending Confirmation"
-              stat={`0`}
+              stat={'0'}
             />
             <DashboardStatButton
               color="red"
@@ -59,7 +59,7 @@ class Dashboard extends Component {
               color="orange"
               icon="checklist"
               text="Appointments"
-              stat={`146`}
+              stat={'146'}
             />
           </div>
         );
@@ -81,19 +81,19 @@ class Dashboard extends Component {
               color="blue"
               icon="bell"
               text="Available Cases"
-              stat={`0`}
+              stat={'0'}
             />
             <DashboardStatButton
               color="orange"
               icon="hourglass"
               text="Ongoing Cases"
-              stat={`0`}
+              stat={'0'}
             />
             <DashboardStatButton
               color="green"
               icon="checklist"
               text="Completed Cases"
-              stat={`0`}
+              stat={'0'}
             />
             <DashboardStatButton
               color="red"

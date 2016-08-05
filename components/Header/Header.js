@@ -23,7 +23,7 @@ const Header = (props) => {
                   Welcome,
                 </div>
                 <div className={s.headerMenuItemText}>
-                  <a href="/profile/528704/">{userName}</a>
+                  <a href="/profile">{userName}</a>
                 </div>
               </div>
             </div>
@@ -35,7 +35,7 @@ const Header = (props) => {
                     Credit Balance
                   </div>
                   <div className={s.headerMenuItemText}>
-                    <a href="/credits/">{`SGD ${user.credit}`}</a>
+                    <a href="/credits">{`SGD ${user.credit}`}</a>
                   </div>
                 </div>
               </div>

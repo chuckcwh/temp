@@ -1,4 +1,5 @@
 import * as ActionTypes from '../actions';
+import cookie from 'react-cookie';
 import { combineReducers } from 'redux';
 import { reducer as form } from 'redux-form';
 import merge from 'lodash/merge';
@@ -6,6 +7,56 @@ import modal from './modal';
 import order from './order';
 import util from '../core/util';
 import sortBy from 'lodash/sortBy';
+
+const user = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: null
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.USER_REQUEST:
+    case ActionTypes.USER_TOKEN_REQUEST:
+    case ActionTypes.LOGIN_REQUEST:
+    case ActionTypes.LOGIN_CLIENT_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false
+      })
+    case ActionTypes.USER_SUCCESS:
+    case ActionTypes.USER_TOKEN_SUCCESS:
+    case ActionTypes.LOGIN_SUCCESS:
+      if (action.response && action.response.user && action.response.user.id) {
+        cookie.save('user_id', action.response.user.id, { path: '/' });
+        cookie.save('user_token', action.response.user.token, { path: '/' });
+      }
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        data: action.response && action.response.user,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    case ActionTypes.LOGIN_CLIENT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true,
+        data: (action.response && action.response.user && action.response.user.type === 'Client') ? action.response.user : null,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    case ActionTypes.USER_TOKEN_FAILURE:
+      cookie.remove('user_id', { path: '/' });
+      cookie.remove('user_token', { path: '/' });
+      return state
+    case ActionTypes.USER_DESTROY:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true,
+        data: null,
+        lastUpdated: undefined
+      })
+    default:
+      return state
+  }
+}
 
 const allServices = (state = {
   isFetching: false,
@@ -182,46 +233,6 @@ const cazesByClient = (state = {}, action) => {
     case ActionTypes.CASES_SUCCESS:
       return Object.assign({}, state, {
         [action.data.cid]: cazes(state[action.data.cid], action)
-      })
-    default:
-      return state
-  }
-}
-
-const user = (state = {
-  isFetching: false,
-  didInvalidate: true,
-  data: null
-}, action) => {
-  switch (action.type) {
-    case ActionTypes.USER_REQUEST:
-    case ActionTypes.LOGIN_REQUEST:
-    case ActionTypes.LOGIN_CLIENT_REQUEST:
-      return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
-      })
-    case ActionTypes.USER_SUCCESS:
-    case ActionTypes.LOGIN_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didInvalidate: false,
-        data: action.response && action.response.user,
-        lastUpdated: action.response && action.response.receivedAt
-      })
-    case ActionTypes.LOGIN_CLIENT_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didInvalidate: true,
-        data: (action.response && action.response.user && action.response.user.type === 'Client') ? action.response.user : null,
-        lastUpdated: action.response && action.response.receivedAt
-      })
-    case ActionTypes.USER_DESTROY:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didInvalidate: true,
-        data: null,
-        lastUpdated: undefined
       })
     default:
       return state
@@ -442,12 +453,12 @@ const errorMessage = (state = null, action) => {
 }
 
 const bookingApp = combineReducers({
+  user,
   allServices,
   languages,
   booking,
   caze,
   cazesByClient,
-  user,
   patientsByClient,
   sessions,
   // paypal,

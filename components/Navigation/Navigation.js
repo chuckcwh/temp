@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import cookie from 'react-cookie';
 import classNames from 'classnames';
 import { slide as Menu } from 'react-burger-menu';
 import s from './Navigation.css';
@@ -21,6 +22,8 @@ class Navigation extends Component {
 
   handleLogout = (event) => {
     event.preventDefault();
+    cookie.remove('user_id', { path: '/' });
+    cookie.remove('user_token', { path: '/' });
     this.props.destroyUser();
     history.push({ pathname: '/login', query: location.query });
   };

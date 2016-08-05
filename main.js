@@ -5,14 +5,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import FastClick from 'fastclick';
 import { Provider } from 'react-redux';
+import cookie from 'react-cookie';
 
 import configureStore from './core/configureStore';
 import router from './core/router';
 import history from './core/history';
 
+import { getUserWithToken } from './actions';
+
 import Layout from './components/Layout';
 
 const store = configureStore();
+
+// Start loading user if user id & token is present
+const userId = cookie.load('user_id');
+const userToken = cookie.load('user_token');
+if (userId && userToken) {
+  store.dispatch(getUserWithToken({
+    id: userId,
+    token: userToken
+  }));
+}
 
 let routes = require('./routes.json'); // Loaded with utils/routes-loader.js
 const container = document.getElementById('container');

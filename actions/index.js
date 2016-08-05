@@ -39,6 +39,10 @@ export const USER_SUCCESS = 'USER_SUCCESS'
 export const USER_FAILURE = 'USER_FAILURE'
 export const USER_DESTROY = 'USER_DESTROY'
 
+export const USER_TOKEN_REQUEST = 'USER_TOKEN_REQUEST'
+export const USER_TOKEN_SUCCESS = 'USER_TOKEN_SUCCESS'
+export const USER_TOKEN_FAILURE = 'USER_TOKEN_FAILURE'
+
 export const CLIENT_EDIT_REQUEST = 'CLIENT_EDIT_REQUEST'
 export const CLIENT_EDIT_SUCCESS = 'CLIENT_EDIT_SUCCESS'
 export const CLIENT_EDIT_FAILURE = 'CLIENT_EDIT_FAILURE'
@@ -193,7 +197,7 @@ function fetchAction(route) {
       entity: 'user'
     },
     getUserWithToken: {
-      types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
+      types: [ USER_TOKEN_REQUEST, USER_TOKEN_SUCCESS, USER_TOKEN_FAILURE ],
       endpoint: 'getUser',
       method: 'get',
       auth: 'userParams',

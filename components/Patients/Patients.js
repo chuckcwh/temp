@@ -29,7 +29,7 @@ class Patients extends Component {
     const { patients } = this.props;
     return (
       <div>
-        <Header />
+        <Header title="Manage Patients" />
         <Container>
           <Loader className="spinner" loaded={!this.props.patientsFetching}>
             <div className={s.addPatient}>

@@ -7,14 +7,13 @@ import util from '../../core/util';
 const imgProfile = require('../../assets/images/profile.png');
 const imgMoney = require('../../assets/images/money.png');
 
-const Header = (props) => {
-  const { user } = props;
+const Header = ({ title, user }) => {
   const userName = util.getUserNameFromUser(user);
   return (
     <div className={s.header}>
       <Container>
         <div className={s.headerBar}>
-          <div className={s.headerTitle}>Dashboard</div>
+          <div className={s.headerTitle}>{title}</div>
           <div className={s.headerMenu}>
             <div className={s.headerMenuItem}>
               <img src={imgProfile} alt="Profile" />
@@ -48,6 +47,8 @@ const Header = (props) => {
 };
 
 Header.propTypes = {
+  title: React.PropTypes.string,
+
   user: React.PropTypes.object,
 };
 

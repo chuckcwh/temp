@@ -107,7 +107,7 @@ class Dashboard extends Component {
     }
     return (
       <div className={s.dashboard}>
-        <Header />
+        <Header title="Dashboard" />
         <Container>
           <div>
             {dashboardStats}

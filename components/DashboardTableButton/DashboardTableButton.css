@@ -1,0 +1,24 @@
+@import '../variables.css';
+
+.dashboardTableButton {
+  cursor: pointer;
+  font-size: inherit;
+  background-color: #f6f6f6;
+  color: #787878;
+  padding: 5px 5px;
+  border-radius: 5px;
+  border: 1px solid #787878;
+
+  &.green:hover {
+    text-decoration: none;
+    background-color: #1d943b;
+    color: white;
+  }
+
+  &.red:hover {
+    text-decoration: none;
+    background-color: #ab4343;
+    color: white;
+  }
+
+}

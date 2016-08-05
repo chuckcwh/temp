@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import s from './Patients.css';
 import { getPatients, getEngagedSessions } from '../../actions';
 import { connect } from 'react-redux';
+import Link from '../Link';
 import Container from '../Container';
 import Header from '../Header';
 import DashboardTableButton from '../DashboardTableButton';
@@ -36,11 +37,11 @@ class Patients extends Component {
                 {patients && Object.values(patients).length} Patient(s)
               </div>
               <div>
-                <a href="" className="btn-small btn-primary">
-                <span className={s.addPatientBtn}>
-                  Add Patient <FaArrowCircleRight />
-                </span>
-                </a>
+                <Link className="btn-small btn-primary" to="/patients/add">
+                  <span className={s.addPatientBtn}>
+                    Add Patient <FaArrowCircleRight />
+                  </span>
+                </Link>
               </div>
             </div>
             {

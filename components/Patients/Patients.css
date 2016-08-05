@@ -1,91 +1,93 @@
 @import '../variables.css';
 
-.addPatient{
-  margin-bottom: 30px;
-  padding: 12px 0;
-  background-color: #FBF8F1;
-  border-radius: 10px;
-  font-size: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.patients {
+  min-height: 400px;
+  position: relative;
 
-  & .addPatientBtn{
-    padding-left: 10px;
-  }
-}
+  & .addPatient{
+    margin-bottom: 30px;
+    padding: 12px 14px;
+    background-color: #FBF8F1;
+    border-radius: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-.patientBlock{
-  background: #f7f7f7;
-  border-radius: 10px;
-  padding: 0 0 20px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-
-    @media (--sm-viewport) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-  & .patientText{
-    flex: 1;
-
-    & > span:not(:last-child){
-      margin-right: 10px;
+    & .addPatientBtn{
+      padding-left: 10px;
     }
   }
 
-  & .patientVisit{
-    flex: 1;
-    text-transform: uppercase;
+  & .patientBlock{
+    background: #f7f7f7;
+    border-radius: 10px;
+    padding: 0 14px 10px 14px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 
-    & .patientVisitDetails{
-      display:inline-block;
-      width: 150px;
+      @media (--sm-viewport) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-      & > span {
-        color: #16a1f2;
-        font-size: 20px;
-        font-weight: 200;
+    & .patientText{
+      flex: 1;
+
+      & > span:not(:last-child){
+        margin-right: 10px;
       }
     }
-    
-  }
 
-  & .patientAction{
-    flex: 1;
-    text-align: right;
+    & .patientVisit{
+      flex: 1;
+      text-transform: uppercase;
 
-    @media (--md-viewport){
-      margin-top: 10px;
+      & .patientVisitDetails{
+        display:inline-block;
+        width: 150px;
+
+        & > span {
+          color: #16a1f2;
+          font-size: 20px;
+          font-weight: 200;
+        }
+      }
+      
     }
 
-    & button:last-child{
-
-      @media (--xs-viewport){
-        margin-left: 0px;
-        margin-top: 10px;
-      }
+    & .patientAction{
+      flex: 1;
+      text-align: right;
 
       @media (--md-viewport){
         margin-top: 10px;
       }
 
-      @media (--lg-xviewport){
-        margin-left: 20px;
+      & button:last-child{
+
+        @media (--xs-viewport){
+          margin-left: 0px;
+          margin-top: 10px;
+        }
+
+        @media (--md-viewport){
+          margin-top: 10px;
+        }
+
+        @media (--lg-xviewport){
+          margin-left: 20px;
+        }
+
       }
 
-    }
-
-    & .patientBtnText{
-      font-size: 22px;
-      width: 140px;
-      display: inherit;
+      & .patientBtnText{
+        font-size: 22px;
+        width: 140px;
+        display: inherit;
+      }
     }
   }
-
-  
-
 }

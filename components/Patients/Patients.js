@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import s from './Patients.css';
-import { getPatients, getEngagedSessions } from '../../actions';
+import { getPatients } from '../../actions';
 import { connect } from 'react-redux';
 import Link from '../Link';
 import Container from '../Container';
 import Header from '../Header';
 import DashboardTableButton from '../DashboardTableButton';
-import LabelButton from '../LabelButton';
 import Loader from 'react-loader';
 import FaUser from 'react-icons/lib/fa/user';
 import FaMedkit from 'react-icons/lib/fa/medkit';
@@ -25,10 +24,10 @@ class Patients extends Component {
       && this.props.getPatients({ cid: this.props.client.id });
   }
 
-   render() {
+  render() {
     const { patients } = this.props;
     return (
-      <div>
+      <div className={s.patients}>
         <Header title="Manage Patients" />
         <Container>
           <Loader className="spinner" loaded={!this.props.patientsFetching}>
@@ -76,7 +75,7 @@ class Patients extends Component {
                       <DashboardTableButton color="green">
                         <span className={s.patientBtnText}>Manage</span>
                       </DashboardTableButton>
-                       <DashboardTableButton color="red">
+                      <DashboardTableButton color="red">
                         <span className={s.patientBtnText}>Delete</span>
                       </DashboardTableButton>
                     </div>

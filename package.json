@@ -116,17 +116,39 @@
     "parser": "babel-eslint",
     "extends": "airbnb",
     "rules": {
-      "max-len": ["error", 150],
+      "max-len": [
+        "error",
+        150
+      ],
       "no-param-reassign": 0,
-      "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
-      "one-var": ["error", { "uninitialized": "always", "initialized": "never" }]
+      "no-unused-expressions": [
+        "error",
+        {
+          "allowShortCircuit": true,
+          "allowTernary": true
+        }
+      ],
+      "one-var": [
+        "error",
+        {
+          "uninitialized": "always",
+          "initialized": "never"
+        }
+      ]
     }
   },
   "stylelint": {
     "extends": "stylelint-config-standard",
     "rules": {
       "string-quotes": "single",
-      "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["global"] }]
+      "selector-pseudo-class-no-unknown": [
+        true,
+        {
+          "ignorePseudoClasses": [
+            "global"
+          ]
+        }
+      ]
     }
   },
   "scripts": {

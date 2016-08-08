@@ -19,7 +19,10 @@ DashboardStatButton.propTypes = {
   color: React.PropTypes.string,
   icon: React.PropTypes.string,
   text: React.PropTypes.string,
-  stat: React.PropTypes.string,
+  stat: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.number,
+  ]),
 };
 
 DashboardStatButton.defaultProps = {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import s from './Patients.css';
 import { getPatients } from '../../actions';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import Link from '../Link';
 import Container from '../Container';
 import Header from '../Header';
@@ -13,10 +14,6 @@ import FaSitemap from 'react-icons/lib/fa/sitemap';
 import FaArrowCircleRight from 'react-icons/lib/fa/arrow-circle-right';
 
 class Patients extends Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.props.client
@@ -46,20 +43,20 @@ class Patients extends Component {
             {
               patients && Object.values(patients).map((patient) => {
                 const currentYear = new Date().getFullYear();
-                const age = currentYear - patient.dob.split("-")[0];
+                const age = currentYear - patient.dob.split('-')[0];
                 return (
                   <div className={s.patientBlock} key={patient.id}>
                     <div className={s.patientText}>
                       <h3>{patient.fullName}</h3>
-                      <span>
-                        <FaUser/> {patient.gender == "" ? '- ' : patient.gender}, {age} years old 
-                      </span>
-                      <span>
-                        <FaMedkit/> {patient.mainDiagnosis == "" ? '- ' : patient.mainDiagnosis} 
-                      </span>
-                      <span>
-                        <FaSitemap/> {patient.relationship == "" ? '- ' : patient.relationship} 
-                      </span>
+                      {patient.gender !== '' && <span>
+                        <FaUser /> {patient.gender}, {age} years old
+                      </span>}
+                      {patient.mainDiagnosis !== '' && <span>
+                        <FaMedkit /> {patient.mainDiagnosis}
+                      </span>}
+                      {patient.relationship !== '' && <span>
+                        <FaSitemap /> {patient.relationship}
+                      </span>}
                     </div>
                     <div className={s.patientVisit}>
                       <div className={s.patientVisitDetails}>
@@ -68,7 +65,7 @@ class Patients extends Component {
                       </div>
                       <div className={s.patientVisitDetails}>
                         <p>Last Visit Date</p>
-                        <span>{patient.lastVisited == null ? '-' : patient.lastVisited.dateEngaged.split(" ")[0]}</span>
+                        <span>{patient.lastVisited == null ? '-' : moment(patient.lastVisited.dateEngaged).format('ll')}</span>
                       </div>
                     </div>
                     <div className={s.patientAction}>
@@ -93,9 +90,12 @@ class Patients extends Component {
 
 Patients.propTypes = {
   user: React.PropTypes.object,
-  getPatientsByClient: React.PropTypes.object,
-  getPatients: React.PropTypes.func.isRequired,
+  client: React.PropTypes.object,
+  patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
+  patientIds: React.PropTypes.array,
+
+  getPatients: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -113,7 +113,6 @@ const mapStateToProps = (state) => ({
     && state.user.data.clients[0] && state.user.data.clients[0].id
     && state.patientsByClient[state.user.data.clients[0].id]
     && state.patientsByClient[state.user.data.clients[0].id].ids,
-
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -4,7 +4,7 @@
   min-height: 400px;
   position: relative;
 
-  & .addPatient{
+  & .addPatient {
     margin-bottom: 30px;
     padding: 12px 14px;
     background-color: #FBF8F1;
@@ -14,12 +14,12 @@
     justify-content: space-between;
     align-items: center;
 
-    & .addPatientBtn{
+    & .addPatientBtn {
       padding-left: 10px;
     }
   }
 
-  & .patientBlock{
+  & .patientBlock {
     background: #f7f7f7;
     border-radius: 10px;
     padding: 0 14px 10px 14px;
@@ -28,29 +28,33 @@
     align-items: center;
     flex-wrap: wrap;
 
-      @media (--sm-viewport) {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    @media (--sm-viewport) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
 
-    & .patientText{
+    & .patientText {
       flex: 1;
 
-      & > span:not(:last-child){
+      & h3 {
+        color: var(--brand-color);
+      }
+
+      & > span:not(:last-child) {
         margin-right: 10px;
       }
     }
 
-    & .patientVisit{
+    & .patientVisit {
       flex: 1;
       text-transform: uppercase;
 
-      & .patientVisitDetails{
+      & .patientVisitDetails {
         display:inline-block;
         width: 150px;
 
         & > span {
-          color: #16a1f2;
+          color: #21a1de;
           font-size: 20px;
           font-weight: 200;
         }
@@ -58,32 +62,30 @@
       
     }
 
-    & .patientAction{
+    & .patientAction {
       flex: 1;
       text-align: right;
 
-      @media (--md-viewport){
+      @media (--md-viewport) {
         margin-top: 10px;
       }
 
-      & button:last-child{
-
-        @media (--xs-viewport){
+      & button:last-child {
+        @media (--xs-viewport) {
           margin-left: 0px;
           margin-top: 10px;
         }
 
-        @media (--md-viewport){
+        @media (--md-viewport) {
           margin-top: 10px;
         }
 
-        @media (--lg-xviewport){
+        @media (--lg-xviewport) {
           margin-left: 20px;
         }
-
       }
 
-      & .patientBtnText{
+      & .patientBtnText {
         font-size: 22px;
         width: 140px;
         display: inherit;

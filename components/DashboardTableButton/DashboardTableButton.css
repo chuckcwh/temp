@@ -9,16 +9,27 @@
   border-radius: 5px;
   border: 1px solid #787878;
 
+  &.blue:hover {
+    text-decoration: none;
+    background-color: #21a1de;
+    color: white;
+  }
+
   &.green:hover {
     text-decoration: none;
-    background-color: #1d943b;
+    background-color: #00b42e;
     color: white;
   }
 
   &.red:hover {
     text-decoration: none;
-    background-color: #ab4343;
+    background-color: #e95900;
     color: white;
   }
 
+  &.orange:hover {
+    text-decoration: none;
+    background-color: #fda738;
+    color: white;
+  }
 }

@@ -23,7 +23,7 @@ const userToken = cookie.load('user_token');
 if (userId && userToken) {
   store.dispatch(getUserWithToken({
     id: userId,
-    token: userToken
+    token: userToken,
   }));
 }
 

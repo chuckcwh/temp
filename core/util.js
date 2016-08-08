@@ -76,6 +76,10 @@ export function isNextLastPage(path, lastPage) {
   return PAGE_ORDERS.indexOf(lastPage) + 1 === PAGE_ORDERS.indexOf(path);
 }
 
+export function isBookingPage(path) {
+  return path.match(/^\/booking[0-9][abc]?/);
+}
+
 function parseCategoriesLevel(services, index) {
   const terms = ['category', 'subType', 'service'];
   let name = terms[index];
@@ -261,6 +265,7 @@ const u = {
   isLoggedInBackend,
   isNavigationAllowed,
   isNextLastPage,
+  isBookingPage,
 
   ALL_SERVICES,
   SERVICES_CATEGORY_ORDER,

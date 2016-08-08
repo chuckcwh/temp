@@ -38,15 +38,15 @@ class Navigation extends Component {
           <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink)}
-                to="/booking1"
-              >CREATE BOOKING</Link>
-            </li>
-            <li className={s.navigationItem}>
-              <Link
                 className={classNames(s.navigationLink, (location.pathname === '/dashboard') ? s.navigationLinkActive : '')}
                 to="/dashboard"
               >DASHBOARD</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink)}
+                to="/booking1"
+              >CREATE BOOKING</Link>
             </li>
             <li className={s.navigationItem}>
               <Link
@@ -76,15 +76,15 @@ class Navigation extends Component {
               <ul className={classNames(s.navigation, this.state.visible ? 'visible' : '')} role="menu">
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink)}
-                    to="/about"
-                  >CREATE BOOKING</Link>
-                </li>
-                <li className={s.navigationItem}>
-                  <Link
                     className={classNames(s.navigationLink, (location.pathname === '/dashboard') ? s.navigationLinkActive : '')}
                     to="/dashboard"
                   >DASHBOARD</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (util.isBookingPage(location.pathname)) ? s.navigationLinkActive : '')}
+                    to="/booking1"
+                  >CREATE BOOKING</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <Link

@@ -71,6 +71,10 @@ a {
   &:hover {
     background-color: color(var(--secondary-color) l(+5%));
   }
+
+  &:active {
+    background-color: color(var(--secondary-color) l(-5%));
+  }
 }
 
 :global a.btn-secondary,
@@ -83,13 +87,15 @@ a {
   padding: 0.3em 0;
   font-size: 25px;
   cursor: pointer;
-  border-bottom: 2px solid #cd5551;
-  box-shadow: inset 0 -2px #cd5551;
 
   @apply --font-smoothing;
 
   &:hover {
-    background-color: #cd5551;
+    background-color: color(#cd5551 l(+5%));
+  }
+
+  &:active {
+    background-color: color(#cd5551 l(-5%));
   }
 }
 

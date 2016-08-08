@@ -18,7 +18,7 @@ const Layout = (props) => {
   }
   return (
     <div className={s.layout}>
-      <Navigation pullRight />
+      <Navigation location={location} pullRight />
       <div className={s.body}>
         {props.children}
       </div>

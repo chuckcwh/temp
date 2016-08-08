@@ -247,6 +247,8 @@ class Navigation extends Component {
 }
 
 Navigation.propTypes = {
+  location: React.PropTypes.object.isRequired,
+
   user: React.PropTypes.object,
 
   destroyUser: React.PropTypes.func.isRequired,

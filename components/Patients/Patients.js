@@ -21,6 +21,14 @@ class Patients extends Component {
       && this.props.getPatients({ cid: this.props.client.id });
   }
 
+  componentWillReceiveProps(props) {
+    if (props.client && !this.props.client) {
+      props.client
+        && props.client.id
+        && props.getPatients({ cid: props.client.id }); 
+    }
+  }
+
   render() {
     const { patients } = this.props;
     return (

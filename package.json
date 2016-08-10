@@ -10,9 +10,12 @@
     "babel-polyfill": "^6.9.1",
     "classnames": "^2.2.5",
     "fastclick": "^1.0.6",
+    "fixed-data-table": "^0.6.3",
+    "flexboxgrid": "^6.3.0",
     "history": "^3.0.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "react-flexbox-grid": "^0.10.2",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "whatwg-fetch": "^1.0.0"

@@ -239,6 +239,18 @@ const cazesByClient = (state = {}, action) => {
   }
 }
 
+const cazesAvailToNurse = (state ={}, action) => {
+  switch (action.type) {
+    case ActionTypes.CASES_REQUEST:
+    case ActionTypes.CASES_SUCCESS:
+      return Object.assign({}, state, {
+        [action.data.nid]: cazes(state[action.data.nid], action)
+      })
+    default:
+      return state
+  }
+}
+
 const patients = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -459,6 +471,7 @@ const bookingApp = combineReducers({
   booking,
   caze,
   cazesByClient,
+  cazesAvailToNurse,
   patientsByClient,
   sessions,
   // paypal,

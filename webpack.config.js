@@ -108,10 +108,20 @@ const config = {
       },
       {
         test: /\.css/,
+        exclude: [/flexboxgrid/],
         include: [/node_modules/],
         loaders: [
           'style-loader',
           'css-loader',
+          'postcss-loader',
+        ],
+      },
+      {
+        test: /\.css/,
+        include: /flexboxgrid/,
+        loaders: [
+          'style-loader',
+          'css-loader?modules',
           'postcss-loader',
         ],
       },

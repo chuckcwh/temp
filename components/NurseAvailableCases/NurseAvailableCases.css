@@ -1,0 +1,65 @@
+@import '../variables.css';
+
+.nurseAvailableCases {
+  min-height: 400px;
+  position: relative;
+
+  & .grid{
+    padding: 0;
+
+    & .lgHeader{
+      font-weight: bold;
+      border-bottom: solid 1px;
+      padding: 0 0 5px;
+      @media (--md-viewport) {
+        display: none;
+      }
+    }
+
+    & .sessionDetails{
+      white-space: pre-wrap;      /* CSS3 */   
+      white-space: -moz-pre-wrap; /* Firefox */    
+      white-space: -pre-wrap;     /* Opera <7 */   
+      white-space: -o-pre-wrap;   /* Opera 7 */    
+      word-wrap: break-word;      /* IE */
+      padding: 10px 0;
+      border-bottom: solid 1px #ccc;
+
+      &:nth-child(odd){
+        background: #f6f6f6;
+      }
+
+      & div:nth-child(odd){
+        font-weight: bold;
+
+        @media (--md-xviewport) {
+          display: none;
+        }
+      }
+
+      & div:nth-child(even){
+        @media (--md-viewport){
+          line-height: 1.5em;
+        }
+      }
+
+    }
+    
+  }
+
+  & .caseContainer{
+    display: flex;
+    flex-direction: row;
+
+    & .caseDetail{
+      flex: 2;
+    }
+
+    & .patientDetail{
+      flex: 2;
+    }
+  }
+
+}
+
+

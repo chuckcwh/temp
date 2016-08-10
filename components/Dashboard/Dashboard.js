@@ -9,6 +9,7 @@ import Header from '../Header';
 import ServiceCard from '../ServiceCard';
 import DashboardStatButton from '../DashboardStatButton';
 import DashboardNextAppt from '../DashboardNextAppt';
+import NurseAvailableCases from '../NurseAvailableCases';
 import { fetchServices, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
@@ -102,6 +103,9 @@ class Dashboard extends Component {
               stat={`$ ${0}`}
             />
           </div>
+        );
+        dashboardBody = (
+          <NurseAvailableCases />
         );
       }
     }

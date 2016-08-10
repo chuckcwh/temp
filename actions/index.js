@@ -123,6 +123,10 @@ export const STATS_SUBCATEGORIES_REQUEST = 'STATS_SUBCATEGORIES_REQUEST'
 export const STATS_SUBCATEGORIES_SUCCESS = 'STATS_SUBCATEGORIES_SUCCESS'
 export const STATS_SUBCATEGORIES_FAILURE = 'STATS_SUBCATEGORIES_FAILURE'
 
+export const AVAILABLE_CASES_REQUEST = 'AVAILABLE_CASES_REQUEST'
+export const AVAILABLE_CASES_SUCCESS = 'AVAILABLE_CASES_SUCCESS'
+export const AVAILABLE_CASES_FAILURE = 'AVAILABLE_CASES_FAILURE'
+
 function fetchAction(route) {
   return {
     getServices: {
@@ -310,6 +314,13 @@ function fetchAction(route) {
       method: 'get',
       auth: 'app',
       entity: 'rankedSubcategories'
+    },
+    getAvailableCases:{
+      types: [ CASES_REQUEST, CASES_SUCCESS, CASES_FAILURE ],
+      endpoint: 'getAvailableCases',
+      method: 'get',
+      auth: 'user',
+      entity: 'cases'
     }
   }[route]
 }
@@ -432,6 +443,10 @@ export function createCaseWithOrder(order) {
     }],
     promoCode: order && order.promoCode && order.promoCode.code
   })
+}
+
+export function getAvailableCases(params) {
+  return fetch('getAvailableCases', params);
 }
 
 export function cancelBookingSession(params, booking) {

@@ -52,6 +52,7 @@
       & .patientVisitDetails {
         display:inline-block;
         width: 150px;
+        text-align: center;
 
         & > span {
           color: #21a1de;

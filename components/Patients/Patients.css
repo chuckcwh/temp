@@ -7,7 +7,7 @@
   & .addPatient {
     margin-bottom: 30px;
     padding: 12px 14px;
-    background-color: #FBF8F1;
+    background-color: #fbf8f1;
     border-radius: 10px;
     font-size: 20px;
     display: flex;
@@ -22,7 +22,7 @@
   & .patientBlock {
     background: #f7f7f7;
     border-radius: 10px;
-    padding: 0 14px 10px 14px;
+    padding: 0 14px 10px;
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -50,7 +50,7 @@
       text-transform: uppercase;
 
       & .patientVisitDetails {
-        display:inline-block;
+        display: inline-block;
         width: 150px;
         text-align: center;
 
@@ -60,7 +60,6 @@
           font-weight: 200;
         }
       }
-      
     }
 
     & .patientAction {
@@ -73,7 +72,7 @@
 
       & button:last-child {
         @media (--xs-viewport) {
-          margin-left: 0px;
+          margin-left: 0;
           margin-top: 10px;
         }
 

@@ -29,7 +29,7 @@
 
   & .dashboardBody {
     margin-bottom: 40px;
-    
+
     & .dashboardNextAppt {
       display: flex;
       flex-direction: row;

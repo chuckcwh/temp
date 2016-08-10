@@ -7,7 +7,7 @@
   &:hover {
     text-decoration: none;
   }
-  
+
   & .dashboardStat {
     cursor: pointer;
     position: relative;
@@ -16,7 +16,7 @@
     &::after {
       display: table;
       line-height: 0;
-      content: "";
+      content: '';
     }
 
     &::after {
@@ -76,7 +76,7 @@
         vertical-align: middle;
         color: #fff;
         text-align: left;
-        letter-spacing: 0px;
+        letter-spacing: 0;
         font-size: 22px;
         font-weight: 300;
 

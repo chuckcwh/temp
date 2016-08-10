@@ -25,7 +25,7 @@ class Patients extends Component {
     if (props.client && !this.props.client) {
       props.client
         && props.client.id
-        && props.getPatients({ cid: props.client.id }); 
+        && props.getPatients({ cid: props.client.id });
     }
   }
 

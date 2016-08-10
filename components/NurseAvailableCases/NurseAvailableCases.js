@@ -1,43 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import Loader from 'react-loader';
 import s from './NurseAvailableCases.css';
 import Container from '../Container';
-import Header from '../Header';
 import { getAvailableCases } from '../../actions';
-import moment from 'moment'
+import moment from 'moment';
 import DashboardTableButton from '../DashboardTableButton';
 
 class NurseAvailableCases extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.nurse
-      && this.props.nurse.id 
-      && this.props.getAvailableCases({nid: this.props.nurse.id});
+      && this.props.nurse.id
+      && this.props.getAvailableCases({ nid: this.props.nurse.id });
   }
 
   render() {
     const { availCases, availCasesFetching } = this.props;
     const rowArr = [];
-    availCases && Object.values(availCases).map((caze) => {
+    availCases && Object.values(availCases).forEach((caze) => {
       caze.dates.forEach((date) => {
-        let row = {};
-        let currentDate = moment();
-        let age = currentDate.diff(moment(caze.patient.dob), 'years');
+        const row = {};
+        const currentDate = moment();
+        const age = currentDate.diff(moment(caze.patient.dob), 'years');
         row.id = caze.id;
         row.service = caze.service.name;
         row.address = caze.addresses[0].region;
         row.date = moment(date.dateTimeStart).format('ddd, DD MMM YYYY');
         row.estTime = date.estTime;
-        row.patient = caze.patient.fullName + " (" + age + ", " + caze.patient.gender + ")";
-        row.action = "Accept";
-        row.price = "$" + date.price;
+        row.patient = `${caze.patient.fullName} ( ${age}, ${caze.patient.gender})`;
+        row.action = 'Accept';
+        row.price = `$ ${date.price}`;
         row.notes = caze.notes;
         rowArr.push(row);
       });
@@ -46,7 +40,7 @@ class NurseAvailableCases extends Component {
     return (
       <div className={s.nurseAvailableCases}>
         <Container>
-          <Loader className="spinner" loaded={!this.props.availCasesFetching}>
+          <Loader className="spinner" loaded={!availCasesFetching}>
             <center><h2><b>Available Cases</b></h2></center>
             <Grid fluid className={s.grid}>
               <Row className={s.lgHeader}>
@@ -59,26 +53,24 @@ class NurseAvailableCases extends Component {
                 <Col md={1}>Action</Col>
               </Row>
               {
-                rowArr.map((row) => {
-                  return (
-                    <Row className={s.sessionDetails}>
-                      <Col xs={4}>Date</Col>
-                      <Col xs={8} md={2}>{row.date} ({row.estTime})</Col>
-                      <Col xs={4}>Service</Col>
-                      <Col xs={8} md={3}>{row.service}</Col>
-                      <Col xs={4}>Patient</Col>
-                      <Col xs={8} md={2}>{row.patient}</Col>
-                      <Col xs={4}>Region</Col>
-                      <Col xs={8} md={2}>{row.address}</Col>
-                      <Col xs={4}>Price</Col>
-                      <Col xs={8} md={1}>{row.price}</Col>
-                      <Col xs={4}>Case ID</Col>
-                      <Col xs={8} md={1}>{row.id}</Col>
-                      <Col xs={4}>Action</Col>
-                      <Col xs={8} md={1}><DashboardTableButton>Accept</DashboardTableButton></Col>
-                    </Row>
-                  );
-                })
+                rowArr.map(row => (
+                  <Row className={s.sessionDetails}>
+                    <Col xs={4}>Date</Col>
+                    <Col xs={8} md={2}>{row.date} ({row.estTime})</Col>
+                    <Col xs={4}>Service</Col>
+                    <Col xs={8} md={3}>{row.service}</Col>
+                    <Col xs={4}>Patient</Col>
+                    <Col xs={8} md={2}>{row.patient}</Col>
+                    <Col xs={4}>Region</Col>
+                    <Col xs={8} md={2}>{row.address}</Col>
+                    <Col xs={4}>Price</Col>
+                    <Col xs={8} md={1}>{row.price}</Col>
+                    <Col xs={4}>Case ID</Col>
+                    <Col xs={8} md={1}>{row.id}</Col>
+                    <Col xs={4}>Action</Col>
+                    <Col xs={8} md={1}><DashboardTableButton>Accept</DashboardTableButton></Col>
+                  </Row>
+                ))
               }
             </Grid>
           </Loader>
@@ -92,6 +84,8 @@ NurseAvailableCases.propTypes = {
   user: React.PropTypes.object,
   getAvailableCases: React.PropTypes.func.isRequired,
   availCasesFetching: React.PropTypes.bool,
+  nurse: React.PropTypes.object,
+  availCases: React.PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -103,7 +97,7 @@ const mapStateToProps = (state) => ({
     && state.cazesAvailToNurse[state.user.data.nurses[0].id].data,
   availCasesFetching: state.user.data && state.user.data.nurses && state.user.data.nurses.length
     && state.user.data.nurses[0] && state.user.data.nurses[0].id
-    && state.cazesAvailToNurse[state.user.data.nurses[0].id] 
+    && state.cazesAvailToNurse[state.user.data.nurses[0].id]
     && state.cazesAvailToNurse[state.user.data.nurses[0].id].isFetching,
 });
 

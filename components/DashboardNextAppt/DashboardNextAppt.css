@@ -95,7 +95,7 @@
               color: #999;
 
               &:global(.DayPicker-Day--today) {
-                background-color: #F8E4AC;
+                background-color: #f8e4ac;
               }
 
               &:focus {

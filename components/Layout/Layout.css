@@ -356,6 +356,11 @@ textarea {
   &:-ms-input-placeholder {
     color: #ddd;
   }
+
+  &:focus {
+    outline: var(--brand-color) auto 5px;
+
+  }
 }
 
 input:disabled,

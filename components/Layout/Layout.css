@@ -123,6 +123,10 @@ a {
 :global input[type=checkbox],
 :global input[type=radio] {
   cursor: pointer;
+
+  &:focus {
+    outline: var(--brand-color) auto 5px;
+  }
 }
 
 :global input[type=checkbox] {
@@ -199,7 +203,7 @@ a {
   }
 
   &:focus + label > span:first-child {
-    outline: -webkit-focus-ring-color auto 5px;
+    outline: var(--brand-color) auto 5px;
   }
 
   &:checked + label > span:first-child > span {
@@ -239,6 +243,10 @@ input[type=password] {
 
   &:disabled {
     border: 1px solid #969696;
+  }
+
+  &:focus {
+    outline: var(--brand-color) auto 5px;
   }
 }
 
@@ -329,6 +337,7 @@ input[type=password] {
 }
 
 textarea {
+  display: block;
   box-sizing: border-box;
   min-width: 230px;
   border: 1px solid var(--border-color);
@@ -376,6 +385,10 @@ textarea:disabled {
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
+
+    &:focus {
+      outline: var(--brand-color) auto 5px;
+    }
   }
 
   & > span {

@@ -1,74 +1,85 @@
 @import '../variables.css';
 
 .multiSelect {
-  & :global .Select-control {
-    border-radius: 0;
-    padding: 10px 0 10px 10px;
+  & :global .Select {
+    & :global .Select-control {
+      border-radius: 0;
+      padding: 10px 0 10px 10px;
 
-    & :global .Select-placeholder {
-      margin: 15px;
-    }
+      & :global .Select-placeholder {
+        margin: 15px;
+      }
 
-    & :global .Select-item {
-      background-color: #fff;
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-      margin: 5px;
+      & :global .Select-item {
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        margin: 5px;
 
-      &-icon {
-        border-right: 1px solid var(--border-color);
-        font-size: 21px;
+        &-icon {
+          border-right: 1px solid var(--border-color);
+          font-size: 21px;
+        }
+      }
+
+      & :global .Select-input {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+
+      & :global .Select-clear-zone {
+        & :global .Select-clear {
+          font-size: 21px;
+        }
+      }
+
+      & :global .Select-arrow-zone {
+        padding-right: 15px;
+
+        & :global .Select-arrow {
+          border: 0;
+          height: 100%;
+
+          background: transparent;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 25px;
+          pointer-events: none;
+        }
+
+        & :global .Select-arrow::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          right: 5px;
+          margin-top: -5px;
+          pointer-events: none;
+          border-top: 9px solid var(--secondary-color);
+          border-left: 9px solid transparent;
+          border-right: 9px solid transparent;
+        }
+
+        & :global .Select-arrow::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          right: 7px;
+          margin-top: -5px;
+          pointer-events: none;
+          border-top: 7px solid #fff;
+          border-left: 7px solid transparent;
+          border-right: 7px solid transparent;
+        }
       }
     }
 
-    & :global .Select-input {
-      margin-top: 5px;
-      margin-bottom: 5px;
-    }
-
-    & :global .Select-clear-zone {
-      & :global .Select-clear {
-        font-size: 21px;
-      }
-    }
-
-    & :global .Select-arrow-zone {
-      padding-right: 15px;
-
-      & :global .Select-arrow {
-        border: 0;
-        height: 100%;
-
-        background: #fff;
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 25px;
-        pointer-events: none;
-      }
-
-      & :global .Select-arrow::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        right: 5px;
-        margin-top: -5px;
-        pointer-events: none;
-        border-top: 9px solid var(--secondary-color);
-        border-left: 9px solid transparent;
-        border-right: 9px solid transparent;
-      }
-
-      & :global .Select-arrow::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        right: 7px;
-        margin-top: -5px;
-        pointer-events: none;
-        border-top: 7px solid #fff;
-        border-left: 7px solid transparent;
-        border-right: 7px solid transparent;
+    &:global(.is-focused:not(.is-open)) {
+      & :global .Select-control {
+        outline: var(--brand-color) auto 5px;
+        outline-offset: -2px;
+        border-color: transparent;
+        box-shadow: none;
       }
     }
   }

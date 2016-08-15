@@ -562,11 +562,12 @@ function requestGeocode(postalCode) {
   }
 }
 
-function receiveGeocode(postalCode, address) {
+function receiveGeocode(postalCode, geocode) {
   return {
     type: GEOCODE_SUCCESS,
     postalCode: postalCode,
-    address: address,
+    address: geocode.address,
+    region: geocode.neighborhood,
     receivedAt: Date.now()
   }
 }
@@ -593,7 +594,15 @@ function geocode(postalCode) {
             latLng: position
           }, function(responses) {
             if (responses && responses.length > 0) {
-              resolve(responses[0].formatted_address);
+              let res = {
+                address: responses[0].formatted_address,
+              };
+              responses[0].address_components.forEach((component) => {
+                if (component.types.indexOf('neighborhood') >= 0) {
+                  res.neighborhood = component.long_name;
+                }
+              });
+              resolve(res);
             } else {
               console.error('Invalid postal code.');
               reject('Invalid postal code.');
@@ -615,7 +624,7 @@ export function fetchAddress(postalCode) {
   return dispatch => {
     dispatch(requestGeocode(postalCode))
     return geocode(postalCode)
-      .then(address => dispatch(receiveGeocode(postalCode, address)),
+      .then(result => dispatch(receiveGeocode(postalCode, result)),
         () => dispatch(failedReceiveGeocode(postalCode)))
   }
 }

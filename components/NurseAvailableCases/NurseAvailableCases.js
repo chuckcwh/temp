@@ -24,7 +24,8 @@ class NurseAvailableCases extends Component {
         const row = {};
         const currentDate = moment();
         const age = currentDate.diff(moment(caze.patient.dob), 'years');
-        row.id = caze.id;
+        row.id = date.id;
+        row.cazeId = caze.id;
         row.service = caze.service.name;
         row.address = caze.addresses[0].region;
         row.date = moment(date.dateTimeStart).format('ddd, DD MMM YYYY');
@@ -54,7 +55,7 @@ class NurseAvailableCases extends Component {
               </Row>
               {
                 rowArr.map(row => (
-                  <Row className={s.sessionDetails}>
+                  <Row className={s.sessionDetails} key={row.id}>
                     <Col xs={4}>Date</Col>
                     <Col xs={8} md={2}>{row.date} ({row.estTime})</Col>
                     <Col xs={4}>Service</Col>
@@ -66,7 +67,7 @@ class NurseAvailableCases extends Component {
                     <Col xs={4}>Price</Col>
                     <Col xs={8} md={1}>{row.price}</Col>
                     <Col xs={4}>Case ID</Col>
-                    <Col xs={8} md={1}>{row.id}</Col>
+                    <Col xs={8} md={1}>{row.cazeId}</Col>
                     <Col xs={4}>Action</Col>
                     <Col xs={8} md={1}><DashboardTableButton>Accept</DashboardTableButton></Col>
                   </Row>

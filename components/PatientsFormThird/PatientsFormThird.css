@@ -1,0 +1,20 @@
+@import '../variables.css';
+
+.patientsFormThird {
+  flex: 10;
+  font-size: 21px;
+
+  & :global .select {
+    display: inline-block;
+    margin: 0;
+  }
+
+  & .patientsFormThirdSection {
+    padding: 0 0 20px;
+
+    & .patientsFormThirdError {
+      padding: 5px 0;
+      color: var(--secondary-color);
+    }
+  }
+}

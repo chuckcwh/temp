@@ -1,0 +1,25 @@
+@import '../variables.css';
+
+.patientsFormFourth {
+  flex: 10;
+  font-size: 21px;
+
+  & textarea {
+    width: 100%;
+    margin: 0;
+  }
+
+  & :global .select {
+    display: inline-block;
+    margin: 0;
+  }
+
+  & .patientsFormFourthSection {
+    padding: 0 0 20px;
+
+    & .patientsFormFourthError {
+      padding: 5px 0;
+      color: var(--secondary-color);
+    }
+  }
+}

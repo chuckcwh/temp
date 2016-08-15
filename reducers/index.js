@@ -561,6 +561,44 @@ const bookingApp = combineReducers({
           return state;
       }
     },
+    patientsFormFirst: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'patientsFormFirst') {
+            return {
+              ...state,
+              dob: {
+                ...state.dob,
+                value: action.value
+              }
+            }
+          }
+          break;
+        default:
+          return state;
+      }
+    },
+    patientsFormSecond: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.GEOCODE_SUCCESS:
+          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+            return {
+              ...state,
+              address: {
+                ...state.address,
+                value: action.address,
+              },
+              region: {
+                ...state.region,
+                value: action.region,
+              },
+            }
+          }
+          break;
+        default:
+          return state;
+      }
+    },
     inlineForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:

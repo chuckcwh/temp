@@ -1,0 +1,33 @@
+@import '../variables.css';
+
+.patientsFormFirst {
+  font-size: 21px;
+
+  & input {
+    margin: 0;
+  }
+
+  & :global .select {
+    display: inline-block;
+    margin: 0;
+  }
+
+  & :global .DateInput {
+    margin: 0;
+  }
+
+  & .patientsFormFirstSection {
+    padding: 0 0 20px;
+
+    & .patientsFormFirstError {
+      padding: 5px 0;
+      color: var(--secondary-color);
+    }
+
+    & :global .datepicker__input {
+      font: inherit;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+}

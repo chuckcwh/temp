@@ -82,5 +82,9 @@
   {
     "path": "/patients",
     "page": "./pages/patients"
+  },
+  {
+    "path": "/patients/add",
+    "page": "./pages/patients-add"
   }
 ]

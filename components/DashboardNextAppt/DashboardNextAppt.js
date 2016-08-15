@@ -46,127 +46,19 @@ class DashboardNextAppt extends Component {
   };
 
   render() {
-    const { user, cazes } = this.props;
+    const { user, cazes, confirmedApptSessions } = this.props;
     const { selectedDay } = this.state;
     const pastSessions = [];
     const confirmedSessions = [];
     const pendingSessions = [];
 
-    let tableContentBlob;
-    const confirmedAppointmentSession = []; // next appointments
-    const pendingConfirmationAppointmentSession = []; // pending appointments
-    const pastAppointmentSession = []; // past appointments
-    // var pendingPaymentAppointmentSession = [] // pending payment cases
-
-    var earliestNewAppointmentDate;
-    var earliestNewAppointment;
-
-    // Table content data structure
-    function createTableContentBlob(patients, cases) {
-      if (!patients || !cases) return [];
-      const tableContentBlob = [];
-      let patientFound = false;
-      Object.values(patients).forEach((patient, index) => {
-        Object.values(cazes).forEach((cas) => {
-          if (patient.id === cas.patient) {
-            tableContentBlob.forEach((patientBlob) => {
-              if (patientBlob.patientId === patient.id) {
-                patientFound = true;
-                patientBlob.cases.push(cas);
-              }
-            });
-            if (!patientFound) {
-              tableContentBlob.push({
-                patientId: patient.id,
-                patient: patient,
-                cases: [cas]
-              });
-            }
-            patientFound = false;
-          }
-        });
-      });
-      return tableContentBlob;
-    }
-    tableContentBlob = createTableContentBlob(this.props.patients, this.props.cazes);
-    // console.log(tableContentBlob);
-
-    // Create eventsArray to be supplied to calendar
-    const eventsArray = [];
-    let sessionAppointment;
-    tableContentBlob.forEach((patientBlob) => {
-      patientBlob.cases.forEach((cas) => {
-        if (cas.dates.length) {
-          cas.dates.forEach((date) => {
-            sessionAppointment = {
-              caseId: cas.id,
-              sessionId: date.id,
-              casePrice: cas.price,
-              price: date.pcode ? (date.price - (date.price * date.pdiscount / 100)).toFixed(2) : date.price,
-              // service: this.props.allServices[cas.service],
-              date: date.dateTimeStart.substr(0, 10),
-              time: date.dateTimeStart.substr(11),
-              estTime: date.estTime,
-              caseNotes: cas.notes,
-              patientId: patientBlob.patient.id,
-              patientFullName: patientBlob.patient.fullName,
-              patientColor: patientBlob.patient.colorCode,
-              isPaid: cas.isPaid,
-              location: cas.addresses.length ? cas.addresses[0].address : 'N/A',
-              engagedId: '',
-              sessionStatus: 'pendingConf',
-              sessionMode: date.status, // Temp -> Cancelled or Active
-              caseStatus: cas.status, // Accepting Quotes, Closed, Completed, Expired
-              stage: '', // If session appointment has not been accepted yet, stage is empty string
-              nurseId: ''
-            };
-            if (cas.quotes.length) { // Quote gets removed when session gets deleted
-              cas.quotes.forEach((quote) => {
-                if (quote.dateObjId === date.id) {
-                  sessionAppointment.sessionStatus = 'engaged';
-                  // Pending visit, pending documentation, pending review, completed
-                  sessionAppointment.stage = quote.casesEngaged[0].status;
-                  sessionAppointment.engagedId = quote.casesEngaged[0].id;
-                  sessionAppointment.nurseId = quote.nurse;
-                }
-              });
-            }
-            eventsArray.push(sessionAppointment);
-          });
-        }
-      });
-    });
-    // console.log(eventsArray);
-
-    // Sorts appointment into dashboard tab category according to type
-    eventsArray.forEach((event) => {
-      var now = moment();
-      if (event.caseStatus === 'Expired') {
-        pastAppointmentSession.push(event);
-      } else {
-        if (moment(event.date, 'YYYY-MM-DD').isSameOrAfter(now, 'day')) {
-          if (event.sessionStatus === "engaged" && event.isPaid) {
-            if (event.stage === "Pending Visit") {
-              confirmedAppointmentSession.push(event);
-            }
-          }
-          if (event.sessionStatus === 'pendingConf' || event.sessionStatus === 'engaged') {
-            if (!event.isPaid && event.caseStatus === 'Accepting Quotes') {
-              pendingConfirmationAppointmentSession.push(event);
-            }
-          }
-        } else if (moment(event.date, 'YYYY-MM-DD').isBefore(now, 'day')) {
-          if (event.caseStatus === "Closed" || event.caseStatus === "Completed") {
-            pastAppointmentSession.push(event);
-          }
-        }
-      }
-    });
+    let earliestNewApptDate;
+    let earliestNewAppt;
 
     let content;
-    if (confirmedAppointmentSession.length) {
+    if (confirmedApptSessions.length) {
       // Determines earliest date of confirmed appointment
-      earliestNewAppointmentDate = confirmedAppointmentSession.reduce((a, b) => {
+      earliestNewApptDate = confirmedApptSessions.reduce((a, b) => {
         if (a.date < b.date) {
           return a;
         } else if (a.date > b.date) {
@@ -176,38 +68,38 @@ class DashboardNextAppt extends Component {
         }
       }).date;
       // Obtains all appointments that have the same date as earliest date
-      earliestNewAppointment = confirmedAppointmentSession.filter((event) => {
-        return moment(event.date, 'YYYY-MM-DD').isSame(earliestNewAppointmentDate,'day')
+      earliestNewAppt = confirmedApptSessions.filter((event) => {
+        return moment(event.date, 'YYYY-MM-DD').isSame(earliestNewApptDate,'day')
       });
       // Default no appointment today
-      if (!moment(earliestNewAppointment[0].date,'YYYY-MM-DD').isSame(moment(), 'day')) {
+      if (!moment(earliestNewAppt[0].date,'YYYY-MM-DD').isSame(moment(), 'day')) {
         content = (
           <div>
             <div className={s.dashboardNextApptInfoTitle}>No Appointment</div>
             <div className={s.dashboardNextApptInfoDesc}>
               <p>You do not have any appointment today.</p>
               <p>Your next appointment is on&nbsp;
-                <span className={s.dashboardNextApptInfoDescHighlight}>{this.formatDate(earliestNewAppointmentDate)}</span>
+                <span className={s.dashboardNextApptInfoDescHighlight}>{this.formatDate(earliestNewApptDate)}</span>
               .</p>
             </div>
           </div>
         );
       // Default multiple or single appointment today
       } else {
-        earliestNewAppointment.forEach((event) => {
+        earliestNewAppt.forEach((event) => {
           // $('.dashboard-next-appointment-info').append(createAppointmentTable(event.caseId, event.price, event.service, event.date, event.time, event.estTime, event.caseNotes, event.patientFullName, event.engagedId, event.location, event.sessionId, event.isPaid, event.nurseId));
         });
       }
-    } else if (!confirmedAppointmentSession.length) {
+    } else if (!confirmedApptSessions.length) {
       content = (
         <div>
           <div className={s.dashboardNextApptInfoTitle}>No Appointment</div>
           <div className={s.dashboardNextApptInfoDesc}>
-            <p>You have no appointment. Please book an appointment here:</p>
+            <p>You have no appointment. You may book an appointment here:</p>
             <Link
-              className="btn-primary"
+              className="btn btn-primary"
               to="/booking1"
-            >Book a Case</Link>
+            >Book now</Link>
           </div>
         </div>
       );
@@ -233,7 +125,7 @@ class DashboardNextAppt extends Component {
 }
 
 DashboardNextAppt.propTypes = {
-  params: React.PropTypes.object,
+  confirmedApptSessions: React.PropTypes.array.isRequired,
 
   user: React.PropTypes.object,
   allServices: React.PropTypes.object,

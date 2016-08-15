@@ -1,0 +1,48 @@
+@import '../variables.css';
+
+.sideTab {
+  position: relative;
+  margin-bottom: 1px;
+  line-height: 36px;
+
+  @apply --font-smoothing;
+
+  & .sideTabLink {
+    display: block;
+    color: var(--text-color);
+    background: color(var(--brand-color) a(15%));
+    border-left: 2px solid var(--brand-color);
+
+    &:hover {
+      background: color(var(--brand-color) a(50%));
+      text-decoration: none;
+    }
+
+    & svg {
+      margin: 0 10px;
+    }
+
+    & span {
+      vertical-align: middle;
+    }
+  }
+
+  &.sideTabActive {
+    & .sideTabLink {
+      color: #fff;
+      background: var(--brand-color);
+      text-decoration: none;
+    }
+
+    &::after {
+      content: '';
+      display: inline-block;
+      border-bottom: 6px solid transparent;
+      border-top: 6px solid transparent;
+      border-left: 6px solid var(--brand-color);
+      position: absolute;
+      top: 12px;
+      right: -5px;
+    }
+  }
+}

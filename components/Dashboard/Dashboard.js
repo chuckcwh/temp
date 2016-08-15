@@ -27,20 +27,20 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.fetchServices();
-    this.props.user && this.props.getPatients({
+    this.props.user && this.props.user.type === 'Client' && this.props.getPatients({
       cid: this.props.user.clients[0].id,
     });
-    this.props.user && this.props.getCases({
+    this.props.user && this.props.user.type === 'Client' && this.props.getCases({
       cid: this.props.user.clients[0].id,
     });
   }
 
   componentWillReceiveProps(props) {
     if (props.user && !this.props.user) {
-      props.user && this.props.getPatients({
+      props.user && props.user.type === 'Client' && this.props.getPatients({
         cid: props.user.clients[0].id,
       });
-      props.user && this.props.getCases({
+      props.user && props.user.type === 'Client' && this.props.getCases({
         cid: props.user.clients[0].id,
       });
     }

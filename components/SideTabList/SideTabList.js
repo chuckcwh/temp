@@ -10,7 +10,7 @@ class SideTabList extends Component {
 
   handleSelect = (index) => (event) => {
     event.preventDefault();
-    this.props.onSelect(index, this.state.selectedIndex);
+    this.props.onSelect(index);
   };
 
   render() {

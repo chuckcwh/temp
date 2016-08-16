@@ -19,7 +19,11 @@ class SideTab extends Component {
     const { selectable } = this.props;
     return (
       <li className={cx(s.sideTab, this.props.selected ? s.sideTabActive : null)}>
-        <a className={cx(s.sideTabLink, !selectable ? s.sideTabLinkDisabled : undefined)} href="#" onClick={selectable ? this.props.onSelect : (e) => e.preventDefault()}>
+        <a
+          className={cx(s.sideTabLink, !selectable ? s.sideTabLinkDisabled : undefined)}
+          href="#"
+          onClick={selectable ? this.props.onSelect : (e) => e.preventDefault()}
+        >
           {this.props.children}
         </a>
       </li>

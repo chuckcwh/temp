@@ -53,6 +53,7 @@ a {
   border: 0;
   cursor: pointer;
   text-align: center;
+  vertical-align: middle;
 }
 
 :global a.btn-default,
@@ -535,7 +536,7 @@ textarea:disabled {
 
 :global .TableRow {
   display: flex;
-  flex-flow: row;
+  flex-flow: row wrap;
   align-items: center;
   margin: 5px 0;
 
@@ -549,6 +550,10 @@ textarea:disabled {
 
   & :global .TableRowItem3 {
     flex: 3;
+  }
+
+  @media (--sm-viewport) {
+    flex-flow: column wrap;
   }
 }
 

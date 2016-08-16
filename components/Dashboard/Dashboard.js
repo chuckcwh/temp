@@ -10,6 +10,7 @@ import Header from '../Header';
 import ServiceCard from '../ServiceCard';
 import DashboardStatButton from '../DashboardStatButton';
 import DashboardNextAppt from '../DashboardNextAppt';
+import DashboardPendingConf from '../DashboardPendingConf';
 import NurseAvailableCases from '../NurseAvailableCases';
 import { fetchServices, getPatients, getCases, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
@@ -220,40 +221,70 @@ class Dashboard extends Component {
               icon="bell"
               text="Next Appointment"
               stat={confirmedApptSessions.length}
+              onClick={() => this.setState({
+                panelChoice: 'Next Appointment'
+              })}
             />
             <DashboardStatButton
               color="green"
               icon="hourglass"
               text="Pending Confirmation"
               stat={activeSessions.length}
+              onClick={() => this.setState({
+                panelChoice: 'Pending Confirmation'
+              })}
             />
             <DashboardStatButton
               color="red"
               icon="coin"
               text="Pending Payment"
               stat={`$ ${totalPendingAmt}`}
+              onClick={() => this.setState({
+                panelChoice: 'Pending Payment'
+              })}
             />
             <DashboardStatButton
               color="orange"
               icon="checklist"
               text="Appointments"
               stat={allAppointments.length}
+              onClick={() => this.setState({
+                panelChoice: 'Appointments'
+              })}
             />
           </div>
         );
-        dashboardBody = (
-          <div className={s.dashboardBody}>
-            <DashboardNextAppt
-              confirmedApptSessions={confirmedApptSessions}
-            />
+        const {panelChoice} = this.state;
+        if (panelChoice === 'Pending Confirmation') {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <DashboardPendingConf
+                confirmedApptSessions={confirmedApptSessions}
+              />
+            </div>
+          )
+        } else if (panelChoice === 'Pending Payment') {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <div className="dashboard-pending-payment">Pending Payment</div>
+            </div>
+          )
+        } else if (panelChoice === 'Appointments') {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <div className="dashboard-all-appointment">Appointment</div>
+            </div>
+          )
+        } else {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <DashboardNextAppt
+                confirmedApptSessions={confirmedApptSessions}
+              />
+            </div>
+          )
+        }
 
-            <div className="dashboard-pending-confirmation"></div>
-
-            <div className="dashboard-all-appointment"></div>
-
-            <div className="dashboard-pending-payment"></div>
-          </div>
-        );
       } else if (user.type === 'Nurse') {
         dashboardStats = (
           <div className={s.dashboardStatsWrapper}>

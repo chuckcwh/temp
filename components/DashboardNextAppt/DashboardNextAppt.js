@@ -104,7 +104,7 @@ class DashboardNextAppt extends Component {
         </div>
       );
     }
-    
+
     return (
       <div className={s.dashboardNextAppt}>
         <div className={s.dashboardNextApptCalendar}>

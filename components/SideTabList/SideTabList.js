@@ -6,26 +6,23 @@ class SideTabList extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      selectedIndex: props.selectedIndex,
-    };
   }
 
   handleSelect = (index) => (event) => {
     event.preventDefault();
     this.props.onSelect(index, this.state.selectedIndex);
-    this.setState({ selectedIndex: index });
   };
 
   render() {
-    const { children } = this.props;
+    const { children, selectable, selectedIndex } = this.props;
     return (
       <ul className={s.sideTabList}>
         {
           React.Children.map(children, (child, index) =>
             React.cloneElement(child, {
               onSelect: this.handleSelect(index),
-              selected: this.state.selectedIndex === index,
+              selected: selectedIndex === index,
+              selectable: selectable,
             })
           )
         }
@@ -43,11 +40,13 @@ SideTabList.propTypes = {
 
   onSelect: React.PropTypes.func,
   selectedIndex: React.PropTypes.number,
+  selectable: React.PropTypes.bool,
 };
 
 SideTabList.defaultProps = {
   onSelect: () => {},
   selectedIndex: undefined,
+  selectable: true,
 };
 
 export default SideTabList;

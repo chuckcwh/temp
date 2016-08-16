@@ -13,8 +13,12 @@
     background: color(var(--brand-color) a(15%));
     border-left: 2px solid var(--brand-color);
 
-    &:hover {
+    &:not(.sideTabLinkDisabled):hover {
       background: color(var(--brand-color) a(50%));
+      text-decoration: none;
+    }
+
+    &:hover {
       text-decoration: none;
     }
 
@@ -24,6 +28,10 @@
 
     & span {
       vertical-align: middle;
+    }
+
+    &.sideTabLinkDisabled {
+      cursor: default;
     }
   }
 

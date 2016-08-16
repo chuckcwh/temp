@@ -16,9 +16,10 @@ class SideTab extends Component {
   }
 
   render() {
+    const { selectable } = this.props;
     return (
       <li className={cx(s.sideTab, this.props.selected ? s.sideTabActive : null)}>
-        <a className={s.sideTabLink} href="#" onClick={this.props.onSelect}>
+        <a className={cx(s.sideTabLink, !selectable ? s.sideTabLinkDisabled : undefined)} href="#" onClick={selectable ? this.props.onSelect : (e) => e.preventDefault()}>
           {this.props.children}
         </a>
       </li>
@@ -32,11 +33,13 @@ SideTab.propTypes = {
 
   onSelect: React.PropTypes.func,
   selected: React.PropTypes.bool,
+  selectable: React.PropTypes.bool,
 };
 
 SideTab.defaultProps = {
   onSelect: () => {},
   selected: false,
+  selectable: true,
 };
 
 export default SideTab;

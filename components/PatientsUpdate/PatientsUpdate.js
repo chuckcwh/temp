@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import s from './PatientsUpdate.css';
 import { getPatients } from '../../actions';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import Link from '../Link';
 import Container from '../Container';
 import Header from '../Header';
-import DashboardTableButton from '../DashboardTableButton';
 import PatientsForm from '../PatientsForm';
 import Loader from 'react-loader';
 

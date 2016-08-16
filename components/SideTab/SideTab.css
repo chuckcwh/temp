@@ -41,6 +41,10 @@
       color: #fff;
       background: var(--brand-color);
       text-decoration: none;
+
+      &:hover {
+        background: var(--brand-color);
+      }
     }
 
     &::after {

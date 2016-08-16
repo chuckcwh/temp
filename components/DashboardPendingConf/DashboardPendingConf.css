@@ -1,0 +1,33 @@
+@import '../variables.css';
+
+.dashboardPendingConf {
+  display: block;
+  position: relative;
+
+  & .dashboardInfoBtn {
+    background-color: #FF8000;
+    color: #FFFFFF;
+    padding: 8px 36px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    font-size: 14px;
+    margin-top: 10px;
+    position: absolute;
+    top: 16px;
+    right: 0;
+
+    @media (--sm-viewport) {
+      top: 0;
+    }
+
+  }
+
+  & .dashboardInfoBtn:hover {
+    text-decoration: none;
+  }
+
+  & .cases {
+    padding-top: 100px;
+  }
+
+}

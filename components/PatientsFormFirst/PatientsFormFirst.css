@@ -29,5 +29,9 @@
       border-radius: 0;
       box-shadow: none;
     }
+
+    & button:not(:last-of-type) {
+      margin-right: 10px;
+    }
   }
 }

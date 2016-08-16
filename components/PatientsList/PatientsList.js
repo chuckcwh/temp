@@ -77,7 +77,7 @@ class PatientsList extends Component {
                       </div>
                     </div>
                     <div className={s.patientAction}>
-                      <DashboardTableButton color="green">
+                      <DashboardTableButton color="green" to={`/patients/${patient.id}`}>
                         <span className={s.patientBtnText}>Edit</span>
                       </DashboardTableButton>
                       <DashboardTableButton color="red">

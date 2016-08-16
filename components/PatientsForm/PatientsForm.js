@@ -38,11 +38,11 @@ class PatientsForm extends Component {
   };
 
   nextPage = () => {
-    // this.setState({ page: this.state.page + 1 });
+    this.setState({ selectedTabIndex: this.state.selectedTabIndex + 1 });
   };
 
   previousPage = () => {
-    // this.setState({ page: this.state.page - 1 });
+    this.setState({ selectedTabIndex: this.state.selectedTabIndex - 1 });
   };
 
   render() {
@@ -55,6 +55,7 @@ class PatientsForm extends Component {
             <SideTabList
               onSelect={this.handleTabSelect}
               selectedIndex={this.state.selectedTabIndex}
+              selectable={action === 'edit' ? true : false}
             >
               <SideTab><FaUser /><span>Basic Details</span></SideTab>
               <SideTab><FaHome /><span>Residential Details</span></SideTab>
@@ -64,13 +65,13 @@ class PatientsForm extends Component {
           </div>
           <div className={s.patientsFormPanel}>
             {selectedTabIndex === 0
-              && <PatientsFormFirst onSubmit={this.nextPage} showDayPickerPopup={showDayPickerPopup} />}
+              && <PatientsFormFirst action={action} onSubmit={this.nextPage} showDayPickerPopup={showDayPickerPopup} />}
             {selectedTabIndex === 1
-              && <PatientsFormSecond previousPage={this.previousPage} onSubmit={this.nextPage} fetchAddress={fetchAddress} />}
+              && <PatientsFormSecond action={action} previousPage={this.previousPage} onSubmit={this.nextPage} fetchAddress={fetchAddress} />}
             {selectedTabIndex === 2
-              && <PatientsFormThird previousPage={this.previousPage} onSubmit={this.nextPage} languages={languages} />}
+              && <PatientsFormThird action={action} previousPage={this.previousPage} onSubmit={this.nextPage} languages={languages} />}
             {selectedTabIndex === 3
-              && <PatientsFormFourth previousPage={this.previousPage} onSubmit={this.nextPage} />}
+              && <PatientsFormFourth action={action} previousPage={this.previousPage} onSubmit={this.nextPage} />}
           </div>
         </div>
         <DayPickerPopup title="Date of Birth" />

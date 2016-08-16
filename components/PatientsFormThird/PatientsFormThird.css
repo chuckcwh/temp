@@ -16,5 +16,9 @@
       padding: 5px 0;
       color: var(--secondary-color);
     }
+
+    & button:not(:last-of-type) {
+      margin-right: 10px;
+    }
   }
 }

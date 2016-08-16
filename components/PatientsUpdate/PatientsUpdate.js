@@ -43,12 +43,23 @@ class PatientsUpdate extends Component {
 
   render() {
     const { action, patients } = this.props;
+    let form;
+    switch (action) {
+      case 'add':
+        form = <PatientsForm action={action} />;
+        break;
+      case 'edit':
+        form = <PatientsForm action={action} />;
+        break;
+      default:
+        break;
+    }
     return (
       <div className={s.patientsUpdate}>
         <Header title={`${action === 'edit' ? 'Edit ' : 'Add '}Patient${action === 'edit' ? ': ' : ''}`} />
         <Container>
           <Loader className="spinner" loaded={!this.props.patientsFetching}>
-            <PatientsForm action={action} />
+            {form}
           </Loader>
         </Container>
       </div>

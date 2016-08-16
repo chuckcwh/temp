@@ -22,6 +22,7 @@ class PatientsFormFirst extends Component {
       handleSubmit,
       submitFailed,
       submitting,
+      action,
     } = this.props;
     return (
       <form className={s.patientsFormFirst} onSubmit={handleSubmit}>
@@ -57,7 +58,7 @@ class PatientsFormFirst extends Component {
             <div className="TableRowItem2">
               <div className="DateInput">
                 <input type="text" id="dob" name="dob" placeholder="YYYY-MM-DD" {...dob} />
-                <span onClick={() => this.props.showDayPickerPopup(dob.value, 'patientsFormFirst')}></span>
+                <span onClick={() => this.props.showDayPickerPopup(dob.value, 'patientsForm')}></span>
               </div>
               {dob.touched && dob.error && <div className={s.patientsFormFirstError}>{dob.error}</div>}
             </div>
@@ -139,7 +140,10 @@ class PatientsFormFirst extends Component {
         </div>
         <div className={s.patientsFormFirstSection}>
           {submitFailed && invalid && <div className={s.patientsFormFirstError}>You have one or more form field errors.</div>}
-          <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>
+          {action === 'add' &&
+            <button className="btn btn-primary" type="submit" disabled={submitting}>Next</button>
+          }
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>}
         </div>
       </form>
     );
@@ -182,12 +186,11 @@ PatientsFormFirst.propTypes = {
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   showDayPickerPopup: PropTypes.func.isRequired,
-  showAlertPopup: PropTypes.func.isRequired,
-  onNext: PropTypes.func.isRequired,
+  action: PropTypes.string.isRequired,
 };
 
 const reduxFormConfig = {
-  form: 'patientsFormFirst',
+  form: 'patientsForm',
   fields: [
     'fullName',
     'gender',
@@ -197,6 +200,7 @@ const reduxFormConfig = {
     'maritalStatus',
     'relationship',
   ],
+  destroyOnUnmount: false,
   validate,
 };
 

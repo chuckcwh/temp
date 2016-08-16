@@ -561,10 +561,10 @@ const bookingApp = combineReducers({
           return state;
       }
     },
-    patientsFormFirst: (state, action) => {
+    patientsForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
-          if (action.source === 'patientsFormFirst') {
+          if (action.source === 'patientsForm') {
             return {
               ...state,
               dob: {
@@ -574,12 +574,6 @@ const bookingApp = combineReducers({
             }
           }
           break;
-        default:
-          return state;
-      }
-    },
-    patientsFormSecond: (state, action) => {
-      switch (action.type) {
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
             return {

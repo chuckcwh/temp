@@ -25,6 +25,8 @@ class PatientsFormThird extends Component {
       handleSubmit,
       submitFailed,
       submitting,
+      previousPage,
+      action,
     } = this.props;
     return (
       <form className={s.patientsFormThird} onSubmit={handleSubmit}>
@@ -80,7 +82,13 @@ class PatientsFormThird extends Component {
         </div>
         <div className={s.patientsFormThirdSection}>
           {submitFailed && invalid && <div className={s.patientsFormThirdError}>You have one or more form field errors.</div>}
-          <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>
+          {action === 'add' &&
+            <div>
+              <button className="btn btn-default" type="button" disabled={submitting} onClick={previousPage}>Previous</button>
+              <button className="btn btn-primary" type="submit" disabled={submitting}>Next</button>
+            </div>
+          }
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>}
         </div>
       </form>
     );
@@ -108,18 +116,19 @@ PatientsFormThird.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  showAlertPopup: PropTypes.func.isRequired,
-  onNext: PropTypes.func.isRequired,
+  previousPage: PropTypes.func.isRequired,
   languages: PropTypes.object.isRequired,
+  action: PropTypes.string.isRequired,
 };
 
 const reduxFormConfig = {
-  form: 'patientsFormThird',
+  form: 'patientsForm',
   fields: [
     'race',
     'religion',
     'languages',
   ],
+  destroyOnUnmount: false,
   validate,
 };
 

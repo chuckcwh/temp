@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
 import s from './PatientsFormFirst.css';
+import Link from '../Link';
 
 class PatientsFormFirst extends Component {
 
@@ -141,7 +142,10 @@ class PatientsFormFirst extends Component {
         <div className={s.patientsFormFirstSection}>
           {submitFailed && invalid && <div className={s.patientsFormFirstError}>You have one or more form field errors.</div>}
           {action === 'add' &&
-            <button className="btn btn-primary" type="submit" disabled={submitting}>Next</button>
+            <div>
+              <Link to="/patients" className="btn btn-default" disabled={submitting}>Cancel</Link>
+              <button className="btn btn-primary" type="submit" disabled={submitting}>Next</button>
+            </div>
           }
           {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>}
         </div>

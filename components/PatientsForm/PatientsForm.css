@@ -16,6 +16,10 @@
     & .patientsFormPanel {
       flex: 8;
       margin-left: 30px;
+
+      @media (--sm-viewport) {
+        margin-left: 0;
+      }
     }
   }
 

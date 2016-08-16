@@ -22,8 +22,17 @@
       color: var(--secondary-color);
     }
 
-    & button:not(:last-of-type) {
+    & :global .btn:not(:last-child) {
       margin-right: 10px;
+
+      @media (--xs-viewport) {
+        margin-right: 0;
+        margin-bottom: 5px;
+      }
+    }
+
+    @media (--sm-viewport) {
+      text-align: center;
     }
   }
 }

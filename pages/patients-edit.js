@@ -4,13 +4,13 @@ import Patients from '../components/Patients';
 export default class extends Component {
 
   componentDidMount() {
-    document.title = 'eBeeCare | Add Patient';
+    document.title = 'eBeeCare | Edit Patient';
   }
 
   render() {
     return (
       <div>
-        <Patients action="add" />
+        <Patients action="edit" />
       </div>
     );
   }

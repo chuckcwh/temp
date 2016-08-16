@@ -18,13 +18,16 @@ class SideTabList extends Component {
     return (
       <ul className={s.sideTabList}>
         {
-          React.Children.map(children, (child, index) =>
-            React.cloneElement(child, {
+          React.Children.map(children, (child, index) => {
+            if (child === null) {
+              return null;
+            }
+            return React.cloneElement(child, {
               onSelect: this.handleSelect(index),
               selected: selectedIndex === index,
               selectable: selectable,
             })
-          )
+          })
         }
       </ul>
     );
@@ -34,8 +37,8 @@ class SideTabList extends Component {
 
 SideTabList.propTypes = {
   children: React.PropTypes.oneOfType([
-    React.PropTypes.instanceOf(SideTab),
-    React.PropTypes.arrayOf(React.PropTypes.instanceOf(SideTab)),
+    React.PropTypes.object,
+    React.PropTypes.array,
   ]),
 
   onSelect: React.PropTypes.func,

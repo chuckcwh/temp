@@ -30,9 +30,9 @@ class NurseAvailableCases extends Component {
         row.address = caze.addresses[0].region;
         row.date = moment(date.dateTimeStart).format('ddd, DD MMM YYYY');
         row.estTime = date.estTime;
-        row.patient = `${caze.patient.fullName} ( ${age}, ${caze.patient.gender})`;
+        row.patient = `${caze.patient.fullName} (${age}, ${caze.patient.gender})`;
         row.action = 'Accept';
-        row.price = `$ ${date.price}`;
+        row.price = `$${date.price}`;
         row.notes = caze.notes;
         rowArr.push(row);
       });
@@ -51,7 +51,7 @@ class NurseAvailableCases extends Component {
                 <Col md={2}>Region</Col>
                 <Col md={1}>Price</Col>
                 <Col md={1}>Case ID</Col>
-                <Col md={1}>Action</Col>
+                <Col md={1}>Actions</Col>
               </Row>
               {
                 rowArr.map(row => (

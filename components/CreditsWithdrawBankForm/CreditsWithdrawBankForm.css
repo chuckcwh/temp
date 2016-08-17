@@ -1,0 +1,33 @@
+@import '../variables.css';
+
+.creditsWithdrawBankForm {
+  font-size: 21px;
+
+  & input {
+    margin: 0;
+  }
+
+  & .creditsWithdrawBankFormSection {
+    padding: 0 0 20px;
+
+    & .creditsWithdrawBankFormGroup {
+      display: inline-block;
+      vertical-align: top;
+      width: 100%;
+
+      & .creditsWithdrawBankFormError {
+        padding: 5px 15px;
+        font-size: 85%;
+      }
+    }
+
+    & .creditsWithdrawBankFormError {
+      padding: 5px 0;
+      color: var(--secondary-color);
+    }
+
+    @media (--sm-viewport) {
+      text-align: center;
+    }
+  }
+}

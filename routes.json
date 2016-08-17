@@ -90,5 +90,9 @@
   {
     "path": "/patients/:id",
     "page": "./pages/patients-edit"
+  },
+  {
+    "path": "/credits",
+    "page": "./pages/credits"
   }
 ]

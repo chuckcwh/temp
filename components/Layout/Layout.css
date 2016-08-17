@@ -557,6 +557,23 @@ textarea:disabled {
   }
 }
 
+:global .well {
+  background-color: #fafafa;
+  border-radius: 10px;
+  border: 1px solid #EEEEEE;
+  box-shadow: 0 0 1px #E6E6E6;
+  padding: 20px;
+  margin-bottom: 15px;
+
+  & :global .featured {
+    margin: 0;
+  }
+
+  & h1 {
+    margin: 0;
+  }
+}
+
 :global .service-icon {
   display: inline-block;
   width: calc(var(--popular-icon-size) * var(--popular-icon-multipler));

@@ -144,10 +144,10 @@ class PatientsFormFirst extends Component {
           {action === 'add' &&
             <div>
               <Link to="/patients" className="btn btn-default" disabled={submitting}>Cancel</Link>
-              <button className="btn btn-primary" type="submit" disabled={submitting}>Next</button>
+              <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Next</button>
             </div>
           }
-          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>}
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>}
         </div>
       </form>
     );

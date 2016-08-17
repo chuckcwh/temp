@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import s from './Header.css';
 import Container from '../Container';
+import Link from '../Link';
 import util from '../../core/util';
 
 const imgProfile = require('../../assets/images/profile.png');
@@ -22,7 +23,7 @@ const Header = ({ title, user }) => {
                   Welcome,
                 </div>
                 <div className={s.headerMenuItemText}>
-                  <a href="/profile">{userName}</a>
+                  <Link to="/profile">{userName}</Link>
                 </div>
               </div>
             </div>
@@ -34,7 +35,7 @@ const Header = ({ title, user }) => {
                     Credit Balance
                   </div>
                   <div className={s.headerMenuItemText}>
-                    <a href="/credits">{`SGD ${user.credit}`}</a>
+                    <Link to="/credits">{`SGD ${user.credit}`}</Link>
                   </div>
                 </div>
               </div>

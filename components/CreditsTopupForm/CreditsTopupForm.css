@@ -1,0 +1,57 @@
+@import '../variables.css';
+
+.creditsTopupForm {
+  font-size: 21px;
+
+  & input {
+    margin: 0;
+  }
+
+  & .creditsTopupFormSection {
+    padding: 0 0 20px;
+
+    & .creditsTopupFormSectionBoxWrapper {
+      display: flex;
+      justify-content: space-around;
+      flex-flow: row wrap;
+
+      & .creditsTopupFormSectionBox {
+        display: table;
+        width: 250px;
+        height: 100px;
+        margin: 5px;
+        border: 1px dashed var(--border-color);
+        border-radius: 15px;
+        text-align: center;
+        
+        & .creditsTopupFormSectionBoxContent {
+          display: table-cell;
+          vertical-align: middle;
+            
+          & .creditsTopupFormSectionBoxValue {
+            font-size: 25px;
+            color: var(--secondary-color);
+          }
+
+          & .creditsTopupFormSectionBoxTitle {
+            font-size: 14px;
+            color: var(--text-color);
+          }
+        }
+      }
+    }
+
+    & .creditsTopupFormError {
+      padding: 5px 0;
+      color: var(--secondary-color);
+    }
+
+    & strong {
+      color: var(--secondary-color);
+    }
+
+    @media (--sm-viewport) {
+      text-align: center;
+    }
+  }
+}

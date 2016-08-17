@@ -73,10 +73,10 @@ class PatientsFormFourth extends Component {
           {action === 'add' &&
             <div>
               <button className="btn btn-default" type="button" disabled={submitting} onClick={previousPage}>Previous</button>
-              <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>
+              <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>
             </div>
           }
-          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={submitting}>Save</button>}
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>}
         </div>
       </form>
     );

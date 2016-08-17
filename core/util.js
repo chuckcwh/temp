@@ -235,8 +235,19 @@ export function getServiceIconClass(serviceId) {
   return subcatClass;
 }
 
-export function isInt(value) {
-  return !isNaN(value) && ((x) => (x | 0) === x)(parseFloat(value));
+export function isInt(val) {
+  const intRegex = /^-?\d+$/;
+  if (!intRegex.test(val)) return false;
+  const intVal = parseInt(val, 10);
+  return parseFloat(val) == intVal && !isNaN(intVal);
+}
+
+export function isFloat(val) {
+  const floatRegex = /^-?\d+(?:[.,]\d*?)?$/;
+  if (!floatRegex.test(val)) return false;
+  val = parseFloat(val);
+  if (isNaN(val)) return false;
+  return true;
 }
 
 const u = {
@@ -277,6 +288,7 @@ const u = {
   getServiceIconClass,
 
   isInt,
+  isFloat,
 };
 
 export default u;

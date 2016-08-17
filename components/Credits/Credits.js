@@ -49,16 +49,33 @@ class Credits extends Component {
                 <p className="featured">You have:</p>
                 <h1>{`SGD ${user && user.credit}`}</h1>
               </div>
-              <SideTabList
-                onSelect={this.handleTabSelect}
-                selectedIndex={this.state.selectedTabIndex}
-                selectable
-              >
-                {user && user.type === 'Client' && <SideTab><FaBank /><span>Top Up Credits</span></SideTab>}
-                <SideTab><FaHistory /><span>Transaction History</span></SideTab>
-                <SideTab><FaGetPocket /><span>Withdraw Credits</span></SideTab>
-                {user && user.type === 'Nurse' && <SideTab><FaMoney /><span>Payments</span></SideTab>}
-              </SideTabList>
+              {(() => {
+                if (user && user.type === 'Client') {
+                  return (
+                    <SideTabList
+                      onSelect={this.handleTabSelect}
+                      selectedIndex={this.state.selectedTabIndex}
+                      selectable
+                    >
+                      <SideTab><FaBank /><span>Top Up Credits</span></SideTab>
+                      <SideTab><FaHistory /><span>Transaction History</span></SideTab>
+                      <SideTab><FaGetPocket /><span>Withdraw Credits</span></SideTab>
+                    </SideTabList>
+                  );
+                } else if (user && user.type === 'Nurse') {
+                  return (
+                    <SideTabList
+                      onSelect={this.handleTabSelect}
+                      selectedIndex={this.state.selectedTabIndex}
+                      selectable
+                    >
+                      <SideTab><FaHistory /><span>Transaction History</span></SideTab>
+                      <SideTab><FaGetPocket /><span>Withdraw Credits</span></SideTab>
+                      <SideTab><FaMoney /><span>Payments</span></SideTab>
+                    </SideTabList>
+                  );
+                }
+              })()}
             </div>
             <div className={s.creditsPanel}>
               {(() => {

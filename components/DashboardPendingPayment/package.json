@@ -1,0 +1,4 @@
+{
+  "name": "DashboardPendingPayment",
+  "main": "./DashboardPendingPayment.js"
+}

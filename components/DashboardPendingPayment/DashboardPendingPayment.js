@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Loader from 'react-loader';
 import moment from 'moment';
-import s from './DashboardPendingConf.css';
+import s from './DashboardPendingPayment.css';
 import 'react-day-picker/lib/style.css';
 import Container from '../Container';
 import Link from '../Link';
@@ -18,7 +18,7 @@ import DashboardDataTable from '../DashboardDataTable';
 import { dummyData } from './dummyData.js';  // need to be replaced by real data
 
 
-class DashboardPendingConf extends Component {
+class DashboardPendingPayment extends Component {
 
   constructor(props) {
     super(props);
@@ -40,12 +40,11 @@ class DashboardPendingConf extends Component {
     // const addCazeUrl = `${bookingSite}booking1?uid=${request.user.id}&token=${request.user.token}`;
 
     return (
-      <div className={s.dashboardPendingConf}>
+      <div className={s.dashboardPendingPayment}>
 
         <Loader className="spinner" loaded={!this.props.cazesFetching}>
-          <a className={s.dashboardInfoBtn} href="#">Add a new case</a>
           <div className={s.cases}>
-            <DashboardDataTable tableData={dummyData} dataActions={['Cancel']}/>
+            <DashboardDataTable tableData={dummyData} dataActions={['View', 'Cancel', 'Pay']}/>
           </div>
         </Loader>
 
@@ -55,7 +54,7 @@ class DashboardPendingConf extends Component {
 
 }
 
-DashboardPendingConf.propTypes = {
+DashboardPendingPayment.propTypes = {
   confirmedApptSessions: React.PropTypes.array.isRequired,
 
   user: React.PropTypes.object,
@@ -120,4 +119,4 @@ const mapDispatchToProps = (dispatch) => ({
   // getCases: (params) => dispatch(getCases(params)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPendingConf);
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardPendingPayment);

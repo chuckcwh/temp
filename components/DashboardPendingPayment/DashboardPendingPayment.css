@@ -1,0 +1,15 @@
+@import '../variables.css';
+
+.dashboardPendingPayment {
+  display: block;
+  position: relative;
+
+  & .dashboardInfoBtn:hover {
+    text-decoration: none;
+  }
+
+  & .cases {
+    padding-top: 100px;
+  }
+
+}

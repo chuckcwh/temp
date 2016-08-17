@@ -11,6 +11,7 @@ import ServiceCard from '../ServiceCard';
 import DashboardStatButton from '../DashboardStatButton';
 import DashboardNextAppt from '../DashboardNextAppt';
 import DashboardPendingConf from '../DashboardPendingConf';
+import DashboardPendingPayment from '../DashboardPendingPayment';
 import NurseAvailableCases from '../NurseAvailableCases';
 import { fetchServices, getPatients, getCases, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
@@ -266,7 +267,9 @@ class Dashboard extends Component {
         } else if (panelChoice === 'Pending Payment') {
           dashboardBody = (
             <div className={s.dashboardBody}>
-              <div className="dashboard-pending-payment">Pending Payment</div>
+              <DashboardPendingPayment
+                confirmedApptSessions={confirmedApptSessions}
+              />
             </div>
           )
         } else if (panelChoice === 'Appointments') {

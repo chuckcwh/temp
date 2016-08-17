@@ -3,18 +3,22 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import moment from 'moment';
-import s from './DashboardAvailableCases.css';
+import s from './DashboardDataTable.css';
 import Container from '../Container';
 import DashboardTableButton from '../DashboardTableButton';
 
 
-class DashboardAvailableCases extends Component {
+class DashboardDataTable extends Component {
   render() {
-    const { user, cazes, confirmedApptSessions, tableData } = this.props;
+    const { user, cazes, confirmedApptSessions, tableData, dataActions } = this.props;
     const { name, cases } = tableData;
 
+    const actionBtn = dataActions.map(item => (
+      <DashboardTableButton>{item}</DashboardTableButton>
+    ))
+
     return (
-      <Grid fluid className={s.dashboardAvailableCases}>
+      <Grid fluid className={s.dashboardDataTable}>
         <p className={s.name}>{ name }</p>
         <Row className={s.lgHeader}>
           <Col md={2}>Case ID</Col>
@@ -44,7 +48,7 @@ class DashboardAvailableCases extends Component {
               <Col xs={4}>Status</Col>
               <Col xs={8} md={1}>{item.status}</Col>
               <Col xs={4}>Action</Col>
-              <Col xs={8} md={1}><DashboardTableButton>Cancel</DashboardTableButton></Col>
+              <Col xs={8} md={1}>{actionBtn}</Col>
             </Row>
           ))
         }
@@ -53,7 +57,8 @@ class DashboardAvailableCases extends Component {
   }
 }
 
-DashboardAvailableCases.propTypes = {
+
+DashboardDataTable.propTypes = {
   // confirmedApptSessions: React.PropTypes.array.isRequired,
   //
   // user: React.PropTypes.object,
@@ -75,4 +80,4 @@ DashboardAvailableCases.propTypes = {
   // getCases: React.PropTypes.func,
 };
 
-export default connect()(DashboardAvailableCases);
+export default connect()(DashboardDataTable);

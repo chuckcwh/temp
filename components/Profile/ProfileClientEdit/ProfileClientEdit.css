@@ -1,0 +1,22 @@
+@import '../../variables.css';
+
+
+.profileClientEdit {
+  min-height: 400px;
+  position: relative;
+
+  & .editWrapper {
+    display: flex;
+    flex-flow: row wrap;
+
+    & .sideBar {
+      flex: 3
+    }
+
+    & .editPanel {
+      flex: 8
+    }
+
+  }
+
+}

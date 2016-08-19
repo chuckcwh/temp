@@ -1,4 +1,4 @@
-@import '../variables.css';
+@import '../../variables.css';
 
 @keyframes MoveUpDown {
   0 {
@@ -17,14 +17,14 @@
   position: relative;
 
   & .main {
-    background: url(../../assets/images/home-concept.png) no-repeat center 0;
+    background: url(../../../assets/images/home-concept.png) no-repeat center 0;
     width: 100%;
     overflow: hidden;
     display: relative;
   }
 
   & .sun {
-    background: transparent url(../../assets/images/home-concept-icons.png) no-repeat 0 0;
+    background: transparent url(../../../assets/images/home-concept-icons.png) no-repeat 0 0;
     width: 60px;
     height: 56px;
     display: block;
@@ -34,7 +34,7 @@
   }
 
   & .cloud {
-    background: transparent url(../../assets/images/home-concept-icons.png) no-repeat 100% 0;
+    background: transparent url(../../../assets/images/home-concept-icons.png) no-repeat 100% 0;
     width: 116px;
     height: 56px;
     display: block;
@@ -56,11 +56,11 @@
       text-align: center;
 
       & .imgContainer {
-        background: transparent url(../../assets/images/home-concept-item.png) no-repeat 100% 0;
+        background: transparent url(../../../assets/images/home-concept-item.png) no-repeat 100% 0;
         width: 350px;
         height: 376px;
 
-        & img {
+        & .profileImg {
           position: absolute;
           border-radius: 50%;
           width: 98%;

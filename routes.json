@@ -98,5 +98,9 @@
   {
     "path": "/profile",
     "page": "./pages/profile"
+  },
+  {
+    "path": "/profile/:edit",
+    "page": "./pages/profile"
   }
 ]

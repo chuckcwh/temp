@@ -4,13 +4,11 @@ import Loader from 'react-loader';
 import classNames from 'classnames';
 import moment from 'moment';
 import s from './ProfileNurse.css';
-import Container from '../Container';
-import Link from '../Link';
-import Header from '../Header';
-// import DashboardNextAppt from '../DashboardNextAppt';
-// import { fetchServices, getPatients, getCases, setOrderService, setLastPage } from '../../actions';
-import history from '../../core/history';
-import util from '../../core/util';
+import Container from '../../Container';
+import Link from '../../Link';
+import Header from '../../Header';
+import history from '../../../core/history';
+import util from '../../../core/util';
 
 
 class ProfileNurse extends Component {

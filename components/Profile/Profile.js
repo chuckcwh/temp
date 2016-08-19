@@ -9,27 +9,38 @@ import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 import util from '../../core/util';
-import ProfileNurse from '../ProfileNurse';
-import ProfileClient from '../ProfileClient';
+import ProfileClient from './ProfileClient/ProfileClient';
+import ProfileClientEdit from './ProfileClientEdit/ProfileClientEdit';
+import ProfileNurse from './ProfileNurse/ProfileNurse';
+import ProfileNurseEdit from './ProfileNurseEdit/ProfileNurseEdit';
 
 
 class Profile extends Component {
 
   render() {
-    const { user } = this.props;
+    const { params, user } = this.props;
+    const { edit } = params;
+
     let content;
 
-    if (user) {
-      if (user.type === 'Client') {
-        content = (
-          <ProfileClient user={user}/>
-        )
-      } else if (user.type === 'Nurse') {
-        content = (
-          <ProfileNurse user={user}/>
-        )
-      }
+    if (user.type === 'Client' && !edit) {
+      content = (
+        <ProfileClient user={user}/>
+      )
+    } else if (user.type === 'Client' && edit) {
+      content = (
+        <ProfileClientEdit user={user}/>
+      )
+    } else if (user.type === 'Nurse' && !edit) {
+      content = (
+        <ProfileNurse user={user}/>
+      )
+    } else if (user.type === 'Nurse' && edit) {
+      content = (
+        <ProfileNurseEdit user={user}/>
+      )
     }
+
     return (
       <div className={s.profile}>
         <Header title={`${user && user.username}'s Profile`} />

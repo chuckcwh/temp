@@ -4,13 +4,12 @@ import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
 import s from './ProfileClient.css';
-import Container from '../Container';
-import Link from '../Link';
-import Header from '../Header';
-// import DashboardNextAppt from '../DashboardNextAppt';
-// import { fetchServices, getPatients, getCases, setOrderService, setLastPage } from '../../actions';
-import history from '../../core/history';
-import util from '../../core/util';
+import Container from '../../Container';
+import Link from '../../Link';
+import Header from '../../Header';
+import history from '../../../core/history';
+import util from '../../../core/util';
+// react-icons
 import MdAccessiblity from 'react-icons/lib/md/accessibility';
 import MdPerson from 'react-icons/lib/md/person';
 import MdLocationOn from 'react-icons/lib/md/location-on';
@@ -69,7 +68,7 @@ class ProfileClient extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <div className={s.photo}></div>
+                  <div className={s.profileImg}></div>
                 </div>
                 <p>{fullName}</p>
               </div>

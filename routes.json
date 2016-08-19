@@ -94,5 +94,9 @@
   {
     "path": "/credits",
     "page": "./pages/credits"
+  },
+  {
+    "path": "/profile",
+    "page": "./pages/profile"
   }
 ]

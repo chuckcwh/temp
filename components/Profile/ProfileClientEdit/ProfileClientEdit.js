@@ -11,7 +11,7 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import SideTabList from '../../SideTabList';
 import SideTab from '../../SideTab';
-// react-icons
+
 import MdPerson from 'react-icons/lib/md/person';
 import MdHome from 'react-icons/lib/md/home';
 import FaComments from 'react-icons/lib/fa/comments';
@@ -19,17 +19,20 @@ import FaImage from 'react-icons/lib/fa/image';
 import FaLock from 'react-icons/lib/fa/lock';
 
 
+const dataUrl = 'https://ebeecare-dev.s3.amazonaws.com/';
+
 class ProfileClientEdit extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
-      selectedTabIndex: 0,
-    };
+      selectedTabIndex: 0
+    }
   }
 
   handleTabSelect() {
-    this.setState({ selectedTabIndex: index });
+    this.setState({ selectedTabIndex: index })
   }
 
   render() {
@@ -39,10 +42,11 @@ class ProfileClientEdit extends Component {
     return (
       <div className={s.profileClientEdit}>
         <Container>
-          this is profile edit
           <div className={s.editWrapper}>
             <div className={s.sideBar}>
-              <div className={s.userImage}></div>
+              <div className={s.userImage}>
+                <img src={`${dataUrl}${user.picture}`} />
+              </div>
               <SideTabList
                 onSelect={this.handleTabSelect}
                 selectedIndex={this.state.selectedTabIndex}
@@ -61,6 +65,7 @@ class ProfileClientEdit extends Component {
           </div>
         </Container>
       </div>
+
     );
   }
 

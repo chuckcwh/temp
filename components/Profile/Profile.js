@@ -23,21 +23,21 @@ class Profile extends Component {
 
     let content;
 
-    if (user.type === 'Client' && !edit) {
+    if (user && user.type === 'Client' && !edit) {
       content = (
-        <ProfileClient user={user}/>
+        <ProfileClient user={user} />
       )
-    } else if (user.type === 'Client' && edit) {
+    } else if (user && user.type === 'Client' && edit) {
       content = (
-        <ProfileClientEdit user={user}/>
+        <ProfileClientEdit user={user} />
       )
-    } else if (user.type === 'Nurse' && !edit) {
+    } else if (user && user.type === 'Nurse' && !edit) {
       content = (
-        <ProfileNurse user={user}/>
+        <ProfileNurse user={user} />
       )
-    } else if (user.type === 'Nurse' && edit) {
+    } else if (user && user.type === 'Nurse' && edit) {
       content = (
-        <ProfileNurseEdit user={user}/>
+        <ProfileNurseEdit user={user} />
       )
     }
 

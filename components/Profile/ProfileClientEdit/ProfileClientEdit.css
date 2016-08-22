@@ -10,11 +10,22 @@
     flex-flow: row wrap;
 
     & .sideBar {
-      flex: 3
+      flex: 3;
+      min-height: 550px;
+
+      & .userImage {
+        width: 100%;
+
+        & img {
+          width: 100%;
+        }
+      }
+
     }
 
     & .editPanel {
-      flex: 8
+      flex: 8;
+
     }
 
   }

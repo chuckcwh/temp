@@ -28,7 +28,7 @@ class ProfileClient extends Component {
 
     const profile = {
       photo: `${dataUrl}${user.picture}`,
-      gender: gender ? (<p><MdAccessiblity/> {gender}</p>) : null,
+      gender: gender ? (<p><MdAccessiblity /> {gender}</p>) : null,
       ageGroup: function() {
         let returnAgeGroup;
         if (dob) {
@@ -41,20 +41,20 @@ class ProfileClient extends Component {
             const hiYears = loYears + 9;
             returnAgeGroup = `${loYears}-${hiYears} years old`;
           }
-          return (<p><MdPerson/> {returnAgeGroup}</p>)
+          return (<p><MdPerson /> {returnAgeGroup}</p>)
         }
       },
       address: addresses ? (<p><MdLocationOn/> {addresses[0].region}</p>) : null,
       raceReligion: function() {
         const returnReligion = religion ? ` - ${religion}`: null;
-        return (race || returnReligion) ? (<p><TiWorld/> {`${race}${returnReligion}`}</p>) : null;
+        return (race || returnReligion) ? (<p><TiWorld /> {`${race}${returnReligion}`}</p>) : null;
       },
       languages: function() {
         let callBack = [];
         languages.map(lang => callBack.push(lang.name));
-        return (<p><FaComment/> {`${callBack.join(', ')}`}</p>)
+        return (<p><FaComment /> {`${callBack.join(', ')}`}</p>)
       },
-      nationality: nationality ? (<p><FaFlag/> {nationality}</p>) : null,
+      nationality: nationality ? (<p><FaFlag /> {nationality}</p>) : null,
     }
 
     return (
@@ -68,7 +68,7 @@ class ProfileClient extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <div className={s.profileImg}></div>
+                  <img src={profile.photo} className={s.profileImg} />
                 </div>
                 <p>{fullName}</p>
               </div>

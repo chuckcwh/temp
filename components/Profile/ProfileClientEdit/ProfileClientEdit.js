@@ -31,13 +31,14 @@ class ProfileClientEdit extends Component {
     }
   }
 
-  handleTabSelect() {
+  handleTabSelect(index) {
     this.setState({ selectedTabIndex: index })
   }
 
   render() {
     const { user } = this.props;
     const { fullName, gender, dob, addresses, race, religion, languages, nationality } = user.clients[0];
+    const { selectedTabIndex } = this.state;
 
     return (
       <div className={s.profileClientEdit}>
@@ -48,7 +49,7 @@ class ProfileClientEdit extends Component {
                 <img src={`${dataUrl}${user.picture}`} />
               </div>
               <SideTabList
-                onSelect={this.handleTabSelect}
+                onSelect={this.handleTabSelect.bind(this)}
                 selectedIndex={this.state.selectedTabIndex}
                 selectable
                 >
@@ -60,7 +61,11 @@ class ProfileClientEdit extends Component {
               </SideTabList>
             </div>
             <div className={s.editPanel}>
-              WTF the main panel
+              {selectedTabIndex === 0 && (<p>Basic Details</p>)}
+              {selectedTabIndex === 1 && (<p>Residential Details</p>)}
+              {selectedTabIndex === 2 && (<p>Cultural Details</p>)}
+              {selectedTabIndex === 3 && (<p>Profile Picture</p>)}
+              {selectedTabIndex === 4 && (<p>Password</p>)}
             </div>
           </div>
         </Container>

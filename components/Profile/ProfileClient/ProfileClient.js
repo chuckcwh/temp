@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
@@ -92,7 +92,11 @@ class ProfileClient extends Component {
 }
 
 ProfileClient.propTypes = {
-  user: React.PropTypes.object,
+  user: PropTypes.object,
 };
 
-export default ProfileClient;
+const mapStateToProps = (state) => ({
+  user: state.user.data,
+});
+
+export default connect(mapStateToProps)(ProfileClient);

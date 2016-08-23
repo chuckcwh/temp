@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import classNames from 'classnames';
@@ -25,19 +25,19 @@ class Profile extends Component {
 
     if (user && user.type === 'Client' && !edit) {
       content = (
-        <ProfileClient user={user} />
+        <ProfileClient />
       )
     } else if (user && user.type === 'Client' && edit) {
       content = (
-        <ProfileClientEdit user={user} />
+        <ProfileClientEdit />
       )
     } else if (user && user.type === 'Nurse' && !edit) {
       content = (
-        <ProfileNurse user={user} />
+        <ProfileNurse />
       )
     } else if (user && user.type === 'Nurse' && edit) {
       content = (
-        <ProfileNurseEdit user={user} />
+        <ProfileNurseEdit />
       )
     }
 
@@ -54,7 +54,7 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  user: React.PropTypes.object,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({

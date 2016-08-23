@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
@@ -11,7 +11,9 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import SideTabList from '../../SideTabList';
 import SideTab from '../../SideTab';
-
+// Sub Components
+import ProfileClientEditBasic from '../ProfileClientEditBasic/ProfileClientEditBasic';
+// React-icons
 import MdPerson from 'react-icons/lib/md/person';
 import MdHome from 'react-icons/lib/md/home';
 import FaComments from 'react-icons/lib/fa/comments';
@@ -61,11 +63,13 @@ class ProfileClientEdit extends Component {
               </SideTabList>
             </div>
             <div className={s.editPanel}>
-              {selectedTabIndex === 0 && (<p>Basic Details</p>)}
-              {selectedTabIndex === 1 && (<p>Residential Details</p>)}
-              {selectedTabIndex === 2 && (<p>Cultural Details</p>)}
-              {selectedTabIndex === 3 && (<p>Profile Picture</p>)}
-              {selectedTabIndex === 4 && (<p>Password</p>)}
+              <div>
+                {selectedTabIndex === 0 && (<ProfileClientEditBasic />)}
+                {selectedTabIndex === 1 && (<p>Residential Details</p>)}
+                {selectedTabIndex === 2 && (<p>Cultural Details</p>)}
+                {selectedTabIndex === 3 && (<p>Profile Picture</p>)}
+                {selectedTabIndex === 4 && (<p>Password</p>)}
+              </div>
             </div>
           </div>
         </Container>
@@ -77,7 +81,11 @@ class ProfileClientEdit extends Component {
 }
 
 ProfileClientEdit.propTypes = {
-  user: React.PropTypes.object,
+  user: PropTypes.object,
 };
 
-export default ProfileClientEdit;
+const mapStateToProps = (state) => ({
+  user: state.user.data,
+});
+
+export default connect(mapStateToProps)(ProfileClientEdit);

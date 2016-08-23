@@ -26,8 +26,8 @@
     & .editPanel {
       flex: 8;
 
-      & div {
-        padding: 0 40px;
+      & .editPanelContainer {
+        padding-left: 40px;
       }
     }
 

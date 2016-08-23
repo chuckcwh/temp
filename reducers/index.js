@@ -620,7 +620,24 @@ const bookingApp = combineReducers({
         default:
           return state;
       }
-    }
+    },
+    profileClientEditBasicForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'profileClientEditBasicForm') {
+            return {
+              ...state,
+              dob: {
+                ...state.dob,
+                value: action.value
+              }
+            }
+          }
+          break;
+        default:
+          return state;
+      }
+    },
   })
 });
 

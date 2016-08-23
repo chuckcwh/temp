@@ -11,7 +11,7 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import { reduxForm } from 'redux-form';
 import InlineForm from '../../MultiSelect';
-import { showDayPickerPopup } from '../../actions';
+import { showDayPickerPopup } from '../../../actions';
 
 import FaLock from 'react-icons/lib/fa/lock';
 

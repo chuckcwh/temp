@@ -18,6 +18,7 @@ import FaMoney from 'react-icons/lib/fa/money';
 import CreditsTopup from '../CreditsTopup';
 import CreditsTransactions from '../CreditsTransactions';
 import CreditsWithdraw from '../CreditsWithdraw';
+import CreditsPayments from '../CreditsPayments';
 
 class Credits extends Component {
 
@@ -91,6 +92,8 @@ class Credits extends Component {
                   return (
                     <div>
                       {selectedTabIndex === 0 && <CreditsTransactions />}
+                      {selectedTabIndex === 1 && <CreditsWithdraw />}
+                      {selectedTabIndex === 2 && <CreditsPayments />}
                     </div>
                   );
                 }

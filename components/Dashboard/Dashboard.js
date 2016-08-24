@@ -314,6 +314,7 @@ class Dashboard extends Component {
               icon="coin"
               text="Total Credits"
               stat={`$ ${0}`}
+              to="/credits"
             />
           </div>
         );

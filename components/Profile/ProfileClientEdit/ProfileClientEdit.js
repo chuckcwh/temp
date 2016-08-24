@@ -12,7 +12,7 @@ import util from '../../../core/util';
 import SideTabList from '../../SideTabList';
 import SideTab from '../../SideTab';
 // Sub Components
-import ProfileClientEditBasic from '../ProfileClientEditBasic/ProfileClientEditBasic';
+import ProfileClientEditBasicForm from '../ProfileClientEditBasicForm/ProfileClientEditBasicForm';
 // React-icons
 import MdPerson from 'react-icons/lib/md/person';
 import MdHome from 'react-icons/lib/md/home';
@@ -63,8 +63,8 @@ class ProfileClientEdit extends Component {
               </SideTabList>
             </div>
             <div className={s.editPanel}>
-              <div>
-                {selectedTabIndex === 0 && (<ProfileClientEditBasic />)}
+              <div className={s.editPanelContainer}>
+                {selectedTabIndex === 0 && (<ProfileClientEditBasicForm />)}
                 {selectedTabIndex === 1 && (<p>Residential Details</p>)}
                 {selectedTabIndex === 2 && (<p>Cultural Details</p>)}
                 {selectedTabIndex === 3 && (<p>Profile Picture</p>)}

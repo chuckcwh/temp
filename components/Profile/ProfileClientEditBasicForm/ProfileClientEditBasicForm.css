@@ -1,0 +1,17 @@
+@import '../../variables.css';
+
+
+.profileClientEditBasicForm {
+  min-height: 400px;
+  position: relative;
+  padding-bottom: 40px;
+
+  & .selectInput {
+    display: inline-block;
+  }
+
+  & .formSectionSubmit {
+    margin-top: 40px;
+  }
+
+}

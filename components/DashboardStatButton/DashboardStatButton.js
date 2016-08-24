@@ -1,9 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
 import s from './DashboardStatButton.css';
+import Link from '../Link';
 
-const DashboardStatButton = ({ onClick, color, icon, text, stat }) => (
-  <a className={s.dashboardStatButton} onClick={onClick}>
+const DashboardStatButton = ({ to, onClick, color, icon, text, stat }) => {
+  let content = (
     <div className={classNames(s.dashboardStat, color)}>
       <div className={classNames(s.dashboardStatVisual, icon)}></div>
       <div className={s.dashboardStatDetails}>
@@ -11,10 +12,23 @@ const DashboardStatButton = ({ onClick, color, icon, text, stat }) => (
       </div>
       <div className={s.dashboardStatMore}>{stat}</div>
     </div>
-  </a>
-);
+  );
+  if (to) {
+    return (
+      <Link className={s.dashboardStatButton} to={to}>
+        {content}
+      </Link>
+    );  
+  }
+  return (
+    <a className={s.dashboardStatButton} onClick={onClick}>
+      {content}
+    </a>
+  );
+};
 
 DashboardStatButton.propTypes = {
+  to: React.PropTypes.string,
   onClick: React.PropTypes.func,
   color: React.PropTypes.string,
   icon: React.PropTypes.string,

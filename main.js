@@ -11,11 +11,13 @@ import configureStore from './core/configureStore';
 import router from './core/router';
 import history from './core/history';
 
-import { getUserWithToken } from './actions';
+import { fetchConfig, getUserWithToken } from './actions';
 
 import Layout from './components/Layout';
 
 const store = configureStore();
+
+store.dispatch(fetchConfig());
 
 // Start loading user if user id & token is present
 const userId = cookie.load('user_id');

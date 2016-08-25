@@ -58,6 +58,29 @@ const user = (state = {
   }
 }
 
+const config = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  data: null,
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.CONFIG_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false
+      })
+    case ActionTypes.CONFIG_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        data: action.response && action.response.data,
+        lastUpdated: action.response && action.response.receivedAt
+      })
+    default:
+      return state
+  }
+}
+
 const allServices = (state = {
   isFetching: false,
   didInvalidate: false,
@@ -466,6 +489,7 @@ const errorMessage = (state = null, action) => {
 
 const bookingApp = combineReducers({
   user,
+  config,
   allServices,
   languages,
   booking,

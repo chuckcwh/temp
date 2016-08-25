@@ -1,0 +1,17 @@
+@import '../../variables.css';
+
+
+.ProfileEditResidentialForm {
+  min-height: 400px;
+  position: relative;
+  padding-bottom: 40px;
+
+  & .addrInput {
+    width: 100%;
+  }
+
+  & .formSectionSubmit {
+    margin-top: 40px;
+  }
+
+}

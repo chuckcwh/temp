@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import classNames from 'classnames';
+import cx from 'classnames';
 import moment from 'moment';
 import s from './ProfileNurse.css';
 import Container from '../../Container';
 import Link from '../../Link';
-import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
 
+// react-icons
+import MdAccessiblity from 'react-icons/lib/md/accessibility';
+import MdPerson from 'react-icons/lib/md/person';
+import MdLocationOn from 'react-icons/lib/md/location-on';
+import TiWorld from 'react-icons/lib/ti/world';
+import FaComment from 'react-icons/lib/fa/comment';
+import FaFlag from 'react-icons/lib/fa/flag';
+import { ProfileDetail } from '../ProfileBase/ProfileBase';
+
+
+const dataUrl = 'https://ebeecare-dev.s3.amazonaws.com/';
 
 class ProfileNurse extends Component {
 
@@ -19,12 +29,52 @@ class ProfileNurse extends Component {
 
   render() {
     const { user } = this.props;
+    const { fullName, gender, dob, addresses, race, religion, languages, nationality, ratings } = user.nurses && user.nurses[0];
+
+    const profile = {
+      photo: user.picture ? `${dataUrl}${user.picture}` : require('../../../assets/images/noimage.gif'),
+
+      gender: gender ? (<p><MdAccessiblity /> {gender}</p>) : null,
+
+      ageGroup: function() {
+        let returnAgeGroup;
+        if (dob) {
+          const years = moment().diff(dob, 'years');
+          if (years % 10 === 0) {
+            const loYears = years - 9;
+            returnAgeGroup = `${loYears}-${years} years old`;
+          } else {
+            const loYears = (Math.floor(years / 10) * 10) + 1;
+            const hiYears = loYears + 9;
+            returnAgeGroup = `${loYears}-${hiYears} years old`;
+          }
+          return (<p><MdPerson /> {returnAgeGroup}</p>)
+        }
+      },
+
+      address: addresses ? (<p><MdLocationOn/> {addresses[0].region}</p>) : null,
+
+      raceReligion: function() {
+        const returnReligion = religion ? ` - ${religion}`: null;
+        return (race || returnReligion) ? (<p><TiWorld /> {`${race}${returnReligion}`}</p>) : null;
+      },
+
+      languages: function() {
+        let callBack = [];
+        languages.map(lang => callBack.push(lang.name));
+        return (<p><FaComment /> {`${callBack.join(', ')}`}</p>)
+      },
+
+      nationality: nationality ? (<p><FaFlag /> {nationality}</p>) : null,
+
+      fullName,
+    }
+
     return (
-      <div className={s.profile}>
-        <Header title={`${user.username}'s Profile`} />
-        <Container>
-          This is nurse.
-        </Container>
+      <div className={s.profileNurse}>
+        <ProfileDetail profile={profile} />
+
+
       </div>
     );
   }

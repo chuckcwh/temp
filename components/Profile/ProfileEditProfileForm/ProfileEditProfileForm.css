@@ -1,0 +1,56 @@
+@import '../../variables.css';
+
+
+.ProfileEditProfileForm {
+  min-height: 400px;
+  position: relative;
+  padding-bottom: 40px;
+
+  & .formMain {
+    width: 400px;
+    height: 400px;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  & .avatarImg {
+    width: 98%;
+  }
+
+  & .formUpload {
+    margin-top: 20px;
+  }
+
+  & .formUploadNote {
+    color: #FFFFFF;
+    background-color: #ff444f;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  & .inputLabel {
+    margin-top: 20px;
+    display: inline-block;
+    text-align: center;
+    background-color: #f78d00;
+    text-decoration: none;
+    color: #FFF;
+    width: 260px;
+    padding: 0.3em 0;
+    font-size: 25px;
+    cursor: pointer;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  & .inputfile {
+    display: none;
+  }
+
+  & .formSubmit {
+    margin-top: 40px;
+  }
+
+}

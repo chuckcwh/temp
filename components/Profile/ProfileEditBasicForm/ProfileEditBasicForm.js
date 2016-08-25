@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
-import s from './ProfileClientEditBasicForm.css';
+import s from './ProfileEditBasicForm.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
@@ -17,7 +17,7 @@ import DayPickerPopup from '../../DayPickerPopup';
 import FaLock from 'react-icons/lib/fa/lock';
 
 
-class ProfileClientEditBasicForm extends Component {
+class ProfileEditBasicForm extends Component {
 
   render() {
     const {
@@ -28,10 +28,11 @@ class ProfileClientEditBasicForm extends Component {
       submitting,
       showDayPickerPopup,
     } = this.props;
-    console.log('showDayPicker', showDayPickerPopup);
+
+    const idTypeChoice = ['Singaporean Pink IC', 'Singaporean Blue IC', 'Others'];
 
     return (
-      <div className={s.profileClientEditBasicForm}>
+      <div className={s.ProfileEditBasicForm}>
         <DayPickerPopup title="Date of Birth" />
 
         <form onSubmit={handleSubmit}>
@@ -64,7 +65,7 @@ class ProfileClientEditBasicForm extends Component {
                 <div className="TableRowItem2">
                   <div className="DateInput">
                     <input type="text" id="dob" name="dob" placeholder="Birth Date* (YYYY-MM-DD)" {...dob} />
-                    <span onClick={() => this.props.showDayPickerPopup(dob.value, 'profileClientEditBasicForm')}></span>
+                    <span onClick={() => this.props.showDayPickerPopup(dob.value, 'ProfileEditBasicForm')}></span>
                   </div>
                 </div>
             </div>
@@ -84,12 +85,11 @@ class ProfileClientEditBasicForm extends Component {
                   <span></span>
                   <select id={idType} name={idType} {...idType} value={idType.value || ''}>
                     <option value="">-- Select --</option>
-                    <option value="male">Singaporean Pink IC</option>
-                    <option value="male">Singaporean Blue IC</option>
-                    <option value="female">Others</option>
+                    {idTypeChoice.map(item => (
+                      <option value={item}>{item}</option>
+                    ))}
                   </select>
                 </div>
-                <input type="text" {...idType} />
                 {idType.touched && idType.error && <div className={s.formError}>{idType.error}</div>}
               </div>
             </div>
@@ -147,7 +147,7 @@ const validate = values => {
   // }
 }
 
-ProfileClientEditBasicForm.propTypes = {
+ProfileEditBasicForm.propTypes = {
   user: PropTypes.object,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -157,7 +157,7 @@ ProfileClientEditBasicForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'profileClientEditBasicForm',
+  form: 'ProfileEditBasicForm',
   fields: ['fullName', 'gender', 'dob', 'idNumber', 'idType', 'occupation', 'maritalStatus', 'email'],
   validate,
 }
@@ -183,4 +183,4 @@ const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
 })
 
-export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileClientEditBasicForm);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditBasicForm);

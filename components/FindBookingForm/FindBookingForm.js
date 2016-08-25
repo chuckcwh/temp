@@ -44,7 +44,7 @@ const FindBookingForm = (props) => {
   return (
     <form className={s.findBookingForm} onSubmit={handleSubmit(submit)}>
       <h3>Have Guest Booking ID?</h3>
-      <div className="IconInput BookingIdInput">
+      <div className="IconInput TickInput">
         <span />
         <input type="text" placeholder="Booking ID*" {...bid} />
       </div>

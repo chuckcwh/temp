@@ -1,7 +1,7 @@
 @import '../variables.css';
 
-.loginForm {
-  & .loginFormError {
+.signupForm {
+  & .signupFormError {
     padding: 5px 0;
     color: var(--secondary-color);
     font-size: 85%;
@@ -11,14 +11,14 @@
 .accountContainerItemMiddle {
   composes: accountContainerItemMiddle from '../Account/Account.css';
 
-  & .signupContainer {
+  & .loginContainer {
     padding: 10px 0;
 
-    & .signupLink {
-      color: var(--secondary-color);
+    & p {
+      margin: 0;
     }
 
-    & .forgotPasswordLink {
+    & .loginLink {
       color: var(--secondary-color);
     }
   }

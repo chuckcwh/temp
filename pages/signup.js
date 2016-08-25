@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Account from '../components/Account';
+import history from '../core/history';
 
 export default class extends Component {
 
   componentDidMount() {
-    document.title = 'eBeeCare | Forgot Password';
+    document.title = 'eBeeCare | Signup';
   }
 
   handleSuccess = () => {
@@ -14,7 +15,7 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <Account type="forgot-password" onSuccess={this.handleSuccess} />
+        <Account type="signup" onSuccess={this.handleSuccess} />
       </div>
     );
   }

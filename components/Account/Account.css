@@ -53,7 +53,7 @@
   Extracted as it is being composed
 */
 .accountContainerItemMiddle {
-  height: 95px;
+  min-height: 95px;
 
   & .loginInsteadContainer {
     padding: 10px 0;

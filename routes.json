@@ -36,8 +36,16 @@
     "page": "./pages/terms-of-service-nurse"
   },
   {
+    "path": "/signup",
+    "page": "./pages/signup"
+  },
+  {
     "path": "/login",
     "page": "./pages/login"
+  },
+  {
+    "path": "/forgot-password",
+    "page": "./pages/forgot-password"
   },
   {
     "path": "/booking-manage",
@@ -102,5 +110,9 @@
   {
     "path": "/profile/:edit",
     "page": "./pages/profile"
+  },
+  {
+    "path": "/schedule",
+    "page": "./pages/schedule"
   }
 ]

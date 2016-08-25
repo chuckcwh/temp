@@ -1,6 +1,10 @@
 import { CALL_API } from '../middleware/api'
 import moment from 'moment';
 
+export const CONFIG_REQUEST = 'CONFIG_REQUEST'
+export const CONFIG_SUCCESS = 'CONFIG_SUCCESS'
+export const CONFIG_FAILURE = 'CONFIG_FAILURE'
+
 export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
@@ -33,6 +37,10 @@ export const CASES_FAILURE = 'CASES_FAILURE'
 export const CASE_CREATE_REQUEST = 'CASE_CREATE_REQUEST'
 export const CASE_CREATE_SUCCESS = 'CASE_CREATE_SUCCESS'
 export const CASE_CREATE_FAILURE = 'CASE_CREATE_FAILURE'
+
+export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
+export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
+export const USER_CREATE_FAILURE = 'USER_CREATE_FAILURE'
 
 export const USER_REQUEST = 'USER_REQUEST'
 export const USER_SUCCESS = 'USER_SUCCESS'
@@ -129,9 +137,16 @@ export const AVAILABLE_CASES_FAILURE = 'AVAILABLE_CASES_FAILURE'
 
 function fetchAction(route) {
   return {
+    getConfig: {
+      types: [ CONFIG_REQUEST, CONFIG_SUCCESS, CONFIG_FAILURE ],
+      endpoint: 'config',
+      method: 'get',
+      auth: 'app',
+      entity: 'config'
+    },
     getServices: {
       types: [ SERVICES_REQUEST, SERVICES_SUCCESS, SERVICES_FAILURE ],
-      endpoint: 'getServices',
+      endpoint: 'services',
       method: 'get',
       auth: 'app',
       entity: 'allServices'
@@ -190,6 +205,12 @@ function fetchAction(route) {
     loginClient: {
       types: [ LOGIN_CLIENT_REQUEST, LOGIN_CLIENT_SUCCESS, LOGIN_CLIENT_FAILURE ],
       endpoint: 'mlogin',
+      method: 'post',
+      auth: 'app'
+    },
+    createUser: {
+      types: [ USER_CREATE_REQUEST, USER_CREATE_SUCCESS, USER_CREATE_FAILURE ],
+      endpoint: 'users',
       method: 'post',
       auth: 'app'
     },
@@ -353,6 +374,10 @@ function fetch(route, data) {
   }
 }
 
+export function fetchConfig() {
+  return fetch('getConfig');
+}
+
 export function fetchServices() {
   return fetch('getServices');
 }
@@ -459,6 +484,10 @@ export function login(params) {
 
 export function loginClient(params) {
   return fetch('loginClient', params);
+}
+
+export function createUser(params) {
+  return fetch('createUser', params);
 }
 
 export function getUser() {

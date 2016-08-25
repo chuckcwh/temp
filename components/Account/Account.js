@@ -6,7 +6,9 @@ import s from './Account.css';
 import Container from '../Container';
 import Link from '../Link';
 import FindBookingForm from '../FindBookingForm';
+import SignupForm from '../SignupForm';
 import LoginForm from '../LoginForm';
+import ForgotPasswordForm from '../ForgotPasswordForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
@@ -68,6 +70,14 @@ class Account extends Component {
           </div>
         </div>
       );
+    } else if (this.props.type === 'signup') {
+      components = (
+        <div className={s.accountContainer}>
+          <div className={classNames(s.accountSignup, s.accountContainerItem)}>
+            <SignupForm {...this.props} />
+          </div>
+        </div>
+      );
     } else if (this.props.type === 'login') {
       components = (
         <div className={s.accountContainer}>
@@ -80,18 +90,7 @@ class Account extends Component {
       components = (
         <div className={s.accountContainer}>
           <div className={classNames(s.accountForgot, s.accountContainerItem)}>
-            <form ref={(c) => (this.accountForgotPasswordForm = c)}>
-              <h3>Forgot Password?</h3>
-              <div className="IconInput EmailInput">
-                <input type="email" placeholder="Enter Email*" />
-              </div>
-              <div className={s.accountContainerItemMiddle}>
-                <div className={s.forgotPasswordContainer}>
-                  <Link to="/manage-booking" className={s.forgotPasswordLink}>Remembered Password?</Link>
-                </div>
-              </div>
-              <a href="#" className="btn btn-primary">Submit</a>
-            </form>
+            <ForgotPasswordForm {...this.props} />
           </div>
         </div>
       );

@@ -10,4 +10,16 @@
 
 .accountContainerItemMiddle {
   composes: accountContainerItemMiddle from '../Account/Account.css';
+
+  & .signupContainer {
+    padding: 10px 0;
+
+    & .signupLink {
+      color: var(--secondary-color);
+    }
+
+    & .forgotPasswordLink {
+      color: var(--secondary-color);
+    }
+  }
 }

@@ -280,7 +280,7 @@ input[type=password] {
   margin-right: 20px;
 }
 
-:global .IconInput {
+:global(.IconInput) {
   position: relative;
   width: 260px;
   height: 55px;
@@ -303,31 +303,37 @@ input[type=password] {
     background: transparent;
   }
 
-  &.EmailInput {
+  &:global(.UserInput) {
+    & > span {
+      background: url('../../assets/images/user.png') no-repeat 12.5px;
+    }
+  }
+
+  &:global(.EmailInput) {
     & > span {
       background: url('../../assets/images/mail.png') no-repeat 12.5px;
     }
   }
 
-  &.BookingIdInput {
+  &:global(.TickInput) {
     & > span {
       background: url('../../assets/images/tick.png') no-repeat 12.5px;
     }
   }
 
-  &.PasswordInput {
+  &:global(.PasswordInput) {
     & > span {
       background: url('../../assets/images/lock.png') no-repeat 12.5px;
     }
   }
 
-  &.PhoneInput {
+  &:global(.PhoneInput) {
     & > span {
       background: url('../../assets/images/phone.png') no-repeat 12.5px;
     }
   }
 
-  &:not(:first-of-type) {
+  & + & {
     border-top: 0;
 
     & input {

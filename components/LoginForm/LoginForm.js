@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Loader from 'react-loader';
 import { reduxForm } from 'redux-form';
 import s from './LoginForm.css';
+import Link from '../Link';
 import { login, loginClient } from '../../actions';
 
 const submit = (props) => (values, dispatch) => (
@@ -72,6 +73,11 @@ class LoginForm extends Component {
             <input type="password" placeholder="Enter Password" {...password} />
           </div>
           <div className={s.accountContainerItemMiddle}>
+            <div className={s.signupContainer}>
+              <Link to="/signup" className={s.signupLink}>No Account?</Link>
+              &nbsp;
+              <Link to="/forgot-password" className={s.forgotPasswordLink}>Forgot Password?</Link>
+            </div>
             {email.touched && email.error && <div className={s.loginFormError}>{email.error}</div>}
             {password.touched && password.error && <div className={s.loginFormError}>{password.error}</div>}
             {error && <div className={s.loginFormError}>{error}</div>}

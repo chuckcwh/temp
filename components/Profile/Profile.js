@@ -13,9 +13,6 @@ import util from '../../core/util';
 import ProfileBase from './ProfileBase/ProfileBase';
 import ProfileEdit from './ProfileEdit/ProfileEdit';
 
-// import ProfileNurse from './ProfileNurse/ProfileNurse';
-// import ProfileNurseEdit from './ProfileNurseEdit/ProfileNurseEdit';
-
 // react-icons
 import MdAccessiblity from 'react-icons/lib/md/accessibility';
 import MdPerson from 'react-icons/lib/md/person';
@@ -30,13 +27,13 @@ const dataUrl = 'https://ebeecare-dev.s3.amazonaws.com/';
 class Profile extends Component {
 
   render() {
-    const { params, user } = this.props;
+    const { params, user, client, nurse } = this.props;
     const { edit } = params;
-    let content;
+    let profile;
 
     if (user) {
-      const { fullName, gender, dob, addresses, race, religion, languages, nationality } = user.clients[0] || user.nurses[0];
-      const profile = {
+      const { fullName, gender, dob, addresses, race, religion, languages, nationality } = client ? client : nurse;
+      profile = {
         photo: user.picture ? `${dataUrl}${user.picture}` : require('../../assets/images/noimage.gif'),
         gender: gender ? (<p><MdAccessiblity /> {gender}</p>) : null,
         ageGroup: function() {
@@ -67,59 +64,30 @@ class Profile extends Component {
         nationality: nationality ? (<p><FaFlag /> {nationality}</p>) : null,
         fullName,
       }
-
-
-      if (user.type === 'Client' && !edit) {
-        content = (
-          <div>
-            <ProfileBase profile={profile} />
-          </div>
-        )
-      } else if (user.type === 'Client' && edit) {
-        content = (
-          <ProfileEdit />
-        )
-      }
-
     }
-
-
-
-
-
-
-
-
-    // else if (user && user.type === 'Nurse' && !edit) {
-    //   content = (
-    //     <div>
-    //       <ProfileBase profile={profile} />
-    //     </div>
-    //   )
-    // } else if (user && user.type === 'Nurse' && edit) {
-    //   content = (
-    //     <ProfileNurseEdit />
-    //   )
-    // }
 
     return (
       <div className={s.profile}>
-        <Header title={`${user && user.clients && user.clients[0].fullName || user && user.nurses && user.nurses[0].fullName}'s Profile`} />
+        <Header title={`${client && client.fullName || nurse && nurse.fullName}'s Profile`} />
         <Container>
-          {content}
+          {user && edit && (<ProfileEdit />)}
+          {user && !edit && (<div><ProfileBase profile={profile} /></div>)}
         </Container>
       </div>
-    );
+    )
   }
 
 }
 
 Profile.propTypes = {
   user: PropTypes.object,
+  userData: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user.data
+  user: state.user && state.user.data,
+  client: state.user && state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
+  nurse: state.user && state.user.data && state.user.data.nurses && state.user.data.nurses.length && state.user.data.nurses[0],
 });
 
 export default connect(mapStateToProps)(Profile);

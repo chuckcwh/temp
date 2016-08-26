@@ -47,12 +47,12 @@ class ProfileEdit extends Component {
   }
 
   render() {
-    const { user, languageChoice } = this.props;
+    const { user, client, nurse, languageChoice } = this.props;
     const { selectedTabIndex } = this.state;
     let tabs;
     let content;
 
-    if (user && user.clients) {
+    if (client) {
       tabs = (
         <SideTabList
           onSelect={this.handleTabSelect.bind(this)}
@@ -75,6 +75,20 @@ class ProfileEdit extends Component {
           {selectedTabIndex === 3 && (<ProfileEditProfileForm />)}
           {selectedTabIndex === 4 && (<ProfileEditPasswordForm />)}
         </div>
+      )
+    } else if (nurse) {
+      tabs = (
+        <SideTabList
+          onSelect={this.handleTabSelect.bind(this)}
+          selectedIndex={this.state.selectedTabIndex}
+          selectable
+        >
+          <SideTab><MdPerson /><span>Basic Details</span></SideTab>
+          <SideTab><MdHome /><span>Residential Details</span></SideTab>
+          <SideTab><FaComments /><span>Cultural Details</span></SideTab>
+          <SideTab><FaImage /><span>Profile Picture</span></SideTab>
+          <SideTab><FaLock /><span>Password</span></SideTab>
+        </SideTabList>
       )
     }
 
@@ -105,7 +119,9 @@ ProfileEdit.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user.data,
+  user: state.user && state.user.data,
+  client: state.user && state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
+  nurse: state.user && state.user.data && state.user.data.nurses && state.user.data.nurses.length && state.user.data.nurses[0],
   languageChoice: state.languages.data || undefined,
 });
 

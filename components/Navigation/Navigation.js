@@ -32,7 +32,7 @@ class Navigation extends Component {
     const location = history.getCurrentLocation();
     const { user } = this.props;
 
-    if (user && user.type === 'Client') {
+    if (user && user.role === 'client') {
       return (
         <div className={s.navWrapper}>
           <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
@@ -106,7 +106,7 @@ class Navigation extends Component {
           </Container>
         </div>
       );
-    } else if (user && user.type === 'Nurse') {
+    } else if (user && user.role === 'provider') {
       return (
         <div className={s.navWrapper}>
           <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>

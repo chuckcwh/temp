@@ -29,20 +29,20 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.fetchServices();
-    this.props.user && this.props.user.type === 'Client' && this.props.getPatients({
+    this.props.user && this.props.user.role === 'client' && this.props.getPatients({
       cid: this.props.user.clients[0].id,
     });
-    this.props.user && this.props.user.type === 'Client' && this.props.getCases({
+    this.props.user && this.props.user.role === 'client' && this.props.getCases({
       cid: this.props.user.clients[0].id,
     });
   }
 
   componentWillReceiveProps(props) {
     if (props.user && !this.props.user) {
-      props.user && props.user.type === 'Client' && this.props.getPatients({
+      props.user && props.user.role === 'client' && this.props.getPatients({
         cid: props.user.clients[0].id,
       });
-      props.user && props.user.type === 'Client' && this.props.getCases({
+      props.user && props.user.role === 'client' && this.props.getCases({
         cid: props.user.clients[0].id,
       });
     }
@@ -68,8 +68,8 @@ class Dashboard extends Component {
       if (!patients || !cases) return [];
       const tableContentBlob = [];
       let patientFound = false;
-      Object.values(patients).forEach((patient, index) => {
-        Object.values(cazes).forEach((cas) => {
+      patients && Object.values(patients).forEach((patient, index) => {
+        cases && Object.values(cazes).forEach((cas) => {
           if (patient.id === cas.patient) {
             tableContentBlob.forEach((patientBlob) => {
               if (patientBlob.patientId === patient.id) {
@@ -97,7 +97,7 @@ class Dashboard extends Component {
     const eventsArray = [];
     let sessionAppointment;
     tableContentBlob.forEach((patientBlob) => {
-      patientBlob.cases.forEach((cas) => {
+      patientBlob && patientBlob.cases && patientBlob.cases.forEach((cas) => {
         if (cas.dates.length) {
           cas.dates.forEach((date) => {
             sessionAppointment = {
@@ -189,7 +189,7 @@ class Dashboard extends Component {
     const pendingPaymentCases = getPendingPaymentCases(patients, cazes);
 
     if (user) {
-      if (user.type === 'Client') {
+      if (user.role === 'client') {
         const activeSessions = pendingConfirmationApptSessions.filter(function(session) {
           return session.sessionMode === "Active";
         });
@@ -288,7 +288,7 @@ class Dashboard extends Component {
           )
         }
 
-      } else if (user.type === 'Nurse') {
+      } else if (user.role === 'nurse') {
         dashboardStats = (
           <div className={s.dashboardStatsWrapper}>
             <DashboardStatButton

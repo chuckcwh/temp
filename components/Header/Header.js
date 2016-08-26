@@ -9,7 +9,6 @@ const imgProfile = require('../../assets/images/profile.png');
 const imgMoney = require('../../assets/images/money.png');
 
 const Header = ({ title, user }) => {
-  const userName = util.getUserNameFromUser(user);
   return (
     <div className={s.header}>
       <Container>
@@ -23,7 +22,7 @@ const Header = ({ title, user }) => {
                   Welcome,
                 </div>
                 <div className={s.headerMenuItemText}>
-                  <Link to="/profile">{userName}</Link>
+                  <Link to="/profile">{user && user.name}</Link>
                 </div>
               </div>
             </div>
@@ -35,7 +34,9 @@ const Header = ({ title, user }) => {
                     Credit Balance
                   </div>
                   <div className={s.headerMenuItemText}>
-                    <Link to="/credits">{`SGD ${user.credit}`}</Link>
+                    <Link to="/credits">
+                      {`SGD ${user && user.credit && parseFloat(user.credit.current).toFixed(2)}`}
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -3,7 +3,7 @@ import Loader from 'react-loader';
 import { reduxForm } from 'redux-form';
 import s from './SignupForm.css';
 import Link from '../Link';
-import { signup } from '../../actions';
+import { USER_CREATE_SUCCESS, createUser } from '../../actions';
 import util from '../../core/util';
 
 const submit = (props) => (values, dispatch) => (
@@ -28,16 +28,16 @@ const submit = (props) => (values, dispatch) => (
     } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.contact)) {
       errors.contact = 'Invalid mobile phone';
     }
-    if (errors.email || errors.password || errors.name || errors.contact) {
+    if (errors.email || errors.password || errors.passwordConfirm || errors.name || errors.contact) {
       reject(errors);
     } else {
-      dispatch(signup({
+      dispatch(createUser({
         email: values.email,
         password: values.password,
         name: values.name,
         contact: values.contact,
       })).then((res) => {
-        if (res && res.response && res.response.user && res.response.user.type === 'Client') {
+        if (res && res.type === USER_CREATE_SUCCESS) {
           props.onSuccess && props.onSuccess();
           resolve();
         } else {
@@ -60,7 +60,7 @@ class SignupForm extends Component {
       type,
     } = this.props;
     return (
-      <form className={s.signupForm} onSubmit={handleSubmit(submit(this.props))} novalidate>
+      <form className={s.signupForm} onSubmit={handleSubmit(submit(this.props))} noValidate>
         <Loader className="spinner" loaded={!submitting}>
           <h3>eBeeCare {type === 'client' ? 'Client ' : ''}Signup</h3>
           <div className="small">
@@ -89,7 +89,7 @@ class SignupForm extends Component {
           <div className={s.accountContainerItemMiddle}>
             <div className={s.loginContainer}>
               <p className="small">A verification SMS will be sent.</p>
-              <Link to="/login" className={s.loginLink}>Have an account?</Link>
+              <Link to="/login" className={s.loginLink} tabIndex="-1">Have an account?</Link>
             </div>
             {email.touched && email.error && <div className={s.signupFormError}>{email.error}</div>}
             {password.touched && password.error && <div className={s.signupFormError}>{password.error}</div>}

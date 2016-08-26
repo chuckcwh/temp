@@ -139,206 +139,206 @@ function fetchAction(route) {
   return {
     getConfig: {
       types: [ CONFIG_REQUEST, CONFIG_SUCCESS, CONFIG_FAILURE ],
-      endpoint: 'config',
+      endpoint: '/config',
       method: 'get',
       auth: 'app',
       entity: 'config'
     },
     getServices: {
       types: [ SERVICES_REQUEST, SERVICES_SUCCESS, SERVICES_FAILURE ],
-      endpoint: 'services',
+      endpoint: '/services',
       method: 'get',
       auth: 'app',
       entity: 'allServices'
     },
     getLanguages: {
       types: [ LANGUAGES_REQUEST, LANGUAGES_SUCCESS, LANGUAGES_FAILURE ],
-      endpoint: 'getLanguages',
+      endpoint: '/getLanguages',
       method: 'get',
       auth: 'app',
       entity: 'languages'
     },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
-      endpoint: 'getBooking',
+      endpoint: '/getBooking',
       method: 'get',
       auth: 'app',
       entity: 'booking'
     },
     createBooking: {
       types: [ BOOKING_CREATE_REQUEST, BOOKING_CREATE_SUCCESS, BOOKING_CREATE_FAILURE ],
-      endpoint: 'createBooking',
+      endpoint: '/createBooking',
       method: 'post',
       auth: 'app'
     },
     editBooking: {
       types: [ BOOKING_EDIT_REQUEST, BOOKING_EDIT_SUCCESS, BOOKING_EDIT_FAILURE ],
-      endpoint: 'editBooking',
+      endpoint: '/editBooking',
       method: 'post',
       auth: 'app'
     },
     cancelBookingSession: {
       types: [ BOOKING_SESSION_CANCEL_REQUEST, BOOKING_SESSION_CANCEL_SUCCESS, BOOKING_SESSION_CANCEL_FAILURE ],
-      endpoint: 'cancelCaseSession',
+      endpoint: '/cancelCaseSession',
       method: 'post',
       auth: 'app'
     },
     getCases: {
       types: [ CASES_REQUEST, CASES_SUCCESS, CASES_FAILURE ],
-      endpoint: 'getCases',
+      endpoint: '/getCases',
       method: 'get',
       auth: 'user',
       entity: 'cases'
     },
     createCase: {
       types: [ CASE_CREATE_REQUEST, CASE_CREATE_SUCCESS, CASE_CREATE_FAILURE ],
-      endpoint: 'createCase',
+      endpoint: '/createCase',
       method: 'post',
       auth: 'user'
     },
     login: {
       types: [ LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE ],
-      endpoint: 'mlogin',
+      endpoint: '/auth/local',
       method: 'post',
       auth: 'app'
     },
     loginClient: {
       types: [ LOGIN_CLIENT_REQUEST, LOGIN_CLIENT_SUCCESS, LOGIN_CLIENT_FAILURE ],
-      endpoint: 'mlogin',
+      endpoint: '/mlogin',
       method: 'post',
       auth: 'app'
     },
     createUser: {
       types: [ USER_CREATE_REQUEST, USER_CREATE_SUCCESS, USER_CREATE_FAILURE ],
-      endpoint: 'users',
+      endpoint: '/users',
       method: 'post',
       auth: 'app'
     },
     getUser: {
       types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
-      endpoint: 'getUser',
+      endpoint: '/users/:id',
       method: 'get',
       auth: 'user',
       entity: 'user'
     },
     getUserWithToken: {
       types: [ USER_TOKEN_REQUEST, USER_TOKEN_SUCCESS, USER_TOKEN_FAILURE ],
-      endpoint: 'getUser',
+      endpoint: '/users/:id',
       method: 'get',
       auth: 'userParams',
       entity: 'user'
     },
     editClient: {
       types: [ CLIENT_EDIT_REQUEST, CLIENT_EDIT_SUCCESS, CLIENT_EDIT_FAILURE ],
-      endpoint: 'editClient',
+      endpoint: '/editClient',
       method: 'post',
       auth: 'user'
     },
     getPatients: {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
-      endpoint: 'getPatients',
+      endpoint: '/getPatients',
       method: 'get',
       auth: 'user',
       entity: 'patients'
     },
     getPatient: {
       types: [ PATIENT_REQUEST, PATIENT_SUCCESS, PATIENT_FAILURE ],
-      endpoint: 'getPatient',
+      endpoint: '/getPatient',
       method: 'get',
       auth: 'user',
       entity: 'patient'
     },
     createPatient: {
       types: [ PATIENT_CREATE_REQUEST, PATIENT_CREATE_SUCCESS, PATIENT_CREATE_FAILURE ],
-      endpoint: 'createPatient',
+      endpoint: '/createPatient',
       method: 'post',
       auth: 'user'
     },
     editPatient: {
       types: [ PATIENT_EDIT_REQUEST, PATIENT_EDIT_SUCCESS, PATIENT_EDIT_FAILURE ],
-      endpoint: 'editPatient',
+      endpoint: '/editPatient',
       method: 'post',
       auth: 'user'
     },
     editEmail: {
       types: [ EMAIL_EDIT_REQUEST, EMAIL_EDIT_SUCCESS, EMAIL_EDIT_FAILURE ],
-      endpoint: 'changeEmail',
+      endpoint: '/changeEmail',
       method: 'post',
       auth: 'user'
     },
     editMobile: {
       types: [ MOBILE_EDIT_REQUEST, MOBILE_EDIT_SUCCESS, MOBILE_EDIT_FAILURE ],
-      endpoint: 'changeMobileNumber',
+      endpoint: '/changeMobileNumber',
       method: 'post',
       auth: 'user'
     },
     getSessions: {
       types: [ SESSIONS_REQUEST, SESSIONS_SUCCESS, SESSIONS_FAILURE ],
-      endpoint: 'getAvailableSchedule',
+      endpoint: '/getAvailableSchedule',
       method: 'get',
       auth: 'app',
       entity: 'sessions'
     },
     getPromo: {
       types: [ PROMO_REQUEST, PROMO_SUCCESS, PROMO_FAILURE ],
-      endpoint: 'checkPromocode',
+      endpoint: '/checkPromocode',
       method: 'get',
       auth: 'app'
     },
     createPaypalTransaction: {
       types: [ TRANSACTION_PAYPAL_CREATE_REQUEST, TRANSACTION_PAYPAL_CREATE_SUCCESS, TRANSACTION_PAYPAL_CREATE_FAILURE ],
-      endpoint: 'makePaypalWebPayment',
+      endpoint: '/makePaypalWebPayment',
       method: 'post',
       auth: 'app'
     },
     executePaypalTransaction: {
       types: [ TRANSACTION_PAYPAL_EXECUTE_REQUEST, TRANSACTION_PAYPAL_EXECUTE_SUCCESS, TRANSACTION_PAYPAL_EXECUTE_FAILURE ],
-      endpoint: 'verifyPaypalTransaction',
+      endpoint: '/verifyPaypalTransaction',
       method: 'post',
       auth: 'app'
     },
     createBankTransferTransaction: {
       types: [ TRANSACTION_BANK_CREATE_REQUEST, TRANSACTION_BANK_CREATE_SUCCESS, TRANSACTION_BANK_CREATE_FAILURE ],
-      endpoint: 'verifyBankTransaction',
+      endpoint: '/verifyBankTransaction',
       method: 'post',
       auth: 'app'
     },
     verifyBookingPin: {
       types: [ VERIFY_BOOKING_PIN_REQUEST, VERIFY_BOOKING_PIN_SUCCESS, VERIFY_BOOKING_PIN_FAILURE ],
-      endpoint: 'verifyBookingPin',
+      endpoint: '/verifyBookingPin',
       method: 'post',
       auth: 'app'
     },
     resendVerifyBookingPin: {
       types: [ RESEND_VERIFY_BOOKING_PIN_REQUEST, RESEND_VERIFY_BOOKING_PIN_SUCCESS, RESEND_VERIFY_BOOKING_PIN_FAILURE ],
-      endpoint: 'resendBookingPin',
+      endpoint: '/resendBookingPin',
       method: 'post',
       auth: 'app'
     },
     getTotalSessionsCount: {
       types: [ STATS_SESSIONS_REQUEST, STATS_SESSIONS_SUCCESS, STATS_SESSIONS_FAILURE ],
-      endpoint: 'getTotalSessionsCount',
+      endpoint: '/getTotalSessionsCount',
       method: 'get',
       auth: 'app',
       entity: 'totalSessionsCount'
     },
     getRankedServices: {
       types: [ STATS_SERVICES_REQUEST, STATS_SERVICES_SUCCESS, STATS_SERVICES_FAILURE ],
-      endpoint: 'getRankedServices',
+      endpoint: '/getRankedServices',
       method: 'get',
       auth: 'app',
       entity: 'rankedServices'
     },
     getRankedSubcategories: {
       types: [ STATS_SUBCATEGORIES_REQUEST, STATS_SUBCATEGORIES_SUCCESS, STATS_SUBCATEGORIES_FAILURE ],
-      endpoint: 'getRankedSubCategory',
+      endpoint: '/getRankedSubCategory',
       method: 'get',
       auth: 'app',
       entity: 'rankedSubcategories'
     },
     getAvailableCases:{
       types: [ CASES_REQUEST, CASES_SUCCESS, CASES_FAILURE ],
-      endpoint: 'getAvailableCases',
+      endpoint: '/getAvailableCases',
       method: 'get',
       auth: 'user',
       entity: 'cases'
@@ -490,8 +490,8 @@ export function createUser(params) {
   return fetch('createUser', params);
 }
 
-export function getUser() {
-  return fetch('getUser');
+export function getUser(params) {
+  return fetch('getUser', params);
 }
 
 export function getUserWithToken(params) {

@@ -16,6 +16,7 @@ const user = (state = {
   switch (action.type) {
     case ActionTypes.USER_REQUEST:
     case ActionTypes.USER_TOKEN_REQUEST:
+    case ActionTypes.USER_CREATE_REQUEST:
     case ActionTypes.LOGIN_REQUEST:
     case ActionTypes.LOGIN_CLIENT_REQUEST:
       return Object.assign({}, state, {
@@ -24,15 +25,16 @@ const user = (state = {
       })
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
+    case ActionTypes.USER_CREATE_SUCCESS:
     case ActionTypes.LOGIN_SUCCESS:
-      if (action.response && action.response.user && action.response.user.id) {
-        cookie.save('user_id', action.response.user.id, { path: '/' });
-        cookie.save('user_token', action.response.user.token, { path: '/' });
+      if (action.response && action.response.data && action.response.data._id && action.response.token) {
+        cookie.save('user_id', action.response.data._id, { path: '/' });
+        cookie.save('user_token', action.response.token, { path: '/' });
       }
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        data: action.response && action.response.user,
+        data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.LOGIN_CLIENT_SUCCESS:

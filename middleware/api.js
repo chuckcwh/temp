@@ -1,27 +1,49 @@
 import { client } from '../utils/http'
 import { fetch } from 'isomorphic-fetch'
+import cookie from 'react-cookie'
 import util from '../core/util'
 
-const API_ROOT = util.host + '/api/'
+const API_ROOT = util.host + '/api'
 
 // Fetches an API response.
 // This makes every API response have the same shape, regardless of how nested it was.
-function callApi(store, endpoint, method, data, auth) {
+function callApi(store, endpoint, method, data) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
   let headers;
-  if (auth === 'app') {
-    headers = { 'Authorization': 'Basic ' + window.btoa(util.authKey + ':' + util.authSecret) }
-  } else if (auth === 'user') {
-    headers = { 'Authorization': 'Basic ' + window.btoa(store.getState().user.data.id + ':' + store.getState().user.data.token) }
-  } else if (auth === 'userParams') {
-    headers = { 'Authorization': 'Basic ' + window.btoa(data.id + ':' + data.token) }
+  const userToken = cookie.load('user_token');
+  if (userToken) {
+    headers = { 'Authorization': 'Bearer ' + userToken }
   }
   let request = client({
     host: util.host,
     headers
   })
 
-  return (request[method])('/api/' + endpoint, data)
+  // Evaluate endpoint
+  const endpointWords = endpoint.split('/');
+  const newEndpoint = endpointWords.reduce((result, word) => {
+    if (!word) {
+      return result;
+    }
+    if (word.indexOf(':') === 0 && data) {
+      const search = (word, data) => {
+        const keys = Object.keys(data);
+        for (let i = 0; i < keys.length; i++) {
+          if (word === `:${keys[i]}`) {
+            return data[keys[i]];
+          }
+        }
+        return '';
+      };
+      const replacement = search(word, data);
+      if (replacement) {
+        return result + '/' + replacement;
+      }
+    }
+    return result + '/' + word;
+  }, '');
+
+  return (request[method])('/api' + newEndpoint, data)
     .then(response =>
       response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
@@ -52,7 +74,7 @@ export default store => next => action => {
   }
 
   let { endpoint } = callAPI
-  const { method, auth, types } = callAPI
+  const { method, types } = callAPI
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState())
@@ -77,7 +99,7 @@ export default store => next => action => {
   const [ requestType, successType, failureType ] = types
   next(actionWith({ type: requestType }))
 
-  return callApi(store, endpoint, method, action['data'], auth).then(
+  return callApi(store, endpoint, method, action['data']).then(
     response => next(actionWith({
       response,
       type: successType

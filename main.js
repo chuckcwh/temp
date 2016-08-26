@@ -11,7 +11,7 @@ import configureStore from './core/configureStore';
 import router from './core/router';
 import history from './core/history';
 
-import { fetchConfig, getUserWithToken } from './actions';
+import { fetchConfig, getUser } from './actions';
 
 import Layout from './components/Layout';
 
@@ -23,9 +23,8 @@ store.dispatch(fetchConfig());
 const userId = cookie.load('user_id');
 const userToken = cookie.load('user_token');
 if (userId && userToken) {
-  store.dispatch(getUserWithToken({
+  store.dispatch(getUser({
     id: userId,
-    token: userToken,
   }));
 }
 

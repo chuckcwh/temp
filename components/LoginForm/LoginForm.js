@@ -3,7 +3,7 @@ import Loader from 'react-loader';
 import { reduxForm } from 'redux-form';
 import s from './LoginForm.css';
 import Link from '../Link';
-import { login, loginClient } from '../../actions';
+import { LOGIN_SUCCESS, LOGIN_CLIENT_SUCCESS, login, loginClient } from '../../actions';
 
 const submit = (props) => (values, dispatch) => (
   new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ const submit = (props) => (values, dispatch) => (
           email: values.email,
           password: values.password,
         })).then((res) => {
-          if (res && res.response && res.response.user && res.response.user.type === 'Client') {
+          if (res && res.type === LOGIN_CLIENT_SUCCESS) {
             props.onSuccess && props.onSuccess();
             resolve();
           } else {
@@ -37,7 +37,7 @@ const submit = (props) => (values, dispatch) => (
           email: values.email,
           password: values.password,
         })).then((res) => {
-          if (res && res.response && res.response.user) {
+          if (res && res.type === LOGIN_SUCCESS) {
             props.onSuccess && props.onSuccess();
             resolve();
           } else {

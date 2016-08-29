@@ -3,7 +3,7 @@ import Loader from 'react-loader';
 import { reduxForm } from 'redux-form';
 import s from './ForgotPasswordForm.css';
 import Link from '../Link';
-import { login, loginClient } from '../../actions';
+import { FORGOT_PASSWORD_EMAIL_SUCCESS, forgotPassword } from '../../actions';
 
 const submit = (props) => (values, dispatch) => (
   new Promise((resolve, reject) => {
@@ -16,16 +16,15 @@ const submit = (props) => (values, dispatch) => (
     if (errors.email) {
       reject(errors);
     } else {
-      dispatch(loginClient({
+      dispatch(forgotPassword({
         email: values.email,
-        password: values.password,
       })).then((res) => {
-        if (res && res.response && res.response.user && res.response.user.type === 'Client') {
+        if (res && res.type === FORGOT_PASSWORD_EMAIL_SUCCESS) {
           props.onSuccess && props.onSuccess();
           resolve();
         } else {
           props.onFailure && props.onFailure();
-          reject({ _error: 'Failed to login.' });
+          reject({ _error: 'Failed to send email.' });
         }
       });
     }
@@ -40,10 +39,9 @@ class ForgotPasswordForm extends Component {
       error,
       handleSubmit,
       submitting,
-      type,
     } = this.props;
     return (
-      <form className={s.forgotPasswordForm} onSubmit={handleSubmit(submit(this.props))}>
+      <form className={s.forgotPasswordForm} onSubmit={handleSubmit(submit(this.props))} noValidate>
         <Loader className="spinner" loaded={!submitting}>
           <h3>Forgot Password?</h3>
           <div className="IconInput EmailInput">
@@ -70,8 +68,6 @@ ForgotPasswordForm.propTypes = {
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  type: PropTypes.string,
-  focused: PropTypes.bool,
   onSuccess: PropTypes.func,
   onFailure: PropTypes.func,
 };

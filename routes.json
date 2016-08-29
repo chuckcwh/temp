@@ -48,6 +48,10 @@
     "page": "./pages/forgot-password"
   },
   {
+    "path": "/reset-password",
+    "page": "./pages/reset-password"
+  },
+  {
     "path": "/booking-manage",
     "page": "./pages/booking-manage"
   },

@@ -5,7 +5,7 @@ import { reducer as form } from 'redux-form';
 import merge from 'lodash/merge';
 import modal from './modal';
 import order from './order';
-import util from '../core/util';
+import { appendAllServices, parseCategories, isClient } from '../core/util';
 import sortBy from 'lodash/sortBy';
 
 const user = (state = {
@@ -41,7 +41,7 @@ const user = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: true,
-        data: (action.response && action.response.user && action.response.user.type === 'Client') ? action.response.user : null,
+        data: (action.response && action.response.user && isClient(action.response.user)) ? action.response.user : null,
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.USER_TOKEN_FAILURE:
@@ -121,7 +121,7 @@ const allServices = (state = {
       Object.keys(subTypesHashBySlug).map((subTypeKey) => {
         subTypesHashBySlug[subTypeKey] = sortBy(subTypesHashBySlug[subTypeKey], ['subTypeOrder', 'name'])
       })
-      const servicesTree = util.appendAllServices(util.parseCategories(servicesHash))
+      const servicesTree = appendAllServices(parseCategories(servicesHash))
       const serviceTreeHash = servicesTree.reduce((result, category) => {
         result[category.name] = category;
         return result;

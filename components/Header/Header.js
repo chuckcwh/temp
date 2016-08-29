@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import s from './Header.css';
 import Container from '../Container';
 import Link from '../Link';
-import util from '../../core/util';
+import { isAdmin, getUserName, getUserCurrentCredits } from '../../core/util';
 
 const imgProfile = require('../../assets/images/profile.png');
 const imgMoney = require('../../assets/images/money.png');
@@ -22,11 +22,11 @@ const Header = ({ title, user }) => {
                   Welcome,
                 </div>
                 <div className={s.headerMenuItemText}>
-                  <Link to="/profile">{user && user.name}</Link>
+                  <Link to="/profile">{getUserName(user)}</Link>
                 </div>
               </div>
             </div>
-            {user && user.type !== 'Admin' &&
+            {!isAdmin(user) &&
               <div className={s.headerMenuItem}>
                 <img src={imgMoney} alt="Credits" />
                 <div className={s.headerMenuItemContent}>
@@ -35,7 +35,7 @@ const Header = ({ title, user }) => {
                   </div>
                   <div className={s.headerMenuItemText}>
                     <Link to="/credits">
-                      {`SGD ${user && user.credit && parseFloat(user.credit.current).toFixed(2)}`}
+                      {`SGD ${getUserCurrentCredits(user)}`}
                     </Link>
                   </div>
                 </div>

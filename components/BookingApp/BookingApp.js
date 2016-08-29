@@ -25,7 +25,7 @@ import AlertPopup from '../AlertPopup';
 import LoginPopup from '../LoginPopup';
 import { fetchServicesIfNeeded, getBooking, getUserWithToken, setPostStatus } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isNavigationAllowed, isClient, isProvider } from '../../core/util';
 
 class BookingApp extends Component {
 
@@ -34,7 +34,7 @@ class BookingApp extends Component {
     const { lastPage } = props;
     const location = history.getCurrentLocation();
     if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1
-      && !util.isNavigationAllowed(location.pathname, lastPage)) {
+      && !isNavigationAllowed(location.pathname, lastPage)) {
       history.replace('');
     }
   }
@@ -83,7 +83,7 @@ class BookingApp extends Component {
     const { lastPage } = props;
     const location = history.getCurrentLocation();
     if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1
-      && !util.isNavigationAllowed(location.pathname, lastPage)) {
+      && !isNavigationAllowed(location.pathname, lastPage)) {
       history.replace('');
     }
   }
@@ -101,7 +101,7 @@ class BookingApp extends Component {
         </div>
       );
     } else if (location && location.pathname === '/booking2') {
-      if (user && user.type === 'Client') {
+      if (isClient(user)) {
         component = (
           <div>
             <BookingNavigation />
@@ -110,7 +110,7 @@ class BookingApp extends Component {
             </BookingLocationUser>
           </div>
         );
-      } else {
+      } else if (isProvider(user)) {
         component = (
           <div>
             <BookingNavigation />

@@ -238,6 +238,30 @@ export function isFloat(val) {
   return true;
 }
 
+/**
+ * User utility functions
+ */
+
+export function isAdmin(user) {
+  return user && user.role === 'admin';
+}
+
+export function isClient(user) {
+  return user && user.role === 'client';
+}
+
+export function isProvider(user) {
+  return user && user.role === 'provider';
+}
+
+export function getUserName(user) {
+  return user && user.name;
+}
+
+export function getUserCurrentCredits(user) {
+  return user && user.credit && (!isNaN(user.credit.current) && parseFloat(user.credit.current).toFixed(2)) || '-';
+}
+
 const u = {
   host: ((typeof window !== 'undefined' &&
     window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
@@ -276,6 +300,11 @@ const u = {
 
   isInt,
   isFloat,
+
+  isClient,
+  isProvider,
+  getUserName,
+  getUserCurrentCredits,
 };
 
 export default u;

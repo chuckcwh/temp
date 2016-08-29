@@ -19,6 +19,7 @@ import CreditsTopup from '../CreditsTopup';
 import CreditsTransactions from '../CreditsTransactions';
 import CreditsWithdraw from '../CreditsWithdraw';
 import CreditsPayments from '../CreditsPayments';
+import { isClient, isProvider, getUserCurrentCredits } from '../../core/util';
 
 class Credits extends Component {
 
@@ -48,10 +49,10 @@ class Credits extends Component {
             <div className={s.creditsTabs}>
               <div className="well">
                 <p className="featured">You have:</p>
-                <h1>{`SGD ${user && user.credit}`}</h1>
+                <h1>{`SGD ${getUserCurrentCredits(user)}`}</h1>
               </div>
               {(() => {
-                if (user && user.type === 'Client') {
+                if (isClient(user)) {
                   return (
                     <SideTabList
                       onSelect={this.handleTabSelect}
@@ -63,7 +64,7 @@ class Credits extends Component {
                       <SideTab><FaGetPocket /><span>Withdraw Credits</span></SideTab>
                     </SideTabList>
                   );
-                } else if (user && user.type === 'Nurse') {
+                } else if (isProvider(user)) {
                   return (
                     <SideTabList
                       onSelect={this.handleTabSelect}
@@ -80,7 +81,7 @@ class Credits extends Component {
             </div>
             <div className={s.creditsPanel}>
               {(() => {
-                if (user && user.type === 'Client') {
+                if (isClient(user)) {
                   return (
                     <div>
                       {selectedTabIndex === 0 && <CreditsTopup />}
@@ -88,7 +89,7 @@ class Credits extends Component {
                       {selectedTabIndex === 2 && <CreditsWithdraw />}
                     </div>
                   );
-                } else if (user && user.type === 'Nurse') {
+                } else if (isProvider(user)) {
                   return (
                     <div>
                       {selectedTabIndex === 0 && <CreditsTransactions />}
@@ -119,8 +120,6 @@ class Credits extends Component {
 
 Credits.propTypes = {
   user: React.PropTypes.object,
-  client: React.PropTypes.object,
-  nurse: React.PropTypes.object,
 
   // fetchLanguages: React.PropTypes.func.isRequired,
   // fetchAddress: React.PropTypes.func.isRequired,
@@ -131,8 +130,6 @@ Credits.propTypes = {
 const mapStateToProps = (state) => ({
   languages: state.languages.data,
   user: state.user.data,
-  client: state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  nurse: state.user.data && state.user.data.nurses && state.user.data.nurses.length && state.user.data.nurses[0],
 });
 
 const mapDispatchToProps = (dispatch) => ({

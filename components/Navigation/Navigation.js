@@ -9,7 +9,7 @@ import Logo from '../Logo';
 import Link from '../Link';
 import { destroyUser } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isBookingPage, blog, isClient, isProvider } from '../../core/util';
 
 class Navigation extends Component {
 
@@ -32,7 +32,7 @@ class Navigation extends Component {
     const location = history.getCurrentLocation();
     const { user } = this.props;
 
-    if (user && user.role === 'client') {
+    if (user && isClient(user)) {
       return (
         <div className={s.navWrapper}>
           <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
@@ -82,7 +82,7 @@ class Navigation extends Component {
                 </li>
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink, (util.isBookingPage(location.pathname)) ? s.navigationLinkActive : '')}
+                    className={classNames(s.navigationLink, (isBookingPage(location.pathname)) ? s.navigationLinkActive : '')}
                     to="/booking1"
                   >CREATE BOOKING</Link>
                 </li>
@@ -106,7 +106,7 @@ class Navigation extends Component {
           </Container>
         </div>
       );
-    } else if (user && user.role === 'provider') {
+    } else if (user && isProvider(user)) {
       return (
         <div className={s.navWrapper}>
           <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
@@ -191,7 +191,7 @@ class Navigation extends Component {
             >FAQ</Link>
           </li>
           <li className={s.navigationItem}>
-            <a className={s.navigationLink} href={util.blog}>BLOG</a>
+            <a className={s.navigationLink} href={blog}>BLOG</a>
           </li>
           <li className={s.navigationItem}>
             <Link
@@ -223,7 +223,7 @@ class Navigation extends Component {
                 >FAQ</Link>
               </li>
               <li className={s.navigationItem}>
-                <a className={s.navigationLink} href={util.blog}>BLOG</a>
+                <a className={s.navigationLink} href={blog}>BLOG</a>
               </li>
               <li className={s.navigationItem}>
                 <Link

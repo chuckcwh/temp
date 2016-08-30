@@ -301,6 +301,7 @@ const u = {
   isInt,
   isFloat,
 
+  isAdmin,
   isClient,
   isProvider,
   getUserName,

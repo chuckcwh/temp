@@ -15,7 +15,7 @@ import DashboardPendingPayment from '../DashboardPendingPayment';
 import NurseAvailableCases from '../NurseAvailableCases';
 import { fetchServices, getPatients, getCases, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isClient, isProvider } from '../../core/util';
 import shuffle from 'lodash/shuffle';
 
 class Dashboard extends Component {
@@ -29,20 +29,20 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.fetchServices();
-    this.props.user && this.props.user.role === 'client' && this.props.getPatients({
+    this.props.user && isClient(this.props.user) && this.props.getPatients({
       cid: this.props.user.clients[0].id,
     });
-    this.props.user && this.props.user.role === 'client' && this.props.getCases({
+    this.props.user && isClient(this.props.user) && this.props.getCases({
       cid: this.props.user.clients[0].id,
     });
   }
 
   componentWillReceiveProps(props) {
     if (props.user && !this.props.user) {
-      props.user && props.user.role === 'client' && this.props.getPatients({
+      props.user && isClient(props.user) && this.props.getPatients({
         cid: props.user.clients[0].id,
       });
-      props.user && props.user.role === 'client' && this.props.getCases({
+      props.user && isClient(props.user) && this.props.getCases({
         cid: props.user.clients[0].id,
       });
     }
@@ -189,7 +189,7 @@ class Dashboard extends Component {
     const pendingPaymentCases = getPendingPaymentCases(patients, cazes);
 
     if (user) {
-      if (user.role === 'client') {
+      if (isClient(user)) {
         const activeSessions = pendingConfirmationApptSessions.filter(function(session) {
           return session.sessionMode === "Active";
         });
@@ -288,7 +288,7 @@ class Dashboard extends Component {
           )
         }
 
-      } else if (user.role === 'nurse') {
+      } else if (isProvider(user)) {
         dashboardStats = (
           <div className={s.dashboardStatsWrapper}>
             <DashboardStatButton

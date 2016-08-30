@@ -5,7 +5,7 @@ import history from '../core/history';
 export default class extends Component {
 
   componentDidMount() {
-    document.title = 'eBeeCare | Forgot Password';
+    document.title = 'eBeeCare | Reset Password';
   }
 
   handleSuccess = () => {
@@ -15,7 +15,7 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <Account type="forgot-password" onSuccess={this.handleSuccess} />
+        <Account type="reset-password" onSuccess={this.handleSuccess} />
       </div>
     );
   }

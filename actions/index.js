@@ -51,6 +51,14 @@ export const USER_TOKEN_REQUEST = 'USER_TOKEN_REQUEST'
 export const USER_TOKEN_SUCCESS = 'USER_TOKEN_SUCCESS'
 export const USER_TOKEN_FAILURE = 'USER_TOKEN_FAILURE'
 
+export const FORGOT_PASSWORD_EMAIL_REQUEST = 'FORGOT_PASSWORD_EMAIL_REQUEST'
+export const FORGOT_PASSWORD_EMAIL_SUCCESS = 'FORGOT_PASSWORD_EMAIL_SUCCESS'
+export const FORGOT_PASSWORD_EMAIL_FAILURE = 'FORGOT_PASSWORD_EMAIL_FAILURE'
+
+export const RESET_PASSWORD_REQUEST = 'RESET_PASSWORD_REQUEST'
+export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS'
+export const RESET_PASSWORD_FAILURE = 'RESET_PASSWORD_FAILURE'
+
 export const CLIENT_EDIT_REQUEST = 'CLIENT_EDIT_REQUEST'
 export const CLIENT_EDIT_SUCCESS = 'CLIENT_EDIT_SUCCESS'
 export const CLIENT_EDIT_FAILURE = 'CLIENT_EDIT_FAILURE'
@@ -227,6 +235,16 @@ function fetchAction(route) {
       method: 'get',
       auth: 'userParams',
       entity: 'user'
+    },
+    forgotPassword: {
+      types: [ FORGOT_PASSWORD_EMAIL_REQUEST, FORGOT_PASSWORD_EMAIL_SUCCESS, FORGOT_PASSWORD_EMAIL_FAILURE ],
+      endpoint: '/users/sendForgotPasswordEmail',
+      method: 'put'
+    },
+    resetPassword: {
+      types: [ RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE ],
+      endpoint: '/users/resetPassword',
+      method: 'put'
     },
     editClient: {
       types: [ CLIENT_EDIT_REQUEST, CLIENT_EDIT_SUCCESS, CLIENT_EDIT_FAILURE ],
@@ -496,6 +514,14 @@ export function getUser(params) {
 
 export function getUserWithToken(params) {
   return fetch('getUserWithToken', params);
+}
+
+export function forgotPassword(params) {
+  return fetch('forgotPassword', params);
+}
+
+export function resetPassword(params) {
+  return fetch('resetPassword', params);
 }
 
 export function destroyUser() {

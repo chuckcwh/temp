@@ -9,6 +9,7 @@ import FindBookingForm from '../FindBookingForm';
 import SignupForm from '../SignupForm';
 import LoginForm from '../LoginForm';
 import ForgotPasswordForm from '../ForgotPasswordForm';
+import ResetPasswordForm from '../ResetPasswordForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
 import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
@@ -91,6 +92,15 @@ class Account extends Component {
         <div className={s.accountContainer}>
           <div className={classNames(s.accountForgot, s.accountContainerItem)}>
             <ForgotPasswordForm {...this.props} />
+          </div>
+        </div>
+      );
+    } else if (this.props.type === 'reset-password') {
+      const token = location && location.query && location.query.token;
+      components = (
+        <div className={s.accountContainer}>
+          <div className={classNames(s.accountReset, s.accountContainerItem)}>
+            <ResetPasswordForm {...this.props} token={token} />
           </div>
         </div>
       );

@@ -8,11 +8,12 @@ import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
 import history from '../../../core/history';
-import util from '../../../core/util';
+import { isAdmin, isClient, isProvider, getUserName } from '../../../core/util';
 import { reduxForm } from 'redux-form';
 import InlineForm from '../../MultiSelect';
 import { showDayPickerPopup } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
+import MultiSelect from '../../MultiSelect';
 // react-icons
 import FaLock from 'react-icons/lib/fa/lock';
 
@@ -21,7 +22,20 @@ class ProfileEditBasicForm extends Component {
 
   render() {
     const {
-      fields: { fullName, gender, dob, idNumber, idType, occupation, maritalStatus, email },
+      fields: {
+        name,
+        gender,
+        dob,
+        idNumber,
+        idType,
+        occupation,
+        maritalStatus,
+        providerType,
+        providerSkills,
+        email
+      },
+      genderChoice,
+      user,
       invalid,
       handleSubmit,
       submitFailed,
@@ -30,6 +44,9 @@ class ProfileEditBasicForm extends Component {
     } = this.props;
 
     const idTypeChoice = ['Singaporean Pink IC', 'Singaporean Blue IC', 'Others'];
+    const providerTypeChoice = ['N/A'];
+    const providerSkillsChoice = [{label: 'Caregiver Training', value: 'Caregiver Training'}, {label: 'General Accompany', value: 'General Accompany'}];
+    // const
 
     return (
       <div className={s.ProfileEditBasicForm}>
@@ -40,8 +57,8 @@ class ProfileEditBasicForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Full Name (as per NRIC)</div>
               <div className="TableRowItem2">
-                <input type="text" {...fullName} />
-                {fullName.touched && fullName.error && <div className={s.formError}>{fullName.error}</div>}
+                <input type="text" {...name} />
+                {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
               </div>
             </div>
 
@@ -51,9 +68,11 @@ class ProfileEditBasicForm extends Component {
               <div className="TableRowItem2">
                 <div className={cx("select", s.selectInput)}>
                   <span></span>
-                  <select id={gender} name={gender} {...gender} value={gender.value || 'male'}>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                  <select id={gender} name={gender} {...gender} value={gender.value}>
+                    <option value="">-- Select --</option>
+                    {genderChoice && genderChoice.map(item => (
+                      <option key={genderChoice.indexOf(item)} value={item.value}>{item.name}</option>
+                    ))}
                   </select>
                 </div>
                 {gender.touched && gender.error && <div className={s.formError}>{gender.error}</div>}
@@ -85,8 +104,8 @@ class ProfileEditBasicForm extends Component {
                   <span></span>
                   <select id={idType} name={idType} {...idType} value={idType.value || ''}>
                     <option value="">-- Select --</option>
-                    {idTypeChoice.map(item => (
-                      <option value={item}>{item}</option>
+                    {idTypeChoice && idTypeChoice.map(item => (
+                      <option key={idTypeChoice.indexOf(item)} value={item}>{item}</option>
                     ))}
                   </select>
                 </div>
@@ -94,30 +113,65 @@ class ProfileEditBasicForm extends Component {
               </div>
             </div>
 
-            <div className="TableRow">
-              <div className="TableRowItem1">Occupation</div>
-              <div className="TableRowItem2">
-                <input type="text" {...occupation} />
-                {occupation.touched && occupation.error && <div className={s.formError}>{occupation.error}</div>}
-              </div>
-            </div>
-
-            <div className="TableRow">
-              <div className="TableRowItem1">Marital Status</div>
-              <div className="TableRowItem2">
-                <div className={cx("select", s.selectInput)}>
-                  <span></span>
-                  <select id={maritalStatus} name={maritalStatus} {...maritalStatus} value={maritalStatus.value || ''}>
-                    <option value="">-- Select --</option>
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                    <option value="Divorced">Divorced</option>
-                    <option value="Widowed">Widowed</option>
-                  </select>
+            {isClient(user) && (
+              <div>
+                <div className="TableRow">
+                  <div className="TableRowItem1">Occupation</div>
+                  <div className="TableRowItem2">
+                    <input type="text" {...occupation} />
+                    {occupation.touched && occupation.error && <div className={s.formError}>{occupation.error}</div>}
+                  </div>
                 </div>
-                {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
+
+                <div className="TableRow">
+                  <div className="TableRowItem1">Marital Status</div>
+                  <div className="TableRowItem2">
+                    <div className={cx("select", s.selectInput)}>
+                      <span></span>
+                      <select id={maritalStatus} name={maritalStatus} {...maritalStatus} value={maritalStatus.value || ''}>
+                        <option value="">-- Select --</option>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Widowed">Widowed</option>
+                      </select>
+                    </div>
+                    {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+
+            {isProvider(user) && (
+              <div>
+                <div className="TableRow">
+                  <div className="TableRowItem1">Provider Type</div>
+                  <div className="TableRowItem2">
+                    <div className={cx("select", s.selectInput)}>
+                      <span></span>
+                      <select id={providerType} name={providerType} {...providerType} value={providerType.value || ''}>
+                        <option value="">-- Select --</option>
+                        {providerTypeChoice && providerTypeChoice.map(item => (
+                          <option key={providerTypeChoice.indexOf(item)} value={item}>{item}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {providerType.touched && providerType.error && <div className={s.formError}>{providerType.error}</div>}
+                  </div>
+                </div>
+
+                <div className="TableRow">
+                  <div className="TableRowItem1">Provider Skills</div>
+                  <div className="TableRowItem2">
+                    <MultiSelect
+                      options={providerSkillsChoice}
+                      {...providerSkills}
+                    />
+                    {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="TableRow">
               <div className="TableRowItem1">Email</div>
@@ -158,7 +212,19 @@ ProfileEditBasicForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'ProfileEditBasicForm',
-  fields: ['fullName', 'gender', 'dob', 'idNumber', 'idType', 'occupation', 'maritalStatus', 'email'],
+  fields: [
+    'userType', // for form validate, not real field
+    'name',
+    'gender',
+    'dob',
+    'idNumber',
+    'idType',
+    'occupation',
+    'maritalStatus',
+    'providerType',
+    'providerSkills',
+    'email'
+  ],
   validate,
 }
 
@@ -167,15 +233,20 @@ const mapStateToProps = (state) => {
 
   return {
     initialValues: {
-      fullName: user.clients[0].fullName || undefined,
-      gender: user.clients[0].gender || undefined,
-      dob: user.clients[0].dob || undefined,
-      idNumber: user.clients[0].IDnum || undefined,
-      idType: user.clients[0].IDtype || undefined,
-      occupation: user.clients[0].occupation || undefined,
-      maritalStatus: user.clients[0].maritalStatus || undefined,
-      email: user.email || undefined,
-    }
+      userType: user && user.role, // for form validate, not real field
+      name: user && user.name,
+      gender: user && user.gender,
+      dob: user && user.dob && moment(user.dob).format("YYYY-MM-DD"),
+      idNumber: user && user.client && user.client.nric || user && user.provider && user.provider.nric,
+      // idType: client && client.IDtype || provider && provider.IDtype,
+      // occupation: client && client.occupation, // client only
+      // maritalStatus: client && client.maritalStatus, // client only
+      // providerType: user && user.typeOfprovider, // provider only
+      // providerSkills: user && user.provider && user.provider.skills, // provider only
+      email: user && user.email,
+    },
+    genderChoice: state.config.data && state.config.data.genders,
+    user,
   }
 };
 

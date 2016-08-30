@@ -14,7 +14,7 @@ import util from '../../../core/util';
 export class ProfileBase extends Component {
 
   render() {
-    const { fullName, photo, gender, ageGroup, address, languages, nationality, raceReligion } = this.props.profile;
+    const { name, photo, gender, ageGroup, address, languages, nationality, raceReligion } = this.props.profile;
 
     return(
       <div className={s.profileBase}>
@@ -29,10 +29,10 @@ export class ProfileBase extends Component {
                 <div className={s.imgContainer}>
                   <img src={photo} className={s.profileImg} />
                 </div>
-                <p>{fullName}</p>
+                <p>{name}</p>
               </div>
               <div className={s.infoSection}>
-                <h3>{fullName}</h3>
+                <h3>{name}</h3>
                 {gender}
                 {ageGroup()}
                 {address}

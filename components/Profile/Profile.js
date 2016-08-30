@@ -8,7 +8,7 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
-import util from '../../core/util';
+import { getUserName } from '../../core/util';
 // sub components
 import ProfileBase from './ProfileBase/ProfileBase';
 import ProfileEdit from './ProfileEdit/ProfileEdit';
@@ -22,53 +22,53 @@ import FaComment from 'react-icons/lib/fa/comment';
 import FaFlag from 'react-icons/lib/fa/flag';
 
 
-const dataUrl = 'https://ebeecare-dev.s3.amazonaws.com/';
+const s3Url = 'https://ebeecare-dev.s3.amazonaws.com/';
 
 class Profile extends Component {
 
   render() {
-    const { params, user, client, nurse } = this.props;
+    const { params, user } = this.props;
     const { edit } = params;
     let profile;
 
     if (user) {
-      const { fullName, gender, dob, addresses, race, religion, languages, nationality } = client ? client : nurse;
+      const { avatar, gender, dob, address, race, religion, languages, nationality, name } = user;
       profile = {
-        photo: user.picture ? `${dataUrl}${user.picture}` : require('../../assets/images/noimage.gif'),
-        gender: gender ? (<p><MdAccessiblity /> {gender}</p>) : null,
+        photo: avatar ? `${s3Url}${avatar}` : require('../../assets/images/noimage.gif'),
+        gender: gender && (<p><MdAccessiblity /> {gender}</p>),
         ageGroup: function() {
           let returnAgeGroup;
           if (dob) {
             const years = moment().diff(dob, 'years');
             if (years % 10 === 0) {
               const loYears = years - 9;
-              returnAgeGroup = `${loYears}-${years} years old`;
+              returnAgeGroup = `${loYears} - ${years} years old`;
             } else {
               const loYears = (Math.floor(years / 10) * 10) + 1;
               const hiYears = loYears + 9;
-              returnAgeGroup = `${loYears}-${hiYears} years old`;
+              returnAgeGroup = `${loYears} - ${hiYears} years old`;
             }
             return (<p><MdPerson /> {returnAgeGroup}</p>)
           }
         },
-        address: addresses ? (<p><MdLocationOn/> {addresses[0].region}</p>) : null,
+        address: address && (<p><MdLocationOn/> {address.neighborhood}</p>),
         raceReligion: function() {
-          const returnReligion = religion ? ` - ${religion}`: null;
-          return (race || returnReligion) ? (<p><TiWorld /> {`${race}${returnReligion}`}</p>) : null;
+          const returnReligion = religion && ` - ${religion}`;
+          return (race || returnReligion) && (<p><TiWorld /> {`${race}${returnReligion}`}</p>);
         },
         languages: function() {
-          let callBack = [];
-          languages.map(lang => callBack.push(lang.name));
-          return (<p><FaComment /> {`${callBack.join(', ')}`}</p>)
+          const langNames = [];
+          languages.map(lang => langNames.push(lang.name));
+          return langNames.length ? (<p><FaComment /> {`${langNames.join(', ')}`}</p>) : null;
         },
-        nationality: nationality ? (<p><FaFlag /> {nationality}</p>) : null,
-        fullName,
+        nationality: nationality && (<p><FaFlag /> {nationality}</p>),
+        name,
       }
     }
 
     return (
       <div className={s.profile}>
-        <Header title={`${client && client.fullName || nurse && nurse.fullName}'s Profile`} />
+        <Header title={`${getUserName(user)}'s Profile`} />
         <Container>
           {user && edit && (<ProfileEdit />)}
           {user && !edit && (<div><ProfileBase profile={profile} /></div>)}
@@ -81,13 +81,10 @@ class Profile extends Component {
 
 Profile.propTypes = {
   user: PropTypes.object,
-  userData: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user && state.user.data,
-  client: state.user && state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  nurse: state.user && state.user.data && state.user.data.nurses && state.user.data.nurses.length && state.user.data.nurses[0],
+    user: state.user.data,
 });
 
 export default connect(mapStateToProps)(Profile);

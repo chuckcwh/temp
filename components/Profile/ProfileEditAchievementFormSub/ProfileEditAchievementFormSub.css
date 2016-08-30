@@ -1,0 +1,73 @@
+@import '../../variables.css';
+
+
+.profileEditEmploymentFormSub {
+  min-height: 400px;
+  position: relative;
+  padding-bottom: 40px;
+
+  & .employmentFormTable {
+    background-color: #FaFaFa;
+    border: 1px solid #EEEEEE;
+    box-shadow: 0 0 1px E6E6E6;
+    border-radius: 10px;
+
+    & .mainCat {
+
+      & .mainCatFields {
+        padding: 20px 10px 0;
+        font-weight: bold;
+
+        & .mainCatContainer {
+          margin: 0 10px;
+          display: flex;
+          flex-direction: column;
+
+          & .selectInput {
+            margin: 0;
+
+            & .selectInputInner {
+              width: 100%;
+            }
+          }
+
+          & .textareaInput {
+            margin-top: 0;
+          }
+
+          & .mainInput {
+            margin: 0;
+            width: auto;
+          }
+
+          & .mainCatMulti {
+            width: 100%;
+          }
+
+          & .dateInputContainer {
+            margin: 0;
+            display: flex;
+
+            & .dateInput {
+              width: auto;
+              padding-right: 0;
+              flex: 1;
+            }
+          }
+
+        }
+      }
+    }
+
+    & .educationFormHandle {
+      margin: 50px 10px 40px;
+      text-align: right;
+      display: block;
+
+      & .formSubmit {
+        margin: 0 10px;
+      }
+    }
+  }
+
+}

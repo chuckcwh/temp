@@ -20,17 +20,19 @@ class ProfileEditResidentialForm extends Component {
   render() {
     const {
       fields: {
-        postalCode,
-        floorNum,
-        unitNum,
-        addr,
-        region
+        userType,
+        postal,
+        unit,
+        des,
+        neighborhood,
+        region,
       },
+      neighborhoodChoice,
+      regionChoice,
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
-      showDayPickerPopup,
     } = this.props;
 
     return (
@@ -40,42 +42,48 @@ class ProfileEditResidentialForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Postal Code</div>
               <div className="TableRowItem2">
-                <input type="text" {...postalCode} />
-                {postalCode.touched && postalCode.error && <div className={s.formError}>{postalCode.error}</div>}
+                <input type="text" {...postal} />
+                {postal.touched && postal.error && <div className={s.formError}>{postal.error}</div>}
               </div>
             </div>
 
             <div className="TableRow">
-              <div className="TableRowItem1">Floor Number (if applicable)</div>
+              <div className="TableRowItem1">Unit Number</div>
               <div className="TableRowItem2">
-                <input type="text" {...floorNum} />
-                {floorNum.touched && floorNum.error && <div className={s.formError}>{floorNum.error}</div>}
-              </div>
-            </div>
-
-            <div className="TableRow">
-              <div className="TableRowItem1">Unit Number (if applicable)</div>
-              <div className="TableRowItem2">
-                <input type="text" {...unitNum} />
-                {unitNum.touched && unitNum.error && <div className={s.formError}>{unitNum.error}</div>}
+                <input type="text" {...unit} />
+                {unit.touched && unit.error && <div className={s.formError}>{unit.error}</div>}
               </div>
             </div>
 
             <div className="TableRow">
               <div className="TableRowItem1">Address</div>
               <div className="TableRowItem2">
-                <div>
-                  <textarea className={s.addrInput} id="addr" name="addr" placeholder="Enter Address" {...addr} />
-                  {addr.touched && addr.error && <div className={s.bookingLocationFormError}>{addr.error}</div>}
+                <textarea className={s.addrInput} id="des" name="des" placeholder="Enter Address" {...des} />
+                {des.touched && des.error && <div className={s.bookingLocationFormError}>{des.error}</div>}
+              </div>
+            </div>
+
+            <div className="TableRow">
+              <div className="TableRowItem1">Neighborhood</div>
+              <div className="TableRowItem2">
+                <div className={cx("select", s.selectInput)}>
+                  <span></span>
+                  <select id={neighborhood} name={neighborhood} {...neighborhood} value={neighborhood.value}>
+                    <option value="">-- Select --</option>
+                    {neighborhoodChoice && neighborhoodChoice.map(item => (
+                      <option key={neighborhoodChoice.indexOf(item)} value={item}>{item}</option>
+                    ))}
+                  </select>
                 </div>
-                {addr.touched && addr.error && <div className={s.formError}>{addr.error}</div>}
+                {neighborhood.touched && neighborhood.error && <div className={s.formError}>{neighborhood.error}</div>}
               </div>
             </div>
 
             <div className="TableRow">
               <div className="TableRowItem1">Region</div>
               <div className="TableRowItem2">
-                <input type="text" {...region} disabled />
+                <input type="text" {...region} />
+                {region.touched && region.error && <div className={s.formError}>{region.error}</div>}
               </div>
             </div>
           </div>
@@ -112,11 +120,12 @@ ProfileEditResidentialForm.propTypes = {
 const reduxFormConfig = {
   form: 'ProfileEditResidentialForm',
   fields: [
-    'postalCode',
-    'floorNum',
-    'unitNum',
-    'addr',
-    'region'
+    'userType', // for form validate, not real field
+    'postal',
+    'unit',
+    'des',
+    'neighborhood',
+    'region',
   ],
   validate,
 }
@@ -126,20 +135,15 @@ const mapStateToProps = (state) => {
 
   return {
     initialValues: {
-      postalCode: user.clients[0].addresses[0].postalCode || undefined,
-      floorNum: user.clients[0].addresses[0].floorNumber || undefined,
-      unitNum: user.clients[0].addresses[0].unitNumber || undefined,
-      addr: user.clients[0].addresses[0].address || undefined,
-      region: `${user.clients[0].addresses[0].region} (${user.clients[0].addresses[0].regionPlaces})`,
-      // fullName: user.clients[0].fullName || undefined,
-      // gender: user.clients[0].gender || undefined,
-      // dob: user.clients[0].dob || undefined,
-      // idNumber: user.clients[0].IDnum || undefined,
-      // idType: user.clients[0].IDtype || undefined,
-      // occupation: user.clients[0].occupation || undefined,
-      // maritalStatus: user.clients[0].maritalStatus || undefined,
-      // email: user.email || undefined,
-    }
+      userType: user && user.role, // for form validate, not real field
+      postal: user && user.address && user.address.postal,
+      unit: user && user.address && user.address.unit,
+      des: user && user.address && user.address.description,
+      neighborhood: user && user.address && user.address.neighborhood,
+      region: user && user.address && user.address.region,
+    },
+    neighborhoodChoice: state.config.neighborhoods,
+    regionChoice: state.config.regions,
   }
 };
 

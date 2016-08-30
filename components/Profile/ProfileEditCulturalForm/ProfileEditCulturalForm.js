@@ -21,9 +21,10 @@ class ProfileEditCulturalForm extends Component {
   render() {
     const {
       fields: {
+        userType,
         race,
         religion,
-        languagesMy,
+        languages,
         nationality
       },
       invalid,
@@ -33,9 +34,11 @@ class ProfileEditCulturalForm extends Component {
       languageChoice,
     } = this.props;
 
+    console.log('languageChoice', languageChoice);
+
     const raceChoice = ['Chinese', 'Malay', 'Indian', 'Eurasian', 'Others'];
     const religionChoice = ['Buddhist', 'Christian', 'Free Thinker',
-      'Hinduism', 'Islam', 'Taoist', 'Catholic', 'Others'];
+      'Hinduism', 'Islam', 'Taoist', 'Catholic', 'Others', 'non-religion'];
     const nationalityChoice = ['Singaporean', 'Australian', 'Bangladeshis',
       'Cambodian', 'Chinese', 'Indian', 'Indonesian', 'Japanese', 'Korean',
       'Malaysian', 'Sri Lankan', 'Thais', 'Vietnamese', 'Others'];
@@ -78,8 +81,8 @@ class ProfileEditCulturalForm extends Component {
               <div className="TableRowItem1">Languages</div>
               <div className="TableRowItem2">
                 <MultiSelect
-                  options={Object.values(languageChoice).map(i => ({ label: i.name, value: i.id }))}
-                  {...languagesMy}
+                  options={Object.values(languageChoice).map(i => ({ label: i.name, value: i.value }))}
+                  {...languages}
                 />
               </div>
             </div>
@@ -133,25 +136,26 @@ ProfileEditCulturalForm.propTypes = {
 const reduxFormConfig = {
   form: 'ProfileEditCulturalForm',
   fields: [
+    'userType',
     'race',
     'religion',
-    'languagesMy',
+    'languages',
     'nationality'
   ],
   validate,
 }
 
 const mapStateToProps = (state) => {
-  const user = state.user.data;
+  const user = state.user && state.user.data;
 
   return {
-    languageChoice: state.languages.data || undefined,
     initialValues: {
-      race: user.clients[0].race || undefined,
-      religion: user.clients[0].religion || undefined,
-      languagesMy: Object.values(user.clients[0].languages).map(i => ({ label: i.name, value: i.id })) || undefined,
-      nationality: user.clients[0].nationality || undefined,
-    }
+      race: user && user.race,
+      religion: user && user.religion,
+      languages: user && Object.values(user.languages).map(i => ({ label: i.name, value: i.id })),
+      nationality: user && user.nationality,
+    },
+    languageChoice: state.config.data && state.config.data.languages,
   }
 };
 

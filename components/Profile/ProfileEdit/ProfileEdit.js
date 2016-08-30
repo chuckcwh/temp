@@ -8,7 +8,7 @@ import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
 import history from '../../../core/history';
-import util from '../../../core/util';
+import { isAdmin, isClient, isProvider, getUserName } from '../../../core/util';
 import SideTabList from '../../SideTabList';
 import SideTab from '../../SideTab';
 import { fetchLanguages } from '../../../actions';
@@ -18,12 +18,18 @@ import ProfileEditResidentialForm from '../ProfileEditResidentialForm/ProfileEdi
 import ProfileEditCulturalForm from '../ProfileEditCulturalForm/ProfileEditCulturalForm';
 import ProfileEditProfileForm from '../ProfileEditProfileForm/ProfileEditProfileForm';
 import ProfileEditPasswordForm from '../ProfileEditPasswordForm/ProfileEditPasswordForm';
+import ProfileEditEducationForm from '../ProfileEditEducationForm/ProfileEditEducationForm';
+import ProfileEditEmploymentForm from '../ProfileEditEmploymentForm/ProfileEditEmploymentForm';
+import ProfileEditAchievementForm from '../ProfileEditAchievementForm/ProfileEditAchievementForm';
 // React-icons
 import MdPerson from 'react-icons/lib/md/person';
 import MdHome from 'react-icons/lib/md/home';
 import FaComments from 'react-icons/lib/fa/comments';
 import FaImage from 'react-icons/lib/fa/image';
 import FaLock from 'react-icons/lib/fa/lock';
+import FaBook from 'react-icons/lib/fa/book';
+import FaBriefcase from 'react-icons/lib/fa/briefcase';
+import FaTrophy from 'react-icons/lib/fa/trophy';
 
 
 const dataUrl = 'https://ebeecare-dev.s3.amazonaws.com/';
@@ -38,57 +44,38 @@ class ProfileEdit extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.fetchLanguages();
-  }
-
   handleTabSelect(index) {
     this.setState({ selectedTabIndex: index })
   }
 
   render() {
-    const { user, client, nurse, languageChoice } = this.props;
+    const { user, languageChoice } = this.props;
     const { selectedTabIndex } = this.state;
-    let tabs;
     let content;
 
-    if (client) {
-      tabs = (
-        <SideTabList
-          onSelect={this.handleTabSelect.bind(this)}
-          selectedIndex={this.state.selectedTabIndex}
-          selectable
-        >
-          <SideTab><MdPerson /><span>Basic Details</span></SideTab>
-          <SideTab><MdHome /><span>Residential Details</span></SideTab>
-          <SideTab><FaComments /><span>Cultural Details</span></SideTab>
-          <SideTab><FaImage /><span>Profile Picture</span></SideTab>
-          <SideTab><FaLock /><span>Password</span></SideTab>
-        </SideTabList>
+    if (isClient(user)) {
+      content = (
+        <div className={s.editPanelContainer}>
+          {selectedTabIndex === 0 && (<ProfileEditBasicForm />)}
+          {selectedTabIndex === 1 && (<ProfileEditResidentialForm />)}
+          {selectedTabIndex === 2 && (<ProfileEditCulturalForm />)}
+          {selectedTabIndex === 3 && (<ProfileEditProfileForm />)}
+          {selectedTabIndex === 4 && (<ProfileEditPasswordForm />)}
+        </div>
       )
+    } else if (isProvider(user)) {
 
       content = (
         <div className={s.editPanelContainer}>
           {selectedTabIndex === 0 && (<ProfileEditBasicForm />)}
           {selectedTabIndex === 1 && (<ProfileEditResidentialForm />)}
-          {selectedTabIndex === 2 && (<ProfileEditCulturalForm languageChoice={languageChoice} />)}
-          {selectedTabIndex === 3 && (<ProfileEditProfileForm />)}
-          {selectedTabIndex === 4 && (<ProfileEditPasswordForm />)}
+          {selectedTabIndex === 2 && (<ProfileEditCulturalForm />)}
+          {selectedTabIndex === 3 && (<ProfileEditEducationForm />)}
+          {selectedTabIndex === 4 && (<ProfileEditEmploymentForm />)}
+          {selectedTabIndex === 5 && (<ProfileEditAchievementForm />)}
+          {selectedTabIndex === 6 && (<ProfileEditProfileForm />)}
+          {selectedTabIndex === 7 && (<ProfileEditPasswordForm />)}
         </div>
-      )
-    } else if (nurse) {
-      tabs = (
-        <SideTabList
-          onSelect={this.handleTabSelect.bind(this)}
-          selectedIndex={this.state.selectedTabIndex}
-          selectable
-        >
-          <SideTab><MdPerson /><span>Basic Details</span></SideTab>
-          <SideTab><MdHome /><span>Residential Details</span></SideTab>
-          <SideTab><FaComments /><span>Cultural Details</span></SideTab>
-          <SideTab><FaImage /><span>Profile Picture</span></SideTab>
-          <SideTab><FaLock /><span>Password</span></SideTab>
-        </SideTabList>
       )
     }
 
@@ -100,7 +87,24 @@ class ProfileEdit extends Component {
               <div className={s.userImage}>
                 <img src={user.picture ? `${dataUrl}${user.picture}` : require('../../../assets/images/noimage.gif')} />
               </div>
-              {tabs}
+              {user && (
+                <SideTabList
+                  onSelect={this.handleTabSelect.bind(this)}
+                  selectedIndex={this.state.selectedTabIndex}
+                  selectable
+                >
+                  <SideTab><MdPerson /><span>Basic Details</span></SideTab>
+                  <SideTab><MdHome /><span>Residential Details</span></SideTab>
+                  <SideTab><FaComments /><span>Cultural Details</span></SideTab>
+                  {isProvider(user) && ([
+                    <SideTab><FaBook /><span>Education History</span></SideTab>,
+                    <SideTab><FaBriefcase /><span>Employment History</span></SideTab>,
+                    <SideTab><FaTrophy /><span>Achievements</span></SideTab>
+                  ])}
+                  <SideTab><FaImage /><span>Profile Picture</span></SideTab>
+                  <SideTab><FaLock /><span>Password</span></SideTab>
+                </SideTabList>
+              )}
             </div>
             <div className={s.editPanel}>
               {content}
@@ -119,14 +123,8 @@ ProfileEdit.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user && state.user.data,
-  client: state.user && state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  nurse: state.user && state.user.data && state.user.data.nurses && state.user.data.nurses.length && state.user.data.nurses[0],
-  languageChoice: state.languages.data || undefined,
+  user: state.user.data,
+  languageChoice: state.config.data && state.config.data.languages,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchLanguages: () => dispatch(fetchLanguages()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileEdit);
+export default connect(mapStateToProps)(ProfileEdit);

@@ -1,0 +1,16 @@
+@import '../../variables.css';
+
+
+.ProfileEditEducationForm {
+  min-height: 400px;
+  position: relative;
+  padding-bottom: 40px;
+
+  & .addForm {
+    margin: 40px 0;
+    width: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+}

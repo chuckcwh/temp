@@ -36,6 +36,7 @@ const submit = (props) => (values, dispatch) => (
         password: values.password,
         name: values.name,
         contact: values.contact,
+        role: 'client',
       })).then((res) => {
         if (res && res.type === USER_CREATE_SUCCESS) {
           props.onSuccess && props.onSuccess();

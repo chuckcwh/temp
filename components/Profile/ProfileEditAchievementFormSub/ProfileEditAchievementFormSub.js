@@ -18,7 +18,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import FaLock from 'react-icons/lib/fa/lock';
 
 
-class ProfileEditEmploymentFormSub extends Component {
+class ProfileEditAchievementFormSub extends Component {
 
   render() {
     const {
@@ -38,7 +38,7 @@ class ProfileEditEmploymentFormSub extends Component {
     // const countryChoice = ['Singapore', 'India', 'Malaysia', 'Indonesia', 'China'];
 
     return (
-      <div className={s.profileEditEmploymentFormSub}>
+      <div className={s.profileEditAchievementFormSub}>
         <DayPickerPopup title="Date Obtained" />
 
         <Grid fluid className={s.employmentFormTable}>
@@ -55,7 +55,7 @@ class ProfileEditEmploymentFormSub extends Component {
                 <p>Date Obtained</p>
                 <div className={cx("DateInput", s.dateInputContainer)}>
                   <input className={s.dateInput} type="text" id="dateObtained" name="dateObtained" placeholder="MM/YYYY" {...dateObtained} />
-                  <span onClick={() => this.props.showDayPickerPopup(dateObtained.value, 'ProfileEditEmploymentFormSub')}></span>
+                  <span onClick={() => this.props.showDayPickerPopup(dateObtained.value, 'ProfileEditAchievementFormSub')}></span>
                 </div>
                 {dateObtained.touched && dateObtained.error && <div className={s.formError}>{dateObtained.error}</div>}
               </div>
@@ -97,7 +97,7 @@ const validate = values => {
   // }
 }
 
-ProfileEditEmploymentFormSub.propTypes = {
+ProfileEditAchievementFormSub.propTypes = {
   user: PropTypes.object,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -107,7 +107,7 @@ ProfileEditEmploymentFormSub.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'ProfileEditEmploymentFormSub',
+  form: 'ProfileEditAchievementFormSub',
   fields: [
     'title',
     'organization',
@@ -125,4 +125,4 @@ const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
 })
 
-export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditEmploymentFormSub);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditAchievementFormSub);

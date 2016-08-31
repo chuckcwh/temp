@@ -8,70 +8,132 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
-import { getUserName } from '../../core/util';
+import { isProvider, getUserName } from '../../core/util';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 // sub components
 import ProfileBase from './ProfileBase/ProfileBase';
 import ProfileEdit from './ProfileEdit/ProfileEdit';
-
 // react-icons
-import MdAccessiblity from 'react-icons/lib/md/accessibility';
-import MdPerson from 'react-icons/lib/md/person';
-import MdLocationOn from 'react-icons/lib/md/location-on';
-import TiWorld from 'react-icons/lib/ti/world';
-import FaComment from 'react-icons/lib/fa/comment';
-import FaFlag from 'react-icons/lib/fa/flag';
+import FaPlus from 'react-icons/lib/fa/plus';
+import FaBook from 'react-icons/lib/fa/book';
+import FaBriefcase from 'react-icons/lib/fa/briefcase';
+import FaTrophy from 'react-icons/lib/fa/trophy';
 
-
-const s3Url = 'https://ebeecare-dev.s3.amazonaws.com/';
 
 class Profile extends Component {
 
   render() {
-    const { params, user } = this.props;
-    const { edit } = params;
-    let profile;
-
-    if (user) {
-      const { avatar, gender, dob, address, race, religion, languages, nationality, name } = user;
-      profile = {
-        photo: avatar ? `${s3Url}${avatar}` : require('../../assets/images/noimage.gif'),
-        gender: gender && (<p><MdAccessiblity /> {gender}</p>),
-        ageGroup: function() {
-          let returnAgeGroup;
-          if (dob) {
-            const years = moment().diff(dob, 'years');
-            if (years % 10 === 0) {
-              const loYears = years - 9;
-              returnAgeGroup = `${loYears} - ${years} years old`;
-            } else {
-              const loYears = (Math.floor(years / 10) * 10) + 1;
-              const hiYears = loYears + 9;
-              returnAgeGroup = `${loYears} - ${hiYears} years old`;
-            }
-            return (<p><MdPerson /> {returnAgeGroup}</p>)
-          }
-        },
-        address: address && (<p><MdLocationOn/> {address.neighborhood}</p>),
-        raceReligion: function() {
-          const returnReligion = religion && ` - ${religion}`;
-          return (race || returnReligion) && (<p><TiWorld /> {`${race}${returnReligion}`}</p>);
-        },
-        languages: function() {
-          const langNames = [];
-          languages.map(lang => langNames.push(lang.name));
-          return langNames.length ? (<p><FaComment /> {`${langNames.join(', ')}`}</p>) : null;
-        },
-        nationality: nationality && (<p><FaFlag /> {nationality}</p>),
-        name,
-      }
-    }
-
+    const { edit } = this.props.params;
+    const {
+      user,
+      name,
+      provider: {
+        skills,
+        educations,
+        experiences,
+        achievements,
+      },
+    } = this.props;
+    console.log('experiences', skills);
     return (
       <div className={s.profile}>
-        <Header title={`${getUserName(user)}'s Profile`} />
+        <Header title={`${name}'s Profile`} />
         <Container>
+
           {user && edit && (<ProfileEdit />)}
-          {user && !edit && (<div><ProfileBase profile={profile} /></div>)}
+
+          {user && !edit && (
+            <div>
+
+              <ProfileBase />
+
+              {isProvider(user) && (
+                <Grid fluid className={s.providerSection}>
+
+                  <Row>
+                    <Col xs={12} sm={12} className={s.skillContainer}>
+                      <hr className={s.providerSegment} />
+                      <h3 className={s.title}><FaPlus /> Provider Skills</h3>
+                      <p>
+                        {!skills.length && (
+                          <span className={s.noSkill}>
+                            Not Entered. <a href="/profile/edit">Add a skill.</a>
+                          </span>
+                        )}
+                        {skills && skills.map(item => (
+                          <span className={s.eachSkill}>{item}</span>
+                        ))}
+                      </p>
+                    </Col>
+
+                    <Col xs={12} sm={3} className={s.educationContainer}>
+                      <h3 className={s.title}><FaBook /> Education History</h3>
+                      {!educations && (
+                        <div>
+                          Not Entered. <a href="/profile/edit" className={s.link}>Add an education record.</a>
+                        </div>
+                      )}
+                      {educations && educations.map(item => (
+                        <div key={item._id} className={s.educationBody}>
+                          <div className={s.flag}>
+                            <div className={s.flagCert}>{item.typeOfCert}</div>
+                            <div className={s.flagDate}>{moment(item.gradDate).format('MMM YYYY')}</div>
+                          </div>
+                          <p className={s.bodyCourse}>{item.course}</p>
+                          <p className={s.bodyInstitute}>{item.institute}{item.institute && item.country && ', '}{item.country}</p>
+                        </div>
+                      ))}
+                    </Col>
+
+                    <Col xs={12} sm={5} className={s.experienceContainer}>
+                      <h3 className={s.title}><FaBriefcase /> Work Experience</h3>
+                      {!experiences && (
+                        <div>
+                          Not Entered. <a href="/profile/edit">Add a work experience.</a>
+                        </div>
+                      )}
+                      <div className={s.experienceBody}>
+                        {experiences && experiences.map(item => (
+                          <div key={item._id} className={s.experienceEach}>
+                            <div className={s.timeFlag}>{moment(item.startDate).format(`MMM 'YY`)}{`- ${moment(item.endDate).format("MMM 'YY")}`}</div>
+                            <div className={s.timeDot}></div>
+
+                            <div className={s.experienceContent}>
+                              <p>{item.employer} ({item.country})</p>
+                              <div className={s.experiencePos}>
+                                <p>{item.position}</p>
+                                <p>{item.description}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </Col>
+
+                    <Col xs={12} sm={4} className={s.achievementContainer}>
+                      <h3><FaTrophy /> Achievements</h3>
+                      {!achievements && (
+                        <div>
+                          Not Entered. <a href="/profile/edit">Add an achievement.</a>
+                        </div>
+                      )}
+                      {achievements && achievements.map(item => (
+                        <div key={item._id} className={s.achievementBody}>
+                          <div className={s.flag}>
+                            <div className={s.flagCert}>{item.title}</div>
+                            <div className={s.flagDate}>{moment(item.dateObtained).format('MMM YYYY')}</div>
+                          </div>
+                          <p className={s.bodyOrg}>{item.organization}</p>
+                          <p className={s.bodyDes}>{item.description}</p>
+                        </div>
+                      ))}
+                    </Col>
+                  </Row>
+                </Grid>
+              )}
+
+            </div>
+          )}
         </Container>
       </div>
     )
@@ -83,8 +145,18 @@ Profile.propTypes = {
   user: PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
-    user: state.user.data,
-});
+const mapStateToProps = (state) => {
+  const user = state.user.data;
+
+  return {
+    name: user && user.name,
+    provider: {
+      skills: user && user.skills,
+      educations: user && user.educations,
+      experiences: user && user.experiences,
+      achievements: user && user.achievements,
+    },
+    user,
+}};
 
 export default connect(mapStateToProps)(Profile);

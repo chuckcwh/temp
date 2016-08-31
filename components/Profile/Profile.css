@@ -1,8 +1,182 @@
 @import '../variables.css';
 
+
 .profile {
   min-height: 400px;
   position: relative;
 
+  & .providerSection {
 
+    & .noSkill {
+      color: #777;
+
+      & .link {
+        color: var(--brand-color);
+      }
+    }
+
+    & .skillContainer {
+      text-align: center;
+
+      & .providerSegment {
+        margin: 44px 0;
+      }
+
+      & .title {
+        color: var(--brand-color);
+      }
+
+      & .eachSkill {
+        color: #FFF;
+        background-color: var(--brand-color);
+        border-radius: 15px;
+        padding: 5px 10px;
+      }
+
+    }
+
+    & .educationContainer {
+      color: var(--brand-color);
+
+      & .title {
+        text-align: center;
+      }
+
+      & .educationBody {
+        margin: 0 10px 15px;
+        padding: 50px 15px 20px;
+        background-color: #f0f0f0;
+        box-shadow: 0px 3px 3px -3px #ccc;
+        -webkit-box-shadow: 0px 3px 3px -3px #ccc;
+        border-radius: 3px;
+        color: #333;
+        position: relative;
+        text-align: center;
+
+        & .flag {
+          position: absolute;
+          top: 10px;
+          left: -10px;
+          text-align: center;
+
+          & .flagCert {
+            background-color: var(--brand-color);
+            display: inline-block;
+            box-shadow: -3px 0 7px -3px rgba(68, 68, 68, .5);
+            color: #FFF;
+            font-size: 14px;
+            padding: 7px 10px;
+          }
+
+          & .flagDate {
+            background-color: #f78d00;
+            color: #FFF;
+            box-shadow: -3px 0 7px -3px rgba(68, 68, 68, .5);
+            display: inline-block;
+            font-size: 14px;
+            padding: 7px 10px;
+          }
+        }
+
+        & .bodyCourse {
+          color: #636363;
+        }
+
+        & .bodyInstitute {
+          color: #636363;
+          font-size: 14px;
+        }
+      }
+    }
+
+    & .experienceContainer {
+      color: var(--brand-color);
+
+      & .title {
+        text-align: center;
+      }
+
+      & .experienceBody {
+        margin-left: 150px;
+        border-left: 8px solid #dfdfdf;
+
+        & .experienceEach {
+          position: relative;
+
+          & .timeFlag {
+            position: absolute;
+            width: 150px;
+            top: 10px;
+            left: -150px;
+            background-color: #f78d00;
+            padding: 7px 10px;
+          }
+
+          & .timeDot {
+            
+          }
+
+          & .experienceContent {
+
+          }
+        }
+      }
+    }
+
+    & .achievementContainer {
+      color: var(--brand-color);
+
+      & .title {
+        text-align: center;
+      }
+
+      & .achievementBody {
+        margin: 0 10px 15px;
+        padding: 50px 15px 20px;
+        background-color: #f0f0f0;
+        box-shadow: 0px 3px 3px -3px #ccc;
+        -webkit-box-shadow: 0px 3px 3px -3px #ccc;
+        border-radius: 3px;
+        color: #333;
+        position: relative;
+        text-align: center;
+
+        & .flag {
+          position: absolute;
+          top: 10px;
+          left: -10px;
+          text-align: center;
+
+          & .flagCert {
+            background-color: var(--brand-color);
+            display: inline-block;
+            box-shadow: -3px 0 7px -3px rgba(68, 68, 68, .5);
+            color: #FFF;
+            font-size: 14px;
+            padding: 7px 10px;
+          }
+
+          & .flagDate {
+            background-color: #f78d00;
+            color: #FFF;
+            box-shadow: -3px 0 7px -3px rgba(68, 68, 68, .5);
+            display: inline-block;
+            font-size: 14px;
+            padding: 7px 10px;
+          }
+        }
+
+        & .bodyOrg {
+          color: #636363;
+        }
+
+        & .bodyDes {
+          color: #636363;
+          font-size: 14px;
+        }
+      }
+
+    }
+
+  }
 }

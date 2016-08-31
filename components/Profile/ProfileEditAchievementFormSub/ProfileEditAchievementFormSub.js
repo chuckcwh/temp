@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
-import s from './ProfileEditEmploymentFormSub.css';
+import s from './ProfileEditAchievementFormSub.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';

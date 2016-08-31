@@ -545,9 +545,9 @@ class BookingDetails extends Component {
                     <div className="TableRow">
                       <div className="TableRowItem1">Service</div>
                       <div className="TableRowItem3">
-                        {this.props.allServices && booking && booking.case
-                          && booking.case.service && this.props.allServices[booking.case.service]
-                          && this.props.allServices[booking.case.service].name}
+                        {this.props.services && booking && booking.case
+                          && booking.case.service && this.props.services[booking.case.service]
+                          && this.props.services[booking.case.service].name}
                       </div>
                     </div>
                   </div>
@@ -623,8 +623,8 @@ class BookingDetails extends Component {
 BookingDetails.propTypes = {
   children: React.PropTypes.node,
 
-  allServices: React.PropTypes.object,
-  allServicesFetching: React.PropTypes.bool,
+  services: React.PropTypes.object,
+  servicesFetching: React.PropTypes.bool,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
   inlineForm: React.PropTypes.object,
@@ -640,8 +640,8 @@ BookingDetails.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  allServices: state.allServices.data,
-  allServicesFetching: state.allServices.isFetching,
+  services: state.services.data,
+  servicesFetching: state.services.isFetching,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
   inlineForm: state.inlineForm,

@@ -11,15 +11,15 @@ class BookingPostSidebar extends Component {
   }
 
   render() {
-    const { allServices, booking } = this.props;
+    const { services, booking } = this.props;
     let service,
       loc,
       sessions,
       sum;
-    if (allServices && booking && booking.case && booking.case.service) {
-      service = `${allServices[booking.case.service].name} ` +
-        `(${parseFloat(allServices[booking.case.service].duration)} ` +
-        `hr${parseFloat(allServices[booking.case.service].duration) > 1 ? 's' : ''})`;
+    if (services && booking && booking.case && booking.case.service) {
+      service = `${services[booking.case.service].name} ` +
+        `(${parseFloat(services[booking.case.service].duration)} ` +
+        `hr${parseFloat(services[booking.case.service].duration) > 1 ? 's' : ''})`;
     }
     if (booking && booking.case && booking.case.addresses && booking.case.addresses[0]) {
       loc = (
@@ -79,7 +79,7 @@ class BookingPostSidebar extends Component {
 }
 
 BookingPostSidebar.propTypes = {
-  allServices: React.PropTypes.object,
+  services: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
 
@@ -87,7 +87,7 @@ BookingPostSidebar.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  allServices: state.allServices.data,
+  services: state.services.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
 });

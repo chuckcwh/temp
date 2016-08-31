@@ -10,6 +10,15 @@ const service = (state = null, action) => {
   }
 }
 
+const serviceClass = (state = null, action) => {
+  switch (action.type) {
+    case ActionTypes.ORDER_SET_SERVICE_CLASS:
+      return action.serviceClass;
+    default:
+      return state;
+  }
+}
+
 const location = (state = null, action) => {
   switch (action.type) {
     case ActionTypes.ORDER_SET_LOCATION:
@@ -84,6 +93,7 @@ const patient = (state = null, action) => {
 
 const order = combineReducers({
   service,
+  serviceClass,
   location,
   dates,
   timeslots,

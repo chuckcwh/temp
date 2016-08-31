@@ -23,34 +23,35 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // filter: util.ALL_SERVICES,
-    };
+      panelChoice: undefined,
+    }
   }
 
   componentDidMount() {
     this.props.fetchServices();
-    this.props.user && isClient(this.props.user) && this.props.getPatients({
-      cid: this.props.user.clients[0].id,
-    });
-    this.props.user && isClient(this.props.user) && this.props.getCases({
-      cid: this.props.user.clients[0].id,
-    });
+    this.props.user && isClient(this.props.user)
+      && this.props.getPatients({
+        cid: this.props.user.clients[0].id,
+      })
+      && this.props.getCases({
+        cid: this.props.user.clients[0].id,
+      });
   }
 
   componentWillReceiveProps(props) {
     if (props.user && !this.props.user) {
-      props.user && isClient(props.user) && this.props.getPatients({
-        cid: props.user.clients[0].id,
-      });
-      props.user && isClient(props.user) && this.props.getCases({
-        cid: props.user.clients[0].id,
-      });
+      props.user && isClient(props.user)
+        && this.props.getPatients({
+          cid: props.user.clients[0].id,
+        })
+        && this.props.getCases({
+          cid: props.user.clients[0].id,
+        });
     }
   }
 
   render() {
     const { user, patients, cazes } = this.props;
-    const { filter } = this.state;
     let dashboardStats,
       dashboardBody;
 
@@ -105,7 +106,7 @@ class Dashboard extends Component {
               sessionId: date.id,
               casePrice: cas.price,
               price: date.pcode ? (date.price - (date.price * date.pdiscount / 100)).toFixed(2) : date.price,
-              // service: this.props.allServices[cas.service],
+              // service: this.props.services[cas.service],
               date: date.dateTimeStart.substr(0, 10),
               time: date.dateTimeStart.substr(11),
               estTime: date.estTime,
@@ -342,8 +343,8 @@ Dashboard.propTypes = {
   params: React.PropTypes.object,
 
   user: React.PropTypes.object,
-  allServices: React.PropTypes.object,
-  allServicesFetching: React.PropTypes.bool,
+  services: React.PropTypes.object,
+  servicesFetching: React.PropTypes.bool,
   servicesTree: React.PropTypes.array,
   servicesTreeHash: React.PropTypes.object,
   servicesSubtypesHash: React.PropTypes.object,
@@ -362,12 +363,12 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  allServices: state.allServices.data,
-  allServicesFetching: state.allServices.isFetching,
-  servicesTree: state.allServices.dashboardTree,
-  servicesTreeHash: state.allServices.dashboardTreeHash,
-  servicesSubtypesHash: state.allServices.subTypesHash,
-  servicesSubtypesHashBySlug: state.allServices.subTypesHashBySlug,
+  services: state.services.data,
+  servicesFetching: state.services.isFetching,
+  servicesTree: state.services.dashboardTree,
+  servicesTreeHash: state.services.dashboardTreeHash,
+  servicesSubtypesHash: state.services.subTypesHash,
+  servicesSubtypesHashBySlug: state.services.subTypesHashBySlug,
   patients: state.user.data && state.user.data.clients && state.user.data.clients.length
     && state.user.data.clients[0] && state.user.data.clients[0].id
     && state.patientsByClient[state.user.data.clients[0].id]

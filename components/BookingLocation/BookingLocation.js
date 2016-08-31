@@ -6,7 +6,7 @@ import BookingLocationForm from '../BookingLocationForm';
 import DayPickerPopup from '../DayPickerPopup';
 import { fetchAddress, setOrderLocation, setLastPage, showLoginPopup, showDayPickerPopup } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isNextLastPage } from '../../core/util';
 
 class BookingLocation extends Component {
 
@@ -19,7 +19,7 @@ class BookingLocation extends Component {
         unitNumber: values.unitNumber || undefined,
       };
       this.props.setOrderLocation(orderLocation);
-      util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+      isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
 
       history.push({ pathname: '/booking3a', query: location.query });
       resolve();

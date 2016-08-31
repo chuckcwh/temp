@@ -83,58 +83,74 @@ const config = (state = {
   }
 }
 
-const allServices = (state = {
+const services = (state = {
   isFetching: false,
   didInvalidate: false,
   data: null,
   ids: null,
+  rankedServices: null,
+  categories: null,
+  categoriesBySlug: null,
   servicesTree: null,
   servicesTreeHash: null,
-  subTypesHash: null,
-  subTypesHashBySlug: null,
+  servicesUnderCategory: null,
+  servicesUnderSlug: null,
 }, action) => {
   switch (action.type) {
-    case ActionTypes.SERVICES_REQUEST:
+    case ActionTypes.CATEGORIES_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         didInvalidate: false
       })
+    case ActionTypes.CATEGORIES_SUCCESS:
+      let categories = {}, categoriesBySlug = {}
+      action.response && action.response.data.forEach((category) => {
+        categories[category._id] = category
+        if (category.slug) {
+          categoriesBySlug[category.slug] = category
+        }
+      })
+      return Object.assign({}, state, {
+        categories,
+        categoriesBySlug,
+      })
     case ActionTypes.SERVICES_SUCCESS:
-      let servicesHash = {}, ids = [], subTypesHash = {}, subTypesHashBySlug = {}
-      action.response && action.response.services.forEach((service) => {
-        servicesHash[service.id] = service
-        ids.push(service.id)
-        const subtypeId = parseInt(service['subTypeId'])
-        if (subtypeId) {
-          if (!subTypesHash[subtypeId]) subTypesHash[subtypeId] = []
-          subTypesHash[subtypeId].push(service);
+      let servicesHash = {}, ids = [], rankedServices = [], servicesUnderCategory = {}, servicesUnderSlug = {}
+      action.response && action.response.data.forEach((service) => {
+        servicesHash[service._id] = service
+        ids.push(service._id)
+        service.categories.forEach(categoryId => {
+          if (!servicesUnderCategory[categoryId]) servicesUnderCategory[categoryId] = []
+          servicesUnderCategory[categoryId].push(service);
+        })
+        const serviceCategorySlug = state.categories[service.parentCategory].slug;
+        if (serviceCategorySlug) {
+          if (!servicesUnderSlug[serviceCategorySlug]) servicesUnderSlug[serviceCategorySlug] = []
+          servicesUnderSlug[serviceCategorySlug].push(service);
         }
-        const subtypeSlug = service['subTypeSlug']
-        if (subtypeSlug) {
-          if (!subTypesHashBySlug[subtypeSlug]) subTypesHashBySlug[subtypeSlug] = []
-          subTypesHashBySlug[subtypeSlug].push(service);
-        }
       })
-      Object.keys(subTypesHash).map((subTypeKey) => {
-        subTypesHash[subTypeKey] = sortBy(subTypesHash[subTypeKey], ['subTypeOrder', 'name'])
+      rankedServices = action.response && action.response.data.sort((a, b) => b.popularity - a.popularity);
+      Object.keys(servicesUnderCategory).map((categoryId) => {
+        servicesUnderCategory[categoryId] = sortBy(servicesUnderCategory[categoryId], ['order', 'name'])
       })
-      Object.keys(subTypesHashBySlug).map((subTypeKey) => {
-        subTypesHashBySlug[subTypeKey] = sortBy(subTypesHashBySlug[subTypeKey], ['subTypeOrder', 'name'])
+      Object.keys(servicesUnderSlug).map((slug) => {
+        servicesUnderSlug[slug] = sortBy(servicesUnderSlug[slug], ['order', 'name'])
       })
-      const servicesTree = appendAllServices(parseCategories(servicesHash))
-      const serviceTreeHash = servicesTree.reduce((result, category) => {
-        result[category.name] = category;
-        return result;
-      }, {});
+      // const servicesTree = appendAllServices(parseCategories(servicesHash))
+      // const serviceTreeHash = servicesTree.reduce((result, category) => {
+      //   result[category.name] = category;
+      //   return result;
+      // }, {});
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
         data: servicesHash,
-        ids: ids,
-        servicesTree: servicesTree,
-        servicesTreeHash: serviceTreeHash,
-        subTypesHash: subTypesHash,
-        subTypesHashBySlug: subTypesHashBySlug,
+        ids,
+        rankedServices,
+        // servicesTree: servicesTree,
+        // servicesTreeHash: serviceTreeHash,
+        servicesUnderCategory,
+        servicesUnderSlug,
         lastUpdated: action.response && action.response.receivedAt
       })
     default:
@@ -203,20 +219,20 @@ const booking = (state = {
   }
 }
 
-const caze = (state = {
+const session = (state = {
   isFetching: false,
   didInvalidate: true,
   data: null
 }, action) => {
   switch (action.type) {
-    case ActionTypes.CASE_CREATE_REQUEST:
+    case ActionTypes.SESSION_CREATE_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       })
-    case ActionTypes.CASE_CREATE_SUCCESS:
+    case ActionTypes.SESSION_CREATE_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        data: action.response && action.response.case,
+        data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
       })
     default:
@@ -224,22 +240,22 @@ const caze = (state = {
   }
 }
 
-const cazes = (state = {
+const sessions = (state = {
   isFetching: false,
   didInvalidate: true,
   data: null,
   ids: null
 }, action) => {
   switch (action.type) {
-    case ActionTypes.CASES_REQUEST:
+    case ActionTypes.SESSIONS_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       })
-    case ActionTypes.CASES_SUCCESS:
+    case ActionTypes.SESSIONS_SUCCESS:
       let hash = {}, ids = []
-      action.response && action.response.cases.forEach((caze) => {
-        hash[caze.id] = caze
-        ids.push(caze.id)
+      action.response && action.response.data.forEach((session) => {
+        hash[session.id] = session
+        ids.push(session.id)
       })
       return Object.assign({}, state, {
         isFetching: false,
@@ -252,24 +268,24 @@ const cazes = (state = {
   }
 }
 
-const cazesByClient = (state = {}, action) => {
+const sessionsByClient = (state = {}, action) => {
   switch (action.type) {
-    case ActionTypes.CASES_REQUEST:
-    case ActionTypes.CASES_SUCCESS:
+    case ActionTypes.SESSIONS_REQUEST:
+    case ActionTypes.SESSIONS_SUCCESS:
       return Object.assign({}, state, {
-        [action.data.cid]: cazes(state[action.data.cid], action)
+        [action.data.client]: sessions(state[action.data.client], action)
       })
     default:
       return state
   }
 }
 
-const cazesAvailToNurse = (state ={}, action) => {
+const sessionsAvailToNurse = (state ={}, action) => {
   switch (action.type) {
-    case ActionTypes.CASES_REQUEST:
-    case ActionTypes.CASES_SUCCESS:
+    case ActionTypes.SESSIONS_REQUEST:
+    case ActionTypes.SESSIONS_SUCCESS:
       return Object.assign({}, state, {
-        [action.data.nid]: cazes(state[action.data.nid], action)
+        [action.data.provider]: sessions(state[action.data.provider], action)
       })
     default:
       return state
@@ -316,27 +332,27 @@ const patientsByClient = (state = {}, action) => {
     case ActionTypes.PATIENTS_SUCCESS:
     case ActionTypes.PATIENT_SUCCESS:
       return Object.assign({}, state, {
-        [action.data.cid]: patients(state[action.data.cid], action)
+        [action.data.client]: patients(state[action.data.client], action)
       })
     default:
       return state
   }
 }
 
-const sessions = (state = {
+const availableSessions = (state = {
   isFetching: false,
   didInvalidate: true,
   data: null
 }, action) => {
   switch (action.type) {
-    case ActionTypes.SESSIONS_REQUEST:
+    case ActionTypes.AVAILABLE_SESSIONS_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       })
-    case ActionTypes.SESSIONS_SUCCESS:
+    case ActionTypes.AVAILABLE_SESSIONS_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        data: action.response.timeSlots,
+        data: action.response.data,
         lastUpdated: action.response && action.response.receivedAt
       })
     default:
@@ -492,14 +508,14 @@ const errorMessage = (state = null, action) => {
 const bookingApp = combineReducers({
   user,
   config,
-  allServices,
+  services,
   languages,
   booking,
-  caze,
-  cazesByClient,
-  cazesAvailToNurse,
+  session,
+  sessionsByClient,
+  sessionsAvailToNurse,
   patientsByClient,
-  sessions,
+  availableSessions,
   // paypal,
   totalSessionsCount,
   rankedServices,

@@ -12,7 +12,7 @@ import { fetchLanguages, fetchAddress, getPatients, createPatient, getPatient, g
   editPatient, editClient, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
   setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isNextLastPage } from '../../core/util';
 
 const imgPencil = require('../pencil.png');
 
@@ -506,7 +506,7 @@ class BookingLocationUser extends Component {
       this.props.setOrderBooker(booker);
       this.props.setOrderLocation(orderLocation);
       this.props.setOrderPatient(this.props.patients[this.state.patientId]);
-      util.isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+      isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
 
       history.push({ pathname: '/booking3a', query: location.query });
     } else {

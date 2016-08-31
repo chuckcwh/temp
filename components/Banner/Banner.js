@@ -6,7 +6,7 @@ import Select from 'react-select';
 import Loader from 'react-loader';
 import 'react-select/dist/react-select.css';
 import s from './Banner.css';
-import { fetchServices, getRankedServices, setOrderService, setLastPage, showAlertPopup } from '../../actions';
+import { fetchServices, setOrderService, setOrderServiceClass, setLastPage, showAlertPopup } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
 
@@ -26,14 +26,15 @@ class Banner extends Component {
   componentDidMount() {
     // this.startSlideshow();
     this.props.fetchServices();
-    this.props.getRankedServices();
   }
 
   onClickSubmit = (event) => {
     event.preventDefault();
 
     if (this.state.option) {
-      this.props.setOrderService(parseInt(this.state.option, 10));
+      const values = this.state.option.split(':');
+      this.props.setOrderService(values[0]);
+      this.props.setOrderServiceClass(values[1]);
       util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
 
       history.push({ pathname: '/booking2' });
@@ -57,7 +58,18 @@ class Banner extends Component {
   };
 
   render() {
-    const { rankedServices, rankedServicesFetching } = this.props;
+    const { rankedServices, servicesFetching } = this.props;
+
+    const selectOptions = rankedServices && rankedServices.reduce((result, service) => {
+      service.classes.forEach((serviceClass, index) => {
+        result.push({
+          label: `${service.name} (${parseFloat(serviceClass.duration)} ` +
+            `hr${parseFloat(serviceClass.duration) > 1 ? 's' : ''})`,
+          value: `${service._id}:${index}`,
+        });
+      });
+      return result;
+    }, []) || [];
 
     return (
       <div className={s.banner}>
@@ -78,22 +90,16 @@ class Banner extends Component {
             <div className={classNames(s.bannerItemText, s.bannerItemText3)}>From SGD 30 / Visit</div>
             <div className={s.bannerItemSearch}>
               <div className={s.bannerItemInput}>
-                <Loader className="spinner" loaded={!rankedServicesFetching}>
+                <Loader className="spinner" loaded={!servicesFetching}>
                   <Select
-                    name="service-search"
                     placeholder="Select Service"
                     value={(this.state.option && this.state.option.value) ? this.state.option.value : this.state.option}
                     onChange={(val) => this.setState({ option: val })}
-                    options={rankedServices
-                      && rankedServices.map(service => ({
-                        label: `${service.name} (${parseFloat(service.duration)} ` +
-                          `hr${parseFloat(service.duration) > 1 ? 's' : ''})`,
-                        value: service.id,
-                      }))}
+                    options={selectOptions}
                   />
                 </Loader>
               </div>
-              {!rankedServicesFetching &&
+              {!servicesFetching &&
                 <a
                   href="/booking1"
                   className={classNames('btn', 'btn-secondary', s.bannerItemButton)}
@@ -110,31 +116,29 @@ class Banner extends Component {
 }
 
 Banner.propTypes = {
-  allServices: React.PropTypes.object,
-  allServicesFetching: React.PropTypes.bool,
+  services: React.PropTypes.object,
+  servicesFetching: React.PropTypes.bool,
   rankedServices: React.PropTypes.array,
-  rankedServicesFetching: React.PropTypes.bool,
   lastPage: React.PropTypes.string,
 
   fetchServices: React.PropTypes.func,
-  getRankedServices: React.PropTypes.func,
   setOrderService: React.PropTypes.func,
+  setOrderServiceClass: React.PropTypes.func,
   setLastPage: React.PropTypes.func,
   showAlertPopup: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
-  allServices: state.allServices.data,
-  allServicesFetching: state.allServices.isFetching,
-  rankedServices: state.rankedServices.data,
-  rankedServicesFetching: state.rankedServices.isFetching,
+  services: state.services.data,
+  servicesFetching: state.services.isFetching,
+  rankedServices: state.services.rankedServices,
   lastPage: state.lastPage,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
-  getRankedServices: () => dispatch(getRankedServices()),
   setOrderService: (service) => dispatch(setOrderService(service)),
+  setOrderServiceClass: (serviceClass) => dispatch(setOrderServiceClass(serviceClass)),
   setLastPage: (page) => dispatch(setLastPage(page)),
   showAlertPopup: (msg) => dispatch(showAlertPopup(msg)),
 });

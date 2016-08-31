@@ -8,7 +8,7 @@ import 'react-day-picker/lib/style.css';
 import s from './BookingDate.css';
 import { setOrderDates, setLastPage, showAlertPopup } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isNextLastPage } from '../../core/util';
 
 class BookingDate extends Component {
 
@@ -41,7 +41,7 @@ class BookingDate extends Component {
 
       // this.props.booking.range = this.state.range;
       this.props.setOrderDates(this.state.selectedDates);
-      util.isNextLastPage('booking3a', this.props.lastPage) && this.props.setLastPage('booking3a');
+      isNextLastPage('booking3a', this.props.lastPage) && this.props.setLastPage('booking3a');
 
       history.push({ pathname: '/booking3b', query: location.query });
     } else {

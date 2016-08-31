@@ -25,7 +25,7 @@ import AlertPopup from '../AlertPopup';
 import LoginPopup from '../LoginPopup';
 import { fetchServicesIfNeeded, getBooking, getUserWithToken, setPostStatus } from '../../actions';
 import history from '../../core/history';
-import { isNavigationAllowed, isClient, isProvider } from '../../core/util';
+import { isNavigationAllowed } from '../../core/util';
 
 class BookingApp extends Component {
 
@@ -101,7 +101,7 @@ class BookingApp extends Component {
         </div>
       );
     } else if (location && location.pathname === '/booking2') {
-      if (isClient(user)) {
+      if (user) {
         component = (
           <div>
             <BookingNavigation />
@@ -110,7 +110,7 @@ class BookingApp extends Component {
             </BookingLocationUser>
           </div>
         );
-      } else if (isProvider(user)) {
+      } else {
         component = (
           <div>
             <BookingNavigation />
@@ -234,7 +234,7 @@ class BookingApp extends Component {
 BookingApp.propTypes = {
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
-  allServices: React.PropTypes.object,
+  services: React.PropTypes.object,
   postStatus: React.PropTypes.string,
   user: React.PropTypes.object,
   lastPage: React.PropTypes.string,
@@ -248,7 +248,7 @@ BookingApp.propTypes = {
 const mapStateToProps = (state) => ({
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
-  allServices: state.allServices,
+  services: state.services,
   postStatus: state.postStatus,
   user: state.user.data,
   lastPage: state.lastPage,

@@ -6,7 +6,7 @@ import Link from '../Link';
 import history from '../../core/history';
 
 const BookingSidebar = (props) => {
-  const { allServices, order } = props;
+  const { services, order } = props;
   const location = history.getCurrentLocation();
   let service,
     patientName,
@@ -15,9 +15,9 @@ const BookingSidebar = (props) => {
     timeslots,
     sessions,
     sum;
-  if (allServices && allServices.data && order && order.service) {
-    service = `${allServices.data[order.service].name} ` +
-      `(${parseFloat(allServices.data[order.service].duration)} hr${parseFloat(allServices.data[order.service].duration) > 1 ? 's' : ''})`;
+  if (services && order && order.service && services[order.service] && !isNaN(order.serviceClass) && services[order.service].classes[order.serviceClass]) {
+    service = `${services[order.service].name} ` +
+      `(${parseFloat(services[order.service].classes[order.serviceClass].duration)} hr${parseFloat(services[order.service].classes[order.serviceClass].duration) > 1 ? 's' : ''})`;
   }
   if (order && order.patient && order.patient.fullName) {
     patientName = order.patient.fullName;
@@ -115,12 +115,12 @@ const BookingSidebar = (props) => {
 };
 
 BookingSidebar.propTypes = {
-  allServices: React.PropTypes.object.isRequired,
+  services: React.PropTypes.object.isRequired,
   order: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  allServices: state.allServices,
+  services: state.services.data,
   order: state.order,
 });
 

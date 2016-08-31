@@ -5,33 +5,35 @@ import classNames from 'classnames';
 import s from './Popular.css';
 import Container from '../Container';
 import Link from '../Link';
-import { getRankedSubcategories } from '../../actions';
-import util from '../../core/util';
+import { fetchServices } from '../../actions';
+import { getServiceIconClass } from '../../core/util';
 
 class Popular extends Component {
 
   componentDidMount() {
-    this.props.getRankedSubcategories();
+    this.props.fetchServices();
   }
 
   render() {
-    const { rankedSubcategories, rankedSubcategoriesFetching } = this.props;
+    const { services, servicesIsFetching, categories } = this.props;
+    const rankedCategories = categories && Object.values(categories).sort((a, b) => {
+      return b.popularity - a.popularity;
+    }).slice(0, 8);
     return (
       <div className={s.popular}>
         <Container>
           <h1 className="text-center">Popular Services</h1>
-          <Loader className="spinner" loaded={!rankedSubcategoriesFetching}>
+          <Loader className="spinner" loaded={!servicesIsFetching}>
             <div className={s.popularList}>
               {
-                rankedSubcategories && rankedSubcategories.map((subcategory, index) => {
-                  const subcatClass = util.getServiceIconClass(subcategory.id);
+                rankedCategories && rankedCategories.map((category, index) => {
                   return (
-                    <div className={classNames(s.popularItem, (index === 7 ? s.lastItem : undefined))} key={subcategory.id}>
-                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}>
-                        <div className={classNames('service-icon', subcatClass)}></div>
+                    <div className={classNames(s.popularItem, (index === 7 ? s.lastItem : undefined))} key={category._id}>
+                      <Link to={`/services/${category.slug ? category.slug : category.id}`}>
+                        <div className={classNames('service-icon', category.iconClassName)}></div>
                       </Link>
-                      <Link to={`/services/${subcategory.slug ? subcategory.slug : subcategory.id}`}>
-                        <div className={s.popularItemTitle}>{subcategory.name}</div>
+                      <Link to={`/services/${category.slug ? category.slug : category.id}`}>
+                        <div className={s.popularItemTitle}>{category.name}</div>
                       </Link>
                     </div>
                   );
@@ -55,19 +57,21 @@ class Popular extends Component {
 }
 
 Popular.propTypes = {
-  rankedSubcategories: React.PropTypes.array,
-  rankedSubcategoriesFetching: React.PropTypes.bool,
-
-  getRankedSubcategories: React.PropTypes.func,
+  services: React.PropTypes.object,
+  servicesIsFetching: React.PropTypes.bool,
+  categories: React.PropTypes.object,
+  
+  fetchServices: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
-  rankedSubcategories: state.rankedSubcategories.data && state.rankedSubcategories.data.slice(0, 8),
-  rankedSubcategoriesFetching: state.rankedSubcategories.isFetching,
+  services: state.services.data,
+  servicesIsFetching: state.services.isFetching,
+  categories: state.services.categories,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getRankedSubcategories: () => dispatch(getRankedSubcategories()),
+  fetchServices: () => dispatch(fetchServices()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Popular);

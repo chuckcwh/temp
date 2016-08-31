@@ -5,6 +5,10 @@ export const CONFIG_REQUEST = 'CONFIG_REQUEST'
 export const CONFIG_SUCCESS = 'CONFIG_SUCCESS'
 export const CONFIG_FAILURE = 'CONFIG_FAILURE'
 
+export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST'
+export const CATEGORIES_SUCCESS = 'CATEGORIES_SUCCESS'
+export const CATEGORIES_FAILURE = 'CATEGORIES_FAILURE'
+
 export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
@@ -30,13 +34,13 @@ export const BOOKING_SESSION_CANCEL_REQUEST = 'BOOKING_SESSION_CANCEL_REQUEST'
 export const BOOKING_SESSION_CANCEL_SUCCESS = 'BOOKING_SESSION_CANCEL_SUCCESS'
 export const BOOKING_SESSION_CANCEL_FAILURE = 'BOOKING_SESSION_CANCEL_FAILURE'
 
-export const CASES_REQUEST = 'CASES_REQUEST'
-export const CASES_SUCCESS = 'CASES_SUCCESS'
-export const CASES_FAILURE = 'CASES_FAILURE'
+export const SESSIONS_REQUEST = 'SESSIONS_REQUEST'
+export const SESSIONS_SUCCESS = 'SESSIONS_SUCCESS'
+export const SESSIONS_FAILURE = 'SESSIONS_FAILURE'
 
-export const CASE_CREATE_REQUEST = 'CASE_CREATE_REQUEST'
-export const CASE_CREATE_SUCCESS = 'CASE_CREATE_SUCCESS'
-export const CASE_CREATE_FAILURE = 'CASE_CREATE_FAILURE'
+export const SESSION_CREATE_REQUEST = 'SESSION_CREATE_REQUEST'
+export const SESSION_CREATE_SUCCESS = 'SESSION_CREATE_SUCCESS'
+export const SESSION_CREATE_FAILURE = 'SESSION_CREATE_FAILURE'
 
 export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
 export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
@@ -99,9 +103,9 @@ export const MOBILE_VERIFY_REQUEST = 'MOBILE_VERIFY_REQUEST'
 export const MOBILE_VERIFY_SUCCESS = 'MOBILE_VERIFY_SUCCESS'
 export const MOBILE_VERIFY_FAILURE = 'MOBILE_VERIFY_FAILURE'
 
-export const SESSIONS_REQUEST = 'SESSIONS_REQUEST'
-export const SESSIONS_SUCCESS = 'SESSIONS_SUCCESS'
-export const SESSIONS_FAILURE = 'SESSIONS_FAILURE'
+export const AVAILABLE_SESSIONS_REQUEST = 'AVAILABLE_SESSIONS_REQUEST'
+export const AVAILABLE_SESSIONS_SUCCESS = 'AVAILABLE_SESSIONS_SUCCESS'
+export const AVAILABLE_SESSIONS_FAILURE = 'AVAILABLE_SESSIONS_FAILURE'
 
 export const PROMO_REQUEST = 'PROMO_REQUEST'
 export const PROMO_SUCCESS = 'PROMO_SUCCESS'
@@ -139,10 +143,6 @@ export const STATS_SUBCATEGORIES_REQUEST = 'STATS_SUBCATEGORIES_REQUEST'
 export const STATS_SUBCATEGORIES_SUCCESS = 'STATS_SUBCATEGORIES_SUCCESS'
 export const STATS_SUBCATEGORIES_FAILURE = 'STATS_SUBCATEGORIES_FAILURE'
 
-export const AVAILABLE_CASES_REQUEST = 'AVAILABLE_CASES_REQUEST'
-export const AVAILABLE_CASES_SUCCESS = 'AVAILABLE_CASES_SUCCESS'
-export const AVAILABLE_CASES_FAILURE = 'AVAILABLE_CASES_FAILURE'
-
 function fetchAction(route) {
   return {
     getConfig: {
@@ -152,12 +152,18 @@ function fetchAction(route) {
       auth: 'app',
       entity: 'config'
     },
+    getCategories: {
+      types: [ CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE ],
+      endpoint: '/categories',
+      method: 'get',
+      entity: 'services'
+    },
     getServices: {
       types: [ SERVICES_REQUEST, SERVICES_SUCCESS, SERVICES_FAILURE ],
       endpoint: '/services',
       method: 'get',
       auth: 'app',
-      entity: 'allServices'
+      entity: 'services'
     },
     getLanguages: {
       types: [ LANGUAGES_REQUEST, LANGUAGES_SUCCESS, LANGUAGES_FAILURE ],
@@ -191,15 +197,14 @@ function fetchAction(route) {
       method: 'post',
       auth: 'app'
     },
-    getCases: {
-      types: [ CASES_REQUEST, CASES_SUCCESS, CASES_FAILURE ],
-      endpoint: '/getCases',
+    getSessions: {
+      types: [ SESSIONS_REQUEST, SESSIONS_SUCCESS, SESSIONS_FAILURE ],
+      endpoint: '/sessions',
       method: 'get',
-      auth: 'user',
-      entity: 'cases'
+      entity: 'sessions'
     },
     createCase: {
-      types: [ CASE_CREATE_REQUEST, CASE_CREATE_SUCCESS, CASE_CREATE_FAILURE ],
+      types: [ SESSION_CREATE_REQUEST, SESSION_CREATE_SUCCESS, SESSION_CREATE_FAILURE ],
       endpoint: '/createCase',
       method: 'post',
       auth: 'user'
@@ -354,12 +359,12 @@ function fetchAction(route) {
       auth: 'app',
       entity: 'rankedSubcategories'
     },
-    getAvailableCases:{
-      types: [ CASES_REQUEST, CASES_SUCCESS, CASES_FAILURE ],
+    getAvailableSessions:{
+      types: [ AVAILABLE_SESSIONS_REQUEST, AVAILABLE_SESSIONS_SUCCESS, AVAILABLE_SESSIONS_FAILURE ],
       endpoint: '/getAvailableCases',
       method: 'get',
       auth: 'user',
-      entity: 'cases'
+      entity: 'availableSessions'
     }
   }[route]
 }
@@ -375,21 +380,24 @@ function shouldFetch(state, action) {
   return obj.didInvalidate
 }
 
+function checkToFetch(route, data, dispatch, getState) {
+  if (shouldFetch(getState(), fetchAction(route))) {
+    if (data) {
+      return dispatch({
+        data,
+        [CALL_API]: fetchAction(route)
+      })
+    } else {
+      return dispatch({
+        [CALL_API]: fetchAction(route)
+      })
+    }
+  } else return new Promise((resolve) => resolve());
+}
+
 function fetch(route, data) {
-  return (dispatch, getState) => {
-    if (shouldFetch(getState(), fetchAction(route))) {
-      if (data) {
-        return dispatch({
-          data,
-          [CALL_API]: fetchAction(route)
-        })
-      } else {
-        return dispatch({
-          [CALL_API]: fetchAction(route)
-        })
-      }
-    } else return new Promise((resolve) => resolve());
-  }
+  return (dispatch, getState) =>
+    checkToFetch(route, data, dispatch, getState);
 }
 
 export function fetchConfig() {
@@ -397,7 +405,15 @@ export function fetchConfig() {
 }
 
 export function fetchServices() {
-  return fetch('getServices');
+  return (dispatch, getState) => {
+    return checkToFetch('getCategories', null, dispatch, getState)
+      .then(result => {
+        if (result && result.type === CATEGORIES_SUCCESS) {
+          return checkToFetch('getServices', null, dispatch, getState);
+        }
+        return new Promise((resolve) => resolve());
+      });
+  }
 }
 
 export function fetchLanguages() {
@@ -700,6 +716,12 @@ export const ORDER_SET_SERVICE = 'ORDER_SET_SERVICE'
 
 export const setOrderService = (service) => {
   return { type: ORDER_SET_SERVICE, service }
+}
+
+export const ORDER_SET_SERVICE_CLASS = 'ORDER_SET_SERVICE_CLASS'
+
+export const setOrderServiceClass = (serviceClass) => {
+  return { type: ORDER_SET_SERVICE_CLASS, serviceClass }
 }
 
 export const ORDER_SET_LOCATION = 'ORDER_SET_LOCATION'

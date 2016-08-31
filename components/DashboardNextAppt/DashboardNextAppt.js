@@ -128,8 +128,8 @@ DashboardNextAppt.propTypes = {
   confirmedApptSessions: React.PropTypes.array.isRequired,
 
   user: React.PropTypes.object,
-  allServices: React.PropTypes.object,
-  allServicesFetching: React.PropTypes.bool,
+  services: React.PropTypes.object,
+  servicesFetching: React.PropTypes.bool,
   servicesTree: React.PropTypes.array,
   servicesTreeHash: React.PropTypes.object,
   servicesSubtypesHash: React.PropTypes.object,
@@ -151,12 +151,12 @@ const mapStateToProps = (state) => ({
   cazesByClient: (clientId) => {
     return state.cazesByClient[clientId] && state.cazesByClient[clientId].data;
   },
-  allServices: state.allServices.data,
-  allServicesFetching: state.allServices.isFetching,
-  servicesTree: state.allServices.dashboardTree,
-  servicesTreeHash: state.allServices.dashboardTreeHash,
-  servicesSubtypesHash: state.allServices.subTypesHash,
-  servicesSubtypesHashBySlug: state.allServices.subTypesHashBySlug,
+  services: state.services.data,
+  servicesFetching: state.services.isFetching,
+  servicesTree: state.services.dashboardTree,
+  servicesTreeHash: state.services.dashboardTreeHash,
+  servicesSubtypesHash: state.services.subTypesHash,
+  servicesSubtypesHashBySlug: state.services.subTypesHashBySlug,
   patients: state.user.data && state.user.data.clients && state.user.data.clients.length
     && state.user.data.clients[0] && state.user.data.clients[0].id
     && state.patientsByClient[state.user.data.clients[0].id]

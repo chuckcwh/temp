@@ -15,32 +15,24 @@ class ServiceCard extends Component {
   }
 
   render() {
-    const { serviceGroup, allServicesFetching } = this.props;
-    const service = reduce(serviceGroup, (result, value) => {
-      result.name = value.name;
-      result.description = value.description;
-      (result.id || (result.id = [])).push(value.id);
-      (result.duration || (result.duration = [])).push(value.duration);
-      (result.price || (result.price = [])).push(value.price);
-      return result;
-    }, {});
+    const { service, servicesFetching } = this.props;
     return (
       <div className={s.serviceCard}>
-        <Loader className="spinner" loaded={!allServicesFetching}>
+        <Loader className="spinner" loaded={!servicesFetching}>
           <h3 className={s.serviceCardTitle}>{service.name}</h3>
           <div className={s.serviceCardBody}>
             <div className={s.serviceCardBodyDescription}>{service.description}</div>
-            <div className={s.serviceCardBodyPrice}>{`Starting from SGD ${service.price[this.state.selected]}`}</div>
+            <div className={s.serviceCardBodyPrice}>{`Starting from SGD ${service && service.classes && service.classes[this.state.selected] && service.classes[this.state.selected].price}`}</div>
             <div className={s.serviceCardBodyDuration}>
               <span>Duration: </span>
               {
-                service.duration.map((duration, key) => (
+                service && service.classes && service.classes.map((serviceClass, index) => (
                   <LabelButton
-                    selected={this.state.selected === key}
-                    onClick={() => { this.setState({ selected: key }); }}
-                    key={service.id[key]}
+                    selected={this.state.selected === index}
+                    onClick={() => { this.setState({ selected: index }); }}
+                    key={serviceClass._id}
                   >
-                    {`${parseFloat(duration)} hr${duration > 1 ? 's' : ''}`}
+                    {`${parseFloat(serviceClass.duration)} hr${serviceClass.duration > 1 ? 's' : ''}`}
                   </LabelButton>
                 ))
               }
@@ -48,7 +40,7 @@ class ServiceCard extends Component {
             <div className={s.serviceCardBodyFooter}>
               <button
                 className="btn btn-primary btn-small"
-                onClick={this.props.onBook(service.id[this.state.selected])}
+                onClick={this.props.onBook(service._id, this.state.selected)}
               >Book Service</button>
             </div>
           </div>
@@ -60,13 +52,13 @@ class ServiceCard extends Component {
 }
 
 ServiceCard.propTypes = {
-  serviceGroup: React.PropTypes.array.isRequired,
-  allServicesFetching: React.PropTypes.bool.isRequired,
+  service: React.PropTypes.object.isRequired,
+  servicesFetching: React.PropTypes.bool.isRequired,
   onBook: React.PropTypes.func,
 };
 
 ServiceCard.defaultProps = {
-  onBook: (e) => { e.preventDefault(); },
+  onBook: () => {},
 };
 
 export default ServiceCard;

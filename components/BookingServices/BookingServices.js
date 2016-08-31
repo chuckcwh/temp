@@ -4,25 +4,29 @@ import classNames from 'classnames';
 import Loader from 'react-loader';
 import s from './BookingServices.css';
 import Container from '../Container';
-import { fetchServices, setOrderService, setLastPage, showAlertPopup } from '../../actions';
+import { fetchServices, setOrderService, setOrderServiceClass, setLastPage, showAlertPopup } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { ALL_SERVICES, isNextLastPage } from '../../core/util';
+import groupBy from 'lodash/groupBy';
 
 class BookingServices extends Component {
 
   constructor(props) {
     super(props);
-    const { allServices, order } = this.props;
+    const { services, order } = this.props;
     const location = history.getCurrentLocation();
     this.state = {
-      filter: util.ALL_SERVICES,
+      filter: ALL_SERVICES,
       selectedService: undefined,
+      selectedServiceClass: undefined,
     };
     if (order && order.service) {
       this.state.selectedService = order.service;
-    } else if (allServices && location.query && location.query.sid) {
-      if (allServices[parseInt(location.query.sid, 10)]) {
-        this.state.selectedService = parseInt(location.query.sid, 10);
+      this.state.selectedServiceClass = order.serviceClass;
+    } else if (services && location.query && location.query.sid && location.query.scid) {
+      if (services[location.query.sid]) {
+        this.state.selectedService = location.query.sid;
+        this.state.selectedServiceClass = location.query.scid;
       }
     }
   }
@@ -32,15 +36,19 @@ class BookingServices extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { allServices, order } = props;
+    const { services, order } = props;
     const location = history.getCurrentLocation();
     if (order && order.service) {
       this.setState({
         selectedService: order.service,
+        selectedServiceClass: order.serviceClass,
       });
-    } else if (allServices && location.query && location.query.sid) {
-      if (allServices[parseInt(location.query.sid, 10)]) {
-        this.setState({ selectedService: parseInt(location.query.sid, 10) });
+    } else if (services && location.query && location.query.sid && location.query.scid) {
+      if (services[location.query.sid]) {
+        this.setState({
+          selectedService: location.query.sid,
+          selectedServiceClass: location.query.scid,
+        });
       }
     }
   }
@@ -52,7 +60,11 @@ class BookingServices extends Component {
   };
 
   onSelect = (event) => {
-    this.setState({ selectedService: parseInt(event.target.value, 10) });
+    const values = event.target.value.split(':');
+    this.setState({
+      selectedService: values[0],
+      selectedServiceClass: values[1],
+    });
   };
 
   onNext = (event) => {
@@ -61,7 +73,8 @@ class BookingServices extends Component {
       event.preventDefault();
 
       this.props.setOrderService(this.state.selectedService);
-      util.isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
+      this.props.setOrderServiceClass(this.state.selectedServiceClass);
+      isNextLastPage('booking1', this.props.lastPage) && this.props.setLastPage('booking1');
 
       history.push({ pathname: '/booking2', query: location.query });
     } else {
@@ -72,32 +85,31 @@ class BookingServices extends Component {
   };
 
   render() {
-    const { allServices, allServicesFetching } = this.props;
-    const { filter, selectedService } = this.state;
+    const { services, servicesFetching, categories, servicesUnderCategory } = this.props;
+    const { filter, selectedService, selectedServiceClass } = this.state;
 
-    const serviceTree = util.appendAllServices(util.parseCategories(allServices));
-    const serviceTreeHash = serviceTree.reduce((hash, category) => {
-      hash[category.name] = category;
-      return hash;
-    }, {});
+    const headCategories = categories && Object.values(categories)
+      .filter(category => category.cType === 'category')
+      .sort((a, b) => b.order - a.order);
+    const filteredServices = servicesUnderCategory && this.state.filter && servicesUnderCategory[this.state.filter] || [];
+    const servicesGroupedByParent = filteredServices && groupBy(filteredServices, 'parentCategory');
 
     return (
       <div className={s.bookingServices}>
-        <Loader className="spinner" loaded={!allServicesFetching}>
+        <Loader className="spinner" loaded={!servicesFetching}>
           <div className={s.bookingServicesNavWrapper}>
             <Container>
               <ul className={s.bookingServicesNav}>
               {
-                serviceTree && serviceTree.map(category => {
-                  const { name } = category;
+                headCategories && headCategories.map(category => {
                   return (
-                    <li className={s.bookingServicesNavItem} key={name}>
+                    <li className={s.bookingServicesNavItem} key={category._id}>
                       <a
-                        className={classNames(s.bookingServicesNavLink, (filter === name) ? s.bookingServicesNavLinkActive : '')}
+                        className={classNames(s.bookingServicesNavLink, (filter === category._id) ? s.bookingServicesNavLinkActive : '')}
                         href="#"
-                        onClick={this.onClickFilter(name)}
+                        onClick={this.onClickFilter(category._id)}
                       >
-                        {name}
+                        {category.name}
                         <span className={s.bookingServicesNavArrow}>
                           <div className="nav-caret"></div>
                         </span>
@@ -114,9 +126,21 @@ class BookingServices extends Component {
               <form ref={(c) => (this.bookingServicesForm = c)}>
                 <div className={s.bookingServicesBody}>
                 {
-                  serviceTreeHash && filter && serviceTreeHash[filter] && serviceTreeHash[filter].children.map(subType => {
+                  servicesGroupedByParent && Object.keys(servicesGroupedByParent).map(parentCategoryId => {
+                    const parentCategory = categories[parentCategoryId];
+                    const services = servicesGroupedByParent[parentCategoryId];
+                    const flattenedServices = services && services.reduce((result, service) => {
+                      service.classes.forEach((serviceClass, index) => {
+                        result.push(Object.assign({}, service, {
+                          price: serviceClass.price,
+                          duration: serviceClass.duration,
+                          key: `${service._id}:${index}`,
+                        }));
+                      });
+                      return result;
+                    }, []) || [];
                     let header;
-                    if (filter === util.ALL_SERVICES) {
+                    if (filter === ALL_SERVICES) {
                       header = (
                         <h3>
                           <a
@@ -128,31 +152,31 @@ class BookingServices extends Component {
                       );
                     } else {
                       header = (
-                        <h3>{subType.name}</h3>
+                        <h3>{parentCategory.name}</h3>
                       );
                     }
                     return (
-                      <div className={s.bookingServicesSection} key={subType.children[0].category + subType.name}>
+                      <div className={s.bookingServicesSection} key={parentCategory._id}>
                         {header}
                         {
-                          subType && subType.children.map(service => (
+                          flattenedServices && flattenedServices.map(service => (
                             <div
-                              className={classNames(s.bookingServicesItem, (service.id === selectedService) ? s.bookingServicesItemActive : '')}
-                              key={service.id}
+                              className={classNames(s.bookingServicesItem, (service.key === `${selectedService}:${selectedServiceClass}`) ? s.bookingServicesItemActive : '')}
+                              key={service.key}
                             >
                               <input
                                 className={s.bookingServicesRadio}
                                 type="radio"
-                                id={service.id}
+                                id={service.key}
                                 name="service"
-                                value={service.id}
-                                checked={service.id === selectedService}
+                                value={service.key}
+                                checked={service.key === `${selectedService}:${selectedServiceClass}`}
                                 onChange={this.onSelect}
                                 required
                               />
                               <label
                                 className={s.bookingServicesRadioLabel}
-                                htmlFor={service.id}
+                                htmlFor={service.key}
                               >
                                 <span><span></span></span>
                                 <span>{`${service.name} (${parseFloat(service.duration)} hr${parseFloat(service.duration) > 1 ? 's' : ''})`}</span>
@@ -185,11 +209,14 @@ class BookingServices extends Component {
 BookingServices.propTypes = {
   lastPage: React.PropTypes.string,
   order: React.PropTypes.object,
-  allServices: React.PropTypes.object,
-  allServicesFetching: React.PropTypes.bool,
+  services: React.PropTypes.object,
+  servicesFetching: React.PropTypes.bool,
+  categories: React.PropTypes.object,
+  servicesUnderCategory: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func,
   setOrderService: React.PropTypes.func,
+  setOrderServiceClass: React.PropTypes.func,
   setLastPage: React.PropTypes.func,
   showAlertPopup: React.PropTypes.func,
 };
@@ -197,13 +224,16 @@ BookingServices.propTypes = {
 const mapStateToProps = (state) => ({
   lastPage: state.lastPage,
   order: state.order,
-  allServices: state.allServices.data,
-  allServicesFetching: state.allServices.isFetching,
+  services: state.services.data,
+  servicesFetching: state.services.isFetching,
+  categories: state.services.categories,
+  servicesUnderCategory: state.services.servicesUnderCategory,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   setOrderService: (service) => dispatch(setOrderService(service)),
+  setOrderServiceClass: (service) => dispatch(setOrderServiceClass(service)),
   setLastPage: (page) => dispatch(setLastPage(page)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });

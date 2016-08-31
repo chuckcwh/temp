@@ -62,8 +62,8 @@ DashboardDataTable.propTypes = {
   // confirmedApptSessions: React.PropTypes.array.isRequired,
   //
   // user: React.PropTypes.object,
-  // allServices: React.PropTypes.object,
-  // allServicesFetching: React.PropTypes.bool,
+  // services: React.PropTypes.object,
+  // servicesFetching: React.PropTypes.bool,
   // servicesTree: React.PropTypes.array,
   // servicesTreeHash: React.PropTypes.object,
   // servicesSubtypesHash: React.PropTypes.object,

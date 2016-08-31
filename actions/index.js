@@ -55,6 +55,10 @@ export const USER_TOKEN_REQUEST = 'USER_TOKEN_REQUEST'
 export const USER_TOKEN_SUCCESS = 'USER_TOKEN_SUCCESS'
 export const USER_TOKEN_FAILURE = 'USER_TOKEN_FAILURE'
 
+export const USER_EDIT_REQUEST = 'USER_EDIT_REQUEST'
+export const USER_EDIT_SUCCESS = 'USER_EDIT_SUCCESS'
+export const USER_EDIT_FAILURE = 'USER_EDIT_FAILURE'
+
 export const FORGOT_PASSWORD_EMAIL_REQUEST = 'FORGOT_PASSWORD_EMAIL_REQUEST'
 export const FORGOT_PASSWORD_EMAIL_SUCCESS = 'FORGOT_PASSWORD_EMAIL_SUCCESS'
 export const FORGOT_PASSWORD_EMAIL_FAILURE = 'FORGOT_PASSWORD_EMAIL_FAILURE'
@@ -249,6 +253,11 @@ function fetchAction(route) {
     resetPassword: {
       types: [ RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE ],
       endpoint: '/users/resetPassword',
+      method: 'put'
+    },
+    editUser: {
+      types: [ USER_EDIT_REQUEST, USER_EDIT_SUCCESS, USER_EDIT_FAILURE ],
+      endpoint: '/users/:_id',
       method: 'put'
     },
     editClient: {

@@ -17,6 +17,7 @@ const user = (state = {
     case ActionTypes.USER_REQUEST:
     case ActionTypes.USER_TOKEN_REQUEST:
     case ActionTypes.USER_CREATE_REQUEST:
+    case ActionTypes.USER_EDIT_REQUEST:
     case ActionTypes.LOGIN_REQUEST:
     case ActionTypes.LOGIN_CLIENT_REQUEST:
       return Object.assign({}, state, {
@@ -37,11 +38,18 @@ const user = (state = {
         data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
       })
+    case ActionTypes.USER_EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        data: action.response && action.response.data,
+        lastUpdated: action.response && action.response.receivedAt
+      })
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: true,
-        data: (action.response && action.response.user && isClient(action.response.user)) ? action.response.user : null,
+        data: (action.response && action.response.data && isClient(action.response.data)) ? action.response.data : null,
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.USER_TOKEN_FAILURE:

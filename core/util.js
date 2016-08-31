@@ -238,6 +238,12 @@ export function isFloat(val) {
   return true;
 }
 
+export function isId(val) {
+  const idRegex = /^[0-9abcdef]{24}$/;
+  if (!idRegex.test(val)) return false;
+  return true; 
+}
+
 /**
  * User utility functions
  */
@@ -300,6 +306,7 @@ const u = {
 
   isInt,
   isFloat,
+  isId,
 
   isAdmin,
   isClient,

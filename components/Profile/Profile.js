@@ -34,7 +34,7 @@ class Profile extends Component {
         achievements,
       },
     } = this.props;
-    console.log('experiences', skills);
+
     return (
       <div className={s.profile}>
         <Header title={`${name}'s Profile`} />
@@ -99,10 +99,10 @@ class Profile extends Component {
                             <div className={s.timeDot}></div>
 
                             <div className={s.experienceContent}>
-                              <p>{item.employer} ({item.country})</p>
+                              <p className={s.experienceEmployer}>{item.employer} ({item.country})</p>
                               <div className={s.experiencePos}>
-                                <p>{item.position}</p>
-                                <p>{item.description}</p>
+                                <p className={s.experiencePosBody}>{item.position}</p>
+                                <p className={s.experiencePosDes}>cccc{item.description}</p>
                               </div>
                             </div>
                           </div>

@@ -12,40 +12,50 @@ import util from '../../../core/util';
 import { reduxForm } from 'redux-form';
 import InlineForm from '../../MultiSelect';
 import MultiSelect from '../../MultiSelect';
+import { editUser } from '../../../actions';
 // react-icons
 import FaLock from 'react-icons/lib/fa/lock';
 
 
 class ProfileEditCulturalForm extends Component {
 
+  onSubmit = (values) => {
+    return new Promise((resolve, reject) => {
+      this.props.editUser({
+        _id: values._id,
+        race: values.race,
+        religion: values.religion,
+        languages: typeof(values.languages) === 'string' ? (values.languages && values.languages.split(',')) : values.languages,
+        nationality: values.nationality,
+      }).then((res) => {
+        console.log('response', res);
+      })
+    })
+  };
+
   render() {
     const {
       fields: {
-        userType,
         race,
         religion,
         languages,
-        nationality
+        nationality,
       },
+      languageChoice,
+      raceChoice,
+      religionChoice,
+      nationalityChoice,
+
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
-      languageChoice,
     } = this.props;
 
-    console.log('languageChoice', languageChoice);
-
-    const raceChoice = ['Chinese', 'Malay', 'Indian', 'Eurasian', 'Others'];
-    const religionChoice = ['Buddhist', 'Christian', 'Free Thinker',
-      'Hinduism', 'Islam', 'Taoist', 'Catholic', 'Others', 'non-religion'];
-    const nationalityChoice = ['Singaporean', 'Australian', 'Bangladeshis',
-      'Cambodian', 'Chinese', 'Indian', 'Indonesian', 'Japanese', 'Korean',
-      'Malaysian', 'Sri Lankan', 'Thais', 'Vietnamese', 'Others'];
     return (
       <div className={s.ProfileEditCulturalForm}>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(this.onSubmit)}>
           <div className={s.formSection}>
             <div className="TableRow">
               <div className="TableRowItem1">Race</div>
@@ -54,8 +64,8 @@ class ProfileEditCulturalForm extends Component {
                   <span></span>
                   <select id={race} name={race} {...race} value={race.value || ''}>
                     <option value="">-- Select --</option>
-                    {raceChoice.map(item => (
-                      <option value={item}>{item}</option>
+                    {raceChoice && raceChoice.map(item => (
+                      <option value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -69,8 +79,8 @@ class ProfileEditCulturalForm extends Component {
                   <span></span>
                   <select id={religion} name={religion} {...religion} value={religion.value || ''}>
                     <option value="">-- Select --</option>
-                    {religionChoice.map(item => (
-                      <option value={item}>{item}</option>
+                    {religionChoice && religionChoice.map(item => (
+                      <option value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -81,7 +91,7 @@ class ProfileEditCulturalForm extends Component {
               <div className="TableRowItem1">Languages</div>
               <div className="TableRowItem2">
                 <MultiSelect
-                  options={Object.values(languageChoice).map(i => ({ label: i.name, value: i.value }))}
+                  options={languageChoice && Object.values(languageChoice).map(i => ({ label: i.name, value: i.value }))}
                   {...languages}
                 />
               </div>
@@ -94,8 +104,8 @@ class ProfileEditCulturalForm extends Component {
                   <span></span>
                   <select id={nationality} name={nationality} {...nationality} value={nationality.value || ''}>
                     <option value="">-- Select --</option>
-                    {nationalityChoice.map(item => (
-                      <option value={item}>{item}</option>
+                    {nationalityChoice && nationalityChoice.map(item => (
+                      <option value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -122,6 +132,7 @@ const validate = values => {
   // } else if (!/\d+/i.test(values.withdrawAmt)) {
   //   errors.withdrawAmt = 'Invalid withdraw amount';
   // }
+  return errors
 }
 
 ProfileEditCulturalForm.propTypes = {
@@ -136,11 +147,11 @@ ProfileEditCulturalForm.propTypes = {
 const reduxFormConfig = {
   form: 'ProfileEditCulturalForm',
   fields: [
-    'userType',
     'race',
     'religion',
     'languages',
-    'nationality'
+    'nationality',
+    '_id',
   ],
   validate,
 }
@@ -152,11 +163,19 @@ const mapStateToProps = (state) => {
     initialValues: {
       race: user && user.race,
       religion: user && user.religion,
-      languages: user && Object.values(user.languages).map(i => ({ label: i.name, value: i.id })),
+      languages: user && user.languages,
       nationality: user && user.nationality,
+      _id: user && user._id,
     },
     languageChoice: state.config.data && state.config.data.languages,
+    raceChoice: state.config.data && state.config.data.races,
+    religionChoice: state.config.data && state.config.data.religions,
+    nationalityChoice: state.config.data && state.config.data.countries,
   }
 };
 
-export default reduxForm(reduxFormConfig, mapStateToProps)(ProfileEditCulturalForm);
+const mapDispatchToProps = (dispatch) => ({
+  editUser: (params) => dispatch(editUser(params)),
+})
+
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditCulturalForm);

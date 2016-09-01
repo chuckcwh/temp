@@ -14,4 +14,12 @@
     margin-top: 40px;
   }
 
+  & .selectInput {
+    width: 260px;
+  }
+
+  & .formError {
+    color: red;
+  }
+
 }

@@ -21,7 +21,6 @@ import FaLock from 'react-icons/lib/fa/lock';
 class ProfileEditBasicForm extends Component {
 
   onSubmit = (values) => {
-    console.log('values', values);
     return new Promise((resolve, reject) => {
       this.props.editUser({
         _id: values._id,
@@ -36,12 +35,8 @@ class ProfileEditBasicForm extends Component {
         skills: typeof(values.skills) === 'string' ? (values.skills && values.skills.split(',')) : values.skills,
       }).then((res) => {
         console.log('response', res);
-        if (res && res.response && res.response.status === 1) {
-          console.log('success', res.data);
-        }
       })
     });
-    resolve();
   }
 
   render() {
@@ -79,7 +74,7 @@ class ProfileEditBasicForm extends Component {
         <form onSubmit={handleSubmit(this.onSubmit)}>
           <div className={s.formSection}>
             <div className="TableRow">
-              <div className="TableRowItem1">Full Name (as per NRIC)</div>
+              <div className="TableRowItem1">Full Name (as per NRIC)<sup>*</sup></div>
               <div className="TableRowItem2">
                 <input type="text" {...name} />
                 {name.touched && name.error && <div className={s.formError}>{name.error}</div>}

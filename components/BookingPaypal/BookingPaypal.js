@@ -16,7 +16,7 @@ class BookingPaypal extends Component {
     this.state = {
       paymentId: location && location.query && location.query.paymentId,
       bid: location && location.query && location.query.bid,
-      mobilePhone: location && location.query && location.query.mobilePhone,
+      contact: location && location.query && location.query.contact,
       pending: location && location.query && location.query.paymentId && true,
       redirecting: false,
     };
@@ -31,8 +31,8 @@ class BookingPaypal extends Component {
         if (res.response && res.response.status === 1) {
           // console.log(res.response.items);
           this.props.getBooking({
-            bid: this.state.bid,
-            mobilePhone: this.state.mobilePhone,
+            bookingId: this.state.bid,
+            contact: this.state.contact,
           });
 
           this.props.setPostStatus('success');
@@ -54,7 +54,7 @@ class BookingPaypal extends Component {
       url = `${(window.location.href.indexOf('?') > -1
         ? window.location.href.slice(0, window.location.href.indexOf('?'))
         : window.location.href)}`
-      + `?bid=${this.props.booking.id}&mobilePhone=${this.props.booking.client_contactNumber}`;
+      + `?bid=${this.props.booking.id}&contact=${this.props.booking.adhocClient.contact}`;
       url = url.replace('#', '');
     }
 

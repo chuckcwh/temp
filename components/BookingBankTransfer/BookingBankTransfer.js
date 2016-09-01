@@ -38,8 +38,8 @@ class BookingBankTransfer extends Component {
       }).then((res) => {
         if (res.response && res.response.status === 1) {
           this.props.getBooking({
-            bid: this.props.booking.id,
-            mobilePhone: this.props.booking.client_contactNumber,
+            bookingId: this.props.booking.id,
+            contact: this.props.booking.adhocClient.contact,
           });
 
           this.props.setPostStatus('success');

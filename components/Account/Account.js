@@ -20,7 +20,7 @@ class Account extends Component {
     super(props);
     this.state = {
       bid: this.props.bid || undefined,
-      mobilePhone: this.props.mobilePhone || undefined,
+      contact: this.props.contact || undefined,
       pin: undefined,
       resend: false,
       resent: false,
@@ -36,7 +36,7 @@ class Account extends Component {
   componentWillReceiveProps(props) {
     this.setState({
       bid: props.bid || this.state.bid,
-      mobilePhone: props.mobilePhone || this.state.mobilePhone,
+      contact: props.contact || this.state.contact,
     });
     if (props.booking && props.booking.id && !props.booking.isHPVerified) {
       this.props.showVerifyBookingPopup(props.booking.id);
@@ -45,8 +45,8 @@ class Account extends Component {
 
   onVerified = () => {
     this.props.getBooking({
-      bid: this.state.bid,
-      mobilePhone: this.state.mobilePhone,
+      bookingId: this.state.bid,
+      contact: this.state.contact,
     }).then((res) => {
       if (res.response && res.response.status < 1) {
         this.props.showAlertPopup('Sorry, we are not able to find your booking.');
@@ -64,7 +64,7 @@ class Account extends Component {
             <Loader
               className="spinner"
               loaded={(!(!(this.props.bookingFetching) && location && location.query
-                && location.query.bid && location.query.mobilePhone))}
+                && location.query.bid && location.query.contact))}
             >
               <FindBookingForm />
             </Loader>
@@ -119,7 +119,7 @@ class Account extends Component {
 
 Account.propTypes = {
   bid: React.PropTypes.string,
-  mobilePhone: React.PropTypes.string,
+  contact: React.PropTypes.string,
   type: React.PropTypes.string,
 
   booking: React.PropTypes.object,

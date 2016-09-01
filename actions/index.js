@@ -178,7 +178,7 @@ function fetchAction(route) {
     },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
-      endpoint: '/getBooking',
+      endpoint: '/bookings/:bookingId',
       method: 'get',
       auth: 'app',
       entity: 'booking'
@@ -329,9 +329,8 @@ function fetchAction(route) {
     },
     verifyBookingPin: {
       types: [ VERIFY_BOOKING_PIN_REQUEST, VERIFY_BOOKING_PIN_SUCCESS, VERIFY_BOOKING_PIN_FAILURE ],
-      endpoint: '/verifyBookingPin',
-      method: 'post',
-      auth: 'app'
+      endpoint: '/bookings/verifyPin',
+      method: 'put',
     },
     resendVerifyBookingPin: {
       types: [ RESEND_VERIFY_BOOKING_PIN_REQUEST, RESEND_VERIFY_BOOKING_PIN_SUCCESS, RESEND_VERIFY_BOOKING_PIN_FAILURE ],

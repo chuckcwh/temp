@@ -197,8 +197,8 @@ class BookingDetails extends Component {
       }, this.props.booking).then((res) => {
         if (res.response && res.response.status === 1) {
           this.props.getBooking({
-            bid: this.props.booking.id,
-            email: this.props.booking.client_contactEmail,
+            bookingId: this.props.booking._id,
+            contact: this.props.booking.adhocClient.contact,
           });
         }
       });

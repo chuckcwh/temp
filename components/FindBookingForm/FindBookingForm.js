@@ -10,19 +10,19 @@ const submit = (values, dispatch) => (
     if (!values.bid) {
       errors.bid = 'Booking ID is required';
     }
-    if (!values.mobilePhone) {
-      errors.mobilePhone = 'Mobile Number is required';
+    if (!values.contact) {
+      errors.contact = 'Mobile Number is required';
     // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
     //   errors.email = 'Invalid email address';
-    } else if (!/^[8-9]{1}[0-9]{7}$/.test(values.mobilePhone)) {
-      errors.mobilePhone = 'Invalid mobile number';
+    } else if (!/^[8-9]{1}[0-9]{7}$/.test(values.contact)) {
+      errors.contact = 'Invalid mobile number';
     }
-    if (errors.bid || errors.mobilePhone) {
+    if (errors.bid || errors.contact) {
       reject(errors);
     } else {
       dispatch(getBooking({
-        bid: values.bid,
-        mobilePhone: values.mobilePhone,
+        bookingId: values.bid,
+        contact: values.contact,
       })).then((res) => {
         if (res.response && res.response.status === 1) {
           resolve();
@@ -36,7 +36,7 @@ const submit = (values, dispatch) => (
 
 const FindBookingForm = (props) => {
   const {
-    fields: { bid, mobilePhone },
+    fields: { bid, contact },
     error,
     handleSubmit,
     submitting,
@@ -50,11 +50,11 @@ const FindBookingForm = (props) => {
       </div>
       <div className="IconInput PhoneInput">
         <span />
-        <input type="text" placeholder="Mobile Number*" {...mobilePhone} />
+        <input type="text" placeholder="Mobile Number*" {...contact} />
       </div>
       <div className={sAccount.accountContainerItemMiddle}>
         {bid.touched && bid.error && <div className={s.findBookingFormError}>{bid.error}</div>}
-        {mobilePhone.touched && mobilePhone.error && <div className={s.findBookingFormError}>{mobilePhone.error}</div>}
+        {contact.touched && contact.error && <div className={s.findBookingFormError}>{contact.error}</div>}
         {error && <div className={s.findBookingFormError}>{error}</div>}
         <div className={sAccount.loginInsteadContainer}>
           Have account? <a href="https://app.ebeecare.com/login/" className={sAccount.loginInsteadLink}>Login instead</a>
@@ -74,7 +74,7 @@ FindBookingForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'findBookingForm',
-  fields: ['bid', 'mobilePhone'],
+  fields: ['bid', 'contact'],
   destroyOnUnmount: true,
 };
 

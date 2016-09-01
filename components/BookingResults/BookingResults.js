@@ -214,7 +214,7 @@ class BookingResults extends Component {
 
       this.updateSum(this.props);
     };
-    const { order } = this.props;
+    const { config, order } = this.props;
     const orderPromoCode = order && order.promoCode;
     let promoButton;
     if (this.state.showPromoButton) {
@@ -271,7 +271,7 @@ class BookingResults extends Component {
                     <div className={s.bookingResultsCheckboxLabelMetaWrapper}>
                       <div className={s.bookingResultsCheckboxLabelMeta}>
                         <span>{session ? moment(session.date, 'YYYY-MM-DD').format('DD MMM') : ''}</span>
-                        <span>{session.time ? session.time : 'Not Available'}</span>
+                        <span>{session.time ? config && config.timeSlotsByValues && config.timeSlotsByValues[session.time].name : 'Not Available'}</span>
                         <span>{session.time ? priceText : ''}</span>
                       </div>
                     </div>
@@ -334,6 +334,7 @@ class BookingResults extends Component {
 }
 
 BookingResults.propTypes = {
+  config: React.PropTypes.object,
   lastPage: React.PropTypes.string,
   user: React.PropTypes.object,
   services: React.PropTypes.object,
@@ -353,6 +354,7 @@ BookingResults.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   lastPage: state.lastPage,
   user: state.user.data,
   services: state.services.data,

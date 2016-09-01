@@ -11,6 +11,13 @@ import util from '../../core/util';
 
 class BookingComplete extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      showedVerifyBookingPopup: false,
+    };
+  }
+
   componentDidMount() {
     const { booking } = this.props;
 
@@ -18,6 +25,7 @@ class BookingComplete extends Component {
     this.props.destroyOrder();
 
     if (booking && booking.adhocClient && !booking.adhocClient.isVerified) {
+      this.setState({ showedVerifyBookingPopup: true });
       this.props.showVerifyBookingPopup(booking._id);
     }
   }
@@ -28,7 +36,9 @@ class BookingComplete extends Component {
     // Destroy order
     this.props.destroyOrder();
 
-    if (booking && booking.adhocClient && !booking.adhocClient.isVerified) {
+    if (booking && booking.adhocClient && !booking.adhocClient.isVerified
+      && this.state.showedVerifyBookingPopup === false) {
+      this.setState({ showedVerifyBookingPopup: true });
       this.props.showVerifyBookingPopup(booking._id);
     }
   }

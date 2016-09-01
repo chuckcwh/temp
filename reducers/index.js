@@ -83,7 +83,12 @@ const config = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        data: action.response && action.response.data,
+        data: action.response && Object.assign({}, action.response.data, {
+          timeSlotsByValues: action.response.data.timeSlots.reduce((result, timeSlot) => {
+            result[timeSlot.value] = timeSlot;
+            return result;
+          }, {}),
+        }),
         lastUpdated: action.response && action.response.receivedAt
       })
     default:

@@ -6,7 +6,7 @@ import Link from '../Link';
 import history from '../../core/history';
 
 const BookingSidebar = (props) => {
-  const { services, order } = props;
+  const { config, services, order } = props;
   const location = history.getCurrentLocation();
   let service,
     patientName,
@@ -73,17 +73,17 @@ const BookingSidebar = (props) => {
             <div className={s.bookingSidebarItem}>
             {
               timeslots && timeslots.map(timeslot => {
-                if (timeslot === 'Morning') {
+                if (timeslot === 'morning') {
                   return (
-                    <div key="Morning">Morning: 8.00am - 11:00am</div>
+                    <div key="morning">Morning: 8.00am - 11:00am</div>
                   );
-                } else if (timeslot === 'Afternoon') {
+                } else if (timeslot === 'afternoon') {
                   return (
-                    <div key="Afternoon">Afternoon: 12:00pm - 5:00pm</div>
+                    <div key="afternoon">Afternoon: 12:00pm - 5:00pm</div>
                   );
-                } else if (timeslot === 'Evening') {
+                } else if (timeslot === 'evening') {
                   return (
-                    <div key="Evening">Evening: 7:00pm - 10:00pm</div>
+                    <div key="evening">Evening: 7:00pm - 10:00pm</div>
                   );
                 }
                 return undefined;
@@ -97,7 +97,7 @@ const BookingSidebar = (props) => {
             <div className={s.bookingSidebarItem}>
             {
               sessions && sessions.map((session, index) => (
-                <div key={index}>{session.date && moment(session.date, 'YYYY-MM-DD').format('DD MMM')} - {session.time}</div>
+                <div key={index}>{session.date && moment(session.date, 'YYYY-MM-DD').format('DD MMM')} - {config && config.timeSlotsByValues && config.timeSlotsByValues[session.time].name}</div>
               ))
             }
             </div>
@@ -115,11 +115,13 @@ const BookingSidebar = (props) => {
 };
 
 BookingSidebar.propTypes = {
+  config: React.PropTypes.object.isRequired,
   services: React.PropTypes.object.isRequired,
   order: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   services: state.services.data,
   order: state.order,
 });

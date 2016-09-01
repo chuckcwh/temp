@@ -5,7 +5,8 @@ import classNames from 'classnames';
 import s from './VerifyBookingPopup.css';
 import Popup from '../Popup';
 import ResendVerifyBookingPopup from '../ResendVerifyBookingPopup';
-import { verifyBookingPin, hideVerifyBookingPopup, showResendVerifyBookingPopup, showAlertPopup } from '../../actions';
+import { VERIFY_BOOKING_PIN_SUCCESS, verifyBookingPin, hideVerifyBookingPopup,
+  showResendVerifyBookingPopup, showAlertPopup } from '../../actions';
 
 class VerifyBookingPopup extends Component {
 
@@ -30,11 +31,11 @@ class VerifyBookingPopup extends Component {
       this.setState({ pending: true });
 
       this.props.verifyBookingPin({
-        bid: this.props.bookingId,
+        id: this.props.bookingId,
         pin: this.state.pin,
       }).then((res) => {
         this.setState({ pending: false });
-        if (res.response && res.response.status === 1) {
+        if (res && res.type === VERIFY_BOOKING_PIN_SUCCESS) {
           // console.log(res.response);
 
           this.setState({

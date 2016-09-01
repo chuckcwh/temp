@@ -14,4 +14,8 @@
     margin-top: 40px;
   }
 
+  & .formError {
+    color: red;
+  }
+
 }

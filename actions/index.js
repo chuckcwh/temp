@@ -537,6 +537,10 @@ export function getUser(params) {
   return fetch('getUser', params);
 }
 
+export function editUser(params) {
+  return fetch('editUser', params);
+}
+
 export function getUserWithToken(params) {
   return fetch('getUserWithToken', params);
 }

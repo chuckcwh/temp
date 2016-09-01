@@ -48,8 +48,12 @@ class ProfileEdit extends Component {
     this.setState({ selectedTabIndex: index })
   }
 
+  onFormSubmit(data) {
+    console.log('submit data', data);
+  }
+
   render() {
-    const { user, languageChoice } = this.props;
+    const { user } = this.props;
     const { selectedTabIndex } = this.state;
     let content;
 
@@ -67,7 +71,7 @@ class ProfileEdit extends Component {
 
       content = (
         <div className={s.editPanelContainer}>
-          {selectedTabIndex === 0 && (<ProfileEditBasicForm />)}
+          {selectedTabIndex === 0 && (<ProfileEditBasicForm handleSubmit={this.onFormSubmit}/>)}
           {selectedTabIndex === 1 && (<ProfileEditResidentialForm />)}
           {selectedTabIndex === 2 && (<ProfileEditCulturalForm />)}
           {selectedTabIndex === 3 && (<ProfileEditEducationForm />)}
@@ -124,7 +128,6 @@ ProfileEdit.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  languageChoice: state.config.data && state.config.data.languages,
 });
 
 export default connect(mapStateToProps)(ProfileEdit);

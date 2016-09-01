@@ -11,7 +11,7 @@ import history from '../../../core/history';
 import { isAdmin, isClient, isProvider, getUserName } from '../../../core/util';
 import { reduxForm } from 'redux-form';
 import InlineForm from '../../MultiSelect';
-import { showDayPickerPopup } from '../../../actions';
+import { showDayPickerPopup, editUser } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 // react-icons
@@ -20,39 +20,63 @@ import FaLock from 'react-icons/lib/fa/lock';
 
 class ProfileEditBasicForm extends Component {
 
+  onSubmit = (values) => {
+    console.log('values', values);
+    return new Promise((resolve, reject) => {
+      this.props.editUser({
+        _id: values._id,
+        name: values.name,
+        gender: values.gender,
+        dob: values.dob,
+        idNum: values.idNum,
+        idType: values.idType,
+        occupation: values.occupation,
+        maritalStatus: values.maritalStatus,
+        profession: values.profession,
+        skills: values.skills.split(','),
+      }).then((res) => {
+        console.log('response', res);
+        if (res && res.response && res.response.status === 1) {
+          console.log('success', res.data);
+        }
+      })
+    });
+    resolve();
+  }
+
   render() {
     const {
       fields: {
+        _id,
         name,
         gender,
         dob,
-        idNumber,
+        idNum,
         idType,
         occupation,
         maritalStatus,
-        providerType,
-        providerSkills,
+        profession,
+        skills,
         email
       },
       genderChoice,
+      idTypeChoice,
+      professionChoice,
+      skillsChoice,
+      showDayPickerPopup,
       user,
+
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
-      showDayPickerPopup,
     } = this.props;
-
-    const idTypeChoice = ['Singaporean Pink IC', 'Singaporean Blue IC', 'Others'];
-    const providerTypeChoice = ['N/A'];
-    const providerSkillsChoice = [{label: 'Caregiver Training', value: 'Caregiver Training'}, {label: 'General Accompany', value: 'General Accompany'}];
-    // const
 
     return (
       <div className={s.ProfileEditBasicForm}>
         <DayPickerPopup title="Date of Birth" />
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(this.onSubmit)}>
           <div className={s.formSection}>
             <div className="TableRow">
               <div className="TableRowItem1">Full Name (as per NRIC)</div>
@@ -83,8 +107,8 @@ class ProfileEditBasicForm extends Component {
                 <div className="TableRowItem1">Date of Birth</div>
                 <div className="TableRowItem2">
                   <div className="DateInput">
-                    <input type="text" id="dob" name="dob" placeholder="Birth Date* (YYYY-MM-DD)" {...dob} />
-                    <span onClick={() => this.props.showDayPickerPopup(dob.value, 'ProfileEditBasicForm')}></span>
+                    <input type="text" id="dob" name="dob" placeholder="YYYY-MM-DD" {...dob} />
+                    <span onClick={() => this.props.showDayPickerPopup(dob.value, 'profileEditBasicForm')}></span>
                   </div>
                 </div>
             </div>
@@ -92,8 +116,8 @@ class ProfileEditBasicForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Identification Number</div>
               <div className="TableRowItem2">
-                <input type="text" {...idNumber} />
-                {idNumber.touched && idNumber.error && <div className={s.formError}>{idNumber.error}</div>}
+                <input type="text" {...idNum} />
+                {idNum.touched && idNum.error && <div className={s.formError}>{idNum.error}</div>}
               </div>
             </div>
 
@@ -105,7 +129,7 @@ class ProfileEditBasicForm extends Component {
                   <select id={idType} name={idType} {...idType} value={idType.value || ''}>
                     <option value="">-- Select --</option>
                     {idTypeChoice && idTypeChoice.map(item => (
-                      <option key={idTypeChoice.indexOf(item)} value={item}>{item}</option>
+                      <option key={idTypeChoice.indexOf(item)} value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -113,34 +137,32 @@ class ProfileEditBasicForm extends Component {
               </div>
             </div>
 
-            {isClient(user) && (
-              <div>
-                <div className="TableRow">
-                  <div className="TableRowItem1">Occupation</div>
-                  <div className="TableRowItem2">
-                    <input type="text" {...occupation} />
-                    {occupation.touched && occupation.error && <div className={s.formError}>{occupation.error}</div>}
-                  </div>
-                </div>
-
-                <div className="TableRow">
-                  <div className="TableRowItem1">Marital Status</div>
-                  <div className="TableRowItem2">
-                    <div className={cx("select", s.selectInput)}>
-                      <span></span>
-                      <select id={maritalStatus} name={maritalStatus} {...maritalStatus} value={maritalStatus.value || ''}>
-                        <option value="">-- Select --</option>
-                        <option value="Single">Single</option>
-                        <option value="Married">Married</option>
-                        <option value="Divorced">Divorced</option>
-                        <option value="Widowed">Widowed</option>
-                      </select>
-                    </div>
-                    {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
-                  </div>
+            <div>
+              <div className="TableRow">
+                <div className="TableRowItem1">Occupation</div>
+                <div className="TableRowItem2">
+                  <input type="text" {...occupation} />
+                  {occupation.touched && occupation.error && <div className={s.formError}>{occupation.error}</div>}
                 </div>
               </div>
-            )}
+
+              <div className="TableRow">
+                <div className="TableRowItem1">Marital Status</div>
+                <div className="TableRowItem2">
+                  <div className={cx("select", s.selectInput)}>
+                    <span></span>
+                    <select id={maritalStatus} name={maritalStatus} {...maritalStatus} value={maritalStatus.value || ''}>
+                      <option value="">-- Select --</option>
+                      <option value="Single">Single</option>
+                      <option value="Married">Married</option>
+                      <option value="Divorced">Divorced</option>
+                      <option value="Widowed">Widowed</option>
+                    </select>
+                  </div>
+                  {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
+                </div>
+              </div>
+            </div>
 
             {isProvider(user) && (
               <div>
@@ -149,14 +171,14 @@ class ProfileEditBasicForm extends Component {
                   <div className="TableRowItem2">
                     <div className={cx("select", s.selectInput)}>
                       <span></span>
-                      <select id={providerType} name={providerType} {...providerType} value={providerType.value || ''}>
+                      <select id={profession} name={profession} {...profession} value={profession.value || ''}>
                         <option value="">-- Select --</option>
-                        {providerTypeChoice && providerTypeChoice.map(item => (
-                          <option key={providerTypeChoice.indexOf(item)} value={item}>{item}</option>
+                        {professionChoice && professionChoice.map(item => (
+                          <option key={professionChoice.indexOf(item)} value={item}>{item}</option>
                         ))}
                       </select>
                     </div>
-                    {providerType.touched && providerType.error && <div className={s.formError}>{providerType.error}</div>}
+                    {profession.touched && profession.error && <div className={s.formError}>{profession.error}</div>}
                   </div>
                 </div>
 
@@ -164,10 +186,10 @@ class ProfileEditBasicForm extends Component {
                   <div className="TableRowItem1">Provider Skills</div>
                   <div className="TableRowItem2">
                     <MultiSelect
-                      options={providerSkillsChoice}
-                      {...providerSkills}
+                      options={skillsChoice}
+                      {...skills}
                     />
-                    {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
+                  {skills.touched && skills.error && <div className={s.formError}>{skills.error}</div>}
                   </div>
                 </div>
               </div>
@@ -194,11 +216,17 @@ class ProfileEditBasicForm extends Component {
 
 const validate = values => {
   const errors = {};
-  // if (!values.withdrawAmt) {
-  //   errors.withdrawAmt = 'Required';
-  // } else if (!/\d+/i.test(values.withdrawAmt)) {
-  //   errors.withdrawAmt = 'Invalid withdraw amount';
-  // }
+  if (!values.name) {
+    errors.name = 'Required';
+  } else if (values.name.length > 50) {
+    errors.name = 'Cannot be more than 50 characters';
+  }
+  if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.dob)) {
+    errors.dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
+  } else if (moment().isSameOrBefore(values.dob, 'day')) {
+    errors.dob = 'Date must be earlier than today';
+  }
+  return errors
 }
 
 ProfileEditBasicForm.propTypes = {
@@ -208,21 +236,22 @@ ProfileEditBasicForm.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  showDayPickerPopup: PropTypes.func.isRequired,
 };
 
 const reduxFormConfig = {
-  form: 'ProfileEditBasicForm',
+  form: 'profileEditBasicForm',
   fields: [
-    'userType', // for form validate, not real field
+    '_id', // for form validate, not real field
     'name',
     'gender',
     'dob',
-    'idNumber',
+    'idNum',
     'idType',
     'occupation',
     'maritalStatus',
-    'providerType',
-    'providerSkills',
+    'profession',
+    'skills',
     'email'
   ],
   validate,
@@ -233,25 +262,29 @@ const mapStateToProps = (state) => {
 
   return {
     initialValues: {
-      userType: user && user.role, // for form validate, not real field
+      _id: user && user._id,
       name: user && user.name,
       gender: user && user.gender,
       dob: user && user.dob && moment(user.dob).format("YYYY-MM-DD"),
-      idNumber: user && user.client && user.client.nric || user && user.provider && user.provider.nric,
-      // idType: client && client.IDtype || provider && provider.IDtype,
-      // occupation: client && client.occupation, // client only
-      // maritalStatus: client && client.maritalStatus, // client only
-      // providerType: user && user.typeOfprovider, // provider only
-      // providerSkills: user && user.provider && user.provider.skills, // provider only
+      idNum: user && user.idNum,
+      idType: user && user.idType,
+      occupation: user && user.occupation,
+      maritalStatus: user && user.maritalStatus,
+      profession: user && user.profession, // provider only
+      skills: user && user.skills, // provider only
       email: user && user.email,
     },
     genderChoice: state.config.data && state.config.data.genders,
+    idTypeChoice: state.config.data && state.config.data.residences,
+    professionChoice: ['doctor', 'nurse', 'therapist', 'tcm', 'others'],
+    skillsChoice: [{label: 'Caregiver Training', value: 'Caregiver Training'}, {label: 'General Accompany', value: 'General Accompany'}],
     user,
   }
 };
 
 const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
+  editUser: (params) => dispatch(editUser(params)),
 })
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditBasicForm);

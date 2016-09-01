@@ -671,10 +671,10 @@ const bookingApp = combineReducers({
           return state;
       }
     },
-    profileClientEditBasicForm: (state, action) => {
+    profileEditBasicForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
-          if (action.source === 'profileClientEditBasicForm') {
+          if (action.source === 'profileEditBasicForm') {
             return {
               ...state,
               dob: {

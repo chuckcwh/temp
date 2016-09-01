@@ -25,7 +25,9 @@ export class ProfileBase extends Component {
   getAgeGroup = (dob) => {
     let ageGroup;
     const years = moment().diff(dob, 'years');
-    if (years % 10 === 0) {
+    if (years === 0) {
+      ageGroup = `0 years old`;
+    } else if (years % 10 === 0) {
       const loYears = years - 9;
       ageGroup = `${loYears} - ${years} years old`;
     } else {

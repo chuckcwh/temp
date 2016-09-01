@@ -5,75 +5,40 @@ import s from './BookingComplete.css';
 import Container from '../Container';
 import Link from '../Link';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import { createBooking, createCase, getBooking, destroyOrder, showVerifyBookingPopup } from '../../actions';
+import { getBooking, destroyOrder, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
 
 class BookingComplete extends Component {
 
-  constructor(props) {
-    super(props);
-    const { order, booking, caze, user } = props;
-    this.state = {
-      bookingStatus: undefined,
-      booking: order && order.service && order.sessions && order.booker && booking,
-      bookingId: order && order.service && order.sessions && order.booker && booking && booking.id,
-      bookingAmt: (user && order && order.patient && caze && caze.price)
-        || (order && order.service && order.sessions && order.booker && booking && booking.case && booking.case.price),
-      bookingHp: order && order.service && order.sessions && order.booker && booking && booking.client_contactNumber,
-      caseId: undefined,
-      bookingVerified: false,
-    };
-  }
-
   componentDidMount() {
-    const { order, user, booking, caze } = this.props;
-    if (user && order && order.patient && caze) {
-      // Destroy order
-      this.props.destroyOrder();
-    } else if (order && order.service && order.sessions && order.booker && booking) {
-      // Destroy order
-      this.props.destroyOrder();
+    const { booking } = this.props;
 
-      this.props.showVerifyBookingPopup(booking.id);
+    // Destroy order
+    this.props.destroyOrder();
+
+    if (booking && booking.adhocClient && !booking.adhocClient.isVerified) {
+      this.props.showVerifyBookingPopup(booking._id);
     }
   }
 
   componentWillReceiveProps(props) {
-    const { order, user, booking, caze } = props;
-    if (user && order && order.patient && caze) {
-      // Destroy order
-      this.props.destroyOrder();
+    const { booking } = props;
 
-      this.setState({
-        bookingAmt: caze.price,
-        caseId: caze.id,
-      });
-    } else if (order && order.service && order.sessions && order.booker && booking) {
-      // Destroy order
-      this.props.destroyOrder();
+    // Destroy order
+    this.props.destroyOrder();
 
-      this.setState({
-        bookingId: booking.id,
-        bookingAmt: booking.case.price,
-        bookingHp: booking.client_contactNumber,
-        booking,
-      });
-
-      this.props.showVerifyBookingPopup(booking.id);
+    if (booking && booking.adhocClient && !booking.adhocClient.isVerified) {
+      this.props.showVerifyBookingPopup(booking._id);
     }
   }
 
   onVerified = () => {
+    const { booking } = this.props;
     this.props.getBooking({
-      bid: this.state.bookingId,
-      mobilePhone: this.state.bookingHp,
-    }).then(() => {
-      this.setState({
-        bookingVerified: true,
-      });
-
-      // Notify parent window of booking completion for embedded widget
+      bookingId: booking && booking._id,
+      contact: booking && booking.adhocClient && booking.adhocClient.contact,
+    }).then(() => {// Notify parent window of booking completion for embedded widget
       const location = history.getCurrentLocation();
       if (location && location.query && location.query.widget === 'true') {
         window.parent.postMessage('completedBooking', '*');
@@ -82,7 +47,7 @@ class BookingComplete extends Component {
   };
 
   onClickActivateBooking = () => {
-    this.props.showVerifyBookingPopup(this.state.bookingId);
+    this.props.booking && this.props.showVerifyBookingPopup(this.props.booking._id);
   };
 
   onClickClose = () => {
@@ -93,17 +58,17 @@ class BookingComplete extends Component {
     let component,
       identity,
       footer;
-    const { bookingFetching, cazeFetching } = this.props;
+    const { booking, bookingFetching } = this.props;
     const location = history.getCurrentLocation();
 
-    if (bookingFetching || cazeFetching) {
+    if (bookingFetching) {
       component = (
         <div className={s.bookingCompleteBody}>
-          <Loader className="spinner" loaded={!(bookingFetching || cazeFetching)} />
+          <Loader className="spinner" loaded={!bookingFetching} />
         </div>
       );
     } else {
-      if (this.state.bookingId) {
+      if (booking.adhocClient) {
         let bookingLink,
           activateText;
         if (location && location.query && location.query.widget === 'true') {
@@ -112,12 +77,12 @@ class BookingComplete extends Component {
               <a href="#" className="btn btn-primary" style={{ color: '#fff' }} onClick={this.onClickClose}>Close Window</a>
             </div>
           );
-        } else if (this.state.bookingVerified) {
+        } else if (booking.adhocClient.isVerified) {
           bookingLink = (
             <div>
               <Link
                 to={{ pathname: '/booking-manage',
-                  query: { bid: this.state.bookingId, mobilePhone: this.state.booking.client_contactNumber } }}
+                  query: { bid: booking._id, contact: booking.adhocClient.contact } }}
                 className="btn btn-primary"
                 style={{ color: '#fff' }}
               >View Booking</Link>
@@ -142,17 +107,17 @@ class BookingComplete extends Component {
         }
         identity = (
           <div>
-            <b>BOOKING ID : {this.state.bookingId}</b>
+            <b>BOOKING ID : {booking._id}</b>
             {bookingLink}
             {activateText}
           </div>
         );
-      } else if (this.state.caseId) {
+      } else {
         identity = (
           <div>
-            <b>CASE ID : {this.state.caseId}</b>
+            <b>BOOKING ID : {booking._id}</b>
             <div>
-              <a href={`${util.backend}/case/${this.state.caseId}`}>View Case</a>
+              <Link to={`/bookings/${booking._id}`}>View Booking</Link>
             </div>
           </div>
         );
@@ -177,7 +142,7 @@ class BookingComplete extends Component {
           </div>
           {identity}
           <div>
-            ESTIMATED AMOUNT : SGD {parseFloat(this.state.bookingAmt).toFixed(2)}
+            ESTIMATED AMOUNT : SGD {!isNaN(booking.totalAmount) && parseFloat(booking.totalAmount).toFixed(2)}
           </div>
           <div>
             For inquiries on your order, please email
@@ -215,32 +180,20 @@ class BookingComplete extends Component {
 }
 
 BookingComplete.propTypes = {
-  order: React.PropTypes.object,
-  user: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
-  caze: React.PropTypes.object,
-  cazeFetching: React.PropTypes.bool,
 
-  createBooking: React.PropTypes.func,
-  createCase: React.PropTypes.func,
   getBooking: React.PropTypes.func,
   destroyOrder: React.PropTypes.func,
   showVerifyBookingPopup: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
-  order: state.order,
-  user: state.user.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
-  caze: state.caze.data,
-  cazeFetching: state.caze.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  createBooking: (booking) => dispatch(createBooking(booking)),
-  createCase: (caze) => dispatch(createCase(caze)),
   getBooking: (params) => dispatch(getBooking(params)),
   destroyOrder: () => dispatch(destroyOrder()),
   showVerifyBookingPopup: (bookingId) => dispatch(showVerifyBookingPopup(bookingId)),

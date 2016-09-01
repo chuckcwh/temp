@@ -7,9 +7,7 @@ export default function (defaults = {}) {
     const arr = [];
     Object.keys(params).forEach((p) => {
       if (Array.isArray(params[p])) {
-        for (let i = 0; i < params[p].length; i++) {
-          arr.push(`${encodeURIComponent(p)}[]=${encodeURIComponent(params[p][i])}`);
-        }
+        arr.push(`${encodeURIComponent(p)}=${encodeURIComponent(JSON.stringify(params[p]))}`);
       } else arr.push(`${encodeURIComponent(p)}=${encodeURIComponent(params[p])}`);
     });
     return (arr.length > 0) ? arr.join('&') : '';

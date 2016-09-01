@@ -12,9 +12,9 @@ class BookingTime extends Component {
     super(props);
     const { order } = this.props;
     this.state = {
-      Morning: order && order.timeslots && order.timeslots.indexOf('Morning') > -1,
-      Afternoon: order && order.timeslots && order.timeslots.indexOf('Afternoon') > -1,
-      Evening: order && order.timeslots && order.timeslots.indexOf('Evening') > -1,
+      morning: order && order.timeslots && order.timeslots.indexOf('morning') > -1,
+      afternoon: order && order.timeslots && order.timeslots.indexOf('afternoon') > -1,
+      evening: order && order.timeslots && order.timeslots.indexOf('evening') > -1,
     };
   }
 
@@ -49,8 +49,8 @@ class BookingTime extends Component {
               className={s.bookingTimeCheckbox}
               type="checkbox"
               id="timeMorning"
-              checkedLink={linkState(this, 'Morning')}
-              value="Morning"
+              checkedLink={linkState(this, 'morning')}
+              value="morning"
             />
             <label className={s.bookingTimeCheckboxLabel} htmlFor="timeMorning">
               <span></span><span>Morning: 8.00am - 11:00am</span>
@@ -61,8 +61,8 @@ class BookingTime extends Component {
               className={s.bookingTimeCheckbox}
               type="checkbox"
               id="timeAfternoon"
-              checkedLink={linkState(this, 'Afternoon')}
-              value="Afternoon"
+              checkedLink={linkState(this, 'afternoon')}
+              value="afternoon"
             />
             <label className={s.bookingTimeCheckboxLabel} htmlFor="timeAfternoon">
               <span></span><span>Afternoon: 12:00pm - 5:00pm</span>
@@ -73,8 +73,8 @@ class BookingTime extends Component {
               className={s.bookingTimeCheckbox}
               type="checkbox"
               id="timeEvening"
-              checkedLink={linkState(this, 'Evening')}
-              value="Evening"
+              checkedLink={linkState(this, 'evening')}
+              value="evening"
             />
             <label className={s.bookingTimeCheckboxLabel} htmlFor="timeEvening">
               <span></span><span>Evening: 7:00pm - 10:00pm</span>

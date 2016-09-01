@@ -5,10 +5,10 @@ import Container from '../Container';
 import BookingPatientForm from '../BookingPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
 import ConfirmPopup from '../ConfirmPopup';
-import { setOrderBooker, setLastPage, createBookingWithOrder, showLoginPopup, showDayPickerPopup,
+import { setOrderBooker, setLastPage, createBookingWithOptions, showLoginPopup, showDayPickerPopup,
   showAlertPopup, showConfirmPopup } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isNextLastPage } from '../../core/util';
 
 class BookingPatient extends Component {
 
@@ -22,8 +22,12 @@ class BookingPatient extends Component {
   componentWillReceiveProps(props) {
     if (props.order.booker !== this.props.order.booker) {
       const location = history.getCurrentLocation();
-      props.createBookingWithOrder(props.order, location);
-      util.isNextLastPage('booking4', props.lastPage) && props.setLastPage('booking4');
+      props.createBookingWithOptions({
+        services: props.services,
+        order: props.order,
+        location,
+      });
+      isNextLastPage('booking4', props.lastPage) && props.setLastPage('booking4');
       history.push({ pathname: '/booking5', query: location && location.query });
     }
   }
@@ -39,16 +43,13 @@ class BookingPatient extends Component {
       if (!this.formValues) return;
       const values = this.formValues;
       const user = {
-        client_contactEmail: values.client_contactEmail,
-        client_contactNumber: values.client_contactNumber,
-        client_firstName: values.client_firstName,
-        client_lastName: values.client_lastName,
-        patient_contactEmail: values.client_contactEmail,
-        patient_contactNumber: values.client_contactNumber,
-        patient_firstName: values.patient_firstName,
-        patient_lastName: values.patient_lastName,
-        patient_dob: values.patient_dob,
-        patient_gender: values.patient_gender,
+        clientName: values.clientName,
+        clientEmail: values.clientEmail,
+        clientContact: values.clientContact,
+        patientName: values.patientName,
+        patientDob: values.patientDob,
+        patientContact: values.patientContact,
+        patientGender: values.patientGender,
         additionalInfo: values.additionalInfo,
         isPatient: values.isPatient,
       };
@@ -56,7 +57,7 @@ class BookingPatient extends Component {
       this.props.setOrderBooker(user);
 
       // Delay execution till order is officially updated
-      // this.props.createBookingWithOrder(this.props.order, location);
+      // this.props.createBookingWithOptions(this.props.order, location);
       // util.isNextLastPage('booking4', this.props.lastPage) && this.props.setLastPage('booking4');
       // history.push({ pathname: '/booking5', query: location && location.query });
     } else {
@@ -122,12 +123,13 @@ class BookingPatient extends Component {
 BookingPatient.propTypes = {
   children: React.PropTypes.node.isRequired,
 
+  services: React.PropTypes.object,
   lastPage: React.PropTypes.string,
   order: React.PropTypes.object,
 
   setOrderBooker: React.PropTypes.func.isRequired,
   setLastPage: React.PropTypes.func.isRequired,
-  createBookingWithOrder: React.PropTypes.func.isRequired,
+  createBookingWithOptions: React.PropTypes.func.isRequired,
   showLoginPopup: React.PropTypes.func.isRequired,
   showDayPickerPopup: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
@@ -135,6 +137,7 @@ BookingPatient.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  services: state.services.data,
   lastPage: state.lastPage,
   order: state.order,
 });
@@ -142,7 +145,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setOrderBooker: (booker) => dispatch(setOrderBooker(booker)),
   setLastPage: (page) => dispatch(setLastPage(page)),
-  createBookingWithOrder: (order, location) => dispatch(createBookingWithOrder(order, location)),
+  createBookingWithOptions: (options) => dispatch(createBookingWithOptions(options)),
   showLoginPopup: () => dispatch(showLoginPopup()),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),

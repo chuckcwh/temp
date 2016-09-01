@@ -107,9 +107,9 @@ export const MOBILE_VERIFY_REQUEST = 'MOBILE_VERIFY_REQUEST'
 export const MOBILE_VERIFY_SUCCESS = 'MOBILE_VERIFY_SUCCESS'
 export const MOBILE_VERIFY_FAILURE = 'MOBILE_VERIFY_FAILURE'
 
-export const AVAILABLE_SESSIONS_REQUEST = 'AVAILABLE_SESSIONS_REQUEST'
-export const AVAILABLE_SESSIONS_SUCCESS = 'AVAILABLE_SESSIONS_SUCCESS'
-export const AVAILABLE_SESSIONS_FAILURE = 'AVAILABLE_SESSIONS_FAILURE'
+export const AVAILABLE_SCHEDULES_REQUEST = 'AVAILABLE_SCHEDULES_REQUEST'
+export const AVAILABLE_SCHEDULES_SUCCESS = 'AVAILABLE_SCHEDULES_SUCCESS'
+export const AVAILABLE_SCHEDULES_FAILURE = 'AVAILABLE_SCHEDULES_FAILURE'
 
 export const PROMO_REQUEST = 'PROMO_REQUEST'
 export const PROMO_SUCCESS = 'PROMO_SUCCESS'
@@ -185,15 +185,13 @@ function fetchAction(route) {
     },
     createBooking: {
       types: [ BOOKING_CREATE_REQUEST, BOOKING_CREATE_SUCCESS, BOOKING_CREATE_FAILURE ],
-      endpoint: '/createBooking',
+      endpoint: '/bookings',
       method: 'post',
-      auth: 'app'
     },
     editBooking: {
       types: [ BOOKING_EDIT_REQUEST, BOOKING_EDIT_SUCCESS, BOOKING_EDIT_FAILURE ],
-      endpoint: '/editBooking',
+      endpoint: '/bookings/:_id',
       method: 'post',
-      auth: 'app'
     },
     cancelBookingSession: {
       types: [ BOOKING_SESSION_CANCEL_REQUEST, BOOKING_SESSION_CANCEL_SUCCESS, BOOKING_SESSION_CANCEL_FAILURE ],
@@ -207,29 +205,25 @@ function fetchAction(route) {
       method: 'get',
       entity: 'sessions'
     },
-    createCase: {
+    createSession: {
       types: [ SESSION_CREATE_REQUEST, SESSION_CREATE_SUCCESS, SESSION_CREATE_FAILURE ],
-      endpoint: '/createCase',
-      method: 'post',
-      auth: 'user'
+      endpoint: '/sessions',
+      method: 'post'
     },
     login: {
       types: [ LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE ],
       endpoint: '/auth/local',
       method: 'post',
-      auth: 'app'
     },
     loginClient: {
       types: [ LOGIN_CLIENT_REQUEST, LOGIN_CLIENT_SUCCESS, LOGIN_CLIENT_FAILURE ],
-      endpoint: '/mlogin',
+      endpoint: '/auth/local',
       method: 'post',
-      auth: 'app'
     },
     createUser: {
       types: [ USER_CREATE_REQUEST, USER_CREATE_SUCCESS, USER_CREATE_FAILURE ],
       endpoint: '/users',
       method: 'post',
-      auth: 'app'
     },
     getUser: {
       types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
@@ -268,9 +262,8 @@ function fetchAction(route) {
     },
     getPatients: {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
-      endpoint: '/getPatients',
+      endpoint: '/users/:userId/patients',
       method: 'get',
-      auth: 'user',
       entity: 'patients'
     },
     getPatient: {
@@ -304,12 +297,11 @@ function fetchAction(route) {
       method: 'post',
       auth: 'user'
     },
-    getSessions: {
-      types: [ SESSIONS_REQUEST, SESSIONS_SUCCESS, SESSIONS_FAILURE ],
-      endpoint: '/getAvailableSchedule',
+    getAvailableSchedules: {
+      types: [ AVAILABLE_SCHEDULES_REQUEST, AVAILABLE_SCHEDULES_SUCCESS, AVAILABLE_SCHEDULES_FAILURE ],
+      endpoint: '/users/schedules/available',
       method: 'get',
-      auth: 'app',
-      entity: 'sessions'
+      entity: 'availableSchedules'
     },
     getPromo: {
       types: [ PROMO_REQUEST, PROMO_SUCCESS, PROMO_FAILURE ],
@@ -368,13 +360,13 @@ function fetchAction(route) {
       auth: 'app',
       entity: 'rankedSubcategories'
     },
-    getAvailableSessions:{
-      types: [ AVAILABLE_SESSIONS_REQUEST, AVAILABLE_SESSIONS_SUCCESS, AVAILABLE_SESSIONS_FAILURE ],
-      endpoint: '/getAvailableCases',
-      method: 'get',
-      auth: 'user',
-      entity: 'availableSessions'
-    }
+    // getAvailableSessions:{
+    //   types: [ AVAILABLE_SESSIONS_REQUEST, AVAILABLE_SESSIONS_SUCCESS, AVAILABLE_SESSIONS_FAILURE ],
+    //   endpoint: '/getAvailableCases',
+    //   method: 'get',
+    //   auth: 'user',
+    //   entity: 'availableSessions'
+    // }
   }[route]
 }
 
@@ -437,43 +429,72 @@ export function createBooking(params) {
   return fetch('createBooking', params);
 }
 
-export function createBookingWithOrder(order, location) {
-  let dates = [];
-  for (let i = 0; i < order.sessions.length; i++) {
-    dates.push({
-      type: 'Schedule',
-      dateTimeStart: order.sessions[i].date + ' 00:00:00',
-      estTime: order.sessions[i].time,
-      price: order.sessions[i].price
-    });
+export function createBookingWithOptions({ services, order, user, location }) {
+  let data;
+  if (user) {
+    data = {
+      sessions: order.sessions.map(session => ({
+        serviceId: order && order.service,
+        classId: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
+        address: {
+          description: order && order.location && order.location.address,
+          unit: order && order.location && order.location.unitNumber,
+          postal: order && order.location && order.location.postalCode,
+          lat: order && order.location && order.location.lat,
+          lng: order && order.location && order.location.lng,
+          region: order && order.location && order.location.region,
+          neighborhood: order && order.location && order.location.neighborhood,
+        },
+        loc: {
+          coordinates: [order && order.location && order.location.lng, order && order.location && order.location.lat]
+        },
+        patient: order && order.patient && order.patient.id,
+        date: moment(session.date).format('YYYY-MM-DD'),
+        timeSlot: session.time,
+        additionalInfo: order && order.booker && order.booker.additionalInfo,
+      })),
+    };
+    if (order && order.promoCode && order.promoCode.code) {
+      data.promoCode = order.promoCode.code;
+    }
+  } else {
+    data = {
+      sessions: order.sessions.map(session => ({
+        serviceId: order && order.service,
+        classId: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
+        address: {
+          description: order && order.location && order.location.address,
+          unit: order && order.location && order.location.unitNumber,
+          postal: order && order.location && order.location.postalCode,
+          lat: order && order.location && order.location.lat,
+          lng: order && order.location && order.location.lng,
+          region: order && order.location && order.location.region,
+          neighborhood: order && order.location && order.location.neighborhood,
+        },
+        loc: {
+          coordinates: [order && order.location && order.location.lng, order && order.location && order.location.lat]
+        },
+        date: moment(session.date).format('YYYY-MM-DD'),
+        timeSlot: session.time,
+        additionalInfo: order && order.booker && order.booker.additionalInfo,
+      })),
+      adhocClient: {
+        email: order && order.booker && order.booker.clientEmail,
+        contact: order && order.booker && order.booker.clientContact,
+        name: order && order.booker && order.booker.clientName,
+      },
+      adhocPatient: {
+        name: order && order.booker && order.booker.patientName,
+        contact: order && order.booker && order.booker.patientContact,
+        gender: order && order.booker && order.booker.patientGender,
+        dob: order && order.booker && order.booker.patientDob,
+      },
+    };
+    if (order && order.promoCode && order.promoCode.code) {
+      data.promoCode = order.promoCode.code;
+    }
   }
-  return createBooking({
-    booking: {
-      client_contactEmail: order && order.booker && order.booker.client_contactEmail,
-      client_contactNumber: order && order.booker && order.booker.client_contactNumber,
-      client_firstName: order && order.booker && order.booker.client_firstName,
-      client_lastName: order && order.booker && order.booker.client_lastName,
-      patient_contactEmail: order && order.booker && order.booker.client_contactEmail,
-      patient_contactNumber: order && order.booker && order.booker.client_contactNumber,
-      patient_firstName: order && order.booker && order.booker.patient_firstName,
-      patient_lastName: order && order.booker && order.booker.patient_lastName,
-      patient_dob: moment(order && order.booker && order.booker.patient_dob).format('YYYY-MM-DD'),
-      patient_gender: order && order.booker && order.booker.patient_gender,
-      organization: location && location.query && location.query.organization || undefined
-    },
-    case: {
-      sid: order && order.service,
-      notes: order && order.booker && order.booker.additionalInfo,
-      price: order && order.sum && order.sum.toFixed(2),
-      dates: dates,
-      addresses: [{
-        address: order && order.location && order.location.address,
-        postalCode: order && order.location && order.location.postalCode,
-        unitNumber: order && order.location && order.location.unitNumber
-      }]
-    },
-    promoCode: order && order.promoCode && order.promoCode.code
-  });
+  return createBooking(data);
 }
 
 export function editBooking(params) {
@@ -484,37 +505,8 @@ export function getCases(params) {
   return fetch('getCases', params);
 }
 
-export function createCase(params) {
-  return fetch('createCase', params);
-}
-
-export function createCaseWithOrder(order) {
-  let dates = [];
-  for (let i = 0; i < order.sessions.length; i++) {
-    dates.push({
-      type: 'Schedule',
-      dateTimeStart: order.sessions[i].date + ' 00:00:00',
-      estTime: order.sessions[i].time,
-      price: order.sessions[i].price
-    });
-  }
-  return createCase({
-    notes: order && order.booker && order.booker.additionalInfo,
-    price: order && order.sum && order.sum.toFixed(2),
-    pid: order && order.patient && order.patient.id,
-    sid: order && order.service,
-    dates: dates,
-    addresses: [{
-      address: order && order.location && order.location.address,
-      postalCode: order && order.location && order.location.postalCode,
-      unitNumber: order && order.location && order.location.unitNumber
-    }],
-    promoCode: order && order.promoCode && order.promoCode.code
-  })
-}
-
-export function getAvailableCases(params) {
-  return fetch('getAvailableCases', params);
+export function getAvailableSchedules(params) {
+  return fetch('getAvailableSchedules', params);
 }
 
 export function cancelBookingSession(params, booking) {
@@ -651,7 +643,10 @@ function receiveGeocode(postalCode, geocode) {
     type: GEOCODE_SUCCESS,
     postalCode: postalCode,
     address: geocode.address,
+    lng: geocode.lng,
+    lat: geocode.lat,
     region: geocode.neighborhood,
+    neighborhood: geocode.neighborhood,
     receivedAt: Date.now()
   }
 }
@@ -680,6 +675,8 @@ function geocode(postalCode) {
             if (responses && responses.length > 0) {
               let res = {
                 address: responses[0].formatted_address,
+                lat: responses[0].geometry.location.lat(),
+                lng: responses[0].geometry.location.lng(),
               };
               responses[0].address_components.forEach((component) => {
                 if (component.types.indexOf('neighborhood') >= 0) {

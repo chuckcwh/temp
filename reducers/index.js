@@ -213,7 +213,7 @@ const booking = (state = {
     case ActionTypes.BOOKING_EDIT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        data: action.response && action.response.booking,
+        data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.BOOKING_DESTROY:
@@ -313,9 +313,9 @@ const patients = (state = {
       })
     case ActionTypes.PATIENTS_SUCCESS:
       let hash = {}, ids = []
-      action.response && action.response.patients.forEach((patient) => {
-        hash[patient.id] = patient
-        ids.push(patient.id)
+      action.response && action.response.data.forEach((patient) => {
+        hash[patient._id] = patient
+        ids.push(patient._id)
       })
       return Object.assign({}, state, {
         isFetching: false,
@@ -324,9 +324,9 @@ const patients = (state = {
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.PATIENT_SUCCESS:
-      if (action.response && action.response.patient && action.response.patient.id && state.data[action.response.patient.id]) {
+      if (action.response && action.response.data && action.response.data.id && state.data[action.response.data.id]) {
         let newState = Object.assign({}, state)
-        newState.data[action.response.patient.id] = action.response.patient
+        newState.data[action.response.data.id] = action.response.data
         return newState
       }
     default:
@@ -340,24 +340,24 @@ const patientsByClient = (state = {}, action) => {
     case ActionTypes.PATIENTS_SUCCESS:
     case ActionTypes.PATIENT_SUCCESS:
       return Object.assign({}, state, {
-        [action.data.client]: patients(state[action.data.client], action)
+        [action.data.userId]: patients(state[action.data.userId], action)
       })
     default:
       return state
   }
 }
 
-const availableSessions = (state = {
+const availableSchedules = (state = {
   isFetching: false,
   didInvalidate: true,
   data: null
 }, action) => {
   switch (action.type) {
-    case ActionTypes.AVAILABLE_SESSIONS_REQUEST:
+    case ActionTypes.AVAILABLE_SCHEDULES_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       })
-    case ActionTypes.AVAILABLE_SESSIONS_SUCCESS:
+    case ActionTypes.AVAILABLE_SCHEDULES_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         data: action.response.data,
@@ -523,7 +523,7 @@ const bookingApp = combineReducers({
   sessionsByClient,
   sessionsAvailToNurse,
   patientsByClient,
-  availableSessions,
+  availableSchedules,
   // paypal,
   totalSessionsCount,
   rankedServices,
@@ -536,14 +536,14 @@ const bookingApp = combineReducers({
   errorMessage,
   form: form.normalize({
     bookingLocationForm: {
-      patient_firstName: (value, previousValue, allValues) => {
+      patientName: (value, previousValue, allValues) => {
         if (allValues.isPatient) {
-          return allValues.client_firstName;
+          return allValues.clientName;
         } else return value;
       },
-      patient_lastName: (value, previousValue, allValues) => {
+      patientContact: (value, previousValue, allValues) => {
         if (allValues.isPatient) {
-          return allValues.client_lastName;
+          return allValues.clientContact;
         } else return value;
       }
     },
@@ -561,8 +561,8 @@ const bookingApp = combineReducers({
           if (action.source === 'bookingLocationForm') {
             return {
               ...state,
-              patient_dob: {
-                ...state.patient_dob,
+              patientDob: {
+                ...state.patientDob,
                 value: action.value
               }
             }
@@ -575,6 +575,22 @@ const bookingApp = combineReducers({
               address: {
                 ...state.address,
                 value: action.address
+              },
+              lat: {
+                ...state.lat,
+                value: action.lat
+              },
+              lng: {
+                ...state.lng,
+                value: action.lng
+              },
+              region: {
+                ...state.region,
+                value: action.region
+              },
+              neighborhood: {
+                ...state.neighborhood,
+                value: action.neighborhood
               }
             }
           }
@@ -603,6 +619,22 @@ const bookingApp = combineReducers({
               address: {
                 ...state.address,
                 value: action.address
+              },
+              lat: {
+                ...state.lat,
+                value: action.lat
+              },
+              lng: {
+                ...state.lng,
+                value: action.lng
+              },
+              region: {
+                ...state.region,
+                value: action.region
+              },
+              neighborhood: {
+                ...state.neighborhood,
+                value: action.neighborhood
               }
             }
           }
@@ -632,10 +664,22 @@ const bookingApp = combineReducers({
                 ...state.address,
                 value: action.address,
               },
+              lat: {
+                ...state.lat,
+                value: action.lat
+              },
+              lng: {
+                ...state.lng,
+                value: action.lng
+              },
               region: {
                 ...state.region,
-                value: action.region,
+                value: action.region
               },
+              neighborhood: {
+                ...state.neighborhood,
+                value: action.neighborhood
+              }
             }
           }
           break;
@@ -663,6 +707,22 @@ const bookingApp = combineReducers({
               address: {
                 ...state.address,
                 value: action.address
+              },
+              lat: {
+                ...state.lat,
+                value: action.lat
+              },
+              lng: {
+                ...state.lng,
+                value: action.lng
+              },
+              region: {
+                ...state.region,
+                value: action.region
+              },
+              neighborhood: {
+                ...state.neighborhood,
+                value: action.neighborhood
               }
             }
           }

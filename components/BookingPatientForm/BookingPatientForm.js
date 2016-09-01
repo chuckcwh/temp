@@ -16,14 +16,13 @@ class BookingPatientForm extends Component {
   render() {
     const {
       fields: {
-        client_firstName,
-        client_lastName,
-        client_contactEmail,
-        client_contactNumber,
-        patient_firstName,
-        patient_lastName,
-        patient_dob,
-        patient_gender,
+        clientName,
+        clientEmail,
+        clientContact,
+        patientName,
+        patientDob,
+        patientContact,
+        patientGender,
         additionalInfo,
         isPatient,
       },
@@ -51,21 +50,17 @@ class BookingPatientForm extends Component {
           </div>
           */}
           <div className={s.bookingPatientFormGroup}>
-            <input type="text" id="client_firstName" name="client_firstName" placeholder="First Name*" {...client_firstName} />
-            {client_firstName.touched && client_firstName.error && <div className={s.bookingPatientFormError}>{client_firstName.error}</div>}
+            <input type="text" placeholder="Name*" {...clientName} />
+            {clientName.touched && clientName.error && <div className={s.bookingPatientFormError}>{clientName.error}</div>}
           </div>
           <div className={s.bookingPatientFormGroup}>
-            <input type="text" id="client_lastName" name="client_lastName" placeholder="Last Name*" {...client_lastName} />
-            {client_lastName.touched && client_lastName.error && <div className={s.bookingPatientFormError}>{client_lastName.error}</div>}
+            <input type="email" placeholder="Email*" {...clientEmail} />
+            {clientEmail.touched && clientEmail.error && <div className={s.bookingPatientFormError}>{clientEmail.error}</div>}
           </div>
           <div className={s.bookingPatientFormGroup}>
-            <input type="email" id="client_contactEmail" name="client_contactEmail" placeholder="Email*" {...client_contactEmail} />
-            {client_contactEmail.touched && client_contactEmail.error && <div className={s.bookingPatientFormError}>{client_contactEmail.error}</div>}
-          </div>
-          <div className={s.bookingPatientFormGroup}>
-            <input type="text" id="client_contactNumber" name="client_contactNumber" placeholder="Mobile Number*" {...client_contactNumber} />
-            {client_contactNumber.touched && client_contactNumber.error &&
-              <div className={s.bookingPatientFormError}>{client_contactNumber.error}</div>}
+            <input type="text" placeholder="Mobile Number*" {...clientContact} />
+            {clientContact.touched && clientContact.error &&
+              <div className={s.bookingPatientFormError}>{clientContact.error}</div>}
           </div>
         </div>
         <div className={s.bookingPatientFormSection}>
@@ -81,19 +76,20 @@ class BookingPatientForm extends Component {
           </div>
           <div>
             <div className={s.bookingPatientFormGroup}>
-              <input type="text" id="patient_firstName" name="patient_firstName" placeholder="First Name*" {...patient_firstName} />
-              {patient_firstName.touched && patient_firstName.error && <div className={s.bookingPatientFormError}>{patient_firstName.error}</div>}
-            </div>
-            <div className={s.bookingPatientFormGroup}>
-              <input type="text" id="patient_lastName" name="patient_lastName" placeholder="Last Name*" {...patient_lastName} />
-              {patient_lastName.touched && patient_lastName.error && <div className={s.bookingPatientFormError}>{patient_lastName.error}</div>}
+              <input type="text" placeholder="Name*" {...patientName} />
+              {patientName.touched && patientName.error && <div className={s.bookingPatientFormError}>{patientName.error}</div>}
             </div>
             <div className={s.bookingPatientFormGroup}>
               <div className="DateInput">
-                <input type="text" id="patient_dob" name="patient_dob" placeholder="Birth Date* (YYYY-MM-DD)" {...patient_dob} />
-                <span onClick={() => this.props.showDayPickerPopup(patient_dob.value, 'bookingLocationForm')}></span>
+                <input type="text" placeholder="Birth Date* (YYYY-MM-DD)" {...patientDob} />
+                <span onClick={() => this.props.showDayPickerPopup(patientDob.value, 'bookingLocationForm')}></span>
               </div>
-              {patient_dob.touched && patient_dob.error && <div className={s.bookingPatientFormError}>{patient_dob.error}</div>}
+              {patientDob.touched && patientDob.error && <div className={s.bookingPatientFormError}>{patientDob.error}</div>}
+            </div>
+            <div className={s.bookingPatientFormGroup}>
+              <input type="text" placeholder="Mobile Number*" {...patientContact} />
+              {patientContact.touched && patientContact.error &&
+                <div className={s.bookingPatientFormError}>{patientContact.error}</div>}
             </div>
             <div className={s.bookingPatientFormGroup}>
               <div className="radio radio-inline">
@@ -101,9 +97,9 @@ class BookingPatientForm extends Component {
                   type="radio"
                   id="patient_gender_male"
                   name="patient_gender"
-                  {...patient_gender}
+                  {...patientGender}
                   value="Male"
-                  checked={patient_gender.value === 'Male'}
+                  checked={patientGender.value === 'Male'}
                 />
                 <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
               </div>
@@ -112,13 +108,13 @@ class BookingPatientForm extends Component {
                   type="radio"
                   id="patient_gender_female"
                   name="patient_gender"
-                  {...patient_gender}
+                  {...patientGender}
                   value="Female"
-                  checked={patient_gender.value === 'Female'}
+                  checked={patientGender.value === 'Female'}
                 />
                 <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
               </div>
-              {patient_gender.touched && patient_gender.error && <div className={s.bookingPatientFormError}>{patient_gender.error}</div>}
+              {patientGender.touched && patientGender.error && <div className={s.bookingPatientFormError}>{patientGender.error}</div>}
             </div>
           </div>
           <div style={{ marginTop: '40px' }}>
@@ -145,47 +141,42 @@ class BookingPatientForm extends Component {
 
 const validate = values => {
   const errors = {};
-  if (!values.client_firstName) {
-    errors.client_firstName = 'Required';
-  } else if (values.client_firstName.length > 50) {
-    errors.client_firstName = 'Cannot be more than 50 characters';
+  if (!values.clientName) {
+    errors.clientName = 'Required';
+  } else if (values.clientName.length > 50) {
+    errors.clientName = 'Cannot be more than 50 characters';
   }
-  if (!values.client_lastName) {
-    errors.client_lastName = 'Required';
-  } else if (values.client_lastName.length > 50) {
-    errors.client_lastName = 'Cannot be more than 50 characters';
+  if (!values.clientEmail) {
+    errors.clientEmail = 'Required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.clientEmail)) {
+    errors.clientEmail = 'Invalid email address';
+  } else if (values.clientEmail.length > 50) {
+    errors.clientEmail = 'Cannot be more than 50 characters';
   }
-  if (!values.client_contactEmail) {
-    errors.client_contactEmail = 'Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.client_contactEmail)) {
-    errors.client_contactEmail = 'Invalid email address';
-  } else if (values.client_contactEmail.length > 50) {
-    errors.client_contactEmail = 'Cannot be more than 50 characters';
+  if (!values.clientContact) {
+    errors.clientContact = 'Required';
+  } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.clientContact)) {
+    errors.clientContact = 'Invalid mobile number (e.g. 98765432)';
   }
-  if (!values.client_contactNumber) {
-    errors.client_contactNumber = 'Required';
-  } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.client_contactNumber)) {
-    errors.client_contactNumber = 'Invalid mobile number (e.g. 98765432)';
+  if (!values.patientName) {
+    errors.patientName = 'Required';
+  } else if (values.patientName.length > 50) {
+    errors.patientName = 'Cannot be more than 50 characters';
   }
-  if (!values.patient_firstName) {
-    errors.patient_firstName = 'Required';
-  } else if (values.patient_firstName.length > 50) {
-    errors.patient_firstName = 'Cannot be more than 50 characters';
+  if (!values.patientDob) {
+    errors.patientDob = 'Required';
+  } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.patientDob)) {
+    errors.patientDob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
+  } else if (moment().isSameOrBefore(values.patientDob, 'day')) {
+    errors.patientDob = 'Date must be earlier than today';
   }
-  if (!values.patient_lastName) {
-    errors.patient_lastName = 'Required';
-  } else if (values.patient_lastName.length > 50) {
-    errors.patient_lastName = 'Cannot be more than 50 characters';
+  if (!values.patientContact) {
+    errors.patientContact = 'Required';
+  } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.patientContact)) {
+    errors.patientContact = 'Invalid mobile number (e.g. 98765432)';
   }
-  if (!values.patient_dob) {
-    errors.patient_dob = 'Required';
-  } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.patient_dob)) {
-    errors.patient_dob = 'Invalid date of birth (e.g. YYYY-MM-DD)';
-  } else if (moment().isSameOrBefore(values.patient_dob, 'day')) {
-    errors.patient_dob = 'Date must be earlier than today';
-  }
-  if (!values.patient_gender) {
-    errors.patient_gender = 'Required';
+  if (!values.patientGender) {
+    errors.patientGender = 'Required';
   }
   return errors;
 };
@@ -205,14 +196,13 @@ BookingPatientForm.propTypes = {
 const reduxFormConfig = {
   form: 'bookingLocationForm',
   fields: [
-    'client_firstName',
-    'client_lastName',
-    'client_contactEmail',
-    'client_contactNumber',
-    'patient_firstName',
-    'patient_lastName',
-    'patient_dob',
-    'patient_gender',
+    'clientName',
+    'clientEmail',
+    'clientContact',
+    'patientName',
+    'patientDob',
+    'patientContact',
+    'patientGender',
     'additionalInfo',
     'postalCode',
     'unitNumber',
@@ -226,16 +216,13 @@ const mapStateToProps = (state) => {
   const { order } = state;
   return {
     initialValues: {
-      client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      client_firstName: order && order.booker && order.booker.client_firstName || undefined,
-      client_lastName: order && order.booker && order.booker.client_lastName || undefined,
-      patient_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      patient_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
-      patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
-      patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-      patient_gender: order && order.booker && order.booker.patient_gender || undefined,
+      clientName: order && order.booker && order.booker.clientName || undefined,
+      clientEmail: order && order.booker && order.booker.clientEmail || undefined,
+      clientContact: order && order.booker && order.booker.clientContact || undefined,
+      patientName: order && order.booker && order.booker.patientName || undefined,
+      patientDob: order && order.booker && order.booker.patientDob || undefined,
+      patientContact: order && order.booker && order.booker.patientContact || undefined,
+      patientGender: order && order.booker && order.booker.patientGender || undefined,
       additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
       isPatient: order && order.booker && order.booker.isPatient || undefined,
       postalCode: order && order.location && order.location.postalCode || undefined,

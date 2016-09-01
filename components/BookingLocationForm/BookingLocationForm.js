@@ -21,7 +21,7 @@ class BookingLocationForm extends Component {
 
   render() {
     const {
-      fields: { postalCode, unitNumber, address },
+      fields: { postalCode, unitNumber, address, lat, lng, region, neighborhood },
       invalid,
       handleSubmit,
       submitFailed,
@@ -95,7 +95,7 @@ BookingLocationForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'bookingLocationForm',
-  fields: ['postalCode', 'unitNumber', 'address'],
+  fields: ['postalCode', 'unitNumber', 'address', 'lat', 'lng', 'region', 'neighborhood'],
   validate,
 };
 
@@ -106,6 +106,10 @@ const mapStateToProps = (state) => {
       postalCode: order && order.location && order.location.postalCode || undefined,
       address: order && order.location && order.location.address || undefined,
       unitNumber: order && order.location && order.location.unitNumber || undefined,
+      lat: order && order.location && order.location.lat || undefined,
+      lng: order && order.location && order.location.lng || undefined,
+      region: order && order.location && order.location.region || undefined,
+      neighborhood: order && order.location && order.location.neighborhood || undefined,
     },
   };
 };

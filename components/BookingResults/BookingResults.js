@@ -5,7 +5,7 @@ import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import s from './BookingResults.css';
 import ConfirmPopup from '../ConfirmPopup';
-import { getSessions, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage,
+import { getAvailableSchedules, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage,
   createCaseWithOrder, showAlertPopup, showConfirmPopup } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
@@ -16,7 +16,7 @@ class BookingResults extends Component {
     super(props);
     const { order } = props;
     this.state = {
-      sessions: undefined,
+      schedules: undefined,
       slots: undefined,
       promoCode: order && order.promoCode && order.promoCode.code,
       showPromoButton: (order && order.promoCode && order.promoCode.code && order.promoCode.code.length),
@@ -26,15 +26,15 @@ class BookingResults extends Component {
   }
 
   componentDidMount() {
-    const { order } = this.props;
+    const { services, order } = this.props;
     // Reset sum displayed on sidebar
     this.props.setOrderSum(null);
 
-    this.props.getSessions({
-      service: order.service,
+    this.props.getAvailableSchedules({
+      serviceId: order.service,
+      classId: services[order.service].classes[order.serviceClass]._id,
       dates: order.dates.map(date => moment(date).format('YYYY-MM-DD')),
-      preferredPostalCode: order.location.postalCode,
-      preferredTimes: order.timeslots,   // hack to send PHP style arrays
+      preferredTimes: order.timeslots,
     }).then((res) => {
       if (res.response && res.response.status < 1) {
         // console.error('Failed to obtain timeslots data.');
@@ -43,12 +43,12 @@ class BookingResults extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.sessions !== nextProps.sessions) {
-      const sessions = [];
+    if (this.props.schedules !== nextProps.schedules) {
+      const schedules = [];
       const checkedData = [];
       let sum = 0;
-      for (let i = 0; i < nextProps.sessions.length; i++) {
-        const timeslot = nextProps.sessions[i];
+      for (let i = 0; i < nextProps.schedules.length; i++) {
+        const timeslot = nextProps.schedules[i];
         let session = {};
         for (let j = 0; j < timeslot.slots.length; j++) {
           if (timeslot.slots[j].selected && timeslot.slots[j].preferred) {
@@ -64,23 +64,23 @@ class BookingResults extends Component {
             }
           }
         }
-        sessions[i] = Object.assign(session, { date: timeslot.date });
+        schedules[i] = Object.assign(session, { date: timeslot.date });
         if (session.time) {
           checkedData[`session${i}`] = true;
-          sum += util.calcRate(sessions[i], this.props.order.promoCode, this.props.order.service);
+          sum += util.calcRate(schedules[i], this.props.order.promoCode, this.props.order.service);
         } else {
           session.disabled = true;
         }
       }
       this.setState(Object.assign({
-        sessions,
+        schedules,
       }, checkedData));
       this.props.setOrderSum(sum);
     }
     if (this.props.order.promoCode !== nextProps.order.promoCode) {
       this.updateSum(nextProps);
     }
-    if (this.props.order.sessions !== nextProps.order.sessions) {
+    if (this.props.order.schedules !== nextProps.order.schedules) {
       this.props.createCaseWithOrder(nextProps.order);
       const location = history.getCurrentLocation();
       history.push({ pathname: '/booking5', query: location && location.query });
@@ -145,15 +145,15 @@ class BookingResults extends Component {
 
   onConfirmed = () => {
     if (this.agreeForm.checkValidity()) {
-      const sessions = [];
-      for (let i = 0; i < this.state.sessions.length; i++) {
+      const schedules = [];
+      for (let i = 0; i < this.state.schedules.length; i++) {
         if (this.state[`session${i}`]) {
-          sessions.push(this.state.sessions[i]);
+          schedules.push(this.state.schedules[i]);
         }
       }
 
-      // console.log(sessions);
-      this.props.setOrderSessions(sessions);
+      // console.log(schedules);
+      this.props.setOrderSessions(schedules);
       // console.log(this.state);
       util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
 
@@ -168,14 +168,14 @@ class BookingResults extends Component {
   onNext = (event) => {
     const location = history.getCurrentLocation();
 
-    const sessions = [];
-    for (let i = 0; i < this.state.sessions.length; i++) {
+    const schedules = [];
+    for (let i = 0; i < this.state.schedules.length; i++) {
       if (this.state[`session${i}`]) {
-        sessions.push(this.state.sessions[i]);
+        schedules.push(this.state.schedules[i]);
       }
     }
 
-    if (sessions.length === 0) {
+    if (schedules.length === 0) {
       this.props.showAlertPopup('Please select at least one session.');
       event.preventDefault();
       return;
@@ -190,8 +190,8 @@ class BookingResults extends Component {
     } else {
       history.push({ pathname: '/booking4', query: location && location.query });
 
-      // console.log(sessions);
-      this.props.setOrderSessions(sessions);
+      // console.log(schedules);
+      this.props.setOrderSessions(schedules);
       // console.log(this.state);
       util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
     }
@@ -199,9 +199,9 @@ class BookingResults extends Component {
 
   updateSum(props) {
     let sum = 0;
-    for (let i = 0; i < this.state.sessions.length; i++) {
+    for (let i = 0; i < this.state.schedules.length; i++) {
       if (this.state[`session${i}`]) {
-        sum += util.calcRate(this.state.sessions[i], props.order.promoCode, props.order.service);
+        sum += util.calcRate(this.state.schedules[i], props.order.promoCode, props.order.service);
       }
     }
     props.setOrderSum(sum);
@@ -230,10 +230,10 @@ class BookingResults extends Component {
     }
     return (
       <div className={s.bookingResults}>
-        <Loader className="spinner" loaded={!this.props.sessionsFetching}>
+        <Loader className="spinner" loaded={!this.props.schedulesFetching}>
           <div>
           {
-            this.state.sessions && this.state.sessions.map((session, index) => {
+            this.state.schedules && this.state.schedules.map((session, index) => {
               let discountedRate,
                 priceText;
               const rate = session.price;
@@ -336,11 +336,12 @@ class BookingResults extends Component {
 BookingResults.propTypes = {
   lastPage: React.PropTypes.string,
   user: React.PropTypes.object,
+  services: React.PropTypes.object,
   order: React.PropTypes.object,
-  sessions: React.PropTypes.array,
-  sessionsFetching: React.PropTypes.bool,
+  schedules: React.PropTypes.array,
+  schedulesFetching: React.PropTypes.bool,
 
-  getSessions: React.PropTypes.func.isRequired,
+  getAvailableSchedules: React.PropTypes.func.isRequired,
   getPromo: React.PropTypes.func.isRequired,
   setOrderSum: React.PropTypes.func.isRequired,
   setOrderPromoCode: React.PropTypes.func.isRequired,
@@ -354,17 +355,18 @@ BookingResults.propTypes = {
 const mapStateToProps = (state) => ({
   lastPage: state.lastPage,
   user: state.user.data,
+  services: state.services.data,
   order: state.order,
-  sessions: state.sessions.data,
-  sessionsFetching: state.sessions.isFetching,
+  schedules: state.availableSchedules.data,
+  schedulesFetching: state.availableSchedules.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getSessions: (params) => dispatch(getSessions(params)),
+  getAvailableSchedules: (params) => dispatch(getAvailableSchedules(params)),
   getPromo: (params) => dispatch(getPromo(params)),
   setOrderSum: (sum) => dispatch(setOrderSum(sum)),
   setOrderPromoCode: (promoCode) => dispatch(setOrderPromoCode(promoCode)),
-  setOrderSessions: (sessions) => dispatch(setOrderSessions(sessions)),
+  setOrderSessions: (schedules) => dispatch(setOrderSessions(schedules)),
   setLastPage: (page) => dispatch(setLastPage(page)),
   createCaseWithOrder: (order) => dispatch(createCaseWithOrder(order)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),

@@ -17,6 +17,10 @@ class BookingLocation extends Component {
         postalCode: values.postalCode,
         address: values.address,
         unitNumber: values.unitNumber || undefined,
+        lat: values.lat,
+        lng: values.lng,
+        region: values.region,
+        neighborhood: values.neighborhood,
       };
       this.props.setOrderLocation(orderLocation);
       isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');

@@ -20,6 +20,10 @@ import FaLock from 'react-icons/lib/fa/lock';
 
 class ProfileEditEducationFormSub extends Component {
 
+  onNext = (values) => {
+    this.props.onNext(values);
+  };
+
   render() {
     const {
       fields: {
@@ -29,21 +33,22 @@ class ProfileEditEducationFormSub extends Component {
         country,
         gradDate,
       },
+      typeOfCertChoice,
+      countryChoice,
+      showDayPickerPopup,
+
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
-      showDayPickerPopup,
+      newForm,
     } = this.props;
 
-    const typeOfCertChoice = ['Bachelor', 'Master', 'PhD', 'Others'];
-    const countryChoice = ['Singapore', 'India', 'Malaysia', 'Indonesia', 'China'];
-
     return (
-      <div className={s.ProfileEditEducationFormSub}>
+      <form className={s.ProfileEditEducationFormSub} onSubmit={handleSubmit(this.onNext)}>
         <DayPickerPopup title="Year of Graduation" />
 
-        <Grid fluid className={s.educationFormTable}>
+        <Grid fluid className={cx(s.educationFormTable, !newForm && s.newForm)}>
           <Row className={s.mainCat}>
             <Col xs={12} sm={7} className={s.mainCatFields}>
               <div className={s.mainCatContainer}>
@@ -60,7 +65,7 @@ class ProfileEditEducationFormSub extends Component {
                   <select className={s.mainCatMulti} id={typeOfCert} name={typeOfCert} {...typeOfCert} value={typeOfCert.value || ''}>
                     <option value="">- Select -</option>
                     {typeOfCertChoice && typeOfCertChoice.map(item => (
-                      <option value={item}>{item}</option>
+                      <option key={typeOfCertChoice.indexOf(item)} value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -81,7 +86,7 @@ class ProfileEditEducationFormSub extends Component {
                   <select className={s.mainCatMulti} id={country} name={country} {...country} value={country.value || ''}>
                     <option value="">- Select -</option>
                     {countryChoice && countryChoice.map(item => (
-                      <option key={countryChoice.indexOf(item)} value={item}>{item}</option>
+                      <option key={countryChoice.indexOf(item)} value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -104,7 +109,7 @@ class ProfileEditEducationFormSub extends Component {
           </Row>
         </Grid>
 
-      </div>
+      </form>
     );
   }
 
@@ -112,11 +117,22 @@ class ProfileEditEducationFormSub extends Component {
 
 const validate = values => {
   const errors = {};
-  // if (!values.withdrawAmt) {
-  //   errors.withdrawAmt = 'Required';
-  // } else if (!/\d+/i.test(values.withdrawAmt)) {
-  //   errors.withdrawAmt = 'Invalid withdraw amount';
-  // }
+  if (!values.institute) {
+    errors.institute = 'Required';
+  }
+  if (!values.typeOfCert) {
+    errors.typeOfCert = 'Required';
+  }
+  if (!values.course) {
+    errors.course = 'Required';
+  }
+  if (!values.country) {
+    errors.country = 'Required';
+  }
+  if (!values.gradDate) {
+    errors.gradDate = 'Required';
+  }
+  return errors
 }
 
 ProfileEditEducationFormSub.propTypes = {
@@ -131,6 +147,8 @@ ProfileEditEducationFormSub.propTypes = {
 const reduxFormConfig = {
   form: 'ProfileEditEducationFormSub',
   fields: [
+    '_id',
+    '_educationId',
     'institute',
     'typeOfCert',
     'course',
@@ -140,9 +158,11 @@ const reduxFormConfig = {
   validate,
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state) => ({
   // const user = state.user.data;
-};
+  typeOfCertChoice: state.config.data && state.config.data.qualifications,
+  countryChoice: state.config.data && state.config.data.countries,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),

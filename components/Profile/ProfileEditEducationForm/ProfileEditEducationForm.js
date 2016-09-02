@@ -10,6 +10,7 @@ import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { editUser, editUserEducation } from '../../../actions';
 // sub component
 import ProfileEditEducationFormSub from '../ProfileEditEducationFormSub/ProfileEditEducationFormSub';
 // react-icons
@@ -24,27 +25,26 @@ class ProfileEditEducationForm extends Component {
     this.state = {}
   }
 
-  // componentWillMount() {
-  //   this.updateNewForms(this.state.newFormsNum);
-  // }
-  //
-  // updateNewForms() {
-  //   const {}
-  //   return
-  // }
-  onAddForm = () => {};
+  onNext = (values) => {
+    console.log('form values', values);
+    return new Promise((resolve, reject) => {
+      this.props.editUserEducation({
+        _id: values.userId,
+        _educationId: values.educationId,
+        country: values.country,
+        course: values.course,
+        gradDate: moment(values.gradDate, 'MM/YYYY').format(),
+        institute: values.institute,
+        isVerified: false,
+        typeOfCert: values.typeOfCert,
+      }).then((res) => {
+        console.log('response', res);
+      })
+    })
+  };
 
-
-  // {educations && educations.map(item => {
-  //   <ProfileEditEducationFormSub />
-  // })}
   render() {
-    const {
-      educations
-      // handleSubmit,
-      // submitFailed,
-      // submitting,
-    } = this.props;
+    const { educations, userId } = this.props;
 
     return (
       <div className={s.ProfileEditEducationForm}>
@@ -52,7 +52,10 @@ class ProfileEditEducationForm extends Component {
         {educations && educations.map(item => (
           <ProfileEditEducationFormSub
             key={item._id}
+            onNext={this.onNext}
             initialValues={{
+              _id: userId,
+              _educationId: item._id,
               institute: item.institute,
               typeOfCert: item.typeOfCert,
               course: item.course,
@@ -62,7 +65,7 @@ class ProfileEditEducationForm extends Component {
           />
         ))}
 
-        <ProfileEditEducationFormSub />
+        <ProfileEditEducationFormSub newForm={true}/>
 
         <button className={cx("btn", "btn-primary", s.addForm)} onClick={this.onAddForm}>
           Add New Education Details
@@ -77,18 +80,20 @@ class ProfileEditEducationForm extends Component {
 
 ProfileEditEducationForm.propTypes = {
   user: PropTypes.object,
-  // handleSubmit: PropTypes.func.isRequired,
-  // invalid: PropTypes.bool.isRequired,
-  // submitFailed: PropTypes.bool.isRequired,
-  // submitting: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
   const user = state.user.data;
 
   return {
+    userId: user && user._id,
     educations: user && user.educations,
   }
 };
 
-export default connect(mapStateToProps)(ProfileEditEducationForm);
+const mapDispatchToProps = (dispatch) => ({
+  editUser: (params) => dispatch(editUser(params)),
+  editUserEducation: (params) => dispatch(editUserEducation(params)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileEditEducationForm);

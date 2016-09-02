@@ -26,7 +26,7 @@ class ProfileEditBasicForm extends Component {
         _id: values._id,
         name: values.name,
         gender: values.gender,
-        dob: moment.format(values.dob),
+        dob: moment(values.dob).format(),
         idNum: values.idNum,
         idType: values.idType,
         occupation: values.occupation,

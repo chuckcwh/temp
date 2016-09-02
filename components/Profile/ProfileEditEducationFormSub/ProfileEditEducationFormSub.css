@@ -62,4 +62,8 @@
     }
   }
 
+  & .newForm {
+    background: rgba(253, 188, 29, 0.15);
+    border-color: transparent;
+  }
 }

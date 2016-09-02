@@ -18,6 +18,7 @@ const user = (state = {
     case ActionTypes.USER_TOKEN_REQUEST:
     case ActionTypes.USER_CREATE_REQUEST:
     case ActionTypes.USER_EDIT_REQUEST:
+    case ActionTypes.USER_EDUCATION_EDIT_REQUEST:
     case ActionTypes.LOGIN_REQUEST:
     case ActionTypes.LOGIN_CLIENT_REQUEST:
       return Object.assign({}, state, {
@@ -44,6 +45,13 @@ const user = (state = {
         didInvalidate: false,
         data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
+      })
+    case ActionTypes.USER_EDUCATION_EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        data: action.response && action.response.data,
+        lastUpdated: action.response && action.response.receiveAt
       })
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
       return Object.assign({}, state, {

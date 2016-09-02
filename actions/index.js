@@ -59,6 +59,10 @@ export const USER_EDIT_REQUEST = 'USER_EDIT_REQUEST'
 export const USER_EDIT_SUCCESS = 'USER_EDIT_SUCCESS'
 export const USER_EDIT_FAILURE = 'USER_EDIT_FAILURE'
 
+export const USER_EDUCATION_EDIT_REQUEST = 'USER_EDIT_REQUEST'
+export const USER_EDUCATION_EDIT_SUCCESS = 'USER_EDIT_SUCCESS'
+export const USER_EDUCATION_EDIT_FAILURE = 'USER_EDIT_FAILURE'
+
 export const FORGOT_PASSWORD_EMAIL_REQUEST = 'FORGOT_PASSWORD_EMAIL_REQUEST'
 export const FORGOT_PASSWORD_EMAIL_SUCCESS = 'FORGOT_PASSWORD_EMAIL_SUCCESS'
 export const FORGOT_PASSWORD_EMAIL_FAILURE = 'FORGOT_PASSWORD_EMAIL_FAILURE'
@@ -252,6 +256,11 @@ function fetchAction(route) {
     editUser: {
       types: [ USER_EDIT_REQUEST, USER_EDIT_SUCCESS, USER_EDIT_FAILURE ],
       endpoint: '/users/:_id',
+      method: 'put'
+    },
+    editUserEducation: {
+      types: [ USER_EDUCATION_EDIT_REQUEST, USER_EDUCATION_EDIT_SUCCESS, USER_EDUCATION_EDIT_FAILURE ],
+      endpoint: '/users/:_id/education/:_educationId',
       method: 'put'
     },
     editClient: {
@@ -530,6 +539,10 @@ export function getUser(params) {
 
 export function editUser(params) {
   return fetch('editUser', params);
+}
+
+export function editUserEducation(params) {
+  return fetch('editUserEducation', params);
 }
 
 export function getUserWithToken(params) {

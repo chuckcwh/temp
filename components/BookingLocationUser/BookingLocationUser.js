@@ -8,8 +8,8 @@ import Container from '../Container';
 import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
-import { fetchLanguages, fetchAddress, getPatients, createPatient, getPatient, getUser,
-  editPatient, editClient, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
+import { USER_EDIT_SUCCESS, PATIENTS_SUCCESS, PATIENT_CREATE_SUCCESS, PATIENT_EDIT_SUCCESS, fetchAddress, getPatients, createPatient, getPatient, getUser,
+  editPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
   setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import history from '../../core/history';
 import { isNextLastPage } from '../../core/util';
@@ -24,7 +24,7 @@ class BookingLocationUser extends Component {
       editing: false,
       savingPatient: false,
 
-      patientId: props.order && props.order.patient && props.order.patient.id,
+      patientId: props.order && props.order.patient,
       additionalInfo: props.order && props.order.booker && props.order.booker.additionalInfo,
     };
   }
@@ -34,10 +34,10 @@ class BookingLocationUser extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.order && newProps.order.patient && newProps.order.patient.id && this.props.order
-      && this.props.order.patient && this.props.order.patient.id
-      && newProps.order.patient.id !== this.props.order.patient.id) {
-      this.setState({ patientId: newProps.order.patient.id });
+    if (newProps.order && newProps.order.patient && this.props.order
+      && this.props.order.patient && this.props.order.patient
+      && newProps.order.patient !== this.props.order.patient) {
+      this.setState({ patientId: newProps.order.patient });
     }
   }
 
@@ -50,17 +50,16 @@ class BookingLocationUser extends Component {
         this.props.showInlineForm({
           name: 'userName',
           inputs: {
-            fullName: {
+            name: {
               label: 'Name',
               type: 'text',
-              initialValue: this.props.user && this.props.user.clients
-                && this.props.user.clients[0] && this.props.user.clients[0].fullName,
+              initialValue: this.props.user && this.props.user.name,
             },
           },
           validate: (values) => {
             const errors = {};
-            if (!values.fullName) {
-              errors.fullName = 'Required';
+            if (!values.name) {
+              errors.name = 'Required';
             }
             return errors;
           },
@@ -98,7 +97,7 @@ class BookingLocationUser extends Component {
             mobilePhone: {
               label: 'Mobile Number',
               type: 'text',
-              initialValue: this.props.user.mobilePhone,
+              initialValue: this.props.user && this.props.user.contact,
             },
           },
           validate: (values) => {
@@ -118,18 +117,18 @@ class BookingLocationUser extends Component {
         this.props.showInlineForm({
           name: 'patientName',
           inputs: {
-            fullName: {
-              label: 'Full Name',
+            name: {
+              label: 'Name',
               type: 'text',
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].fullName,
+                && this.props.patients[this.state.patientId].name,
             },
           },
           validate: (values) => {
             const errors = {};
-            if (!values.fullName) {
-              errors.fullName = 'Required';
+            if (!values.name) {
+              errors.name = 'Required';
             }
             return errors;
           },
@@ -138,31 +137,27 @@ class BookingLocationUser extends Component {
         });
         break;
       case 'patientLanguages':
-        this.props.fetchLanguages().then(() => {
-          if (this.props.languages) {
-            this.props.showInlineForm({
-              name: 'patientLanguages',
-              inputs: {
-                languages: {
-                  label: 'Languages',
-                  type: 'multiselect',
-                  options: Object.values(this.props.languages).map((l) => ({ label: l.name, value: l.id })),
-                  initialValue: this.props.patients && this.state.patientId
-                    && this.props.patients[this.state.patientId]
-                    && this.props.patients[this.state.patientId].languages.map(l => l.id).join(','),
-                },
-              },
-              validate: (values) => {
-                const errors = {};
-                if (!values.languages) {
-                  errors.languages = 'Required';
-                }
-                return errors;
-              },
-              ok: this.onClickSave('patientLanguages'),
-              cancel: () => { this.setState({ editing: false }); },
-            });
-          }
+        this.props.showInlineForm({
+          name: 'patientLanguages',
+          inputs: {
+            languages: {
+              label: 'Languages',
+              type: 'multiselect',
+              options: config.languages.map((l) => ({ label: l.name, value: l.value })),
+              initialValue: this.props.patients && this.state.patientId
+                && this.props.patients[this.state.patientId]
+                && this.props.patients[this.state.patientId].languages.map(l => l.value).join(','),
+            },
+          },
+          validate: (values) => {
+            const errors = {};
+            if (!values.languages) {
+              errors.languages = 'Required';
+            }
+            return errors;
+          },
+          ok: this.onClickSave('patientLanguages'),
+          cancel: () => { this.setState({ editing: false }); },
         });
         break;
       case 'patientGender':
@@ -172,7 +167,7 @@ class BookingLocationUser extends Component {
             gender: {
               label: 'Gender',
               type: 'select',
-              options: [{ label: 'Male', value: 'Male' }, { label: 'Female', value: 'Female' }],
+              options: config.genders.map((l) => ({ label: l.name, value: l.value })),
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
                 && this.props.patients[this.state.patientId].gender,
@@ -221,13 +216,7 @@ class BookingLocationUser extends Component {
             race: {
               label: 'Race',
               type: 'select',
-              options: [
-                { label: 'Chinese', value: 'Chinese' },
-                { label: 'Malay', value: 'Malay' },
-                { label: 'Indian', value: 'Indian' },
-                { label: 'Eurasian', value: 'Eurasian' },
-                { label: 'Others', value: 'Others' },
-              ],
+              options: config.races.map((l) => ({ label: l.name, value: l.value })),
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
                 && this.props.patients[this.state.patientId].race,
@@ -251,16 +240,7 @@ class BookingLocationUser extends Component {
             religion: {
               label: 'Religion',
               type: 'select',
-              options: [
-                { label: 'Buddhist', value: 'Buddhist' },
-                { label: 'Christian', value: 'Christian' },
-                { label: 'Free Thinker', value: 'Free Thinker' },
-                { label: 'Hinduism', value: 'Hinduism' },
-                { label: 'Islam', value: 'Islam' },
-                { label: 'Taoist', value: 'Taoist' },
-                { label: 'Catholic', value: 'Catholic' },
-                { label: 'Others', value: 'Others' },
-              ],
+              options: config.religions.map((l) => ({ label: l.name, value: l.value })),
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
                 && this.props.patients[this.state.patientId].religion,
@@ -281,40 +261,37 @@ class BookingLocationUser extends Component {
         this.props.showInlineForm({
           name: 'patientLocation',
           inputs: {
-            postalCode: {
+            postal: {
               label: 'Postal Code',
               type: 'text',
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].addresses
-                && this.props.patients[this.state.patientId].addresses[0]
-                && this.props.patients[this.state.patientId].addresses[0].postalCode,
+                && this.props.patients[this.state.patientId].address
+                && this.props.patients[this.state.patientId].address.postal,
             },
             address: {
               label: 'Address',
               type: 'text',
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].addresses
-                && this.props.patients[this.state.patientId].addresses[0]
-                && this.props.patients[this.state.patientId].addresses[0].address,
+                && this.props.patients[this.state.patientId].address
+                && this.props.patients[this.state.patientId].address.description,
             },
-            unitNumber: {
+            unit: {
               label: 'Unit Number',
               type: 'text',
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].addresses
-                && this.props.patients[this.state.patientId].addresses[0]
-                && this.props.patients[this.state.patientId].addresses[0].unitNumber,
+                && this.props.patients[this.state.patientId].address
+                && this.props.patients[this.state.patientId].address.unit,
             },
           },
           validate: (values) => {
             const errors = {};
-            if (!values.postalCode) {
-              errors.postalCode = 'Required';
-            } else if (!/^[0-9]{6}$/i.test(values.postalCode)) {
-              errors.postalCode = 'Invalid postal code (e.g. 123456)';
+            if (!values.postal) {
+              errors.postal = 'Required';
+            } else if (!/^[0-9]{6}$/i.test(values.postal)) {
+              errors.postal = 'Invalid postal code (e.g. 123456)';
             }
             if (!values.address) {
               errors.address = 'Required';
@@ -334,12 +311,14 @@ class BookingLocationUser extends Component {
     new Promise((resolve, reject) => {
       switch (entity) {
         case 'userName':
-          this.props.editClient({
-            cid: this.props.client.id,
-            fullName: values.fullName,
+          this.props.editUser({
+            _id: this.props.user._id,
+            name: values.name,
           }).then((res) => {
-            if (res && res.response && res.response.status === 1) {
-              this.props.getUser().then(() => {
+            if (res && res.type === USER_EDIT_SUCCESS) {
+              this.props.getUser({
+                userId: this.props.user && this.props.user._id,
+              }).then(() => {
                 resolve();
                 this.setState({ editing: false });
               });
@@ -351,11 +330,14 @@ class BookingLocationUser extends Component {
           });
           break;
         case 'userEmail':
-          this.props.editEmail({
+          this.props.editUser({
+            _id: this.props.user._id,
             email: values.email,
           }).then((res) => {
-            if (res && res.response && res.response.status === 1) {
-              this.props.getUser().then(() => {
+            if (res && res.type === USER_EDIT_SUCCESS) {
+              this.props.getUser({
+                userId: this.props.user && this.props.user._id,
+              }).then(() => {
                 resolve();
                 this.setState({ editing: false });
               });
@@ -367,11 +349,17 @@ class BookingLocationUser extends Component {
           });
           break;
         case 'userMobile':
-          this.props.editMobile({
-            mobilephone: values.mobilePhone,
+          this.props.editUser({
+            _id: this.props.user._id,
+            contact: values.contact,
           }).then((res) => {
-            if (res && res.response && res.response.status === 1) {
-              // do something here
+            if (res && res.type === USER_EDIT_SUCCESS) {
+              this.props.getUser({
+                userId: this.props.user && this.props.user._id,
+              }).then(() => {
+                resolve();
+                this.setState({ editing: false });
+              });
             } else {
               reject({ _error: res.response.message });
             }
@@ -385,10 +373,13 @@ class BookingLocationUser extends Component {
         case 'patientRace':
         case 'patientReligion':
           this.props.editPatient(Object.assign({
-            pid: this.state.patientId,
+            patientId: this.state.patientId,
           }, values)).then((res) => {
-            if (res && res.response && res.response.status === 1) {
-              this.props.getPatient({ pid: this.state.patientId }).then(() => {
+            if (res && res.type === PATIENT_EDIT_SUCCESS) {
+              this.props.getPatient({
+                userId: this.props.user && this.props.user._id,
+                patientId: this.state.patientId,
+              }).then(() => {
                 resolve();
                 this.setState({ editing: false });
               });
@@ -399,11 +390,14 @@ class BookingLocationUser extends Component {
           break;
         case 'patientLanguages':
           this.props.editPatient({
-            pid: this.state.patientId,
+            patientId: this.state.patientId,
             languages: values.languages.split(','),
           }).then((res) => {
-            if (res && res.response && res.response.status === 1) {
-              this.props.getPatient({ pid: this.state.patientId }).then(() => {
+            if (res && res.type === PATIENT_EDIT_SUCCESS) {
+              this.props.getPatient({
+                userId: this.props.user && this.props.user._id,
+                patientId: this.state.patientId,
+              }).then(() => {
                 resolve();
                 this.setState({ editing: false });
               });
@@ -414,17 +408,17 @@ class BookingLocationUser extends Component {
           break;
         case 'patientLocation':
           this.props.editPatient({
-            pid: this.state.patientId,
-            addresses: [Object.assign({
-              id: this.props.patients && this.state.patientId
-                && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].addresses
-                && this.props.patients[this.state.patientId].addresses[0]
-                && this.props.patients[this.state.patientId].addresses[0].id,
-            }, values)],
+            patientId: this.state.patientId,
+            address: [Object.assign(this.props.patients &&
+              this.props.patients[this.state.patientId] &&
+              this.props.patients[this.state.patientId].address
+            , values)],
           }).then((res) => {
-            if (res && res.response && res.response.status === 1) {
-              this.props.getPatient({ pid: this.state.patientId }).then(() => {
+            if (res && res.type === PATIENT_EDIT_SUCCESS) {
+              this.props.getPatient({
+                userId: this.props.user && this.props.user._id,
+                patientId: this.state.patientId,
+              }).then(() => {
                 resolve();
                 this.setState({ editing: false });
               });
@@ -456,28 +450,38 @@ class BookingLocationUser extends Component {
     new Promise((resolve) => {
       this.setState({ savingPatient: true });
       this.props.createPatient({
-        fullName: values.fullName,
+        userId: this.props.user && this.props.user._id,
+        name: values.name,
+        nric: values.nric,
+        contact: values.contact,
         gender: values.gender,
         dob: values.dob,
-        addresses: [{
-          address: values.address,
-          postalCode: values.postalCode,
-          unitNumber: values.unitNumber,
-        }],
+        address: {
+          lat: values.lat,
+          lng: values.lng,
+          description: values.description,
+          postal: values.postal,
+          unit: values.unit || undefined,
+          region: values.region,
+          neighborhood: values.neighborhood,
+        },
+        loc: {
+          coordinates: [values.lng, values.lat],
+        },
       }).then((res) => {
-        if (res.response && res.response.patient) {
-          const patientId = res.response.patient.id;
+        if (res && res.type === PATIENT_CREATE_SUCCESS) {
+          const patientId = res.response.data._id;
           this.getPatients(this.props.user, () => {
             if (this.props.patients[patientId]) {
               this.setState({
                 patientId,
                 savingPatient: false,
-                fullName: undefined,
+                name: undefined,
                 gender: undefined,
                 dob: undefined,
                 address: undefined,
-                postalCode: undefined,
-                unitNumber: undefined,
+                postal: undefined,
+                unit: undefined,
               });
             }
           });
@@ -498,14 +502,19 @@ class BookingLocationUser extends Component {
         additionalInfo: this.state.additionalInfo,
       };
       // console.log(booker);
+      const { postal, description, unit, lat, lng, region, neighborhood } = this.props.patients[this.state.patientId].address;
       const orderLocation = {
-        postalCode: this.props.patients[this.state.patientId].addresses[0].postalCode,
-        address: this.props.patients[this.state.patientId].addresses[0].address,
-        unitNumber: this.props.patients[this.state.patientId].addresses[0].unitNumber,
+        postal,
+        description,
+        unit,
+        lat,
+        lng,
+        region,
+        neighborhood,
       };
       this.props.setOrderBooker(booker);
       this.props.setOrderLocation(orderLocation);
-      this.props.setOrderPatient(this.props.patients[this.state.patientId]);
+      this.props.setOrderPatient(this.state.patientId);
       isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
 
       history.push({ pathname: '/booking3a', query: location.query });
@@ -519,9 +528,9 @@ class BookingLocationUser extends Component {
   getPatients = (user, cb) => {
     cb = cb || (() => {});
     this.props.getPatients({
-      cid: user.clients[0].id,
+      userId: user && user._id,
     }).then((res) => {
-      if (res.response && res.response.status === 1) {
+      if (res && res.type === PATIENTS_SUCCESS) {
         cb();
         return;
       }
@@ -530,6 +539,7 @@ class BookingLocationUser extends Component {
   };
 
   render() {
+    const { config, user } = this.props;
     let component,
       userDetails,
       patientDetails;
@@ -542,20 +552,19 @@ class BookingLocationUser extends Component {
           <div className="TableRow">
             <div className="TableRowItem1">Name</div>
             <div className="TableRowItem3">
-              {this.props.user && this.props.user.clients && this.props.user.clients[0]
-                && this.props.user.clients[0].fullName}
+              {user && user.name}
               &nbsp;<a href="#" onClick={this.onClickEdit('userName')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{this.props.user.email}
+            <div className="TableRowItem3">{user.email}
               &nbsp;<a href="#" onClick={this.onClickEdit('userEmail')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Mobile Number</div>
-            <div className="TableRowItem3">{this.props.user.mobilePhone}</div>
+            <div className="TableRowItem3">{user.contact}</div>
           </div>
         </div>
       );
@@ -576,13 +585,16 @@ class BookingLocationUser extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">Full Name</div>
-            <div className="TableRowItem3">{this.props.patients[this.state.patientId].fullName}
+            <div className="TableRowItem3">{this.props.patients[this.state.patientId].name}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientName')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Gender</div>
-            <div className="TableRowItem3">{this.props.patients[this.state.patientId].gender}
+            <div className="TableRowItem3">
+              {this.props.patients[this.state.patientId].gender &&
+                config.gendersByValues[this.props.patients[this.state.patientId].gender] &&
+                config.gendersByValues[this.props.patients[this.state.patientId].gender].name}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientGender')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
@@ -600,11 +612,10 @@ class BookingLocationUser extends Component {
             <div className="TableRowItem1">Language{this.props.patients[this.state.patientId].languages.length > 1 ? 's' : ''}</div>
             <div className="TableRowItem3">{
               this.props.patients[this.state.patientId].languages.map((language, index) => (
-                (index > 0) ? (
-                  <span key={language.id}>, {language.name}</span>
-                ) : (
-                  <span key={language.id}>{language.name}</span>
-                )
+                <span key={language}>
+                  {index > 0 ? ', ' : ''}
+                  {config.languagesByValue[language] && config.languagesByValue[language].name}
+                </span>
               ))
             }
               &nbsp;<a href="#" onClick={this.onClickEdit('patientLanguages')}><img src={imgPencil} alt="Edit" /></a>
@@ -612,13 +623,19 @@ class BookingLocationUser extends Component {
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Race</div>
-            <div className="TableRowItem3">{this.props.patients[this.state.patientId].race}
+            <div className="TableRowItem3">
+              {this.props.patients[this.state.patientId].race &&
+                config.racesByValues[this.props.patients[this.state.patientId].race] &&
+                config.racesByValues[this.props.patients[this.state.patientId].race].name}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientRace')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Religion</div>
-            <div className="TableRowItem3">{this.props.patients[this.state.patientId].religion}
+            <div className="TableRowItem3">
+              {this.props.patients[this.state.patientId].religion &&
+                config.religionsByValues[this.props.patients[this.state.patientId].religion] &&
+                config.religionsByValues[this.props.patients[this.state.patientId].religion].name}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientReligion')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
@@ -626,9 +643,8 @@ class BookingLocationUser extends Component {
             <div className="TableRowItem1">Address</div>
             <div className="TableRowItem3">
               {this.props.patients && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].addresses
-                && this.props.patients[this.state.patientId].addresses[0]
-                && this.props.patients[this.state.patientId].addresses[0].address}
+                && this.props.patients[this.state.patientId].address
+                && this.props.patients[this.state.patientId].address.description}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientLocation')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
@@ -636,18 +652,16 @@ class BookingLocationUser extends Component {
             <div className="TableRowItem1">Unit Number</div>
             <div className="TableRowItem3">
               {this.props.patients && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].addresses
-                && this.props.patients[this.state.patientId].addresses[0]
-                && this.props.patients[this.state.patientId].addresses[0].unitNumber}
+                && this.props.patients[this.state.patientId].address
+                && this.props.patients[this.state.patientId].address.unit}
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Postal Code</div>
             <div className="TableRowItem3">
               {this.props.patients && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].addresses
-                && this.props.patients[this.state.patientId].addresses[0]
-                && this.props.patients[this.state.patientId].addresses[0].postalCode}
+                && this.props.patients[this.state.patientId].address
+                && this.props.patients[this.state.patientId].address.postal}
             </div>
           </div>
         </div>
@@ -660,7 +674,7 @@ class BookingLocationUser extends Component {
             showDayPickerPopup={this.props.showDayPickerPopup}
             showAlertPopup={this.props.showAlertPopup}
             fetchAddress={this.props.fetchAddress}
-            user={this.props.user}
+            user={user}
             onFilled={this.onClickSavePatient}
           />
           <DayPickerPopup title="Date of Birth" onDayClick={this.onSelectNewDob} />
@@ -689,7 +703,7 @@ class BookingLocationUser extends Component {
                 <option>Select Patient</option>
                 {
                   this.props.patientIds && this.props.patientIds.map((index) => (
-                    <option key={this.props.patients[index].id} value={index}>{this.props.patients[index].fullName}</option>
+                    <option key={this.props.patients[index].id} value={index}>{this.props.patients[index].name}</option>
                   ))
                 }
               </select>
@@ -737,25 +751,23 @@ class BookingLocationUser extends Component {
 BookingLocationUser.propTypes = {
   children: React.PropTypes.node,
 
-  languages: React.PropTypes.array,
+  config: React.PropTypes.object,
   lastPage: React.PropTypes.string,
   order: React.PropTypes.object,
   user: React.PropTypes.object,
-  client: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
   patientIds: React.PropTypes.array,
   inlineForm: React.PropTypes.object,
   form: React.PropTypes.object,
 
-  fetchLanguages: React.PropTypes.func.isRequired,
   fetchAddress: React.PropTypes.func.isRequired,
   getPatients: React.PropTypes.func.isRequired,
   createPatient: React.PropTypes.func.isRequired,
   getPatient: React.PropTypes.func.isRequired,
   getUser: React.PropTypes.func.isRequired,
   editPatient: React.PropTypes.func.isRequired,
-  editClient: React.PropTypes.func.isRequired,
+  editUser: React.PropTypes.func.isRequired,
   editEmail: React.PropTypes.func.isRequired,
   editMobile: React.PropTypes.func.isRequired,
   verifyMobile: React.PropTypes.func.isRequired,
@@ -769,36 +781,31 @@ BookingLocationUser.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  languages: state.languages.data,
+  config: state.config.data,
   lastPage: state.lastPage,
   order: state.order,
   user: state.user.data,
-  client: state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  patients: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].data,
-  patientsFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].isFetching,
-  patientIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].ids,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
+  patientsFetching: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].isFetching,
+  patientIds: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].ids,
   inlineForm: state.inlineForm,
   form: state.form,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchLanguages: () => dispatch(fetchLanguages()),
-  fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
+  fetchAddress: (postal) => dispatch(fetchAddress(postal)),
   getPatients: (params) => dispatch(getPatients(params)),
   createPatient: (patient) => dispatch(createPatient(patient)),
   getPatient: (params) => dispatch(getPatient(params)),
-  getUser: () => dispatch(getUser()),
+  getUser: (params) => dispatch(getUser(params)),
   editPatient: (params) => dispatch(editPatient(params)),
-  editClient: (params) => dispatch(editClient(params)),
+  editUser: (params) => dispatch(editUser(params)),
   editEmail: (params) => dispatch(editEmail(params)),
   editMobile: (params) => dispatch(editMobile(params)),
   verifyMobile: (params) => dispatch(verifyMobile(params)),

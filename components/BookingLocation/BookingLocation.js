@@ -14,9 +14,9 @@ class BookingLocation extends Component {
     new Promise((resolve) => {
       const location = history.getCurrentLocation();
       const orderLocation = {
-        postalCode: values.postalCode,
-        address: values.address,
-        unitNumber: values.unitNumber || undefined,
+        postal: values.postal,
+        description: values.description,
+        unit: values.unit || undefined,
         lat: values.lat,
         lng: values.lng,
         region: values.region,

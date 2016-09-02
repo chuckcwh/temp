@@ -117,7 +117,7 @@ class BookingComplete extends Component {
         }
         identity = (
           <div>
-            <b>BOOKING ID : {booking._id}</b>
+            <b>BOOKING ID : {booking.bookingId}</b>
             {bookingLink}
             {activateText}
           </div>
@@ -125,7 +125,7 @@ class BookingComplete extends Component {
       } else {
         identity = (
           <div>
-            <b>BOOKING ID : {booking._id}</b>
+            <b>BOOKING ID : {booking.bookingId}</b>
             <div>
               <Link to={`/bookings/${booking._id}`}>View Booking</Link>
             </div>
@@ -156,7 +156,7 @@ class BookingComplete extends Component {
           </div>
           <div>
             For inquiries on your order, please email
-            <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a>
+            &nbsp;<a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a>&nbsp;
             or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
           </div>
           {footer}

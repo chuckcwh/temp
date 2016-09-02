@@ -6,7 +6,7 @@ import Link from '../Link';
 import history from '../../core/history';
 
 const BookingSidebar = (props) => {
-  const { config, services, order } = props;
+  const { config, services, patients, order } = props;
   const location = history.getCurrentLocation();
   let service,
     patientName,
@@ -19,11 +19,11 @@ const BookingSidebar = (props) => {
     service = `${services[order.service].name} ` +
       `(${parseFloat(services[order.service].classes[order.serviceClass].duration)} hr${parseFloat(services[order.service].classes[order.serviceClass].duration) > 1 ? 's' : ''})`;
   }
-  if (order && order.patient && order.patient.fullName) {
-    patientName = order.patient.fullName;
+  if (order && order.patient && patients && patients[order.patient] && patients[order.patient].name) {
+    patientName = patients[order.patient].name;
   }
-  if (order && order.location && order.location.postalCode) {
-    loc = (<span>{order.location.address}<br />{order.location.unitNumber}</span>);
+  if (order && order.location && order.location.description && order.location.unit) {
+    loc = (<span>{order.location.description}<br />{order.location.unit}</span>);
   }
   if (order && order.dates) {
     dates = order.dates;
@@ -117,12 +117,16 @@ const BookingSidebar = (props) => {
 BookingSidebar.propTypes = {
   config: React.PropTypes.object.isRequired,
   services: React.PropTypes.object.isRequired,
+  patients: React.PropTypes.object.isRequired,
   order: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   config: state.config.data,
   services: state.services.data,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
   order: state.order,
 });
 

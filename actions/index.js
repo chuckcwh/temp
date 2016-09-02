@@ -231,9 +231,8 @@ function fetchAction(route) {
     },
     getUser: {
       types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
-      endpoint: '/users/:id',
+      endpoint: '/users/:userId',
       method: 'get',
-      auth: 'user',
       entity: 'user'
     },
     getUserWithToken: {
@@ -277,22 +276,19 @@ function fetchAction(route) {
     },
     getPatient: {
       types: [ PATIENT_REQUEST, PATIENT_SUCCESS, PATIENT_FAILURE ],
-      endpoint: '/getPatient',
+      endpoint: '/users/:userId/patients/:patientId',
       method: 'get',
-      auth: 'user',
       entity: 'patient'
     },
     createPatient: {
       types: [ PATIENT_CREATE_REQUEST, PATIENT_CREATE_SUCCESS, PATIENT_CREATE_FAILURE ],
-      endpoint: '/createPatient',
+      endpoint: '/users/:userId/patients',
       method: 'post',
-      auth: 'user'
     },
     editPatient: {
       types: [ PATIENT_EDIT_REQUEST, PATIENT_EDIT_SUCCESS, PATIENT_EDIT_FAILURE ],
-      endpoint: '/editPatient',
-      method: 'post',
-      auth: 'user'
+      endpoint: '/users/:userId/patients/:patientId',
+      method: 'put',
     },
     editEmail: {
       types: [ EMAIL_EDIT_REQUEST, EMAIL_EDIT_SUCCESS, EMAIL_EDIT_FAILURE ],
@@ -437,7 +433,7 @@ export function createBooking(params) {
   return fetch('createBooking', params);
 }
 
-export function createBookingWithOptions({ services, order, user, location }) {
+export function createBookingWithOptions({ services, order, user }) {
   let data;
   if (user) {
     data = {
@@ -445,9 +441,9 @@ export function createBookingWithOptions({ services, order, user, location }) {
         serviceId: order && order.service,
         classId: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
         address: {
-          description: order && order.location && order.location.address,
-          unit: order && order.location && order.location.unitNumber,
-          postal: order && order.location && order.location.postalCode,
+          description: order && order.location && order.location.description,
+          unit: order && order.location && order.location.unit,
+          postal: order && order.location && order.location.postal,
           lat: order && order.location && order.location.lat,
           lng: order && order.location && order.location.lng,
           region: order && order.location && order.location.region,
@@ -456,7 +452,7 @@ export function createBookingWithOptions({ services, order, user, location }) {
         loc: {
           coordinates: [order && order.location && order.location.lng, order && order.location && order.location.lat]
         },
-        patient: order && order.patient && order.patient.id,
+        patient: order && order.patient,
         date: moment(session.date).format('YYYY-MM-DD'),
         timeSlot: session.time,
         additionalInfo: order && order.booker && order.booker.additionalInfo,
@@ -471,9 +467,9 @@ export function createBookingWithOptions({ services, order, user, location }) {
         serviceId: order && order.service,
         classId: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
         address: {
-          description: order && order.location && order.location.address,
-          unit: order && order.location && order.location.unitNumber,
-          postal: order && order.location && order.location.postalCode,
+          description: order && order.location && order.location.description,
+          unit: order && order.location && order.location.unit,
+          postal: order && order.location && order.location.postal,
           lat: order && order.location && order.location.lat,
           lng: order && order.location && order.location.lng,
           region: order && order.location && order.location.region,
@@ -643,18 +639,18 @@ export const GEOCODE_REQUEST = 'GEOCODE_REQUEST'
 export const GEOCODE_SUCCESS = 'GEOCODE_SUCCESS'
 export const GEOCODE_FAILURE = 'GEOCODE_FAILURE'
 
-function requestGeocode(postalCode) {
+function requestGeocode(postal) {
   return {
     type: GEOCODE_REQUEST,
-    postalCode
+    postal
   }
 }
 
-function receiveGeocode(postalCode, geocode) {
+function receiveGeocode(postal, geocode) {
   return {
     type: GEOCODE_SUCCESS,
-    postalCode: postalCode,
-    address: geocode.address,
+    postal: postal,
+    description: geocode.description,
     lng: geocode.lng,
     lat: geocode.lat,
     region: geocode.neighborhood,
@@ -663,20 +659,20 @@ function receiveGeocode(postalCode, geocode) {
   }
 }
 
-function failedReceiveGeocode(postalCode) {
+function failedReceiveGeocode(postal) {
   return {
     type: GEOCODE_FAILURE,
-    postalCode: postalCode,
+    postal,
     receivedAt: Date.now()
   }
 }
 
-function geocode(postalCode) {
+function geocode(postal) {
   return new Promise((resolve, reject) => {
     try {
       var geocoder = new google.maps.Geocoder();
       geocoder.geocode( {
-        'address': postalCode,
+        'address': postal,
         'region': 'SG'
       }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
@@ -686,7 +682,7 @@ function geocode(postalCode) {
           }, function(responses) {
             if (responses && responses.length > 0) {
               let res = {
-                address: responses[0].formatted_address,
+                description: responses[0].formatted_address,
                 lat: responses[0].geometry.location.lat(),
                 lng: responses[0].geometry.location.lng(),
               };
@@ -713,12 +709,12 @@ function geocode(postalCode) {
   });
 }
 
-export function fetchAddress(postalCode) {
+export function fetchAddress(postal) {
   return dispatch => {
-    dispatch(requestGeocode(postalCode))
-    return geocode(postalCode)
-      .then(result => dispatch(receiveGeocode(postalCode, result)),
-        () => dispatch(failedReceiveGeocode(postalCode)))
+    dispatch(requestGeocode(postal))
+    return geocode(postal)
+      .then(result => dispatch(receiveGeocode(postal, result)),
+        () => dispatch(failedReceiveGeocode(postal)))
   }
 }
 

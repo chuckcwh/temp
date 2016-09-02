@@ -24,7 +24,7 @@ const userId = cookie.load('user_id');
 const userToken = cookie.load('user_token');
 if (userId && userToken) {
   store.dispatch(getUser({
-    id: userId,
+    userId: userId,
   }));
 }
 

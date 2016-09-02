@@ -59,9 +59,33 @@ export const USER_EDIT_REQUEST = 'USER_EDIT_REQUEST'
 export const USER_EDIT_SUCCESS = 'USER_EDIT_SUCCESS'
 export const USER_EDIT_FAILURE = 'USER_EDIT_FAILURE'
 
-export const USER_EDUCATION_EDIT_REQUEST = 'USER_EDIT_REQUEST'
-export const USER_EDUCATION_EDIT_SUCCESS = 'USER_EDIT_SUCCESS'
-export const USER_EDUCATION_EDIT_FAILURE = 'USER_EDIT_FAILURE'
+export const USER_DEVICES_EDIT_REQUEST = 'USER_DEVICES_EDIT_REQUEST'
+export const USER_DEVICES_EDIT_SUCCESS = 'USER_DEVICES_EDIT_SUCCESS'
+export const USER_DEVICES_EDIT_FAILURE = 'USER_DEVICES_EDIT_FAILURE'
+
+export const PATIENTS_EDIT_REQUEST = 'PATIENTS_EDIT_REQUEST'
+export const PATIENTS_EDIT_SUCCESS = 'PATIENTS_EDIT_SUCCESS'
+export const PATIENTS_EDIT_FAILURE = 'PATIENTS_EDIT_FAILURE'
+
+export const USER_EXPERIENCES_EDIT_REQUEST = 'USER_EXPERIENCES_EDIT_REQUEST'
+export const USER_EXPERIENCES_EDIT_SUCCESS = 'USER_EXPERIENCES_EDIT_SUCCESS'
+export const USER_EXPERIENCES_EDIT_FAILURE = 'USER_EXPERIENCES_EDIT_FAILURE'
+
+export const USER_EDUCATIONS_EDIT_REQUEST = 'USER_EDUCATIONS_EDIT_REQUEST'
+export const USER_EDUCATIONS_EDIT_SUCCESS = 'USER_EDUCATIONS_EDIT_SUCCESS'
+export const USER_EDUCATIONS_EDIT_FAILURE = 'USER_EDUCATIONS_EDIT_FAILURE'
+
+export const USER_ACHIEVEMENTS_EDIT_REQUEST = 'USER_ACHIEVEMENTS_EDIT_REQUEST'
+export const USER_ACHIEVEMENTS_EDIT_SUCCESS = 'USER_ACHIEVEMENTS_EDIT_SUCCESS'
+export const USER_ACHIEVEMENTS_EDIT_FAILURE = 'USER_ACHIEVEMENTS_EDIT_FAILURE'
+
+export const USER_REVIEWS_EDIT_REQUEST = 'USER_REVIEWS_EDIT_REQUEST'
+export const USER_REVIEWS_EDIT_SUCCESS = 'USER_REVIEWS_EDIT_SUCCESS'
+export const USER_REVIEWS_EDIT_FAILURE = 'USER_REVIEWS_EDIT_FAILURE'
+
+export const USER_SCHEDULES_EDIT_REQUEST = 'USER_SCHEDULES_EDIT_REQUEST'
+export const USER_SCHEDULES_EDIT_SUCCESS = 'USER_SCHEDULES_EDIT_SUCCESS'
+export const USER_SCHEDULES_EDIT_FAILURE = 'USER_SCHEDULES_EDIT_FAILURE'
 
 export const FORGOT_PASSWORD_EMAIL_REQUEST = 'FORGOT_PASSWORD_EMAIL_REQUEST'
 export const FORGOT_PASSWORD_EMAIL_SUCCESS = 'FORGOT_PASSWORD_EMAIL_SUCCESS'
@@ -254,19 +278,38 @@ function fetchAction(route) {
     },
     editUser: {
       types: [ USER_EDIT_REQUEST, USER_EDIT_SUCCESS, USER_EDIT_FAILURE ],
-      endpoint: '/users/:_id',
+      endpoint: '/users/:userId',
       method: 'put'
     },
-    editUserEducation: {
-      types: [ USER_EDUCATION_EDIT_REQUEST, USER_EDUCATION_EDIT_SUCCESS, USER_EDUCATION_EDIT_FAILURE ],
-      endpoint: '/users/:_id/education/:_educationId',
+    editUserDevices: {
+      types: [ USER_DEVICES_EDIT_REQUEST, USER_DEVICES_EDIT_SUCCESS, USER_DEVICES_EDIT_FAILURE ],
+      endpoint: '/users/:userId/devices/:deviceId',
       method: 'put'
     },
-    editClient: {
-      types: [ CLIENT_EDIT_REQUEST, CLIENT_EDIT_SUCCESS, CLIENT_EDIT_FAILURE ],
-      endpoint: '/editClient',
-      method: 'post',
-      auth: 'user'
+    editUserExperiences: {
+      types: [ USER_EXPERIENCES_EDIT_REQUEST, USER_EXPERIENCES_EDIT_SUCCESS, USER_EXPERIENCES_EDIT_FAILURE ],
+      endpoint: '/users/:userId/experiences/:experienceId',
+      method: 'put'
+    },
+    editUserEducations: {
+      types: [ USER_EDUCATIONS_EDIT_REQUEST, USER_EDUCATIONS_EDIT_SUCCESS, USER_EDUCATIONS_EDIT_FAILURE ],
+      endpoint: '/users/:userId/educations/:educationId',
+      method: 'put'
+    },
+    editUserAchievements: {
+      types: [ USER_ACHIEVEMENTS_EDIT_REQUEST, USER_ACHIEVEMENTS_EDIT_SUCCESS, USER_ACHIEVEMENTS_EDIT_FAILURE ],
+      endpoint: '/users/:userId/achievements/:achievementId',
+      method: 'put'
+    },
+    editUserReviews: {
+      types: [ USER_REVIEWS_EDIT_REQUEST, USER_REVIEWS_EDIT_SUCCESS, USER_REVIEWS_EDIT_FAILURE ],
+      endpoint: '/users/:userId/reviews/:reviewId',
+      method: 'put'
+    },
+    editUserSchedules: {
+      types: [ USER_SCHEDULES_EDIT_REQUEST, USER_SCHEDULES_EDIT_SUCCESS, USER_SCHEDULES_EDIT_FAILURE ],
+      endpoint: '/users/:userId/schedules/:scheduleId',
+      method: 'put'
     },
     getPatients: {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
@@ -537,8 +580,28 @@ export function editUser(params) {
   return fetch('editUser', params);
 }
 
-export function editUserEducation(params) {
-  return fetch('editUserEducation', params);
+export function editUserDevices(params) {
+  return fetch('editUserDevices', params);
+}
+
+export function editUserExperiences(params) {
+  return fetch('editUserExperiences', params);
+}
+
+export function editUserEducations(params) {
+  return fetch('editUserEducations', params);
+}
+
+export function editUserAchievements(params) {
+  return fetch('editUserAchievements', params);
+}
+
+export function editUserReviews(params) {
+  return fetch('editUserReviews', params);
+}
+
+export function editUserSchedules(params) {
+  return fetch('editUserSchedules', params);
 }
 
 export function getUserWithToken(params) {
@@ -557,10 +620,6 @@ export function destroyUser() {
   return {
     type: USER_DESTROY
   }
-}
-
-export function editClient(params) {
-  return fetch('editClient', params);
 }
 
 export function getPatients(params) {

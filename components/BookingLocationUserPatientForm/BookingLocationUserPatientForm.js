@@ -7,20 +7,21 @@ import s from './BookingLocationUserPatientForm.css';
 class BookingLocationUserPatientForm extends Component {
 
   componentWillReceiveProps(props) {
-    const { fields: { postalCode } } = this.props;
-    const newPostalCode = props && props.fields && props.fields.postalCode;
-    if (newPostalCode.value.length === 6 && newPostalCode.value !== postalCode.value) {
+    const { fields: { postal } } = this.props;
+    const newPostalCode = props && props.fields && props.fields.postal;
+    if (newPostalCode.value.length === 6 && newPostalCode.value !== postal.value) {
       this.props.fetchAddress(newPostalCode.value);
     }
   }
 
   render() {
     const {
-      fields: { fullName, dob, gender, postalCode, unitNumber, address, isPatient },
+      fields: { name, dob, nric, contact, gender, postal, unit, description, lat, lng, region, neighborhood, isPatient },
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
+      config,
     } = this.props;
     return (
       <form className={s.bookingLocationUserPatientForm} onSubmit={handleSubmit(this.props.onFilled)}>
@@ -32,25 +33,33 @@ class BookingLocationUserPatientForm extends Component {
             </label>
           </div>
           <div className={s.bookingLocationUserPatientFormGroup}>
-            <input type="text" id="fullName" name="fullName" placeholder="Full Name*" {...fullName} disabled={isPatient.value === true} />
-            {fullName.touched && fullName.error && <div className={s.bookingLocationUserPatientFormError}>{fullName.error}</div>}
+            <input type="text" placeholder="Full Name*" {...name} disabled={isPatient.value === true} />
+            {name.touched && name.error && <div className={s.bookingLocationUserPatientFormError}>{name.error}</div>}
+          </div>
+          <div className={s.bookingLocationUserPatientFormGroup}>
+            <input type="text" placeholder="Mobile Number" {...contact} disabled={isPatient.value === true} />
+            {contact.touched && contact.error && <div className={s.bookingLocationUserPatientFormError}>{contact.error}</div>}
+          </div>
+          <div className={s.bookingLocationUserPatientFormGroup}>
+            <input type="text" placeholder="NRIC*" {...nric} />
+            {nric.touched && nric.error && <div className={s.bookingLocationUserPatientFormError}>{nric.error}</div>}
           </div>
           <div className={s.bookingLocationUserPatientFormGroup}>
             <div className="DateInput">
-              <input type="text" id="dob" name="dob" placeholder="Birth Date* (YYYY-MM-DD)" {...dob} />
+              <input type="text" placeholder="Birth Date* (YYYY-MM-DD)" {...dob} />
               <span onClick={() => this.props.showDayPickerPopup(dob.value, 'bookingLocationUserPatientForm')}></span>
             </div>
             {dob.touched && dob.error && <div className={s.bookingLocationUserPatientFormError}>{dob.error}</div>}
           </div>
           <div className={s.bookingLocationUserPatientFormGroup}>
-            <div className="radio radio-inline">
-              <input type="radio" id="gender_male" name="gender" {...gender} value="Male" checked={gender.value === 'Male'} />
-              <label htmlFor="gender_male"><span><span></span></span><span>Male</span></label>
-            </div>
-            <div className="radio radio-inline">
-              <input type="radio" id="gender_female" name="gender" {...gender} value="Female" checked={gender.value === 'Female'} />
-              <label htmlFor="gender_female"><span><span></span></span><span>Female</span></label>
-            </div>
+            {
+              config.genders.map(elem => (
+                <div className="radio radio-inline" key={elem.value}>
+                  <input type="radio" id={`gender_${elem.value}`} name="gender" {...gender} value={elem.value} checked={gender.value === elem.value} />
+                  <label htmlFor={`gender_${elem.value}`}><span><span></span></span><span>{elem.name}</span></label>
+                </div>
+              ))
+            }
             {gender.touched && gender.error && <div className={s.bookingLocationUserPatientFormError}>{gender.error}</div>}
           </div>
         </div>
@@ -59,18 +68,18 @@ class BookingLocationUserPatientForm extends Component {
           <div className={s.patientAddress}>
             <div className={classNames(s.patientAddressLeft, 'inline')}>
               <div className={s.bookingLocationUserPatientFormGroup}>
-                <input type="text" id="postalCode" name="postalCode" placeholder="Enter Postal Code*" {...postalCode} />
-                {postalCode.touched && postalCode.error && <div className={s.bookingLocationUserPatientFormError}>{postalCode.error}</div>}
+                <input type="text" placeholder="Enter Postal Code*" {...postal} />
+                {postal.touched && postal.error && <div className={s.bookingLocationUserPatientFormError}>{postal.error}</div>}
               </div>
               <div className={s.bookingLocationUserPatientFormGroup}>
-                <input type="text" id="unitNumber" name="unitNumber" placeholder="Enter Unit Number" {...unitNumber} />
-                {unitNumber.touched && unitNumber.error && <div className={s.bookingLocationUserPatientFormError}>{unitNumber.error}</div>}
+                <input type="text" placeholder="Enter Unit Number" {...unit} />
+                {unit.touched && unit.error && <div className={s.bookingLocationUserPatientFormError}>{unit.error}</div>}
               </div>
             </div>
             <div className={classNames(s.patientAddressRight, 'inline')}>
               <div>
-                <textarea id="address" name="address" placeholder="Enter Address*" {...address} />
-                {address.touched && address.error && <div className={s.bookingLocationUserPatientFormError}>{address.error}</div>}
+                <textarea placeholder="Enter Address*" {...description} />
+                {description.touched && description.error && <div className={s.bookingLocationUserPatientFormError}>{description.error}</div>}
               </div>
             </div>
           </div>
@@ -86,10 +95,10 @@ class BookingLocationUserPatientForm extends Component {
 
 const validate = values => {
   const errors = {};
-  if (!values.fullName) {
-    errors.fullName = 'Required';
-  } else if (values.fullName.length > 50) {
-    errors.fullName = 'Cannot be more than 50 characters';
+  if (!values.name) {
+    errors.name = 'Required';
+  } else if (values.name.length > 50) {
+    errors.name = 'Cannot be more than 50 characters';
   }
   if (!values.dob) {
     errors.dob = 'Required';
@@ -98,16 +107,24 @@ const validate = values => {
   } else if (moment().isSameOrBefore(values.dob, 'day')) {
     errors.dob = 'Date must be earlier than today';
   }
+  if (!values.nric) {
+    errors.nric = 'Required';
+  } else if (!/[A-Z]\d{7}[A-Z]/i.test(values.nric)) {
+    errors.nric = 'Invalid NRIC (e.g. S1234567A)';
+  }
+  if (values.contact && !/^([+]65)[8-9]{1}[0-9]{7}$/.test(values.contact)) {
+    errors.contact = 'Invalid mobile number';
+  }
   if (!values.gender) {
     errors.gender = 'Required';
   }
-  if (!values.postalCode) {
-    errors.postalCode = 'Required';
-  } else if (!/^[0-9]{6}$/i.test(values.postalCode)) {
-    errors.postalCode = 'Invalid postal code (e.g. 123456)';
+  if (!values.postal) {
+    errors.postal = 'Required';
+  } else if (!/^[0-9]{6}$/i.test(values.postal)) {
+    errors.postal = 'Invalid postal code (e.g. 123456)';
   }
-  if (!values.address) {
-    errors.address = 'Required';
+  if (!values.description) {
+    errors.description = 'Required';
   }
   return errors;
 };
@@ -123,17 +140,22 @@ BookingLocationUserPatientForm.propTypes = {
   fetchAddress: PropTypes.func.isRequired,
   onFilled: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+
+  config: PropTypes.object.isRequired,
+  initialValues: PropTypes.object.isRequired,
 };
 
 const reduxFormConfig = {
   form: 'bookingLocationUserPatientForm',
-  fields: ['userName', 'fullName', 'dob', 'gender', 'postalCode', 'unitNumber', 'address', 'isPatient'],
+  fields: ['userName', 'userContact', 'name', 'dob', 'nric', 'contact', 'gender', 'postal', 'unit', 'description', 'lat', 'lng', 'region', 'neighborhood', 'isPatient'],
   validate,
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   initialValues: {
-    userName: state.user.data && state.user.data.clients && state.user.data.clients[0] && state.user.data.clients[0].fullName,
+    userName: state.user.data && state.user.data.name,
+    userContact: state.user.data && state.user.data.contact,
   },
 });
 

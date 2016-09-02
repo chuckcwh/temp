@@ -37,15 +37,15 @@ class BookingConfirmation extends Component {
         break;
       case 'address':
         this.setState({
-          postalCode: this.props.booking && this.props.booking.case
+          postal: this.props.booking && this.props.booking.case
             && this.props.booking.case.addresses && this.props.booking.case.addresses[0]
-            && this.props.booking.case.addresses[0].postalCode,
+            && this.props.booking.case.addresses[0].postal,
           address: this.props.booking && this.props.booking.case
             && this.props.booking.case.addresses && this.props.booking.case.addresses[0]
             && this.props.booking.case.addresses[0].address,
-          unitNumber: this.props.booking && this.props.booking.case
+          unit: this.props.booking && this.props.booking.case
             && this.props.booking.case.addresses && this.props.booking.case.addresses[0]
-            && this.props.booking.case.addresses[0].unitNumber,
+            && this.props.booking.case.addresses[0].unit,
 
           editingAddress: true,
         });
@@ -116,9 +116,9 @@ class BookingConfirmation extends Component {
                   && this.props.booking.case.addresses
                   && this.props.booking.case.addresses[0]
                   && this.props.booking.case.addresses[0].id,
-                address: this.state.address,
-                postalCode: this.state.postalCode,
-                unitNumber: this.state.unitNumber,
+                description: this.state.description,
+                postal: this.state.postal,
+                unit: this.state.unit,
               }],
             },
           }).then((res) => {
@@ -146,17 +146,17 @@ class BookingConfirmation extends Component {
 
   onChangePostalCode = (event) => {
     const that = this;
-    const postalCodeInput = event.target;
+    const postalInput = event.target;
     this.setState({
-      postalCode: postalCodeInput.value,
+      postal: postalInput.value,
     });
-    if (postalCodeInput.value.length === 6) {
-      // console.log(postalCodeInput.value);
+    if (postalInput.value.length === 6) {
+      // console.log(postalInput.value);
       try {
-        // postalCodeInput.disabled = true;
+        // postalInput.disabled = true;
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({
-          address: postalCodeInput.value,
+          address: postalInput.value,
           region: 'SG',
         }, (results, status) => {
           if (status === google.maps.GeocoderStatus.OK) {
@@ -168,19 +168,19 @@ class BookingConfirmation extends Component {
                 that.setState({
                   address: responses[0].formatted_address,
                 });
-                // postalCodeInput.disabled = false;
+                // postalInput.disabled = false;
               } else {
-                // postalCodeInput.disabled = false;
+                // postalInput.disabled = false;
                 // console.error('Invalid postal code.');
               }
             });
           } else {
-            // postalCodeInput.disabled = false;
+            // postalInput.disabled = false;
             // console.error('Invalid postal code.');
           }
         });
       } catch (e) {
-        // postalCodeInput.disabled = false;
+        // postalInput.disabled = false;
         // console.error('Unable to find your address.');
       }
     }
@@ -403,10 +403,10 @@ class BookingConfirmation extends Component {
               <div className="TableRowItem3">
                 <input
                   type="text"
-                  id="postalCode"
-                  name="postalCode"
+                  id="postal"
+                  name="postal"
                   onChange={this.onChangePostalCode}
-                  value={this.state.postalCode}
+                  value={this.state.postal}
                   placeholder="Enter Postal Code*"
                   required
                 />
@@ -430,10 +430,10 @@ class BookingConfirmation extends Component {
               <div className="TableRowItem3">
                 <input
                   type="text"
-                  id="unitNumber"
-                  name="unitNumber"
-                  value={this.state.unitNumber}
-                  onChange={(e) => this.setState({ unitNumber: e.target.value })}
+                  id="unit"
+                  name="unit"
+                  value={this.state.unit}
+                  onChange={(e) => this.setState({ unit: e.target.value })}
                   placeholder="Enter Unit Number"
                 />
               </div>
@@ -458,7 +458,7 @@ class BookingConfirmation extends Component {
             {this.props.booking && this.props.booking.case
               && this.props.booking.case.addresses
               && this.props.booking.case.addresses[0]
-              && this.props.booking.case.addresses[0].unitNumber}
+              && this.props.booking.case.addresses[0].unit}
           </div>
         </div>
       );

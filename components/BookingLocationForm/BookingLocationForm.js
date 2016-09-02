@@ -6,9 +6,9 @@ import s from './BookingLocationForm.css';
 class BookingLocationForm extends Component {
 
   componentWillReceiveProps(props) {
-    const { fields: { postalCode } } = this.props;
-    const newPostalCode = props && props.fields && props.fields.postalCode;
-    if (newPostalCode.value.length === 6 && newPostalCode.value !== postalCode.value) {
+    const { fields: { postal } } = this.props;
+    const newPostalCode = props && props.fields && props.fields.postal;
+    if (newPostalCode.value.length === 6 && newPostalCode.value !== postal.value) {
       this.props.fetchAddress(newPostalCode.value);
     }
   }
@@ -21,7 +21,7 @@ class BookingLocationForm extends Component {
 
   render() {
     const {
-      fields: { postalCode, unitNumber, address, lat, lng, region, neighborhood },
+      fields: { postal, unit, description, lat, lng, region, neighborhood },
       invalid,
       handleSubmit,
       submitFailed,
@@ -43,18 +43,18 @@ class BookingLocationForm extends Component {
           <div className={s.patientAddress}>
             <div className={classNames(s.patientAddressLeft, 'inline')}>
               <div className={s.bookingLocationFormGroup}>
-                <input type="text" id="postalCode" name="postalCode" placeholder="Enter Postal Code*" {...postalCode} />
-                {postalCode.touched && postalCode.error && <div className={s.bookingLocationFormError}>{postalCode.error}</div>}
+                <input type="text" id="postal" name="postal" placeholder="Enter Postal Code*" {...postal} />
+                {postal.touched && postal.error && <div className={s.bookingLocationFormError}>{postal.error}</div>}
               </div>
               <div className={s.bookingLocationFormGroup}>
-                <input type="text" id="unitNumber" name="unitNumber" placeholder="Enter Unit Number" {...unitNumber} />
-                {unitNumber.touched && unitNumber.error && <div className={s.bookingLocationFormError}>{unitNumber.error}</div>}
+                <input type="text" id="unit" name="unit" placeholder="Enter Unit Number" {...unit} />
+                {unit.touched && unit.error && <div className={s.bookingLocationFormError}>{unit.error}</div>}
               </div>
             </div>
             <div className={classNames(s.patientAddressRight, 'inline')}>
               <div className={s.bookingLocationFormGroup}>
-                <textarea id="address" name="address" placeholder="Enter Address*" {...address} />
-                {address.touched && address.error && <div className={s.bookingLocationFormError}>{address.error}</div>}
+                <textarea id="description" name="description" placeholder="Enter Address*" {...description} />
+                {description.touched && description.error && <div className={s.bookingLocationFormError}>{description.error}</div>}
               </div>
             </div>
           </div>
@@ -71,13 +71,13 @@ class BookingLocationForm extends Component {
 
 const validate = values => {
   const errors = {};
-  if (!values.postalCode) {
-    errors.postalCode = 'Required';
-  } else if (!/^[0-9]{6}$/i.test(values.postalCode)) {
-    errors.postalCode = 'Invalid postal code (e.g. 123456)';
+  if (!values.postal) {
+    errors.postal = 'Required';
+  } else if (!/^[0-9]{6}$/i.test(values.postal)) {
+    errors.postal = 'Invalid postal code (e.g. 123456)';
   }
-  if (!values.address) {
-    errors.address = 'Required';
+  if (!values.description) {
+    errors.description = 'Required';
   }
   return errors;
 };
@@ -95,7 +95,7 @@ BookingLocationForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'bookingLocationForm',
-  fields: ['postalCode', 'unitNumber', 'address', 'lat', 'lng', 'region', 'neighborhood'],
+  fields: ['postal', 'unit', 'description', 'lat', 'lng', 'region', 'neighborhood'],
   validate,
 };
 
@@ -103,9 +103,9 @@ const mapStateToProps = (state) => {
   const { order } = state;
   return {
     initialValues: {
-      postalCode: order && order.location && order.location.postalCode || undefined,
-      address: order && order.location && order.location.address || undefined,
-      unitNumber: order && order.location && order.location.unitNumber || undefined,
+      postal: order && order.location && order.location.postal || undefined,
+      description: order && order.location && order.location.description || undefined,
+      unit: order && order.location && order.location.unit || undefined,
       lat: order && order.location && order.location.lat || undefined,
       lng: order && order.location && order.location.lng || undefined,
       region: order && order.location && order.location.region || undefined,

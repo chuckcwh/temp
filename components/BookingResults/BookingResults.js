@@ -6,7 +6,7 @@ import Loader from 'react-loader';
 import s from './BookingResults.css';
 import ConfirmPopup from '../ConfirmPopup';
 import { getAvailableSchedules, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage,
-  createCaseWithOrder, showAlertPopup, showConfirmPopup } from '../../actions';
+  createBookingWithOptions, showAlertPopup, showConfirmPopup } from '../../actions';
 import history from '../../core/history';
 import util from '../../core/util';
 
@@ -80,8 +80,12 @@ class BookingResults extends Component {
     if (this.props.order.promoCode !== nextProps.order.promoCode) {
       this.updateSum(nextProps);
     }
-    if (this.props.order.schedules !== nextProps.order.schedules) {
-      this.props.createCaseWithOrder(nextProps.order);
+    if (this.props.order.sessions !== nextProps.order.sessions) {
+      this.props.createBookingWithOptions({
+        services: nextProps.services,
+        order: nextProps.order,
+        user: nextProps.user,
+      });
       const location = history.getCurrentLocation();
       history.push({ pathname: '/booking5', query: location && location.query });
     }
@@ -238,7 +242,7 @@ class BookingResults extends Component {
                 priceText;
               const rate = session.price;
               if (orderPromoCode) {
-                discountedRate = util.calcRate(session, order.promoCode, order.service).toFixed(2);
+                discountedRate = util.calcRate(session, order.promoCode, order.service);
                 if (discountedRate === rate) {
                   // empty discountedRate if there is actually no discount
                   discountedRate = null;
@@ -247,12 +251,13 @@ class BookingResults extends Component {
               if (orderPromoCode && discountedRate) {
                 priceText = (
                   <span>
-                    <span className="strike-through nowrap">$ {rate}</span><span className="nowrap"> $ {discountedRate}</span>
+                    <span className="strike-through nowrap">$ {!isNaN(rate) && parseFloat(rate).toFixed(2)}</span>
+                    <span className="nowrap"> $ {!isNaN(discountedRate) && parseFloat(discountedRate).toFixed(2)}</span>
                   </span>
                 );
               } else {
                 priceText = (
-                  <span className="nowrap">$ {rate}</span>
+                  <span className="nowrap">$ {!isNaN(rate) && parseFloat(rate).toFixed(2)}</span>
                 );
               }
               return (
@@ -348,7 +353,7 @@ BookingResults.propTypes = {
   setOrderPromoCode: React.PropTypes.func.isRequired,
   setOrderSessions: React.PropTypes.func.isRequired,
   setLastPage: React.PropTypes.func.isRequired,
-  createCaseWithOrder: React.PropTypes.func.isRequired,
+  createBookingWithOptions: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
   showConfirmPopup: React.PropTypes.func.isRequired,
 };
@@ -370,7 +375,7 @@ const mapDispatchToProps = (dispatch) => ({
   setOrderPromoCode: (promoCode) => dispatch(setOrderPromoCode(promoCode)),
   setOrderSessions: (schedules) => dispatch(setOrderSessions(schedules)),
   setLastPage: (page) => dispatch(setLastPage(page)),
-  createCaseWithOrder: (order) => dispatch(createCaseWithOrder(order)),
+  createBookingWithOptions: (params) => dispatch(createBookingWithOptions(params)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
   showConfirmPopup: () => dispatch(showConfirmPopup()),
 });

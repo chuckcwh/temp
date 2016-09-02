@@ -54,6 +54,10 @@ const user = (state = {
         lastUpdated: action.response && action.response.receiveAt
       })
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
+      if (action.response && action.response.data && action.response.data._id && action.response.token) {
+        cookie.save('user_id', action.response.data._id, { path: '/' });
+        cookie.save('user_token', action.response.token, { path: '/' });
+      }
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: true,
@@ -92,6 +96,22 @@ const config = (state = {
         isFetching: false,
         didInvalidate: false,
         data: action.response && Object.assign({}, action.response.data, {
+          gendersByValues: action.response.data.genders.reduce((result, gender) => {
+            result[gender.value] = gender;
+            return result;
+          }, {}),
+          languagesByValues: action.response.data.languages.reduce((result, language) => {
+            result[language.value] = language;
+            return result;
+          }, {}),
+          racesByValues: action.response.data.races.reduce((result, race) => {
+            result[race.value] = race;
+            return result;
+          }, {}),
+          religionsByValues: action.response.data.religions.reduce((result, religion) => {
+            result[religion.value] = religion;
+            return result;
+          }, {}),
           timeSlotsByValues: action.response.data.timeSlots.reduce((result, timeSlot) => {
             result[timeSlot.value] = timeSlot;
             return result;
@@ -172,36 +192,6 @@ const services = (state = {
         // servicesTreeHash: serviceTreeHash,
         servicesUnderCategory,
         servicesUnderSlug,
-        lastUpdated: action.response && action.response.receivedAt
-      })
-    default:
-      return state
-  }
-}
-
-const languages = (state = {
-  isFetching: false,
-  didInvalidate: false,
-  data: null,
-  ids: null
-}, action) => {
-  switch (action.type) {
-    case ActionTypes.LANGUAGES_REQUEST:
-      return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
-      })
-    case ActionTypes.LANGUAGES_SUCCESS:
-      let hash = {}, ids = []
-      action.response && action.response.languages.forEach((language) => {
-        hash[language.id] = language
-        ids.push(language.id)
-      })
-      return Object.assign({}, state, {
-        isFetching: false,
-        didInvalidate: false,
-        data: hash,
-        ids: ids,
         lastUpdated: action.response && action.response.receivedAt
       })
     default:
@@ -530,7 +520,6 @@ const bookingApp = combineReducers({
   user,
   config,
   services,
-  languages,
   booking,
   session,
   sessionsByClient,
@@ -561,9 +550,14 @@ const bookingApp = combineReducers({
       }
     },
     bookingLocationUserPatientForm: {
-      fullName: (value, previousValue, allValues) => {
+      name: (value, previousValue, allValues) => {
         if (allValues.isPatient) {
           return allValues.userName;
+        } else return value;
+      },
+      contact: (value, previousValue, allValues) => {
+        if (allValues.isPatient) {
+          return allValues.userContact;
         } else return value;
       }
     }
@@ -582,12 +576,12 @@ const bookingApp = combineReducers({
           }
           break;
         case ActionTypes.GEOCODE_SUCCESS:
-          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+          if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
               ...state,
-              address: {
-                ...state.address,
-                value: action.address
+              description: {
+                ...state.description,
+                value: action.description
               },
               lat: {
                 ...state.lat,
@@ -626,12 +620,12 @@ const bookingApp = combineReducers({
           }
           break;
         case ActionTypes.GEOCODE_SUCCESS:
-          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+          if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
               ...state,
-              address: {
-                ...state.address,
-                value: action.address
+              description: {
+                ...state.description,
+                value: action.description
               },
               lat: {
                 ...state.lat,
@@ -670,12 +664,12 @@ const bookingApp = combineReducers({
           }
           break;
         case ActionTypes.GEOCODE_SUCCESS:
-          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+          if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
               ...state,
-              address: {
-                ...state.address,
-                value: action.address,
+              description: {
+                ...state.description,
+                value: action.description,
               },
               lat: {
                 ...state.lat,
@@ -714,12 +708,12 @@ const bookingApp = combineReducers({
           }
           break;
         case ActionTypes.GEOCODE_SUCCESS:
-          if (state.postalCode && state.postalCode.value && action.postalCode && state.postalCode.value == action.postalCode) {
+          if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
               ...state,
-              address: {
-                ...state.address,
-                value: action.address
+              description: {
+                ...state.description,
+                value: action.description
               },
               lat: {
                 ...state.lat,

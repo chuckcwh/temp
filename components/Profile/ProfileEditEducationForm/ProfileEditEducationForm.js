@@ -11,6 +11,7 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { editUser, editUserEducation } from '../../../actions';
+import DayPickerPopup from '../../DayPickerPopup';
 // sub component
 import ProfileEditEducationFormSub from '../ProfileEditEducationFormSub/ProfileEditEducationFormSub';
 // react-icons
@@ -52,7 +53,8 @@ class ProfileEditEducationForm extends Component {
         {educations && educations.map(item => (
           <ProfileEditEducationFormSub
             key={item._id}
-            onNext={this.onNext}
+            formKey={item._id}
+
             initialValues={{
               _id: userId,
               _educationId: item._id,
@@ -62,10 +64,11 @@ class ProfileEditEducationForm extends Component {
               country: item.country,
               gradDate: moment(item.gradDate).format('MM/YYYY'),
             }}
+            onNext={this.onNext}
           />
         ))}
 
-        <ProfileEditEducationFormSub newForm={true}/>
+        <ProfileEditEducationFormSub formKey='new' newForm={true}/>
 
         <button className={cx("btn", "btn-primary", s.addForm)} onClick={this.onAddForm}>
           Add New Education Details

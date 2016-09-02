@@ -7,6 +7,7 @@ import modal from './modal';
 import order from './order';
 import { appendAllServices, parseCategories, isClient } from '../core/util';
 import sortBy from 'lodash/sortBy';
+import moment from 'moment';
 
 const user = (state = {
   isFetching: false,
@@ -761,6 +762,27 @@ const bookingApp = combineReducers({
           return state;
       }
     },
+    ProfileEditEducationFormSub: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          const { main, sub } = action.source;
+          if (main === 'ProfileEditEducationFormSub') {
+            return {
+              ...state,
+              [sub]: {
+                ...state[sub],
+                gradDate: {
+                  ...state[sub].gradDate,
+                  value: moment(action.value).format('MM/YYYY')
+                }
+              }
+            }
+          }
+          break;
+        default:
+          return state;
+      }
+    }
   })
 });
 

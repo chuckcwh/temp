@@ -11,9 +11,9 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import { reduxForm } from 'redux-form';
 import InlineForm from '../../MultiSelect';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import { showDayPickerPopup } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
-import { Grid, Row, Col } from 'react-flexbox-grid';
 // react-icons
 import FaLock from 'react-icons/lib/fa/lock';
 
@@ -32,6 +32,7 @@ class ProfileEditEducationFormSub extends Component {
         course,
         country,
         gradDate,
+        _educationId,
       },
       typeOfCertChoice,
       countryChoice,
@@ -45,71 +46,78 @@ class ProfileEditEducationFormSub extends Component {
     } = this.props;
 
     return (
-      <form className={s.ProfileEditEducationFormSub} onSubmit={handleSubmit(this.onNext)}>
+      <div>
         <DayPickerPopup title="Year of Graduation" />
 
-        <Grid fluid className={cx(s.educationFormTable, !newForm && s.newForm)}>
-          <Row className={s.mainCat}>
-            <Col xs={12} sm={7} className={s.mainCatFields}>
-              <div className={s.mainCatContainer}>
-                <p>Institute Name</p>
-                <input className={s.mainInput} type='text' {...institute}/>
-                {institute.touched && institute.error && <div className={s.formError}>{institute.error}</div>}
-              </div>
-            </Col>
-            <Col xs={12} sm={5} className={s.mainCatFields}>
-              <div className={s.mainCatContainer}>
-                <p>Type of Certification</p>
-                <div className={cx("select", s.selectInput)}>
-                  <span></span>
-                  <select className={s.mainCatMulti} id={typeOfCert} name={typeOfCert} {...typeOfCert} value={typeOfCert.value || ''}>
-                    <option value="">- Select -</option>
-                    {typeOfCertChoice && typeOfCertChoice.map(item => (
-                      <option key={typeOfCertChoice.indexOf(item)} value={item.value}>{item.name}</option>
-                    ))}
-                  </select>
+        <form className={s.ProfileEditEducationFormSub} onSubmit={handleSubmit(this.onNext)}>
+          <Grid fluid className={cx(s.educationFormTable, !newForm && s.newForm)}>
+            <Row className={s.mainCat}>
+              <Col xs={12} sm={7} className={s.mainCatFields}>
+                <div className={s.mainCatContainer}>
+                  <p>Institute Name</p>
+                  <input className={s.mainInput} type='text' {...institute}/>
+                  {institute.touched && institute.error && <div className={s.formError}>{institute.error}</div>}
                 </div>
-              </div>
-            </Col>
-            <Col xs={12} sm={5} className={s.mainCatFields}>
-              <div className={s.mainCatContainer}>
-                <p>Course / Specialisation</p>
-                <input className={s.mainInput} type='text' {...course}/>
-                {course.touched && course.error && <div className={s.formError}>{course.error}</div>}
-              </div>
-            </Col>
-            <Col xs={12} sm={3} className={s.mainCatFields}>
-              <div className={s.mainCatContainer}>
-                <p>Country</p>
-                <div className={cx("select", s.selectInput)}>
-                  <span></span>
-                  <select className={s.mainCatMulti} id={country} name={country} {...country} value={country.value || ''}>
-                    <option value="">- Select -</option>
-                    {countryChoice && countryChoice.map(item => (
-                      <option key={countryChoice.indexOf(item)} value={item.value}>{item.name}</option>
-                    ))}
-                  </select>
+              </Col>
+              <Col xs={12} sm={5} className={s.mainCatFields}>
+                <div className={s.mainCatContainer}>
+                  <p>Type of Certification</p>
+                  <div className={cx("select", s.selectInput)}>
+                    <span></span>
+                    <select className={s.mainCatMulti} id={typeOfCert} name={typeOfCert} {...typeOfCert} value={typeOfCert.value || ''}>
+                      <option value="">- Select -</option>
+                      {typeOfCertChoice && typeOfCertChoice.map(item => (
+                        <option key={typeOfCertChoice.indexOf(item)} value={item.value}>{item.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </div>
-            </Col>
-            <Col xs={12} sm={4} className={s.mainCatFields}>
-              <div className={s.mainCatContainer}>
-                <p>Year of Graduation</p>
-                <div className={cx("DateInput", s.dateInputContainer)}>
-                  <input className={s.dateInput} type="text" id="gradDate" name="gradDate" placeholder="MM/YYYY" {...gradDate} />
-                  <span onClick={() => this.props.showDayPickerPopup(gradDate.value, 'ProfileEditEducationFormSub')}></span>
+              </Col>
+              <Col xs={12} sm={5} className={s.mainCatFields}>
+                <div className={s.mainCatContainer}>
+                  <p>Course / Specialisation</p>
+                  <input className={s.mainInput} type='text' {...course}/>
+                  {course.touched && course.error && <div className={s.formError}>{course.error}</div>}
                 </div>
-              </div>
-            </Col>
-          </Row>
+              </Col>
+              <Col xs={12} sm={3} className={s.mainCatFields}>
+                <div className={s.mainCatContainer}>
+                  <p>Country</p>
+                  <div className={cx("select", s.selectInput)}>
+                    <span></span>
+                    <select className={s.mainCatMulti} id={country} name={country} {...country} value={country.value || ''}>
+                      <option value="">- Select -</option>
+                      {countryChoice && countryChoice.map(item => (
+                        <option key={countryChoice.indexOf(item)} value={item.value}>{item.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={12} sm={4} className={s.mainCatFields}>
+                <div className={s.mainCatContainer}>
+                  <p>Year of Graduation</p>
+                  <div className={cx("DateInput", s.dateInputContainer)}>
+                    <input className={s.dateInput} type="text" id="gradDate" name="gradDate" placeholder="MM/YYYY" {...gradDate} />
+                    <span onClick={() => {
+                      this.props.showDayPickerPopup(
+                        gradDate.value,
+                        {main: 'ProfileEditEducationFormSub', sub: _educationId.value}
+                      )}}>
+                    </span>
+                  </div>
+                </div>
+              </Col>
+            </Row>
 
-          <Row className={s.educationFormHandle}>
-            <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
-            <button className={cx("btn", "btn-primary", s.formSubmit)}>Delete</button>
-          </Row>
-        </Grid>
+            <Row className={s.educationFormHandle}>
+              <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
+              <button className={cx("btn", "btn-primary", s.formSubmit)}>Delete</button>
+            </Row>
+          </Grid>
 
-      </form>
+        </form>
+      </div>
     );
   }
 
@@ -166,6 +174,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
-})
+});
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditEducationFormSub);

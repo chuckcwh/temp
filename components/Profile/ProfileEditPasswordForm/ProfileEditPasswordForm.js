@@ -10,32 +10,53 @@ import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
 import { reduxForm } from 'redux-form';
+import { CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE, changePassword } from '../../../actions';
 // react-icons
 import FaLock from 'react-icons/lib/fa/lock';
 
 
 class ProfileEditPasswordForm extends Component {
 
+  onSubmit = (values) => {
+    console.log('values', values);
+    return new Promise((resolve, reject) => {
+      this.props.changePassword({
+        _userId: values._userId,
+        oldPassword: values.currPwd,
+        newPassword: values.newPwd,
+      }).then((res) => {
+        if (res && res.type === CHANGE_PASSWORD_SUCCESS) {
+          console.log('response success', res);
+        } else if (res && res.type === CHANGE_PASSWORD_FAILURE) {
+          console.log('response fail', res);
+        }
+      })
+    })
+  }
+
   render() {
     const {
-      fields: { currPwd, newPwd, repeatNewPwd },
+      fields: {
+        currPwd,
+        newPwd,
+        repeatNewPwd
+      },
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
-      showDayPickerPopup,
     } = this.props;
 
     return (
       <div className={s.ProfileEditPasswordForm}>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(this.onSubmit)}>
           <div className={s.formSection}>
 
             <div className="TableRow">
               <div className="TableRowItem1">Current Password</div>
               <div className="TableRowItem2">
-                <input type="text" {...currPwd} />
+                <input type="password" {...currPwd} />
                 {currPwd.touched && currPwd.error && <div className={s.formError}>{currPwd.error}</div>}
               </div>
             </div>
@@ -43,7 +64,7 @@ class ProfileEditPasswordForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">New Password</div>
               <div className="TableRowItem2">
-                <input type="text" {...newPwd} />
+                <input type="password" {...newPwd} />
                 {newPwd.touched && newPwd.error && <div className={s.formError}>{newPwd.error}</div>}
               </div>
             </div>
@@ -51,7 +72,7 @@ class ProfileEditPasswordForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Repeat New Password</div>
               <div className="TableRowItem2">
-                <input type="text" {...repeatNewPwd} />
+                <input type="password" {...repeatNewPwd} />
                 {repeatNewPwd.touched && repeatNewPwd.error && <div className={s.formError}>{repeatNewPwd.error}</div>}
               </div>
             </div>
@@ -71,15 +92,20 @@ class ProfileEditPasswordForm extends Component {
 
 const validate = values => {
   const errors = {};
-  // if (!values.withdrawAmt) {
-  //   errors.withdrawAmt = 'Required';
-  // } else if (!/\d+/i.test(values.withdrawAmt)) {
-  //   errors.withdrawAmt = 'Invalid withdraw amount';
-  // }
+  if (!values.currPwd) {
+    errors.currPwd = 'Required';
+  }
+  if (!values.newPwd) {
+    errors.newPwd = 'Required';
+  }
+  if (values.newPwd !== values.repeatNewPwd) {
+    errors.repeatNewPwd = 'Passwords are not the same'
+  }
+  return errors
 }
 
 ProfileEditPasswordForm.propTypes = {
-  user: PropTypes.object,
+  // user: PropTypes.object,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
@@ -88,8 +114,12 @@ ProfileEditPasswordForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'ProfileEditPasswordForm',
-  fields: ['currPwd', 'newPwd', 'repeatNewPwd'],
+  form: 'profileEditPasswordForm',
+  fields: [
+    'currPwd',
+    'newPwd',
+    'repeatNewPwd'
+  ],
   validate,
 }
 
@@ -97,22 +127,15 @@ const mapStateToProps = (state) => {
   const user = state.user.data;
 
   return {
-    user,
+    // user,
     // initialValues: {
       // fullName: user.clients[0].fullName || undefined,
-      // gender: user.clients[0].gender || undefined,
-      // dob: user.clients[0].dob || undefined,
-      // idNumber: user.clients[0].IDnum || undefined,
-      // idType: user.clients[0].IDtype || undefined,
-      // occupation: user.clients[0].occupation || undefined,
-      // maritalStatus: user.clients[0].maritalStatus || undefined,
-      // email: user.email || undefined,
     // }
   }
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  // showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
-})
+  changePassword: (params) => dispatch(changePassword(params)),
+});
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditPasswordForm);

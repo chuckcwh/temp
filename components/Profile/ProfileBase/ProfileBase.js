@@ -42,7 +42,6 @@ export class ProfileBase extends Component {
     const { avatar, gender, dob, address, race, religion, languages, nationality, name } = this.props;
 
     const profile = {
-      photo: avatar ? `${s3Url}${avatar}` : require('../../../assets/images/noimage.gif'),
       gender: gender && (<p><MdAccessiblity /> {gender}</p>),
       ageGroup: dob && (<p><MdPerson /> {this.getAgeGroup(dob)}</p>),
       address: address && address.neighborhood && (<p><MdLocationOn/> {address.neighborhood}</p>),
@@ -50,6 +49,7 @@ export class ProfileBase extends Component {
       languages: languages.length && (<p><FaComment /> {`${languages.join(', ')}`}</p>),
       nationality: nationality && (<p><FaFlag /> {nationality}</p>),
       name,
+      avatar
     }
 
     return(
@@ -63,7 +63,7 @@ export class ProfileBase extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <img src={profile.photo} className={s.profileImg} />
+                  <img src={profile.avatar} className={s.profileImg} />
                 </div>
                 <p>{profile.name}</p>
               </div>
@@ -94,7 +94,7 @@ const mapStateToProps = (state) => {
   const user = state.user.data;
 
   return {
-    avatar: user && user.avatar,
+    avatar: user && (user.avatar ? `${s3Url}${avatar}` : require('../../../assets/images/noimage.gif')),
     gender: user && user.gender,
     dob: user && user.dob,
     address: user && user.address,

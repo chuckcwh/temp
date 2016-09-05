@@ -87,7 +87,7 @@
     "react-flexbox-grid": "^0.10.2",
     "react-hot-loader": "^3.0.0-beta.2",
     "react-icons": "^2.2.1",
-    "react-image-crop": "^1.0.0-rc8",
+    "react-image-crop": "^1.0.0",
     "react-infinite-calendar": "^1.1.18",
     "react-link-state": "^0.1.1",
     "react-loader": "^2.0.0",

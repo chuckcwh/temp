@@ -23,7 +23,7 @@ class ProfileEditBasicForm extends Component {
   onSubmit = (values) => {
     return new Promise((resolve, reject) => {
       this.props.editUser({
-        _id: values._id,
+        userId: values.userId,
         name: values.name,
         gender: values.gender,
         dob: moment(values.dob).format(),
@@ -42,7 +42,7 @@ class ProfileEditBasicForm extends Component {
   render() {
     const {
       fields: {
-        _id,
+        userId,
         name,
         gender,
         dob,
@@ -237,7 +237,7 @@ ProfileEditBasicForm.propTypes = {
 const reduxFormConfig = {
   form: 'profileEditBasicForm',
   fields: [
-    '_id', // for form validate, not real field
+    'userId', // for form validate, not real field
     'name',
     'gender',
     'dob',
@@ -257,7 +257,7 @@ const mapStateToProps = (state) => {
 
   return {
     initialValues: {
-      _id: user && user._id,
+      userId: user && user._id,
       name: user && user.name,
       gender: user && user.gender,
       dob: user && user.dob && moment(user.dob).format("YYYY-MM-DD"),

@@ -171,6 +171,10 @@ export const USER_SCHEDULE_EDIT_REQUEST = 'USER_SCHEDULE_EDIT_REQUEST'
 export const USER_SCHEDULE_EDIT_SUCCESS = 'USER_SCHEDULE_EDIT_SUCCESS'
 export const USER_SCHEDULE_EDIT_FAILURE = 'USER_SCHEDULE_EDIT_FAILURE'
 
+export const CHANGE_PASSWORD_REQUEST = 'CHANGE_PASSWORD_REQUEST'
+export const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS'
+export const CHANGE_PASSWORD_FAILURE = 'CHANGE_PASSWORD_FAILURE'
+
 export const FORGOT_PASSWORD_EMAIL_REQUEST = 'FORGOT_PASSWORD_EMAIL_REQUEST'
 export const FORGOT_PASSWORD_EMAIL_SUCCESS = 'FORGOT_PASSWORD_EMAIL_SUCCESS'
 export const FORGOT_PASSWORD_EMAIL_FAILURE = 'FORGOT_PASSWORD_EMAIL_FAILURE'
@@ -333,6 +337,11 @@ function fetchAction(route) {
       method: 'get',
       auth: 'userParams',
       entity: 'user'
+    },
+    changePassword: {
+      types: [ CHANGE_PASSWORD_REQUEST, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE ],
+      endpoint: '/users/:userId/changePassword',
+      method: 'put'
     },
     forgotPassword: {
       types: [ FORGOT_PASSWORD_EMAIL_REQUEST, FORGOT_PASSWORD_EMAIL_SUCCESS, FORGOT_PASSWORD_EMAIL_FAILURE ],
@@ -836,6 +845,10 @@ export function editUserSchedule(params) {
 
 export function getUserWithToken(params) {
   return fetch('getUserWithToken', params);
+}
+
+export function changePassword(params) {
+  return fetch('changePassword', params);
 }
 
 export function forgotPassword(params) {

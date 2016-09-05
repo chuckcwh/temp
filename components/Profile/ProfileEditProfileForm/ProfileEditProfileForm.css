@@ -1,5 +1,5 @@
 @import '../../variables.css';
-
+@import '../../../node_modules/react-image-crop/dist/ReactCrop.css';
 
 .ProfileEditProfileForm {
   min-height: 400px;

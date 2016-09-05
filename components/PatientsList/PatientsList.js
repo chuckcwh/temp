@@ -18,19 +18,19 @@ class PatientsList extends Component {
   componentDidMount() {
     this.props.client
       && this.props.client.id
-      && this.props.getPatients({ cid: this.props.client.id });
+      && this.props.getPatients({ userId: this.props.user._id });
   }
 
   componentWillReceiveProps(props) {
     if (props.client && !this.props.client) {
       props.client
         && props.client.id
-        && props.getPatients({ cid: props.client.id });
+        && props.getPatients({ userId: props.user._id });
     }
   }
 
   render() {
-    const { patients } = this.props;
+    const { config, patients } = this.props;
     return (
       <div className={s.patients}>
         <Header title="Manage Patients" />
@@ -53,31 +53,34 @@ class PatientsList extends Component {
                 const currentYear = new Date().getFullYear();
                 const age = currentYear - patient.dob.split('-')[0];
                 return (
-                  <div className={s.patientBlock} key={patient.id}>
+                  <div className={s.patientBlock} key={patient._id}>
                     <div className={s.patientText}>
-                      <h3>{patient.fullName}</h3>
+                      <h3>{patient.name}</h3>
                       {patient.gender !== '' && <span>
-                        <FaUser /> {patient.gender}, {age} years old
+                        <FaUser />
+                        &nbsp;{config && config.gendersByValues &&
+                          config.gendersByValues[patient.gender] &&
+                          config.gendersByValues[patient.gender].name}, {age} years old
                       </span>}
-                      {patient.mainDiagnosis !== '' && <span>
+                      {patient.mainDiagnosis && <span>
                         <FaMedkit /> {patient.mainDiagnosis}
                       </span>}
-                      {patient.relationship !== '' && <span>
+                      {patient.relationship && <span>
                         <FaSitemap /> {patient.relationship}
                       </span>}
                     </div>
                     <div className={s.patientVisit}>
                       <div className={s.patientVisitDetails}>
                         <p>Total Visits</p>
-                        <span>{patient.totalVisited}</span>
+                        <span>{patient.totalVisits}</span>
                       </div>
                       <div className={s.patientVisitDetails}>
                         <p>Last Visit Date</p>
-                        <span>{patient.lastVisited == null ? '-' : moment(patient.lastVisited.dateEngaged).format('ll')}</span>
+                        <span>{patient.lastVisitedDate ? moment(patient.lastVisitedDate).format('ll') : '-'}</span>
                       </div>
                     </div>
                     <div className={s.patientAction}>
-                      <DashboardTableButton color="green" to={`/patients/${patient.id}`}>
+                      <DashboardTableButton color="green" to={`/patients/${patient._id}`}>
                         <span className={s.patientBtnText}>Edit</span>
                       </DashboardTableButton>
                       <DashboardTableButton color="red">
@@ -97,30 +100,23 @@ class PatientsList extends Component {
 
 
 PatientsList.propTypes = {
+  config: React.PropTypes.object,
   user: React.PropTypes.object,
-  client: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
-  patientIds: React.PropTypes.array,
 
   getPatients: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   user: state.user.data,
-  client: state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  patients: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].data,
-  patientsFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].isFetching,
-  patientIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].ids,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
+  patientsFetching: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({

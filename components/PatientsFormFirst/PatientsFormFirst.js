@@ -24,6 +24,7 @@ class PatientsFormFirst extends Component {
       submitFailed,
       submitting,
       action,
+      config,
     } = this.props;
     return (
       <form className={s.patientsFormFirst} onSubmit={handleSubmit}>
@@ -42,12 +43,10 @@ class PatientsFormFirst extends Component {
                 <span></span>
                 <select id="gender" name="gender" {...gender} value={gender.value || ''}>
                   <option value="">-- Select --</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
                   {
-                    /* input.options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
-                    )) */
+                    config && config.genders && config.genders.map((option) => (
+                      <option value={option.value} key={option.value}>{option.name}</option>
+                    ))
                   }
                 </select>
               </div>
@@ -83,7 +82,7 @@ class PatientsFormFirst extends Component {
                   <option value="Others">Others</option>
                   {
                     /* input.options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
+                      <option value={option.value} key={option.value}>{option.name}</option>
                     )) */
                   }
                 </select>
@@ -98,14 +97,10 @@ class PatientsFormFirst extends Component {
                 <span></span>
                 <select id="maritalStatus" name="maritalStatus" {...maritalStatus} value={maritalStatus.value || ''}>
                   <option value="">-- Select --</option>
-                  <option value="Single">Single</option>
-                  <option value="Married">Married</option>
-                  <option value="Divorced">Divorced</option>
-                  <option value="Widowed">Widowed</option>
                   {
-                    /* input.options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
-                    )) */
+                    config && config.maritalStatus && config.maritalStatus.map((option) => (
+                      <option value={option.value} key={option.value}>{option.name}</option>
+                    ))
                   }
                 </select>
               </div>
@@ -130,7 +125,7 @@ class PatientsFormFirst extends Component {
                   <option value="Widowed">Widowed</option>
                   {
                     /* input.options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
+                      <option value={option.value} key={option.value}>{option.name}</option>
                     )) */
                   }
                 </select>
@@ -191,6 +186,7 @@ PatientsFormFirst.propTypes = {
   submitting: PropTypes.bool.isRequired,
   showDayPickerPopup: PropTypes.func.isRequired,
   action: PropTypes.string.isRequired,
+  config: PropTypes.object,
 };
 
 const reduxFormConfig = {
@@ -211,6 +207,7 @@ const reduxFormConfig = {
 const mapStateToProps = (state) => {
   // const { order } = state;
   return {
+    config: state.config.data,
     initialValues: {
       // client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
       // client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,

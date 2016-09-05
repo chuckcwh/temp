@@ -29,10 +29,6 @@ class PatientsForm extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.fetchLanguages();
-  }
-
   handleTabSelect = (index) => {
     this.setState({ selectedTabIndex: index });
   };
@@ -46,7 +42,7 @@ class PatientsForm extends Component {
   };
 
   render() {
-    const { action, patients, showDayPickerPopup, fetchAddress, languages } = this.props;
+    const { action, patients, showDayPickerPopup, fetchAddress } = this.props;
     const { selectedTabIndex } = this.state;
     return (
       <div className={s.patientsForm}>
@@ -69,7 +65,7 @@ class PatientsForm extends Component {
             {selectedTabIndex === 1
               && <PatientsFormSecond action={action} previousPage={this.previousPage} onSubmit={this.nextPage} fetchAddress={fetchAddress} />}
             {selectedTabIndex === 2
-              && <PatientsFormThird action={action} previousPage={this.previousPage} onSubmit={this.nextPage} languages={languages} />}
+              && <PatientsFormThird action={action} previousPage={this.previousPage} onSubmit={this.nextPage} />}
             {selectedTabIndex === 3
               && <PatientsFormFourth action={action} previousPage={this.previousPage} onSubmit={this.nextPage} />}
           </div>
@@ -85,37 +81,25 @@ PatientsForm.propTypes = {
   action: React.PropTypes.string.isRequired,
 
   user: React.PropTypes.object,
-  client: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
-  patientIds: React.PropTypes.array,
 
-  fetchLanguages: React.PropTypes.func.isRequired,
   fetchAddress: React.PropTypes.func.isRequired,
   getPatients: React.PropTypes.func.isRequired,
   showDayPickerPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  languages: state.languages.data,
   user: state.user.data,
-  client: state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  patients: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].data,
-  patientsFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].isFetching,
-  patientIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].ids,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
+  patientsFetching: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchLanguages: () => dispatch(fetchLanguages()),
   fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
   getPatients: (params) => dispatch(getPatients(params)),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),

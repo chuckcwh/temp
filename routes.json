@@ -100,7 +100,7 @@
     "page": "./pages/patients-add"
   },
   {
-    "path": "/patients/:id",
+    "path": "/patients/:patientId",
     "page": "./pages/patients-edit"
   },
   {

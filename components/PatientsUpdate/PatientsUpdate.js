@@ -6,6 +6,7 @@ import Container from '../Container';
 import Header from '../Header';
 import PatientsForm from '../PatientsForm';
 import Loader from 'react-loader';
+import history from '../../core/history';
 
 class PatientsUpdate extends Component {
 
@@ -18,18 +19,18 @@ class PatientsUpdate extends Component {
 
   componentDidMount() {
     if (this.props.action === 'edit') {
-      this.props.client
-        && this.props.client.id
-        && this.props.getPatients({ cid: this.props.client.id });
+      this.props.user
+        && this.props.user._id
+        && this.props.getPatients({ userId: this.props.user._id });
     }
   }
 
   componentWillReceiveProps(props) {
     if (this.props.action === 'edit') {
-      if (props.client && !this.props.client) {
-        props.client
-          && props.client.id
-          && props.getPatients({ cid: props.client.id });
+      if (props.user && !this.props.user) {
+        props.user
+          && props.user._id
+          && props.getPatients({ userId: props.user._id });
       }
     }
   }
@@ -39,21 +40,23 @@ class PatientsUpdate extends Component {
   };
 
   render() {
-    const { action, patients } = this.props;
-    let form;
+    const { params, action, patients } = this.props;
+    let form,
+      patientName;
     switch (action) {
       case 'add':
         form = <PatientsForm action={action} />;
         break;
       case 'edit':
         form = <PatientsForm action={action} />;
+        patientName = patients && params.patientId && patients[params.patientId] && patients[params.patientId].name;
         break;
       default:
         break;
     }
     return (
       <div className={s.patientsUpdate}>
-        <Header title={`${action === 'edit' ? 'Edit ' : 'Add '}Patient${action === 'edit' ? ': ' : ''}`} />
+        <Header title={`${action === 'edit' ? 'Edit ' : 'Add '}Patient${action === 'edit' ? `: ${patientName}` : ''}`} />
         <Container>
           <Loader className="spinner" loaded={!this.props.patientsFetching}>
             {form}
@@ -66,32 +69,24 @@ class PatientsUpdate extends Component {
 
 
 PatientsUpdate.propTypes = {
+  params: React.PropTypes.object,
   action: React.PropTypes.string.isRequired,
 
   user: React.PropTypes.object,
-  client: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
-  patientIds: React.PropTypes.array,
 
   getPatients: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  client: state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  patients: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].data,
-  patientsFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].isFetching,
-  patientIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].ids,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
+  patientsFetching: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({

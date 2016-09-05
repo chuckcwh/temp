@@ -27,6 +27,7 @@ class PatientsFormThird extends Component {
       submitting,
       previousPage,
       action,
+      config,
     } = this.props;
     return (
       <form className={s.patientsFormThird} onSubmit={handleSubmit}>
@@ -38,12 +39,10 @@ class PatientsFormThird extends Component {
                 <span></span>
                 <select id="race" name="race" {...race} value={race.value || ''}>
                   <option value="">-- Select --</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
                   {
-                    /* input.options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
-                    )) */
+                    config && config.races.map((option) => (
+                      <option value={option.value} key={option.value}>{option.name}</option>
+                    ))
                   }
                 </select>
               </div>
@@ -57,12 +56,10 @@ class PatientsFormThird extends Component {
                 <span></span>
                 <select id="religion" name="religion" {...religion} value={religion.value || ''}>
                   <option value="">-- Select --</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
                   {
-                    /* input.options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
-                    )) */
+                    config && config.religions.map((option) => (
+                      <option value={option.value} key={option.value}>{option.name}</option>
+                    ))
                   }
                 </select>
               </div>
@@ -73,7 +70,7 @@ class PatientsFormThird extends Component {
             <div className="TableRowItem1">Languages*</div>
             <div className="TableRowItem2">
               <MultiSelect
-                options={Object.values(this.props.languages).map((l) => ({ label: l.name, value: l.id }))}
+                options={config && config.languages.map((l) => ({ label: l.name, value: l.value }))}
                 {...languages}
               />
               {languages.touched && languages.error && <div className={s.patientsFormThirdError}>{languages.error}</div>}
@@ -117,8 +114,9 @@ PatientsFormThird.propTypes = {
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   previousPage: PropTypes.func.isRequired,
-  languages: PropTypes.object.isRequired,
   action: PropTypes.string.isRequired,
+  config: PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
 };
 
 const reduxFormConfig = {
@@ -135,6 +133,7 @@ const reduxFormConfig = {
 const mapStateToProps = (state) => {
   const { order } = state;
   return {
+    config: state.config.data,
     initialValues: {
       // client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
       // client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,

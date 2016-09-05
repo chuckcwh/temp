@@ -289,7 +289,7 @@ function fetchAction(route) {
       method: 'get',
       entity: 'patient'
     },
-    createPatient: {
+    createUserPatient: {
       types: [ USER_PATIENT_CREATE_REQUEST, USER_PATIENT_CREATE_SUCCESS, USER_PATIENT_CREATE_FAILURE ],
       endpoint: '/users/:userId/patients',
       method: 'post',

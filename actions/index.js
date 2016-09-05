@@ -63,29 +63,41 @@ export const USER_DEVICES_EDIT_REQUEST = 'USER_DEVICES_EDIT_REQUEST'
 export const USER_DEVICES_EDIT_SUCCESS = 'USER_DEVICES_EDIT_SUCCESS'
 export const USER_DEVICES_EDIT_FAILURE = 'USER_DEVICES_EDIT_FAILURE'
 
-export const PATIENTS_EDIT_REQUEST = 'PATIENTS_EDIT_REQUEST'
-export const PATIENTS_EDIT_SUCCESS = 'PATIENTS_EDIT_SUCCESS'
-export const PATIENTS_EDIT_FAILURE = 'PATIENTS_EDIT_FAILURE'
+export const USER_PATIENTS_REQUEST = 'USER_PATIENTS_REQUEST'
+export const USER_PATIENTS_SUCCESS = 'USER_PATIENTS_SUCCESS'
+export const USER_PATIENTS_FAILURE = 'USER_PATIENTS_FAILURE'
 
-export const USER_EXPERIENCES_EDIT_REQUEST = 'USER_EXPERIENCES_EDIT_REQUEST'
-export const USER_EXPERIENCES_EDIT_SUCCESS = 'USER_EXPERIENCES_EDIT_SUCCESS'
-export const USER_EXPERIENCES_EDIT_FAILURE = 'USER_EXPERIENCES_EDIT_FAILURE'
+export const USER_PATIENT_REQUEST = 'USER_PATIENT_REQUEST'
+export const USER_PATIENT_SUCCESS = 'USER_PATIENT_SUCCESS'
+export const USER_PATIENT_FAILURE = 'USER_PATIENT_FAILURE'
 
-export const USER_EDUCATIONS_EDIT_REQUEST = 'USER_EDUCATIONS_EDIT_REQUEST'
-export const USER_EDUCATIONS_EDIT_SUCCESS = 'USER_EDUCATIONS_EDIT_SUCCESS'
-export const USER_EDUCATIONS_EDIT_FAILURE = 'USER_EDUCATIONS_EDIT_FAILURE'
+export const USER_PATIENT_CREATE_REQUEST = 'USER_PATIENT_CREATE_REQUEST'
+export const USER_PATIENT_CREATE_SUCCESS = 'USER_PATIENT_CREATE_SUCCESS'
+export const USER_PATIENT_CREATE_FAILURE = 'USER_PATIENT_CREATE_FAILURE'
 
-export const USER_ACHIEVEMENTS_EDIT_REQUEST = 'USER_ACHIEVEMENTS_EDIT_REQUEST'
-export const USER_ACHIEVEMENTS_EDIT_SUCCESS = 'USER_ACHIEVEMENTS_EDIT_SUCCESS'
-export const USER_ACHIEVEMENTS_EDIT_FAILURE = 'USER_ACHIEVEMENTS_EDIT_FAILURE'
+export const USER_PATIENT_EDIT_REQUEST = 'USER_PATIENT_EDIT_REQUEST'
+export const USER_PATIENT_EDIT_SUCCESS = 'USER_PATIENT_EDIT_SUCCESS'
+export const USER_PATIENT_EDIT_FAILURE = 'USER_PATIENT_EDIT_FAILURE'
 
-export const USER_REVIEWS_EDIT_REQUEST = 'USER_REVIEWS_EDIT_REQUEST'
-export const USER_REVIEWS_EDIT_SUCCESS = 'USER_REVIEWS_EDIT_SUCCESS'
-export const USER_REVIEWS_EDIT_FAILURE = 'USER_REVIEWS_EDIT_FAILURE'
+export const USER_EXPERIENCE_EDIT_REQUEST = 'USER_EXPERIENCE_EDIT_REQUEST'
+export const USER_EXPERIENCE_EDIT_SUCCESS = 'USER_EXPERIENCE_EDIT_SUCCESS'
+export const USER_EXPERIENCE_EDIT_FAILURE = 'USER_EXPERIENCE_EDIT_FAILURE'
 
-export const USER_SCHEDULES_EDIT_REQUEST = 'USER_SCHEDULES_EDIT_REQUEST'
-export const USER_SCHEDULES_EDIT_SUCCESS = 'USER_SCHEDULES_EDIT_SUCCESS'
-export const USER_SCHEDULES_EDIT_FAILURE = 'USER_SCHEDULES_EDIT_FAILURE'
+export const USER_EDUCATION_EDIT_REQUEST = 'USER_EDUCATION_EDIT_REQUEST'
+export const USER_EDUCATION_EDIT_SUCCESS = 'USER_EDUCATION_EDIT_SUCCESS'
+export const USER_EDUCATION_EDIT_FAILURE = 'USER_EDUCATION_EDIT_FAILURE'
+
+export const USER_ACHIEVEMENT_EDIT_REQUEST = 'USER_ACHIEVEMENT_EDIT_REQUEST'
+export const USER_ACHIEVEMENT_EDIT_SUCCESS = 'USER_ACHIEVEMENT_EDIT_SUCCESS'
+export const USER_ACHIEVEMENT_EDIT_FAILURE = 'USER_ACHIEVEMENT_EDIT_FAILURE'
+
+export const USER_REVIEW_EDIT_REQUEST = 'USER_REVIEW_EDIT_REQUEST'
+export const USER_REVIEW_EDIT_SUCCESS = 'USER_REVIEW_EDIT_SUCCESS'
+export const USER_REVIES_EDIT_FAILURE = 'USER_REVIEW_EDIT_FAILURE'
+
+export const USER_SCHEDULE_EDIT_REQUEST = 'USER_SCHEDULE_EDIT_REQUEST'
+export const USER_SCHEDULE_EDIT_SUCCESS = 'USER_SCHEDULE_EDIT_SUCCESS'
+export const USER_SCHEDULE_EDIT_FAILURE = 'USER_SCHEDULE_EDIT_FAILURE'
 
 export const FORGOT_PASSWORD_EMAIL_REQUEST = 'FORGOT_PASSWORD_EMAIL_REQUEST'
 export const FORGOT_PASSWORD_EMAIL_SUCCESS = 'FORGOT_PASSWORD_EMAIL_SUCCESS'
@@ -98,22 +110,6 @@ export const RESET_PASSWORD_FAILURE = 'RESET_PASSWORD_FAILURE'
 export const CLIENT_EDIT_REQUEST = 'CLIENT_EDIT_REQUEST'
 export const CLIENT_EDIT_SUCCESS = 'CLIENT_EDIT_SUCCESS'
 export const CLIENT_EDIT_FAILURE = 'CLIENT_EDIT_FAILURE'
-
-export const PATIENTS_REQUEST = 'PATIENTS_REQUEST'
-export const PATIENTS_SUCCESS = 'PATIENTS_SUCCESS'
-export const PATIENTS_FAILURE = 'PATIENTS_FAILURE'
-
-export const PATIENT_REQUEST = 'PATIENT_REQUEST'
-export const PATIENT_SUCCESS = 'PATIENT_SUCCESS'
-export const PATIENT_FAILURE = 'PATIENT_FAILURE'
-
-export const PATIENT_CREATE_REQUEST = 'PATIENT_CREATE_REQUEST'
-export const PATIENT_CREATE_SUCCESS = 'PATIENT_CREATE_SUCCESS'
-export const PATIENT_CREATE_FAILURE = 'PATIENT_CREATE_FAILURE'
-
-export const PATIENT_EDIT_REQUEST = 'PATIENT_EDIT_REQUEST'
-export const PATIENT_EDIT_SUCCESS = 'PATIENT_EDIT_SUCCESS'
-export const PATIENT_EDIT_FAILURE = 'PATIENT_EDIT_FAILURE'
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
@@ -281,57 +277,57 @@ function fetchAction(route) {
       endpoint: '/users/:userId',
       method: 'put'
     },
-    editUserDevices: {
-      types: [ USER_DEVICES_EDIT_REQUEST, USER_DEVICES_EDIT_SUCCESS, USER_DEVICES_EDIT_FAILURE ],
-      endpoint: '/users/:userId/devices/:deviceId',
-      method: 'put'
-    },
-    editUserExperiences: {
-      types: [ USER_EXPERIENCES_EDIT_REQUEST, USER_EXPERIENCES_EDIT_SUCCESS, USER_EXPERIENCES_EDIT_FAILURE ],
-      endpoint: '/users/:userId/experiences/:experienceId',
-      method: 'put'
-    },
-    editUserEducations: {
-      types: [ USER_EDUCATIONS_EDIT_REQUEST, USER_EDUCATIONS_EDIT_SUCCESS, USER_EDUCATIONS_EDIT_FAILURE ],
-      endpoint: '/users/:userId/educations/:educationId',
-      method: 'put'
-    },
-    editUserAchievements: {
-      types: [ USER_ACHIEVEMENTS_EDIT_REQUEST, USER_ACHIEVEMENTS_EDIT_SUCCESS, USER_ACHIEVEMENTS_EDIT_FAILURE ],
-      endpoint: '/users/:userId/achievements/:achievementId',
-      method: 'put'
-    },
-    editUserReviews: {
-      types: [ USER_REVIEWS_EDIT_REQUEST, USER_REVIEWS_EDIT_SUCCESS, USER_REVIEWS_EDIT_FAILURE ],
-      endpoint: '/users/:userId/reviews/:reviewId',
-      method: 'put'
-    },
-    editUserSchedules: {
-      types: [ USER_SCHEDULES_EDIT_REQUEST, USER_SCHEDULES_EDIT_SUCCESS, USER_SCHEDULES_EDIT_FAILURE ],
-      endpoint: '/users/:userId/schedules/:scheduleId',
-      method: 'put'
-    },
-    getPatients: {
-      types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
+    getUserPatients: {
+      types: [ USER_PATIENTS_REQUEST, USER_PATIENTS_SUCCESS, USER_PATIENTS_FAILURE ],
       endpoint: '/users/:userId/patients',
       method: 'get',
       entity: 'patients'
     },
-    getPatient: {
-      types: [ PATIENT_REQUEST, PATIENT_SUCCESS, PATIENT_FAILURE ],
+    getUserPatient: {
+      types: [ USER_PATIENT_REQUEST, USER_PATIENT_SUCCESS, USER_PATIENT_FAILURE ],
       endpoint: '/users/:userId/patients/:patientId',
       method: 'get',
       entity: 'patient'
     },
     createPatient: {
-      types: [ PATIENT_CREATE_REQUEST, PATIENT_CREATE_SUCCESS, PATIENT_CREATE_FAILURE ],
+      types: [ USER_PATIENT_CREATE_REQUEST, USER_PATIENT_CREATE_SUCCESS, USER_PATIENT_CREATE_FAILURE ],
       endpoint: '/users/:userId/patients',
       method: 'post',
     },
-    editPatient: {
-      types: [ PATIENT_EDIT_REQUEST, PATIENT_EDIT_SUCCESS, PATIENT_EDIT_FAILURE ],
+    editUserPatient: {
+      types: [ USER_PATIENT_EDIT_REQUEST, USER_PATIENT_EDIT_SUCCESS, USER_PATIENT_EDIT_FAILURE ],
       endpoint: '/users/:userId/patients/:patientId',
-      method: 'put',
+      method: 'put'
+    },
+    editUserDevice: {
+      types: [ USER_DEVICE_EDIT_REQUEST, USER_DEVICE_EDIT_SUCCESS, USER_DEVICE_EDIT_FAILURE ],
+      endpoint: '/users/:userId/devices/:deviceId',
+      method: 'put'
+    },
+    editUserExperience: {
+      types: [ USER_EXPERIENCE_EDIT_REQUEST, USER_EXPERIENCE_EDIT_SUCCESS, USER_EXPERIENCE_EDIT_FAILURE ],
+      endpoint: '/users/:userId/experiences/:experienceId',
+      method: 'put'
+    },
+    editUserEducation: {
+      types: [ USER_EDUCATION_EDIT_REQUEST, USER_EDUCATION_EDIT_SUCCESS, USER_EDUCATION_EDIT_FAILURE ],
+      endpoint: '/users/:userId/educations/:educationId',
+      method: 'put'
+    },
+    editUserAchievement: {
+      types: [ USER_ACHIEVEMENT_EDIT_REQUEST, USER_ACHIEVEMENT_EDIT_SUCCESS, USER_ACHIEVEMENT_EDIT_FAILURE ],
+      endpoint: '/users/:userId/achievements/:achievementId',
+      method: 'put'
+    },
+    editUserReview: {
+      types: [ USER_REVIEW_EDIT_REQUEST, USER_REVIEW_EDIT_SUCCESS, USER_REVIEW_EDIT_FAILURE ],
+      endpoint: '/users/:userId/reviews/:reviewId',
+      method: 'put'
+    },
+    editUserSchedule: {
+      types: [ USER_SCHEDULE_EDIT_REQUEST, USER_SCHEDULE_EDIT_SUCCESS, USER_SCHEDULE_EDIT_FAILURE ],
+      endpoint: '/users/:userId/schedules/:scheduleId',
+      method: 'put'
     },
     editEmail: {
       types: [ EMAIL_EDIT_REQUEST, EMAIL_EDIT_SUCCESS, EMAIL_EDIT_FAILURE ],
@@ -580,28 +576,44 @@ export function editUser(params) {
   return fetch('editUser', params);
 }
 
-export function editUserDevices(params) {
-  return fetch('editUserDevices', params);
+export function getUserPatients(params) {
+  return fetch('getUserPatients', params);
 }
 
-export function editUserExperiences(params) {
-  return fetch('editUserExperiences', params);
+export function getUserPatient(params) {
+  return fetch('getUserPatient', params);
 }
 
-export function editUserEducations(params) {
-  return fetch('editUserEducations', params);
+export function createUserPatient(params) {
+  return fetch('createUserPatient', params);
 }
 
-export function editUserAchievements(params) {
-  return fetch('editUserAchievements', params);
+export function editUserPatient(params) {
+  return fetch('editUserPatient', params);
 }
 
-export function editUserReviews(params) {
-  return fetch('editUserReviews', params);
+export function editUserDevice(params) {
+  return fetch('editUserDevice', params);
 }
 
-export function editUserSchedules(params) {
-  return fetch('editUserSchedules', params);
+export function editUserExperience(params) {
+  return fetch('editUserExperience', params);
+}
+
+export function editUserEducation(params) {
+  return fetch('editUserEducation', params);
+}
+
+export function editUserAchievement(params) {
+  return fetch('editUserAchievement', params);
+}
+
+export function editUserReview(params) {
+  return fetch('editUserReview', params);
+}
+
+export function editUserSchedule(params) {
+  return fetch('editUserSchedule', params);
 }
 
 export function getUserWithToken(params) {
@@ -620,22 +632,6 @@ export function destroyUser() {
   return {
     type: USER_DESTROY
   }
-}
-
-export function getPatients(params) {
-  return fetch('getPatients', params);
-}
-
-export function getPatient(params) {
-  return fetch('getPatient', params);
-}
-
-export function createPatient(params) {
-  return fetch('createPatient', params);
-}
-
-export function editPatient(params) {
-  return fetch('editPatient', params);
 }
 
 export function editEmail(params) {

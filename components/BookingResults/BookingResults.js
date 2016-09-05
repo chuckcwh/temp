@@ -326,8 +326,11 @@ class BookingResults extends Component {
               <label className={s.agreeCheckboxLabel} htmlFor="agree">
                 <span></span>
                 <span>
-                  By making this booking, I agree to the <a href="/terms-of-service" target="blank">Terms of Service</a>
-                  and <a href="/privacy-policy" target="blank">Privacy Policy</a>.</span>
+                  By making this booking, I agree to the
+                  &nbsp;<a href="/terms-of-service" target="blank">Terms of Service</a>&nbsp;
+                  and
+                  &nbsp;<a href="/privacy-policy" target="blank">Privacy Policy</a>
+                  .</span>
               </label>
             </form>
           </div>

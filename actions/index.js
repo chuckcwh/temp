@@ -75,25 +75,97 @@ export const PATIENT_EDIT_REQUEST = 'PATIENT_EDIT_REQUEST'
 export const PATIENT_EDIT_SUCCESS = 'PATIENT_EDIT_SUCCESS'
 export const PATIENT_EDIT_FAILURE = 'PATIENT_EDIT_FAILURE'
 
+export const USER_DEVICES_REQUEST = 'USER_DEVICES_REQUEST'
+export const USER_DEVICES_SUCCESS = 'USER_DEVICES_SUCCESS'
+export const USER_DEVICES_FAILURE = 'USER_DEVICES_FAILURE'
+
+export const USER_DEVICE_REQUEST = 'USER_DEVICE_REQUEST'
+export const USER_DEVICE_SUCCESS = 'USER_DEVICE_SUCCESS'
+export const USER_DEVICE_FAILURE = 'USER_DEVICE_FAILURE'
+
+export const USER_DEVICE_CREATE_REQUEST = 'USER_DEVICE_CREATE_REQUEST'
+export const USER_DEVICE_CREATE_SUCCESS = 'USER_DEVICE_CREATE_SUCCESS'
+export const USER_DEVICE_CREATE_FAILURE = 'USER_DEVICE_CREATE_FAILURE'
+
 export const USER_DEVICE_EDIT_REQUEST = 'USER_DEVICE_EDIT_REQUEST'
 export const USER_DEVICE_EDIT_SUCCESS = 'USER_DEVICE_EDIT_SUCCESS'
 export const USER_DEVICE_EDIT_FAILURE = 'USER_DEVICE_EDIT_FAILURE'
+
+export const USER_EXPERIENCES_REQUEST = 'USER_EXPERIENCES_REQUEST'
+export const USER_EXPERIENCES_SUCCESS = 'USER_EXPERIENCES_SUCCESS'
+export const USER_EXPERIENCES_FAILURE = 'USER_EXPERIENCES_FAILURE'
+
+export const USER_EXPERIENCE_REQUEST = 'USER_EXPERIENCE_REQUEST'
+export const USER_EXPERIENCE_SUCCESS = 'USER_EXPERIENCE_SUCCESS'
+export const USER_EXPERIENCE_FAILURE = 'USER_EXPERIENCE_FAILURE'
+
+export const USER_EXPERIENCE_CREATE_REQUEST = 'USER_EXPERIENCE_CREATE_REQUEST'
+export const USER_EXPERIENCE_CREATE_SUCCESS = 'USER_EXPERIENCE_CREATE_SUCCESS'
+export const USER_EXPERIENCE_CREATE_FAILURE = 'USER_EXPERIENCE_CREATE_FAILURE'
 
 export const USER_EXPERIENCE_EDIT_REQUEST = 'USER_EXPERIENCE_EDIT_REQUEST'
 export const USER_EXPERIENCE_EDIT_SUCCESS = 'USER_EXPERIENCE_EDIT_SUCCESS'
 export const USER_EXPERIENCE_EDIT_FAILURE = 'USER_EXPERIENCE_EDIT_FAILURE'
 
+export const USER_EDUCATIONS_REQUEST = 'USER_EDUCATIONS_REQUEST'
+export const USER_EDUCATIONS_SUCCESS = 'USER_EDUCATIONS_SUCCESS'
+export const USER_EDUCATIONS_FAILURE = 'USER_EDUCATIONS_FAILURE'
+
+export const USER_EDUCATION_REQUEST = 'USER_EDUCATION_REQUEST'
+export const USER_EDUCATION_SUCCESS = 'USER_EDUCATION_SUCCESS'
+export const USER_EDUCATION_FAILURE = 'USER_EDUCATION_FAILURE'
+
+export const USER_EDUCATION_CREATE_REQUEST = 'USER_EDUCATION_CREATE_REQUEST'
+export const USER_EDUCATION_CREATE_SUCCESS = 'USER_EDUCATION_CREATE_SUCCESS'
+export const USER_EDUCATION_CREATE_FAILURE = 'USER_EDUCATION_CREATE_FAILURE'
+
 export const USER_EDUCATION_EDIT_REQUEST = 'USER_EDUCATION_EDIT_REQUEST'
 export const USER_EDUCATION_EDIT_SUCCESS = 'USER_EDUCATION_EDIT_SUCCESS'
 export const USER_EDUCATION_EDIT_FAILURE = 'USER_EDUCATION_EDIT_FAILURE'
+
+export const USER_ACHIEVEMENTS_REQUEST = 'USER_ACHIEVEMENTS_REQUEST'
+export const USER_ACHIEVEMENTS_SUCCESS = 'USER_ACHIEVEMENTS_SUCCESS'
+export const USER_ACHIEVEMENTS_FAILURE = 'USER_ACHIEVEMENTS_FAILURE'
+
+export const USER_ACHIEVEMENT_REQUEST = 'USER_ACHIEVEMENT_REQUEST'
+export const USER_ACHIEVEMENT_SUCCESS = 'USER_ACHIEVEMENT_SUCCESS'
+export const USER_ACHIEVEMENT_FAILURE = 'USER_ACHIEVEMENT_FAILURE'
+
+export const USER_ACHIEVEMENT_CREATE_REQUEST = 'USER_ACHIEVEMENT_CREATE_REQUEST'
+export const USER_ACHIEVEMENT_CREATE_SUCCESS = 'USER_ACHIEVEMENT_CREATE_SUCCESS'
+export const USER_ACHIEVEMENT_CREATE_FAILURE = 'USER_ACHIEVEMENT_CREATE_FAILURE'
 
 export const USER_ACHIEVEMENT_EDIT_REQUEST = 'USER_ACHIEVEMENT_EDIT_REQUEST'
 export const USER_ACHIEVEMENT_EDIT_SUCCESS = 'USER_ACHIEVEMENT_EDIT_SUCCESS'
 export const USER_ACHIEVEMENT_EDIT_FAILURE = 'USER_ACHIEVEMENT_EDIT_FAILURE'
 
+export const USER_REVIEWS_REQUEST = 'USER_REVIEWS_REQUEST'
+export const USER_REVIEWS_SUCCESS = 'USER_REVIEWS_SUCCESS'
+export const USER_REVIEWS_FAILURE = 'USER_REVIEWS_FAILURE'
+
+export const USER_REVIEW_REQUEST = 'USER_REVIEW_REQUEST'
+export const USER_REVIEW_SUCCESS = 'USER_REVIEW_SUCCESS'
+export const USER_REVIEW_FAILURE = 'USER_REVIEW_FAILURE'
+
+export const USER_REVIEW_CREATE_REQUEST = 'USER_REVIEW_CREATE_REQUEST'
+export const USER_REVIEW_CREATE_SUCCESS = 'USER_REVIEW_CREATE_SUCCESS'
+export const USER_REVIEW_CREATE_FAILURE = 'USER_REVIEW_CREATE_FAILURE'
+
 export const USER_REVIEW_EDIT_REQUEST = 'USER_REVIEW_EDIT_REQUEST'
 export const USER_REVIEW_EDIT_SUCCESS = 'USER_REVIEW_EDIT_SUCCESS'
 export const USER_REVIEW_EDIT_FAILURE = 'USER_REVIEW_EDIT_FAILURE'
+
+export const USER_SCHEDULES_REQUEST = 'USER_SCHEDULES_REQUEST'
+export const USER_SCHEDULES_SUCCESS = 'USER_SCHEDULES_SUCCESS'
+export const USER_SCHEDULES_FAILURE = 'USER_SCHEDULES_FAILURE'
+
+export const USER_SCHEDULE_REQUEST = 'USER_SCHEDULE_REQUEST'
+export const USER_SCHEDULE_SUCCESS = 'USER_SCHEDULE_SUCCESS'
+export const USER_SCHEDULE_FAILURE = 'USER_SCHEDULE_FAILURE'
+
+export const USER_SCHEDULE_CREATE_REQUEST = 'USER_SCHEDULE_CREATE_REQUEST'
+export const USER_SCHEDULE_CREATE_SUCCESS = 'USER_SCHEDULE_CREATE_SUCCESS'
+export const USER_SCHEDULE_CREATE_FAILURE = 'USER_SCHEDULE_CREATE_FAILURE'
 
 export const USER_SCHEDULE_EDIT_REQUEST = 'USER_SCHEDULE_EDIT_REQUEST'
 export const USER_SCHEDULE_EDIT_SUCCESS = 'USER_SCHEDULE_EDIT_SUCCESS'
@@ -277,30 +349,120 @@ function fetchAction(route) {
       endpoint: '/users/:userId',
       method: 'put'
     },
+    getUserDevices: {
+      types: [ USER_DEVICES_REQUEST, USER_DEVICES_SUCCESS, USER_DEVICES_FAILURE ],
+      endpoint: '/users/:userId/devices',
+      method: 'get'
+    },
+    getUserDevice: {
+      types: [ USER_DEVICE_REQUEST, USER_DEVICE_SUCCESS, USER_DEVICE_FAILURE ],
+      endpoint: '/users/:userId/devices/:deviceId',
+      method: 'get'
+    },
+    createUserDevice: {
+      types: [ USER_DEVICE_CREATE_REQUEST, USER_DEVICE_CREATE_SUCCESS, USER_DEVICE_CREATE_FAILURE ],
+      endpoint: '/users/:userId/devices',
+      method: 'post'
+    },
     editUserDevice: {
       types: [ USER_DEVICE_EDIT_REQUEST, USER_DEVICE_EDIT_SUCCESS, USER_DEVICE_EDIT_FAILURE ],
       endpoint: '/users/:userId/devices/:deviceId',
       method: 'put'
+    },
+    getUserExperiences: {
+      types: [ USER_EXPERIENCES_REQUEST, USER_EXPERIENCES_SUCCESS, USER_EXPERIENCES_FAILURE ],
+      endpoint: '/users/:userId/experiences',
+      method: 'get'
+    },
+    getUserExperience: {
+      types: [ USER_EXPERIENCE_REQUEST, USER_EXPERIENCE_SUCCESS, USER_EXPERIENCE_FAILURE ],
+      endpoint: '/users/:userId/experiences/:experienceId',
+      method: 'get'
+    },
+    createUserExperience: {
+      types: [ USER_EXPERIENCE_CREATE_REQUEST, USER_EXPERIENCE_CREATE_SUCCESS, USER_EXPERIENCE_CREATE_FAILURE ],
+      endpoint: '/users/:userId/experiences',
+      method: 'post'
     },
     editUserExperience: {
       types: [ USER_EXPERIENCE_EDIT_REQUEST, USER_EXPERIENCE_EDIT_SUCCESS, USER_EXPERIENCE_EDIT_FAILURE ],
       endpoint: '/users/:userId/experiences/:experienceId',
       method: 'put'
     },
+    getUserEducations: {
+      types: [ USER_EDUCATIONS_REQUEST, USER_EDUCATIONS_SUCCESS, USER_EDUCATIONS_FAILURE ],
+      endpoint: '/users/:userId/educations',
+      method: 'get'
+    },
+    getUserEducation: {
+      types: [ USER_EDUCATION_REQUEST, USER_EDUCATION_SUCCESS, USER_EDUCATION_FAILURE ],
+      endpoint: '/users/:userId/educations/:educationId',
+      method: 'get'
+    },
+    createUserEducation: {
+      types: [ USER_EDUCATION_CREATE_REQUEST, USER_EDUCATION_CREATE_SUCCESS, USER_EDUCATION_CREATE_FAILURE ],
+      endpoint: '/users/:userId/educations',
+      method: 'post'
+    },
     editUserEducation: {
       types: [ USER_EDUCATION_EDIT_REQUEST, USER_EDUCATION_EDIT_SUCCESS, USER_EDUCATION_EDIT_FAILURE ],
       endpoint: '/users/:userId/educations/:educationId',
       method: 'put'
+    },
+    getUserAchievements: {
+      types: [ USER_ACHIEVEMENTS_REQUEST, USER_ACHIEVEMENTS_SUCCESS, USER_ACHIEVEMENTS_FAILURE ],
+      endpoint: '/users/:userId/achievements',
+      method: 'get'
+    },
+    getUserAchievement: {
+      types: [ USER_ACHIEVEMENT_REQUEST, USER_ACHIEVEMENT_SUCCESS, USER_ACHIEVEMENT_FAILURE ],
+      endpoint: '/users/:userId/achievements/:achievementId',
+      method: 'get'
+    },
+    createUserAchievement: {
+      types: [ USER_ACHIEVEMENT_CREATE_REQUEST, USER_ACHIEVEMENT_CREATE_SUCCESS, USER_ACHIEVEMENT_CREATE_FAILURE ],
+      endpoint: '/users/:userId/achievements',
+      method: 'post'
     },
     editUserAchievement: {
       types: [ USER_ACHIEVEMENT_EDIT_REQUEST, USER_ACHIEVEMENT_EDIT_SUCCESS, USER_ACHIEVEMENT_EDIT_FAILURE ],
       endpoint: '/users/:userId/achievements/:achievementId',
       method: 'put'
     },
+    getUserReviews: {
+      types: [ USER_REVIEWS_REQUEST, USER_REVIEWS_SUCCESS, USER_REVIEWS_FAILURE ],
+      endpoint: '/users/:userId/reviews',
+      method: 'get'
+    },
+    getUserReview: {
+      types: [ USER_REVIEW_REQUEST, USER_REVIEW_SUCCESS, USER_REVIEW_FAILURE ],
+      endpoint: '/users/:userId/reviews/:reviewId',
+      method: 'get'
+    },
+    createUserReview: {
+      types: [ USER_REVIEW_CREATE_REQUEST, USER_REVIEW_CREATE_SUCCESS, USER_REVIEW_CREATE_FAILURE ],
+      endpoint: '/users/:userId/reviews',
+      method: 'post'
+    },
     editUserReview: {
       types: [ USER_REVIEW_EDIT_REQUEST, USER_REVIEW_EDIT_SUCCESS, USER_REVIEW_EDIT_FAILURE ],
       endpoint: '/users/:userId/reviews/:reviewId',
       method: 'put'
+    },
+    getUserSchedules: {
+      types: [ USER_SCHEDULES_REQUEST, USER_SCHEDULES_SUCCESS, USER_SCHEDULES_FAILURE ],
+      endpoint: '/users/:userId/schedules',
+      method: 'get'
+    },
+    getUserSchedule: {
+      types: [ USER_SCHEDULE_REQUEST, USER_SCHEDULE_SUCCESS, USER_SCHEDULE_FAILURE ],
+      endpoint: '/users/:userId/schedules/:scheduleId',
+      method: 'get'
+    },
+    createUserSchedule: {
+      types: [ USER_SCHEDULE_CREATE_REQUEST, USER_SCHEDULE_CREATE_SUCCESS, USER_SCHEDULE_CREATE_FAILURE ],
+      endpoint: '/users/:userId/schedules',
+      method: 'post'
     },
     editUserSchedule: {
       types: [ USER_SCHEDULE_EDIT_REQUEST, USER_SCHEDULE_EDIT_SUCCESS, USER_SCHEDULE_EDIT_FAILURE ],
@@ -576,24 +738,96 @@ export function editUser(params) {
   return fetch('editUser', params);
 }
 
+export function getUserDevices(params) {
+  return fetch('getUserDevices', params);
+}
+
+export function getUserDevice(params) {
+  return fetch('getUserDevice', params);
+}
+
+export function createUserDevice(params) {
+  return fetch('createUserDevice', params);
+}
+
 export function editUserDevice(params) {
   return fetch('editUserDevice', params);
+}
+
+export function getUserExperiences(params) {
+  return fetch('getUserExperiences', params);
+}
+
+export function getUserExperience(params) {
+  return fetch('getUserExperience', params);
+}
+
+export function createUserExperience(params) {
+  return fetch('createUserExperience', params);
 }
 
 export function editUserExperience(params) {
   return fetch('editUserExperience', params);
 }
 
+export function getUserEducations(params) {
+  return fetch('getUserEducations', params);
+}
+
+export function getUserEducation(params) {
+  return fetch('getUserEducation', params);
+}
+
+export function createUserEducation(params) {
+  return fetch('createUserEducation', params);
+}
+
 export function editUserEducation(params) {
   return fetch('editUserEducation', params);
+}
+
+export function getUserAchievements(params) {
+  return fetch('getUserAchievements', params);
+}
+
+export function getUserAchievement(params) {
+  return fetch('getUserAchievement', params);
+}
+
+export function createUserAchievement(params) {
+  return fetch('createUserAchievement', params);
 }
 
 export function editUserAchievement(params) {
   return fetch('editUserAchievement', params);
 }
 
+export function getUserReviews(params) {
+  return fetch('getUserReviews', params);
+}
+
+export function getUserReview(params) {
+  return fetch('getUserReview', params);
+}
+
+export function createUserReview(params) {
+  return fetch('createUserReview', params);
+}
+
 export function editUserReview(params) {
   return fetch('editUserReview', params);
+}
+
+export function getUserSchedules(params) {
+  return fetch('getUserSchedules', params);
+}
+
+export function getUserSchedule(params) {
+  return fetch('getUserSchedule', params);
+}
+
+export function createUserSchedule(params) {
+  return fetch('createUserSchedule', params);
 }
 
 export function editUserSchedule(params) {

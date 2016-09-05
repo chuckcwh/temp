@@ -3,9 +3,18 @@ import * as ActionTypes from '../actions';
 import { combineReducers } from 'redux';
 import { isClient } from '../core/util';
 
+const patients = (state = null, action) => {
+  switch (action.type) {
+    case ActionTypes.USER_PATIENTS_EDIT_SUCCESS:
+      return Object.assign({}, state, action.response.data);
+    default:
+      return state;
+  }
+}
+
 const devices = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.USER_DEVICES_EDIT_SUCCESS:
+    case ActionTypes.USER_DEVICE_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
       return state;
@@ -14,7 +23,7 @@ const devices = (state = null, action) => {
 
 const experiences = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.USER_EXPERIENCES_EDIT_SUCCESS:
+    case ActionTypes.USER_EXPERIENCE_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
       return state;
@@ -23,7 +32,7 @@ const experiences = (state = null, action) => {
 
 const educations = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.USER_EDUCATIONS_EDIT_SUCCESS:
+    case ActionTypes.USER_EDUCATION_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
       return state;
@@ -32,7 +41,7 @@ const educations = (state = null, action) => {
 
 const achievements = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.USER_ACHIEVEMENTS_EDIT_SUCCESS:
+    case ActionTypes.USER_ACHIEVEMENT_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
       return state;
@@ -41,7 +50,7 @@ const achievements = (state = null, action) => {
 
 const reviews = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.USER_REVIEWS_EDIT_SUCCESS:
+    case ActionTypes.USER_REVIEW_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
       return state;
@@ -50,13 +59,14 @@ const reviews = (state = null, action) => {
 
 const schedules = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.USER_SCHEDULES_EDIT_SUCCESS:
+    case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
       return state;
   }
 }
 const userData = combineReducers({
+  patients,
   devices,
   experiences,
   educations,
@@ -67,12 +77,13 @@ const userData = combineReducers({
 
 const extendedUserData = (state, action) => {
   switch (action.type) {
-    case ActionTypes.USER_DEVICES_EDIT_SUCCESS:
-    case ActionTypes.USER_EXPERIENCES_EDIT_SUCCESS:
-    case ActionTypes.USER_EDUCATIONS_EDIT_SUCCESS:
-    case ActionTypes.USER_ACHIEVEMENTS_EDIT_SUCCESS:
-    case ActionTypes.USER_REVIEWS_EDIT_SUCCESS:
-    case ActionTypes.USER_SCHEDULES_EDIT_SUCCESS:
+    case ActionTypes.USER_PATIENTS_EDIT_SUCCESS:
+    case ActionTypes.USER_DEVICE_EDIT_SUCCESS:
+    case ActionTypes.USER_EXPERIENCE_EDIT_SUCCESS:
+    case ActionTypes.USER_EDUCATION_EDIT_SUCCESS:
+    case ActionTypes.USER_ACHIEVEMENT_EDIT_SUCCESS:
+    case ActionTypes.USER_REVIEW_EDIT_SUCCESS:
+    case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:
       return Object.assign({}, state, userData(state, action));
     default:
       return state;
@@ -117,12 +128,13 @@ const user = (state = {
         data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
       })
-    case ActionTypes.USER_DEVICES_EDIT_SUCCESS:
-    case ActionTypes.USER_EXPERIENCES_EDIT_SUCCESS:
-    case ActionTypes.USER_EDUCATIONS_EDIT_SUCCESS:
-    case ActionTypes.USER_ACHIEVEMENTS_EDIT_SUCCESS:
-    case ActionTypes.USER_REVIEWS_EDIT_SUCCESS:
-    case ActionTypes.USER_SCHEDULES_EDIT_SUCCESS:
+    case ActionTypes.USER_PATIENTS_EDIT_SUCCESS:
+    case ActionTypes.USER_DEVICE_EDIT_SUCCESS:
+    case ActionTypes.USER_EXPERIENCE_EDIT_SUCCESS:
+    case ActionTypes.USER_EDUCATION_EDIT_SUCCESS:
+    case ActionTypes.USER_ACHIEVEMENT_EDIT_SUCCESS:
+    case ActionTypes.USER_REVIEW_EDIT_SUCCESS:
+    case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,

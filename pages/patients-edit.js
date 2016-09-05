@@ -10,7 +10,7 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <Patients action="edit" />
+        <Patients action="edit" {...this.props} />
       </div>
     );
   }

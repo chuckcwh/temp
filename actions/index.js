@@ -59,21 +59,21 @@ export const USER_EDIT_REQUEST = 'USER_EDIT_REQUEST'
 export const USER_EDIT_SUCCESS = 'USER_EDIT_SUCCESS'
 export const USER_EDIT_FAILURE = 'USER_EDIT_FAILURE'
 
-export const USER_PATIENTS_REQUEST = 'USER_PATIENTS_REQUEST'
-export const USER_PATIENTS_SUCCESS = 'USER_PATIENTS_SUCCESS'
-export const USER_PATIENTS_FAILURE = 'USER_PATIENTS_FAILURE'
+export const PATIENTS_REQUEST = 'PATIENTS_REQUEST'
+export const PATIENTS_SUCCESS = 'PATIENTS_SUCCESS'
+export const PATIENTS_FAILURE = 'PATIENTS_FAILURE'
 
-export const USER_PATIENT_REQUEST = 'USER_PATIENT_REQUEST'
-export const USER_PATIENT_SUCCESS = 'USER_PATIENT_SUCCESS'
-export const USER_PATIENT_FAILURE = 'USER_PATIENT_FAILURE'
+export const PATIENT_REQUEST = 'PATIENT_REQUEST'
+export const PATIENT_SUCCESS = 'PATIENT_SUCCESS'
+export const PATIENT_FAILURE = 'PATIENT_FAILURE'
 
-export const USER_PATIENT_CREATE_REQUEST = 'USER_PATIENT_CREATE_REQUEST'
-export const USER_PATIENT_CREATE_SUCCESS = 'USER_PATIENT_CREATE_SUCCESS'
-export const USER_PATIENT_CREATE_FAILURE = 'USER_PATIENT_CREATE_FAILURE'
+export const PATIENT_CREATE_REQUEST = 'PATIENT_CREATE_REQUEST'
+export const PATIENT_CREATE_SUCCESS = 'PATIENT_CREATE_SUCCESS'
+export const PATIENT_CREATE_FAILURE = 'PATIENT_CREATE_FAILURE'  
 
-export const USER_PATIENT_EDIT_REQUEST = 'USER_PATIENT_EDIT_REQUEST'
-export const USER_PATIENT_EDIT_SUCCESS = 'USER_PATIENT_EDIT_SUCCESS'
-export const USER_PATIENT_EDIT_FAILURE = 'USER_PATIENT_EDIT_FAILURE'
+export const PATIENT_EDIT_REQUEST = 'PATIENT_EDIT_REQUEST'
+export const PATIENT_EDIT_SUCCESS = 'PATIENT_EDIT_SUCCESS'
+export const PATIENT_EDIT_FAILURE = 'PATIENT_EDIT_FAILURE'
 
 export const USER_DEVICE_EDIT_REQUEST = 'USER_DEVICE_EDIT_REQUEST'
 export const USER_DEVICE_EDIT_SUCCESS = 'USER_DEVICE_EDIT_SUCCESS'
@@ -277,28 +277,6 @@ function fetchAction(route) {
       endpoint: '/users/:userId',
       method: 'put'
     },
-    getUserPatients: {
-      types: [ USER_PATIENTS_REQUEST, USER_PATIENTS_SUCCESS, USER_PATIENTS_FAILURE ],
-      endpoint: '/users/:userId/patients',
-      method: 'get',
-      entity: 'patients'
-    },
-    getUserPatient: {
-      types: [ USER_PATIENT_REQUEST, USER_PATIENT_SUCCESS, USER_PATIENT_FAILURE ],
-      endpoint: '/users/:userId/patients/:patientId',
-      method: 'get',
-      entity: 'patient'
-    },
-    createUserPatient: {
-      types: [ USER_PATIENT_CREATE_REQUEST, USER_PATIENT_CREATE_SUCCESS, USER_PATIENT_CREATE_FAILURE ],
-      endpoint: '/users/:userId/patients',
-      method: 'post',
-    },
-    editUserPatient: {
-      types: [ USER_PATIENT_EDIT_REQUEST, USER_PATIENT_EDIT_SUCCESS, USER_PATIENT_EDIT_FAILURE ],
-      endpoint: '/users/:userId/patients/:patientId',
-      method: 'put'
-    },
     editUserDevice: {
       types: [ USER_DEVICE_EDIT_REQUEST, USER_DEVICE_EDIT_SUCCESS, USER_DEVICE_EDIT_FAILURE ],
       endpoint: '/users/:userId/devices/:deviceId',
@@ -340,6 +318,28 @@ function fetchAction(route) {
       endpoint: '/changeMobileNumber',
       method: 'post',
       auth: 'user'
+    },
+    getPatients: {
+      types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
+      endpoint: '/users/:userId/patients',
+      method: 'get',
+      entity: 'patients'
+    },
+    getPatient: {
+      types: [ PATIENT_REQUEST, PATIENT_SUCCESS, PATIENT_FAILURE ],
+      endpoint: '/users/:userId/patients/:patientId',
+      method: 'get',
+      entity: 'patient'
+    },
+    createPatient: {
+      types: [ PATIENT_CREATE_REQUEST, PATIENT_CREATE_SUCCESS, PATIENT_CREATE_FAILURE ],
+      endpoint: '/users/:userId/patients',
+      method: 'post',
+    },
+    editPatient: {
+      types: [ PATIENT_EDIT_REQUEST, PATIENT_EDIT_SUCCESS, PATIENT_EDIT_FAILURE ],
+      endpoint: '/users/:userId/patients/:patientId',
+      method: 'put'
     },
     getAvailableSchedules: {
       types: [ AVAILABLE_SCHEDULES_REQUEST, AVAILABLE_SCHEDULES_SUCCESS, AVAILABLE_SCHEDULES_FAILURE ],
@@ -576,22 +576,6 @@ export function editUser(params) {
   return fetch('editUser', params);
 }
 
-export function getUserPatients(params) {
-  return fetch('getUserPatients', params);
-}
-
-export function getUserPatient(params) {
-  return fetch('getUserPatient', params);
-}
-
-export function createUserPatient(params) {
-  return fetch('createUserPatient', params);
-}
-
-export function editUserPatient(params) {
-  return fetch('editUserPatient', params);
-}
-
 export function editUserDevice(params) {
   return fetch('editUserDevice', params);
 }
@@ -644,6 +628,22 @@ export function editMobile(params) {
 
 export function verifyMobile(params) {
   return fetch('verifyMobile', params);
+}
+
+export function getPatients(params) {
+  return fetch('getPatients', params);
+}
+
+export function getPatient(params) {
+  return fetch('getPatient', params);
+}
+
+export function createPatient(params) {
+  return fetch('createPatient', params);
+}
+
+export function editPatient(params) {
+  return fetch('editPatient', params);
 }
 
 export function getSessions(params) {

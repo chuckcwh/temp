@@ -8,8 +8,8 @@ import Container from '../Container';
 import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
-import { USER_EDIT_SUCCESS, USER_PATIENTS_SUCCESS, USER_PATIENT_CREATE_SUCCESS, USER_PATIENT_EDIT_SUCCESS, fetchAddress, getUserPatients, createUserPatient, getUserPatient, getUser,
-  editUserPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
+import { USER_EDIT_SUCCESS, PATIENTS_SUCCESS, PATIENT_CREATE_SUCCESS, PATIENT_EDIT_SUCCESS, fetchAddress, getPatients, createPatient, getPatient, getUser,
+  editPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
   setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import history from '../../core/history';
 import { isNextLastPage } from '../../core/util';
@@ -375,7 +375,7 @@ class BookingLocationUser extends Component {
           this.props.editPatient(Object.assign({
             patientId: this.state.patientId,
           }, values)).then((res) => {
-            if (res && res.type === USER_PATIENT_EDIT_SUCCESS) {
+            if (res && res.type === PATIENT_EDIT_SUCCESS) {
               this.props.getPatient({
                 userId: this.props.user && this.props.user._id,
                 patientId: this.state.patientId,
@@ -469,7 +469,7 @@ class BookingLocationUser extends Component {
           coordinates: [values.lng, values.lat],
         },
       }).then((res) => {
-        if (res && res.type === USER_PATIENT_CREATE_SUCCESS) {
+        if (res && res.type === PATIENT_CREATE_SUCCESS) {
           const patientId = res.response.data._id;
           this.getPatients(this.props.user, () => {
             if (this.props.patients[patientId]) {
@@ -527,10 +527,10 @@ class BookingLocationUser extends Component {
 
   getPatients = (user, cb) => {
     cb = cb || (() => {});
-    this.props.getUserPatients({
+    this.props.getPatients({
       userId: user && user._id,
     }).then((res) => {
-      if (res && res.type === USER_PATIENTS_SUCCESS) {
+      if (res && res.type === PATIENTS_SUCCESS) {
         cb();
         return;
       }
@@ -800,11 +800,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchAddress: (postal) => dispatch(fetchAddress(postal)),
-  getUserPatients: (params) => dispatch(getUserPatients(params)),
-  createUserPatient: (patient) => dispatch(createUserPatient(patient)),
-  getUserPatient: (params) => dispatch(getUserPatient(params)),
+  getPatients: (params) => dispatch(getPatients(params)),
+  createPatient: (patient) => dispatch(createPatient(patient)),
+  getPatient: (params) => dispatch(getPatient(params)),
   getUser: (params) => dispatch(getUser(params)),
-  editUserPatient: (params) => dispatch(editUserPatient(params)),
+  editPatient: (params) => dispatch(editPatient(params)),
   editUser: (params) => dispatch(editUser(params)),
   editEmail: (params) => dispatch(editEmail(params)),
   editMobile: (params) => dispatch(editMobile(params)),

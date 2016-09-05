@@ -128,7 +128,6 @@ Credits.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  languages: state.languages.data,
   user: state.user.data,
 });
 

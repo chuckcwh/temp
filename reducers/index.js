@@ -7,7 +7,7 @@ import user from './user';
 import modal from './modal';
 import order from './order';
 import userData from './user';
-import { appendAllServices, parseCategories } from '../core/util';
+import { normalize, appendAllServices, parseCategories } from '../core/util';
 import sortBy from 'lodash/sortBy';
 import moment from 'moment';
 
@@ -27,26 +27,11 @@ const config = (state = {
         isFetching: false,
         didInvalidate: false,
         data: action.response && Object.assign({}, action.response.data, {
-          gendersByValues: action.response.data.genders.reduce((result, gender) => {
-            result[gender.value] = gender;
-            return result;
-          }, {}),
-          languagesByValues: action.response.data.languages.reduce((result, language) => {
-            result[language.value] = language;
-            return result;
-          }, {}),
-          racesByValues: action.response.data.races.reduce((result, race) => {
-            result[race.value] = race;
-            return result;
-          }, {}),
-          religionsByValues: action.response.data.religions.reduce((result, religion) => {
-            result[religion.value] = religion;
-            return result;
-          }, {}),
-          timeSlotsByValues: action.response.data.timeSlots.reduce((result, timeSlot) => {
-            result[timeSlot.value] = timeSlot;
-            return result;
-          }, {}),
+          gendersByValues: normalize(action.response.data.genders, 'value'),
+          languagesByValues: normalize(action.response.data.languages, 'value'),
+          racesByValues: normalize(action.response.data.races, 'value'),
+          religionsByValues: normalize(action.response.data.religions, 'value'),
+          timeSlotsByValues: normalize(action.response.data.timeSlots, 'value'),
         }),
         lastUpdated: action.response && action.response.receivedAt
       })
@@ -263,6 +248,15 @@ const patients = (state = {
         newState.data[action.response.data.id] = action.response.data
         return newState
       }
+    case ActionTypes.USER_SUCCESS:
+    case ActionTypes.USER_TOKEN_SUCCESS:
+    case ActionTypes.USER_CREATE_SUCCESS:
+    case ActionTypes.LOGIN_SUCCESS:
+    case ActionTypes.LOGIN_CLIENT_SUCCESS:
+    case ActionTypes.USER_EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        data: normalize(action.response.data && action.response.data.patients)
+      })
     default:
       return state
   }
@@ -275,6 +269,15 @@ const patientsByClient = (state = {}, action) => {
     case ActionTypes.PATIENT_SUCCESS:
       return Object.assign({}, state, {
         [action.data.userId]: patients(state[action.data.userId], action)
+      })
+    case ActionTypes.USER_SUCCESS:
+    case ActionTypes.USER_TOKEN_SUCCESS:
+    case ActionTypes.USER_CREATE_SUCCESS:
+    case ActionTypes.LOGIN_SUCCESS:
+    case ActionTypes.LOGIN_CLIENT_SUCCESS:
+    case ActionTypes.USER_EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        [action.response.data._id]: patients(state[action.response.data._id], action)
       })
     default:
       return state

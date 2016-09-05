@@ -244,6 +244,14 @@ export function isId(val) {
   return true; 
 }
 
+export function normalize(array, id = '_id') {
+  if (!array || !Array.isArray(array)) return;
+  return array.reduce((result, elem) => {
+    result[elem[id]] = elem;
+    return result;
+  }, {})
+}
+
 /**
  * User utility functions
  */
@@ -307,6 +315,8 @@ const u = {
   isInt,
   isFloat,
   isId,
+
+  normalize,
 
   isAdmin,
   isClient,

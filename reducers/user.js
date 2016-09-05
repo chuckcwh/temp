@@ -8,7 +8,7 @@ const devices = (state = null, action) => {
     case ActionTypes.USER_DEVICES_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
-      return (action.response.data && action.response.data.devices) || state;
+      return state;
   }
 }
 
@@ -17,7 +17,7 @@ const experiences = (state = null, action) => {
     case ActionTypes.USER_EXPERIENCES_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
-      return (action.response.data && action.response.data.experiences) || state;
+      return state;
   }
 }
 
@@ -26,7 +26,7 @@ const educations = (state = null, action) => {
     case ActionTypes.USER_EDUCATIONS_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
-      return (action.response.data && action.response.data.educations) || state;
+      return state;
   }
 }
 
@@ -35,7 +35,7 @@ const achievements = (state = null, action) => {
     case ActionTypes.USER_ACHIEVEMENTS_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
-      return (action.response.data && action.response.data.achievements) || state;
+      return state;
   }
 }
 
@@ -44,16 +44,16 @@ const reviews = (state = null, action) => {
     case ActionTypes.USER_REVIEWS_EDIT_SUCCESS:
       return Object.assign({}, state, action.response.data);
     default:
-      return (action.response.data && action.response.data.reviews) || state;
+      return state;
   }
 }
 
 const schedules = (state = null, action) => {
   switch (action.type) {
     case ActionTypes.USER_SCHEDULES_EDIT_SUCCESS:
-      return action.booker;
+      return Object.assign({}, state, action.response.data);
     default:
-      return (action.response.data && action.response.data.schedules) || state;
+      return state;
   }
 }
 const userData = combineReducers({

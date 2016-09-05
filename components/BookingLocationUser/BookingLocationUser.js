@@ -700,7 +700,7 @@ class BookingLocationUser extends Component {
             <div className="select">
               <span></span>
               <select name="patientId" value={this.state.patientId} onChange={this.onChangePatient}>
-                <option>Select Patient</option>
+                <option value="">Select Patient</option>
                 {
                   this.props.patientIds && this.props.patientIds.map((index) => (
                     <option key={this.props.patients[index].id} value={index}>{this.props.patients[index].name}</option>

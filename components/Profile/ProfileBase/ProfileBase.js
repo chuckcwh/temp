@@ -92,16 +92,22 @@ ProfileBase.propTypes = {
 
 const mapStateToProps = (state) => {
   const user = state.user.data;
+  const config = state.config.data;
+  const gendersByValues = config && config.gendersByValues;
+  const raceByValues = config && config.raceByValues;
+  const religionsByValues = config && config.religionsByValues;
+  const languagesByValues = config && config.languagesByValues;
+  const countriesByValues = config && config.countriesByValues;
 
   return {
     avatar: user && (user.avatar ? `${s3Url}${avatar}` : require('../../../assets/images/noimage.gif')),
-    gender: user && user.gender,
+    gender: user && user.gender && gendersByValues && gendersByValues[user.gender].name,
     dob: user && user.dob,
     address: user && user.address,
-    race: user && user.race,
-    religion: user && user.religion,
-    languages: user && user.languages,
-    nationality: user && user.nationality,
+    race: user && user.race && raceByValues && raceByValues[user.race].name,
+    religion: user && user.religion && religionsByValues && religionsByValues[user.religion].name,
+    languages: user && user.languages  && languagesByValues && user.languages.map(item => (languagesByValues[item].name)),
+    nationality: user && user.nationality && countriesByValues && countriesByValues[user.nationality].name,
     name: user && user.name,
 }};
 

@@ -9,8 +9,9 @@ import Link from '../../Link';
 import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
-import ReactCrop from 'react-image-crop';
-import { changeAvatar } from '../../../actions';
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
+import { getS3Policy } from '../../../actions';
 
 
 const s3Url = 'https://ebeecare-dev.s3.amazonaws.com/';
@@ -21,104 +22,115 @@ class ProfileEditProfileForm extends Component {
     super(props);
 
     this.state = {
-      newAvatar: this.props.avatar,
-      processing: false,
+      avatar: this.props.avatar,
+      newAvatar: null,
+      newAvatarSelected: null,
     }
   }
 
-  onHandleUpload = (e) => {
-    e.preventDefault();
-    return console.log('fuck');
-  };
-
-  _crop = () => {
-    this.setState({
-      newAvatar: this.refs.cropper.getCroppedCanvas().toDataURL()
-    })
-  };
-
   handleFile = (e) => {
+
     const reader = new FileReader();
     const file = e.target.files[0];
 
-    reader.onload = (upload) => {
-      this.setState({
-        newAvatar: upload.target.result,
-        newAvatarName: file.name,
-        filetype: file.type,
-      })
+    let error;
+    const allowedFileTypes = ['jpg', 'jpeg', 'png', 'bmp', 'gif'];
+    const fileExtension = file.type.split('/').pop().toLowerCase();
+
+    if (!window.FileReader) {
+      error = 'The file API is not supported on this browser.';
+    } else if (!e.target.files) {
+      error = 'Wrong files property.';
+    } else if (!file) {
+      error = 'Please select a file.';
+    } else if (file.size > 4194304) {
+      error = 'File size is too big.';
+    } else if (!(allowedFileTypes.indexOf(fileExtension) >= 0)) {
+      error = 'File type is not supported';
+    } else {
+      error = null;
+      reader.onload = (upload) => {
+        this.setState({
+          newAvatar: upload.target.result,
+          newAvatarName: file.name,
+          filetype: file.type,
+        })
+      }
+      reader.readAsDataURL(file);
     }
 
-    reader.readAsDataURL(file);
+    return this.setState({ fileErr: error })
   }
 
+  _crop = () => {
+    this.setState({
+      newAvatarSelected: this.refs.cropper.getCroppedCanvas().toDataURL()
+    })
+  };
+
+  onHandleUpload = (e) => {
+    e.preventDefault();
+    this.setState({ processing: "uploading..." });
+
+    return new Promise((resolve, reject) => {
+      this.props.getS3Policy().then((res) => {
+        if (res && res.type === 'GET_S3_POLICY_SUCCESS') {
+          console.log('response', res.response);
+        }
+
+        this.setState({ processing: null });
+      })
+    })
+  };
+
   render() {
-    const { newAvatar, uploadCheck, file, newAvatarName } = this.state;
-    let processing;
-
-    if (this.state.processing) {
-      processing = "Processing image, hang tight";
-    }
-
-    var crop = {
-      x: 20,
-      y: 10,
-      width: 30,
-      height: 10
-    }
+    const { avatar, newAvatar, newAvatarSelected, uploadCheck, fileErr, processing } = this.state;
 
     return (
       <div className={s.ProfileEditProfileForm}>
 
-        <div>
-          <ReactCrop src={newAvatar} crop={crop} />
-        </div>
-
-
+        {newAvatar ? (
+          <div className={s.formCropperContainer}>
+            <Cropper
+              ref='cropper'
+              src={newAvatar}
+              style={{height: '100%', width: '100%'}}
+              aspectRatio={1/1}
+              guides={false}
+              crop={this._crop}
+            />
+          </div>
+        ): (
+          <img src={avatar} className={s.profilePhotoDemo} />
+        )}
 
         <p className={s.formUpload}>
           <span className={s.formUploadNote}>Note!</span> Max File Size: 4MB
         </p>
 
 
-        <form onSubmit={this.handleSubmit} encType="multipart/form-data">
-          <input type="file" onChange={this.handleFile} />
-          <input disabled={this.state.processing} className='btn btn-primary' type="submit" value="Upload" />
-          {processing}
-        </form>
 
-        {/*
         <label for="file-upload" className={cx("btn", "btn-primary", s.inputLabel)}>
-          <input type="file" className={s.inputfile} onChange={this.handleImgChange} />
+          <input type="file" className={s.inputfile} onChange={this.handleFile} />
           Choose a file
         </label>
-        */}
 
-        <span className={s.newAvatarName}>{newAvatarName}</span>
+        <span className={s.formError}>{fileErr}</span>
 
-        {uploadCheck && <div className={s.formError}>You have image errors.</div>}
-
-        <div>
-          <button
-            className={cx("btn btn-primary", s.formSubmit)}
-            onClick={this.onHandleUpload}>Save Changes
-          </button>
+        <div className={s.formSubmit}>
+          {newAvatar ? (
+            <button className="btn btn-primary" onClick={this.onHandleUpload}>Save Changes</button>
+          ): (
+            <button className={"btn btn-primary"} onClick={this.onHandleUpload} disabled>Save Changes</button>
+          )}
         </div>
 
+        <span className={s.formError}>{processing}</span>
 
       </div>
     );
   }
 
-}
-
-const validate = values => {
-  const errors = {};
-  // if (!values.withdrawAmt) {
-  //   errors.withdrawAmt = 'Required';
-  // } else if (!/\d+/i.test(values.withdrawAmt)) {
-  //   errors.withdrawAmt = 'Invalid withdraw amount';
-  // }
 }
 
 ProfileEditProfileForm.propTypes = {
@@ -133,8 +145,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (state) => ({
-  changeAvatar: (params) => dispatch(changeAvatar(params)),
+const mapDispatchToProps = (dispatch) => ({
+  getS3Policy: () => dispatch(getS3Policy()),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileEditProfileForm);

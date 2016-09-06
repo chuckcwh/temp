@@ -73,7 +73,7 @@ class Profile extends Component {
                           Not Entered. <a href="/profile/edit" className={s.link}>Add an education record.</a>
                         </div>
                       )}
-                      {educations && educations.map(item => (
+                      {educations && Object.values(educations).map(item => (
                         <div key={item._id} className={s.educationBody}>
                           <div className={s.flag}>
                             <div className={s.flagCert}>{item.typeOfCert}</div>
@@ -93,7 +93,7 @@ class Profile extends Component {
                         </div>
                       )}
                       <div className={s.experienceBody}>
-                        {experiences && experiences.map(item => (
+                        {experiences && Object.values(experiences).map(item => (
                           <div key={item._id} className={s.experienceEach}>
                             <div className={s.timeFlag}>{moment(item.startDate).format(`MMM 'YY`)}{`- ${moment(item.endDate).format("MMM 'YY")}`}</div>
                             <div className={s.timeDot}></div>
@@ -117,7 +117,7 @@ class Profile extends Component {
                           Not Entered. <a href="/profile/edit">Add an achievement.</a>
                         </div>
                       )}
-                      {achievements && achievements.map(item => (
+                      {achievements && Object.values(achievements).map(item => (
                         <div key={item._id} className={s.achievementBody}>
                           <div className={s.flag}>
                             <div className={s.flagCert}>{item.title}</div>

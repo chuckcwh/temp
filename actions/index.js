@@ -69,7 +69,7 @@ export const PATIENT_FAILURE = 'PATIENT_FAILURE'
 
 export const PATIENT_CREATE_REQUEST = 'PATIENT_CREATE_REQUEST'
 export const PATIENT_CREATE_SUCCESS = 'PATIENT_CREATE_SUCCESS'
-export const PATIENT_CREATE_FAILURE = 'PATIENT_CREATE_FAILURE'  
+export const PATIENT_CREATE_FAILURE = 'PATIENT_CREATE_FAILURE'
 
 export const PATIENT_EDIT_REQUEST = 'PATIENT_EDIT_REQUEST'
 export const PATIENT_EDIT_SUCCESS = 'PATIENT_EDIT_SUCCESS'
@@ -234,6 +234,10 @@ export const VERIFY_BOOKING_PIN_FAILURE = 'VERIFY_BOOKING_PIN_FAILURE'
 export const RESEND_VERIFY_BOOKING_PIN_REQUEST = 'RESEND_VERIFY_BOOKING_PIN_REQUEST'
 export const RESEND_VERIFY_BOOKING_PIN_SUCCESS = 'RESEND_VERIFY_BOOKING_PIN_SUCCESS'
 export const RESEND_VERIFY_BOOKING_PIN_FAILURE = 'RESEND_VERIFY_BOOKING_PIN_FAILURE'
+
+export const GET_S3_POLICY_REQUEST = 'GET_S3_POLICY_REQUEST'
+export const GET_S3_POLICY_SUCCESS = 'GET_S3_POLICY_SUCCESS'
+export const GET_S3_POLICY_FAILURE = 'GET_S3_POLICY_FAILURE'
 
 export const STATS_SESSIONS_REQUEST = 'STATS_SESSIONS_REQUEST'
 export const STATS_SESSIONS_SUCCESS = 'STATS_SESSIONS_SUCCESS'
@@ -574,6 +578,11 @@ function fetchAction(route) {
       auth: 'app',
       entity: 'rankedSubcategories'
     },
+    getS3Policy: {
+      types: [ GET_S3_POLICY_REQUEST, GET_S3_POLICY_SUCCESS, GET_S3_POLICY_FAILURE ],
+      endpoint: '/s3',
+      method: 'get',
+    }
     // getAvailableSessions:{
     //   types: [ AVAILABLE_SESSIONS_REQUEST, AVAILABLE_SESSIONS_SUCCESS, AVAILABLE_SESSIONS_FAILURE ],
     //   endpoint: '/getAvailableCases',
@@ -927,6 +936,10 @@ export function getTotalSessionsCount() {
 
 export function getRankedServices() {
   return fetch('getRankedServices');
+}
+
+export function getS3Policy() {
+  return fetch('getS3Policy');
 }
 
 export function getRankedSubcategories() {

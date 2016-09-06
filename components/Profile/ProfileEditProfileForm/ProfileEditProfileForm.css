@@ -1,5 +1,5 @@
 @import '../../variables.css';
-@import '../../../node_modules/react-image-crop/dist/ReactCrop.css';
+
 
 .ProfileEditProfileForm {
   min-height: 400px;
@@ -28,6 +28,22 @@
     background-color: #ff444f;
     padding: 3px 8px;
     border-radius: 3px;
+  }
+
+  & .formError {
+    color: #ff444f;
+    display: inline-block;
+    margin-left: 20px;
+  }
+
+  & .formCropperContainer {
+    width: 350px;
+    height: 350px;
+  }
+
+  & .profilePhotoDemo {
+    width: 350px;
+    height: 350px;
   }
 
   & .inputLabel {

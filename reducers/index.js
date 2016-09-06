@@ -27,6 +27,7 @@ const config = (state = {
         isFetching: false,
         didInvalidate: false,
         data: action.response && Object.assign({}, action.response.data, {
+          countriesByValues: normalize(action.response.data.countries, 'value'),
           gendersByValues: normalize(action.response.data.genders, 'value'),
           languagesByValues: normalize(action.response.data.languages, 'value'),
           racesByValues: normalize(action.response.data.races, 'value'),

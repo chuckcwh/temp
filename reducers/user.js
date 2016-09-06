@@ -179,7 +179,7 @@ const partialUserData = combineReducers({
   schedules
 })
 
-const extendedUserData = (state, action) => {
+const extendedUserData = (state = null, action) => {
   switch (action.type) {
     case ActionTypes.USER_DEVICES_SUCCESS:
     case ActionTypes.USER_DEVICE_SUCCESS:
@@ -211,7 +211,7 @@ const extendedUserData = (state, action) => {
   }
 }
 
-const fullUserData = (state, action) => {
+const fullUserData = (state = null, action) => {
   switch(action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
@@ -230,7 +230,14 @@ const fullUserData = (state, action) => {
 const user = (state = {
   isFetching: false,
   didInvalidate: true,
-  data: null
+  data: {
+    devices,
+    experiences,
+    educations,
+    achievements,
+    reviews,
+    schedules
+  }
 }, action) => {
   switch (action.type) {
     case ActionTypes.USER_REQUEST:
@@ -255,7 +262,7 @@ const user = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        data: fullUserData(state, action),
+        data: fullUserData(state.data, action),
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
@@ -266,14 +273,14 @@ const user = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: true,
-        data: fullUserData(state, action),
+        data: fullUserData(state.data, action),
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.USER_EDIT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        data: fullUserData(state, action),
+        data: fullUserData(state.data, action),
         lastUpdated: action.response && action.response.receivedAt
       })
     case ActionTypes.USER_DEVICES_SUCCESS:
@@ -303,7 +310,7 @@ const user = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        data: extendedUserData(state, action),
+        data: extendedUserData(state.data, action),
         lastUpdated: action.response && action.response.receiveAt
       })
     case ActionTypes.USER_TOKEN_FAILURE:

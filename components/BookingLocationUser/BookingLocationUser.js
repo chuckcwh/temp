@@ -702,8 +702,8 @@ class BookingLocationUser extends Component {
               <select name="patientId" value={this.state.patientId} onChange={this.onChangePatient}>
                 <option value="">Select Patient</option>
                 {
-                  this.props.patientIds && this.props.patientIds.map((index) => (
-                    <option key={this.props.patients[index].id} value={index}>{this.props.patients[index].name}</option>
+                  this.props.patients && Object.keys(this.props.patients).map((id) => (
+                    <option key={id} value={id}>{this.props.patients[id].name}</option>
                   ))
                 }
               </select>
@@ -757,7 +757,6 @@ BookingLocationUser.propTypes = {
   user: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
-  patientIds: React.PropTypes.array,
   inlineForm: React.PropTypes.object,
   form: React.PropTypes.object,
 
@@ -791,9 +790,6 @@ const mapStateToProps = (state) => ({
   patientsFetching: state.user.data && state.user.data._id
     && state.patientsByClient[state.user.data._id]
     && state.patientsByClient[state.user.data._id].isFetching,
-  patientIds: state.user.data && state.user.data._id
-    && state.patientsByClient[state.user.data._id]
-    && state.patientsByClient[state.user.data._id].ids,
   inlineForm: state.inlineForm,
   form: state.form,
 });

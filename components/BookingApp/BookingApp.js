@@ -101,7 +101,7 @@ class BookingApp extends Component {
         </div>
       );
     } else if (location && location.pathname === '/booking2') {
-      if (user) {
+      if (user && user._id) {
         component = (
           <div>
             <BookingNavigation />

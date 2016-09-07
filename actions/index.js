@@ -159,6 +159,10 @@ export const USER_ACHIEVEMENT_EDIT_REQUEST = 'USER_ACHIEVEMENT_EDIT_REQUEST'
 export const USER_ACHIEVEMENT_EDIT_SUCCESS = 'USER_ACHIEVEMENT_EDIT_SUCCESS'
 export const USER_ACHIEVEMENT_EDIT_FAILURE = 'USER_ACHIEVEMENT_EDIT_FAILURE'
 
+export const USER_ACHIEVEMENT_DELETE_REQUEST = 'USER_ACHIEVEMENT_DELETE_REQUEST'
+export const USER_ACHIEVEMENT_DELETE_SUCCESS = 'USER_ACHIEVEMENT_DELETE_SUCCESS'
+export const USER_ACHIEVEMENT_DELETE_FAILURE = 'USER_ACHIEVEMENT_DELETE_FAILURE'
+
 export const USER_REVIEWS_REQUEST = 'USER_REVIEWS_REQUEST'
 export const USER_REVIEWS_SUCCESS = 'USER_REVIEWS_SUCCESS'
 export const USER_REVIEWS_FAILURE = 'USER_REVIEWS_FAILURE'
@@ -482,6 +486,11 @@ function fetchAction(route) {
       types: [ USER_ACHIEVEMENT_EDIT_REQUEST, USER_ACHIEVEMENT_EDIT_SUCCESS, USER_ACHIEVEMENT_EDIT_FAILURE ],
       endpoint: '/users/:userId/achievements/:achievementId',
       method: 'put'
+    },
+    deleteUserAchievement: {
+      types: [ USER_ACHIEVEMENT_DELETE_REQUEST, USER_ACHIEVEMENT_DELETE_SUCCESS, USER_ACHIEVEMENT_DELETE_FAILURE ],
+      endpoint: '/users/:userId/achievements/:achievementId',
+      method: 'del'
     },
     getUserReviews: {
       types: [ USER_REVIEWS_REQUEST, USER_REVIEWS_SUCCESS, USER_REVIEWS_FAILURE ],
@@ -861,6 +870,10 @@ export function createUserAchievement(params) {
 
 export function editUserAchievement(params) {
   return fetch('editUserAchievement', params);
+}
+
+export function deleteUserAchievement(params) {
+  return fetch('deleteUserAchievement', params);
 }
 
 export function getUserReviews(params) {

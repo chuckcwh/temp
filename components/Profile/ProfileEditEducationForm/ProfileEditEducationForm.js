@@ -19,12 +19,6 @@ import FaLock from 'react-icons/lib/fa/lock';
 
 class ProfileEditEducationForm extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {}
-  }
-
   onChangeForm = (values) => {
     console.log('form values', values);
     return new Promise((resolve, reject) => {

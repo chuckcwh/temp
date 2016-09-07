@@ -106,8 +106,8 @@ class BookingPatient extends Component {
               <label className={s.agreeCheckboxLabel} htmlFor="agree">
                 <span></span>
                 <span>
-                  By making this booking, I agree to the
-                  <a href="/terms-of-service" target="_blank">Terms of Service</a> and
+                  By making this booking, I agree to the&nbsp;
+                  <a href="/terms-of-service" target="_blank">Terms of Service</a> and&nbsp;
                   <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
                 </span>
               </label>

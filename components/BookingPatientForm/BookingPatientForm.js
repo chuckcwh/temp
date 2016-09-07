@@ -30,6 +30,7 @@ class BookingPatientForm extends Component {
       handleSubmit,
       submitFailed,
       submitting,
+      config,
     } = this.props;
     return (
       <form className={s.bookingPatientForm} onSubmit={handleSubmit(this.props.onNext)}>
@@ -92,28 +93,24 @@ class BookingPatientForm extends Component {
                 <div className={s.bookingPatientFormError}>{patientContact.error}</div>}
             </div>
             <div className={s.bookingPatientFormGroup}>
-              <div className="radio radio-inline">
-                <input
-                  type="radio"
-                  id="patient_gender_male"
-                  name="patient_gender"
-                  {...patientGender}
-                  value="Male"
-                  checked={patientGender.value === 'Male'}
-                />
-                <label htmlFor="patient_gender_male"><span><span></span></span><span>Male</span></label>
-              </div>
-              <div className="radio radio-inline">
-                <input
-                  type="radio"
-                  id="patient_gender_female"
-                  name="patient_gender"
-                  {...patientGender}
-                  value="Female"
-                  checked={patientGender.value === 'Female'}
-                />
-                <label htmlFor="patient_gender_female"><span><span></span></span><span>Female</span></label>
-              </div>
+              {
+                config && config.genders.map(elem => (
+                  <div className="radio radio-inline">
+                    <input
+                      type="radio"
+                      id={`patient_gender_${elem.value}`}
+                      name="patient_gender"
+                      {...patientGender}
+                      value={elem.value}
+                      checked={patientGender.value === elem.value}
+                    />
+                    <label htmlFor={`patient_gender_${elem.value}`}>
+                      <span><span></span></span>
+                      <span>{elem.name}</span>
+                    </label>
+                  </div>
+                ))
+              }
               {patientGender.touched && patientGender.error && <div className={s.bookingPatientFormError}>{patientGender.error}</div>}
             </div>
           </div>
@@ -191,6 +188,7 @@ BookingPatientForm.propTypes = {
   showLoginPopup: PropTypes.func.isRequired,
   showAlertPopup: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
+  config: PropTypes.object,
 };
 
 const reduxFormConfig = {
@@ -215,6 +213,7 @@ const reduxFormConfig = {
 const mapStateToProps = (state) => {
   const { order } = state;
   return {
+    config: state.config.data,
     initialValues: {
       clientName: order && order.booker && order.booker.clientName || undefined,
       clientEmail: order && order.booker && order.booker.clientEmail || undefined,

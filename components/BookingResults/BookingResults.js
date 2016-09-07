@@ -189,7 +189,7 @@ class BookingResults extends Component {
 
     event.preventDefault();
 
-    if (this.props.user) {
+    if (this.props.isLoggedIn) {
       this.props.showConfirmPopup();
     } else {
       history.push({ pathname: '/booking4', query: location && location.query });
@@ -218,7 +218,7 @@ class BookingResults extends Component {
 
       this.updateSum(this.props);
     };
-    const { config, order } = this.props;
+    const { config, isLoggedIn, order } = this.props;
     const orderPromoCode = order && order.promoCode;
     let promoButton;
     if (this.state.showPromoButton) {
@@ -308,7 +308,7 @@ class BookingResults extends Component {
           </form>
           <p></p>
           <div className="text-center">
-            <a href="#" className="btn btn-primary" onClick={this.onNext}>{this.props.user ? 'BOOK NOW' : 'NEXT'}</a>
+            <a href="#" className="btn btn-primary" onClick={this.onNext}>{isLoggedIn ? 'BOOK NOW' : 'NEXT'}</a>
           </div>
         </Loader>
         <ConfirmPopup onConfirmed={this.onConfirmed}>
@@ -345,6 +345,7 @@ BookingResults.propTypes = {
   config: React.PropTypes.object,
   lastPage: React.PropTypes.string,
   user: React.PropTypes.object,
+  isLoggedIn: React.PropTypes.bool,
   services: React.PropTypes.object,
   order: React.PropTypes.object,
   schedules: React.PropTypes.array,
@@ -365,6 +366,7 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   lastPage: state.lastPage,
   user: state.user.data,
+  isLoggedIn: !!(state.user.data && state.user.data._id),
   services: state.services.data,
   order: state.order,
   schedules: state.availableSchedules.data,

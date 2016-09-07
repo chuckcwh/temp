@@ -692,7 +692,7 @@ export function createBooking(params) {
 
 export function createBookingWithOptions({ services, order, user }) {
   let data;
-  if (user) {
+  if (user && user._id) {
     data = {
       sessions: order.sessions.map(session => ({
         serviceId: order && order.service,

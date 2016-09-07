@@ -11,7 +11,7 @@ const alert = (state = { visible: false }, action) => {
     case ActionTypes.HIDE_MODAL_ALERT:
       return {
         visible: false,
-        message: null
+        message: ''
       };
     default:
       return state;
@@ -20,9 +20,9 @@ const alert = (state = { visible: false }, action) => {
 
 const confirm = (state = {
   visible: false,
-  message: null,
-  accept: null,
-  cancel: null
+  message: '',
+  accept: () => {},
+  cancel: () => {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_CONFIRM:
@@ -35,9 +35,9 @@ const confirm = (state = {
     case ActionTypes.HIDE_MODAL_CONFIRM:
       return {
         visible: false,
-        message: null,
-        accept: null,
-        cancel: null
+        message: '',
+        accept: () => {},
+        cancel: () => {}
       };
     default:
       return state;
@@ -57,7 +57,7 @@ const login = (state = false, action) => {
 
 const daypicker = (state = {
   visible: false,
-  source: null,
+  source: '',
   value: new Date()
 }, action) => {
   switch (action.type) {
@@ -72,7 +72,7 @@ const daypicker = (state = {
       return {
         ...state,
         visible: false,
-        source: null,
+        source: '',
         value: new Date()
       };
     default:
@@ -82,7 +82,7 @@ const daypicker = (state = {
 
 const verifyBooking = (state = {
   visible: false,
-  bookingId: null
+  bookingId: ''
 }, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_VERIFYBOOKING:
@@ -103,9 +103,9 @@ const verifyBooking = (state = {
 
 const resendVerifyBooking = (state = {
   visible: false,
-  bookingId: null,
-  hp: undefined,
-  error: undefined,
+  bookingId: '',
+  hp: '',
+  error: '',
   pending: false
 }, action) => {
   switch (action.type) {
@@ -119,8 +119,8 @@ const resendVerifyBooking = (state = {
       return {
         ...state,
         visible: false,
-        hp: undefined,
-        error: undefined,
+        hp: '',
+        error: '',
         pending: false
       };
     default:

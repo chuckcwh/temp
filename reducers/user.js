@@ -3,7 +3,7 @@ import * as ActionTypes from '../actions';
 import { combineReducers } from 'redux';
 import { normalize, isClient } from '../core/util';
 
-const devices = (state = null, action) => {
+const devices = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
@@ -23,7 +23,7 @@ const devices = (state = null, action) => {
   }
 }
 
-const experiences = (state = null, action) => {
+const experiences = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
@@ -43,7 +43,7 @@ const experiences = (state = null, action) => {
   }
 }
 
-const educations = (state = null, action) => {
+const educations = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
@@ -63,7 +63,7 @@ const educations = (state = null, action) => {
   }
 }
 
-const achievements = (state = null, action) => {
+const achievements = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
@@ -83,7 +83,7 @@ const achievements = (state = null, action) => {
   }
 }
 
-const reviews = (state = null, action) => {
+const reviews = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
@@ -103,7 +103,7 @@ const reviews = (state = null, action) => {
   }
 }
 
-const schedules = (state = null, action) => {
+const schedules = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
@@ -131,7 +131,7 @@ const partialUserData = combineReducers({
   schedules
 })
 
-const extendedUserData = (state = null, action) => {
+const extendedUserData = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.USER_DEVICES_SUCCESS:
     case ActionTypes.USER_DEVICE_SUCCESS:
@@ -164,7 +164,7 @@ const extendedUserData = (state = null, action) => {
   }
 }
 
-const fullUserData = (state = null, action) => {
+const fullUserData = (state = {}, action) => {
   switch(action.type) {
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:

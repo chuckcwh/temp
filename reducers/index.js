@@ -14,7 +14,7 @@ import moment from 'moment';
 const config = (state = {
   isFetching: false,
   didInvalidate: false,
-  data: null,
+  data: {},
 }, action) => {
   switch (action.type) {
     case ActionTypes.CONFIG_REQUEST:
@@ -48,15 +48,15 @@ const config = (state = {
 const services = (state = {
   isFetching: false,
   didInvalidate: false,
-  data: null,
-  ids: null,
-  rankedServices: null,
-  categories: null,
-  categoriesBySlug: null,
-  servicesTree: null,
-  servicesTreeHash: null,
-  servicesUnderCategory: null,
-  servicesUnderSlug: null,
+  data: {},
+  ids: [],
+  rankedServices: [],
+  categories: {},
+  categoriesBySlug: {},
+  servicesTree: [],
+  servicesTreeHash: {},
+  servicesUnderCategory: {},
+  servicesUnderSlug: {},
 }, action) => {
   switch (action.type) {
     case ActionTypes.CATEGORIES_REQUEST:
@@ -126,7 +126,7 @@ const services = (state = {
 const booking = (state = {
   isFetching: false,
   didInvalidate: true,
-  data: null
+  data: {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.BOOKING_REQUEST:
@@ -149,7 +149,7 @@ const booking = (state = {
       return {
         ...state,
         isFetching: false,
-        data: null,
+        data: {},
         lastUpdated: undefined
       }
     default:
@@ -160,7 +160,7 @@ const booking = (state = {
 const session = (state = {
   isFetching: false,
   didInvalidate: true,
-  data: null
+  data: {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.SESSION_CREATE_REQUEST:
@@ -183,8 +183,8 @@ const session = (state = {
 const sessions = (state = {
   isFetching: false,
   didInvalidate: true,
-  data: null,
-  dataByPatient: null
+  data: {},
+  dataByPatient: {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
@@ -222,8 +222,8 @@ const sessionsByUser = (state = {}, action) => {
 const patients = (state = {
   isFetching: false,
   didInvalidate: true,
-  data: null,
-  ids: null
+  data: {},
+  ids: []
 }, action) => {
   switch (action.type) {
     case ActionTypes.PATIENTS_REQUEST:
@@ -292,7 +292,7 @@ const patientsByClient = (state = {}, action) => {
 const availableSchedules = (state = {
   isFetching: false,
   didInvalidate: true,
-  data: null
+  data: []
 }, action) => {
   switch (action.type) {
     case ActionTypes.AVAILABLE_SCHEDULES_REQUEST:
@@ -372,7 +372,7 @@ const totalSessionsCount = (state = {
 const rankedServices = (state = {
   isFetching: false,
   didInvalidate: false,
-  data: null
+  data: []
 }, action) => {
   switch (action.type) {
     case ActionTypes.STATS_SERVICES_REQUEST:
@@ -395,7 +395,7 @@ const rankedServices = (state = {
 const rankedSubcategories = (state = {
   isFetching: false,
   didInvalidate: false,
-  data: null
+  data: []
 }, action) => {
   switch (action.type) {
     case ActionTypes.STATS_SUBCATEGORIES_REQUEST:
@@ -433,7 +433,7 @@ const postStatus = (state = 'confirmation', action) => {
   }
 }
 
-const inlineForm = (state = null, action) => {
+const inlineForm = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_INLINE_FORM:
       return {
@@ -444,18 +444,18 @@ const inlineForm = (state = null, action) => {
         validate: action.validate
       }
     case ActionTypes.HIDE_INLINE_FORM:
-      return null;
+      return {};
     default:
       return state;
   }
 }
 
 // Updates error message to notify about the failed fetches.
-const errorMessage = (state = null, action) => {
+const errorMessage = (state = '', action) => {
   const { type, error } = action
 
   if (type === ActionTypes.RESET_ERROR_MESSAGE) {
-    return null
+    return ''
   } else if (error) {
     return action.error
   }

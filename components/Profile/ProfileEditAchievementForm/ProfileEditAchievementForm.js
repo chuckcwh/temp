@@ -20,7 +20,7 @@ import FaLock from 'react-icons/lib/fa/lock';
 class ProfileEditAchievementForm extends Component {
 
   onChangeForm = (values) => {
-    console.log('change form', values);
+    // console.log('change form', values);
     return new Promise((res, rej) => {
       this.props.editUserAchievement({
         userId: this.props.userId,
@@ -37,7 +37,7 @@ class ProfileEditAchievementForm extends Component {
   }
 
   onDelForm = (achievementId) => {
-    console.log('delete form', achievementId);
+    // console.log('delete form', achievementId);
     return new Promise((resolve, reject) => {
       this.props.deleteUserAchievement({
         userId: this.props.userId,
@@ -49,7 +49,7 @@ class ProfileEditAchievementForm extends Component {
   };
 
   onAddForm = (values) => {
-    console.log('add form', values);
+    // console.log('add form', values);
     return new Promise((res, rej) => {
       this.props.createUserAchievement({
         userId: this.props.userId,
@@ -89,6 +89,9 @@ class ProfileEditAchievementForm extends Component {
         <ProfileEditAchievementFormSub
           formKey='new'
           onNext={this.onAddForm}
+          initialValues={{
+            achievementId: 'new',
+          }}
           newForm
         />
 

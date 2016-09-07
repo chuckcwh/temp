@@ -44,7 +44,7 @@ class ProfileEditAchievementFormSub extends Component {
 
     return (
       <div>
-        <DayPickerPopup title="Date Obtained" />
+        <DayPickerPopup title="Date Picker" />
 
         <form className={s.profileEditAchievementFormSub} onSubmit={handleSubmit(this.onNext)}>
           <Grid fluid className={cx(s.employmentFormTable, newForm && s.newForm)}>

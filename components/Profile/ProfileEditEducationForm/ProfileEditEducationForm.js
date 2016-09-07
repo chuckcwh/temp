@@ -92,6 +92,9 @@ class ProfileEditEducationForm extends Component {
         <ProfileEditEducationFormSub
           formKey='new'
           onNext={this.onAddForm}
+          initialValues={{
+            educationId: 'new',
+          }}
           newForm
         />
 

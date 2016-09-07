@@ -102,7 +102,7 @@ class ProfileEditEducationFormSub extends Component {
                     <span onClick={() => {
                       this.props.showDayPickerPopup(
                         gradDate.value,
-                        {main: 'ProfileEditEducationFormSub', sub: _educationId.value}
+                        {main: 'ProfileEditEducationFormSub', sub: educationId.value}
                       )}}>
                     </span>
                   </div>

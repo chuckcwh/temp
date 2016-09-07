@@ -71,7 +71,7 @@ class DayPickerPopup extends Component {
   };
 
   closePopup = () => {
-    this.props.hideDayPickerPopup();
+    this.props.hideDayPickerPopup(null, this.props.source);
   };
 
   render() {

@@ -71,7 +71,7 @@ class ProfileEditEmploymentFormSub extends Component {
                   <p>Start Date</p>
                   <div className={cx("DateInput", s.dateInputContainer)}>
                     <input className={s.dateInput} type="text" id="startDate" name="startDate" placeholder="MM/YYYY" {...startDate} />
-                    <span onClick={() => this.props.showDayPickerPopup(startDate.value, 'ProfileEditEmploymentFormSub')}></span>
+                    <span onClick={() => this.props.showDayPickerPopup(startDate.value, {main: 'ProfileEditEmploymentFormSub', sub: experienceId.value, name: 'startDate'})}></span>
                   </div>
                 </div>
               </Col>
@@ -80,7 +80,7 @@ class ProfileEditEmploymentFormSub extends Component {
                   <p>End Date</p>
                   <div className={cx("DateInput", s.dateInputContainer)}>
                     <input className={s.dateInput} type="text" id="endDate" name="endDate" placeholder="MM/YYYY" {...endDate} />
-                    <span onClick={() => this.props.showDayPickerPopup(endDate.value, 'ProfileEditEmploymentFormSub')}></span>
+                    <span onClick={() => this.props.showDayPickerPopup(endDate.value, {main: 'ProfileEditEmploymentFormSub', sub: experienceId.value, name: 'endDate'})}></span>
                   </div>
                 </div>
               </Col>

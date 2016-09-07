@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 import Loader from 'react-loader';
 import moment from 'moment';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import s from './DashboardPendingConf.css';
-import 'react-day-picker/lib/style.css';
-import Container from '../Container';
 import Link from '../Link';
-import Header from '../Header';
-import ServiceCard from '../ServiceCard';
-// import { fetchServices, getPatients, getCases } from '../../actions';
-import history from '../../core/history';
-import util from '../../core/util';
-import shuffle from 'lodash/shuffle';
 import DashboardDataTable from '../DashboardDataTable';
-
-import { dummyData } from './dummyData.js';  // need to be replaced by real data
-
+import DashboardTableButton from '../DashboardTableButton';
+import { fetchServices } from '../../actions';
+import { formatSessionAlias } from '../../core/util';
 
 class DashboardPendingConf extends Component {
 
@@ -26,26 +18,73 @@ class DashboardPendingConf extends Component {
   }
 
   componentDidMount() {
-    // this.props.fetchServices();
-    // this.props.user && this.props.getPatients({
-    //   cid: this.props.user.clients[0].id,
-    // });
-    // this.props.user && this.props.getCases({
-    //   cid: this.props.user.clients[0].id,
-    // });
+    this.props.fetchServices();
   }
 
   render() {
-    const { user, cazes, confirmedApptSessions } = this.props;
-    // const addCazeUrl = `${bookingSite}booking1?uid=${request.user.id}&token=${request.user.token}`;
-
+    const { config, services, patients, sessions, sessionsFetching, sessionsByPatient } = this.props;
     return (
       <div className={s.dashboardPendingConf}>
 
-        <Loader className="spinner" loaded={!this.props.cazesFetching}>
-          <a className={s.dashboardInfoBtn} href="#">Add a new case</a>
+        <Loader className="spinner" loaded={!this.props.sessionsFetching}>
+          <Link className={s.dashboardInfoBtn} to="/booking1">Book Appointment</Link>
           <div className={s.cases}>
-            <DashboardDataTable tableData={dummyData} dataActions={['Cancel']}/>
+          {
+            sessionsByPatient && Object.keys(sessionsByPatient).map(patientId => {
+              const patientName = patients && patients[patientId] && patients[patientId].name;
+              const filteredSessions = sessionsByPatient[patientId].filter(session => session.phase === 'awaiting-caregiver');
+              return (
+                <DashboardDataTable css={s} key={patientId}>
+                  <Grid fluid className={s.dashboardDataTable}>
+                    <p className={s.name}>{patientName}</p>
+                    <Row className={s.lgHeader}>
+                      <Col md={2}>ID</Col>
+                      <Col md={2}>Follow up</Col>
+                      <Col md={2}>Date</Col>
+                      <Col md={2}>Time</Col>
+                      <Col md={1}>Service</Col>
+                      <Col md={1}>Price</Col>
+                      <Col md={1}>Status</Col>
+                      <Col md={1}>Action(s)</Col>
+                    </Row>
+                    {
+                      filteredSessions && filteredSessions.map(session => (
+                        <Row className={s.sessionDetails} key={session._id}>
+                          <Col xs={4}>ID</Col>
+                          <Col xs={8} md={2}>{formatSessionAlias(session.alias)}</Col>
+                          <Col xs={4}>Follow up</Col>
+                          <Col xs={8} md={2}>{session.followUp}</Col>
+                          <Col xs={4}>Date</Col>
+                          <Col xs={8} md={2}>{moment(session.date).format('ll')}</Col>
+                          <Col xs={4}>Time</Col>
+                          <Col xs={8} md={2}>
+                            {config && config.timeSlotsByValues && config.timeSlotsByValues[session.timeSlot] &&
+                              config.timeSlotsByValues[session.timeSlot].name}
+                          </Col>
+                          <Col xs={4}>Service</Col>
+                          <Col xs={8} md={1}>
+                            {services && services[session.service] && services[session.service].name}
+                          </Col>
+                          <Col xs={4}>Price</Col>
+                          <Col xs={8} md={1}>{session.price}</Col>
+                          <Col xs={4}>Status</Col>
+                          <Col xs={8} md={1}>
+                            {config && config.sessionStatusesByValues && config.sessionStatusesByValues[session.status] &&
+                              config.sessionStatusesByValues[session.status].name}
+                          </Col>
+                          <Col xs={4}>Action(s)</Col>
+                          <Col xs={8} md={1}>
+                            <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
+                            <DashboardTableButton>Cancel</DashboardTableButton>
+                          </Col>
+                        </Row>
+                      ))
+                    }
+                  </Grid>
+                </DashboardDataTable>
+              );
+            })
+          }
           </div>
         </Loader>
 
@@ -56,68 +95,44 @@ class DashboardPendingConf extends Component {
 }
 
 DashboardPendingConf.propTypes = {
-  confirmedApptSessions: React.PropTypes.array.isRequired,
-
-  user: React.PropTypes.object,
+  config: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
-  servicesTree: React.PropTypes.array,
-  servicesTreeHash: React.PropTypes.object,
-  servicesSubtypesHash: React.PropTypes.object,
-  servicesSubtypesHashBySlug: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
-  patientIds: React.PropTypes.array,
-  cazes: React.PropTypes.object,
-  cazesFetching: React.PropTypes.bool,
-  cazeIds: React.PropTypes.array,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
+  sessionsByPatient: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func,
   getPatients: React.PropTypes.func,
-  getCases: React.PropTypes.func,
+  getSessions: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
-  // user: state.user.data,
-  // cazesByClient: (clientId) => {
-  //   return state.cazesByClient[clientId] && state.cazesByClient[clientId].data;
-  // },
-  // services: state.services.data,
-  // servicesFetching: state.services.isFetching,
-  // servicesTree: state.services.dashboardTree,
-  // servicesTreeHash: state.services.dashboardTreeHash,
-  // servicesSubtypesHash: state.services.subTypesHash,
-  // servicesSubtypesHashBySlug: state.services.subTypesHashBySlug,
-  // patients: state.user.data && state.user.data.clients && state.user.data.clients.length
-  //   && state.user.data.clients[0] && state.user.data.clients[0].id
-  //   && state.patientsByClient[state.user.data.clients[0].id]
-  //   && state.patientsByClient[state.user.data.clients[0].id].data,
-  // patientsFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-  //   && state.user.data.clients[0] && state.user.data.clients[0].id
-  //   && state.patientsByClient[state.user.data.clients[0].id]
-  //   && state.patientsByClient[state.user.data.clients[0].id].isFetching,
-  // patientIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-  //   && state.user.data.clients[0] && state.user.data.clients[0].id
-  //   && state.patientsByClient[state.user.data.clients[0].id]
-  //   && state.patientsByClient[state.user.data.clients[0].id].ids,
-  // cazes: state.user.data && state.user.data.clients && state.user.data.clients.length
-  //   && state.user.data.clients[0] && state.user.data.clients[0].id
-  //   && state.cazesByClient[state.user.data.clients[0].id]
-  //   && state.cazesByClient[state.user.data.clients[0].id].data,
-  // cazesFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-  //   && state.user.data.clients[0] && state.user.data.clients[0].id
-  //   && state.cazesByClient[state.user.data.clients[0].id]
-  //   && state.cazesByClient[state.user.data.clients[0].id].isFetching,
-  // cazeIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-  //   && state.user.data.clients[0] && state.user.data.clients[0].id
-  //   && state.cazesByClient[state.user.data.clients[0].id]
-  //   && state.cazesByClient[state.user.data.clients[0].id].ids,
+  config: state.config.data,
+  services: state.services.data,
+  servicesFetching: state.services.isFetching,
+  servicesTree: state.services.dashboardTree,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
+  patientsFetching: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].isFetching,
+  sessions: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].data,
+  sessionsFetching: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].isFetching,
+  sessionsByPatient: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].dataByPatient,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // fetchServices: () => dispatch(fetchServices()),
-  // getPatients: (params) => dispatch(getPatients(params)),
-  // getCases: (params) => dispatch(getCases(params)),
+  fetchServices: () => dispatch(fetchServices()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPendingConf);

@@ -13,7 +13,7 @@ import DashboardNextAppt from '../DashboardNextAppt';
 import DashboardPendingConf from '../DashboardPendingConf';
 import DashboardPendingPayment from '../DashboardPendingPayment';
 import NurseAvailableCases from '../NurseAvailableCases';
-import { fetchServices, getPatients, getCases, setOrderService, setLastPage } from '../../actions';
+import { fetchServices, getPatients, getSessions, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import { isClient, isProvider } from '../../core/util';
 import shuffle from 'lodash/shuffle';
@@ -30,28 +30,22 @@ class Dashboard extends Component {
   componentDidMount() {
     this.props.fetchServices();
     this.props.user && isClient(this.props.user)
-      && this.props.getPatients({
-        cid: this.props.user.clients[0].id,
-      })
-      && this.props.getCases({
-        cid: this.props.user.clients[0].id,
+      && this.props.getSessions({
+        client: this.props.user._id,
       });
   }
 
   componentWillReceiveProps(props) {
-    if (props.user && !this.props.user) {
+    if (props.user._id !== this.props.user._id) {
       props.user && isClient(props.user)
-        && this.props.getPatients({
-          cid: props.user.clients[0].id,
-        })
-        && this.props.getCases({
-          cid: props.user.clients[0].id,
+        && this.props.getSessions({
+          client: props.user._id,
         });
     }
   }
 
   render() {
-    const { user, patients, cazes } = this.props;
+    const { user, patients, sessions } = this.props;
     let dashboardStats,
       dashboardBody;
 
@@ -70,7 +64,7 @@ class Dashboard extends Component {
       const tableContentBlob = [];
       let patientFound = false;
       patients && Object.values(patients).forEach((patient, index) => {
-        cases && Object.values(cazes).forEach((cas) => {
+        cases && Object.values(sessions).forEach((cas) => {
           if (patient.id === cas.patient) {
             tableContentBlob.forEach((patientBlob) => {
               if (patientBlob.patientId === patient.id) {
@@ -91,7 +85,7 @@ class Dashboard extends Component {
       });
       return tableContentBlob;
     }
-    tableContentBlob = createTableContentBlob(patients, cazes);
+    tableContentBlob = createTableContentBlob(patients, sessions);
     // console.log(tableContentBlob);
 
     // Create eventsArray to be supplied to calendar
@@ -170,7 +164,7 @@ class Dashboard extends Component {
       if (!patients || !cases) return {};
       const pendingPaymentCases = {};
       Object.values(patients).forEach((patient) => {
-        Object.values(cazes).forEach((cas) => {
+        Object.values(sessions).forEach((cas) => {
           if (patient.id === cas.patient) {
             if (cas.status === "Closed" && !cas.isPaid) {
               if (!pendingPaymentCases[cas.patient]) {
@@ -187,7 +181,7 @@ class Dashboard extends Component {
       });
       return pendingPaymentCases;
     }
-    const pendingPaymentCases = getPendingPaymentCases(patients, cazes);
+    const pendingPaymentCases = getPendingPaymentCases(patients, sessions);
 
     if (user) {
       if (isClient(user)) {
@@ -282,9 +276,7 @@ class Dashboard extends Component {
         } else {
           dashboardBody = (
             <div className={s.dashboardBody}>
-              <DashboardNextAppt
-                confirmedApptSessions={confirmedApptSessions}
-              />
+              <DashboardNextAppt />
             </div>
           )
         }
@@ -351,10 +343,8 @@ Dashboard.propTypes = {
   servicesSubtypesHashBySlug: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
-  patientIds: React.PropTypes.array,
-  cazes: React.PropTypes.object,
-  cazesFetching: React.PropTypes.bool,
-  cazeIds: React.PropTypes.array,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
 
   fetchServices: React.PropTypes.func,
   setOrderService: React.PropTypes.func,
@@ -369,36 +359,24 @@ const mapStateToProps = (state) => ({
   servicesTreeHash: state.services.dashboardTreeHash,
   servicesSubtypesHash: state.services.subTypesHash,
   servicesSubtypesHashBySlug: state.services.subTypesHashBySlug,
-  patients: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].data,
-  patientsFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].isFetching,
-  patientIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.patientsByClient[state.user.data.clients[0].id]
-    && state.patientsByClient[state.user.data.clients[0].id].ids,
-  cazes: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.cazesByClient[state.user.data.clients[0].id]
-    && state.cazesByClient[state.user.data.clients[0].id].data,
-  cazesFetching: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.cazesByClient[state.user.data.clients[0].id]
-    && state.cazesByClient[state.user.data.clients[0].id].isFetching,
-  cazeIds: state.user.data && state.user.data.clients && state.user.data.clients.length
-    && state.user.data.clients[0] && state.user.data.clients[0].id
-    && state.cazesByClient[state.user.data.clients[0].id]
-    && state.cazesByClient[state.user.data.clients[0].id].ids,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
+  patientsFetching: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].isFetching,
+  sessions: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].data,
+  sessionsFetching: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getPatients: (params) => dispatch(getPatients(params)),
-  getCases: (params) => dispatch(getCases(params)),
+  getSessions: (params) => dispatch(getSessions(params)),
   setOrderService: (service) => dispatch(setOrderService(service)),
   setLastPage: (page) => dispatch(setLastPage(page)),
 });

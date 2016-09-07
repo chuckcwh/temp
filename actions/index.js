@@ -123,6 +123,10 @@ export const USER_EDUCATION_EDIT_REQUEST = 'USER_EDUCATION_EDIT_REQUEST'
 export const USER_EDUCATION_EDIT_SUCCESS = 'USER_EDUCATION_EDIT_SUCCESS'
 export const USER_EDUCATION_EDIT_FAILURE = 'USER_EDUCATION_EDIT_FAILURE'
 
+export const USER_EDUCATION_DELETE_REQUEST = 'USER_EDUCATION_DELETE_REQUEST'
+export const USER_EDUCATION_DELETE_SUCCESS = 'USER_EDUCATION_DELETE_SUCCESS'
+export const USER_EDUCATION_DELETE_FAILURE = 'USER_EDUCATION_DELETE_FAILURE'
+
 export const USER_ACHIEVEMENTS_REQUEST = 'USER_ACHIEVEMENTS_REQUEST'
 export const USER_ACHIEVEMENTS_SUCCESS = 'USER_ACHIEVEMENTS_SUCCESS'
 export const USER_ACHIEVEMENTS_FAILURE = 'USER_ACHIEVEMENTS_FAILURE'
@@ -421,6 +425,11 @@ function fetchAction(route) {
       types: [ USER_EDUCATION_EDIT_REQUEST, USER_EDUCATION_EDIT_SUCCESS, USER_EDUCATION_EDIT_FAILURE ],
       endpoint: '/users/:userId/educations/:educationId',
       method: 'put'
+    },
+    deleteUserEducation: {
+      types: [ USER_EDUCATION_DELETE_REQUEST, USER_EDUCATION_DELETE_SUCCESS, USER_EDUCATION_DELETE_FAILURE ],
+      endpoint: '/users/:userId/educations/:educationId',
+      method: 'del'
     },
     getUserAchievements: {
       types: [ USER_ACHIEVEMENTS_REQUEST, USER_ACHIEVEMENTS_SUCCESS, USER_ACHIEVEMENTS_FAILURE ],
@@ -802,6 +811,10 @@ export function createUserEducation(params) {
 
 export function editUserEducation(params) {
   return fetch('editUserEducation', params);
+}
+
+export function deleteUserEducation(params) {
+  return fetch('deleteUserEducation', params);
 }
 
 export function getUserAchievements(params) {

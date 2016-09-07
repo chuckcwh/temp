@@ -10,7 +10,7 @@ import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import { editUser, editUserEducation } from '../../../actions';
+import { editUser, editUserEducation, createUserEducation, deleteUserEducation } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 // sub component
 import ProfileEditEducationFormSub from '../ProfileEditEducationFormSub/ProfileEditEducationFormSub';
@@ -26,12 +26,41 @@ class ProfileEditEducationForm extends Component {
     this.state = {}
   }
 
-  onNext = (values) => {
+  onChangeEducation = (values) => {
     console.log('form values', values);
     return new Promise((resolve, reject) => {
       this.props.editUserEducation({
-        _id: values.userId,
-        _educationId: values.educationId,
+        userId: this.props.userId,
+        educationId: values.educationId,
+        country: values.country,
+        course: values.course,
+        gradDate: moment(values.gradDate, 'MM/YYYY').format(),
+        institute: values.institute,
+        isVerified: false,
+        typeOfCert: values.typeOfCert,
+      }).then((res) => {
+        console.log('response', res);
+      })
+    })
+  };
+
+  onDeleteEducation = (educationId) => {
+    console.log('delete action', educationId);
+    return new Promise((resolve, reject) => {
+      this.props.deleteUserEducation({
+        userId: this.props.userId,
+        educationId,
+      }).then((res) => {
+        console.log('response', res);
+      })
+    })
+  };
+
+  onAddEducation = (values) => {
+    console.log('new form', values);
+    return new Promise((resolve, reject) => {
+      this.props.createUserEducation({
+        userId: this.props.userId,
         country: values.country,
         course: values.course,
         gradDate: moment(values.gradDate, 'MM/YYYY').format(),
@@ -50,29 +79,29 @@ class ProfileEditEducationForm extends Component {
     return (
       <div className={s.ProfileEditEducationForm}>
 
-        {educations && educations.map(item => (
+        {educations && Object.values(educations).map(item => (
           <ProfileEditEducationFormSub
             key={item._id}
             formKey={item._id}
 
             initialValues={{
-              _id: userId,
-              _educationId: item._id,
+              educationId: item._id,
               institute: item.institute,
               typeOfCert: item.typeOfCert,
               course: item.course,
               country: item.country,
               gradDate: moment(item.gradDate).format('MM/YYYY'),
             }}
-            onNext={this.onNext}
+            onNext={this.onChangeEducation}
+            onDelete={this.onDeleteEducation}
           />
         ))}
 
-        <ProfileEditEducationFormSub formKey='new' newForm={true}/>
-
-        <button className={cx("btn", "btn-primary", s.addForm)} onClick={this.onAddForm}>
-          Add New Education Details
-        </button>
+        <ProfileEditEducationFormSub
+          formKey='new'
+          onNext={this.onAddEducation}
+          newForm
+        />
 
       </div>
     );
@@ -96,7 +125,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   editUser: (params) => dispatch(editUser(params)),
+  createUserEducation: (params) => dispatch(createUserEducation(params)),
   editUserEducation: (params) => dispatch(editUserEducation(params)),
+  deleteUserEducation: (params) => dispatch(deleteUserEducation(params)),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileEditEducationForm);

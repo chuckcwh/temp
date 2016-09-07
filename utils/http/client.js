@@ -39,8 +39,8 @@ export default function (defaults = {}) {
   const post = (resource, body = {}, headers = {}) =>
     request(resource, 'POST', body, headers);
 
-  const delete = (resource, params = {}, headers = {}) =>
+  const del = (resource, params = {}, headers = {}) =>
     request(queryURL(resource, query(params)), 'DELETE', {}, headers);
 
-  return { request, get, put, post, delete };
+  return { request, get, put, post, del };
 }

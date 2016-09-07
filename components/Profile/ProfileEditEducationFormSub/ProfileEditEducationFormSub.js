@@ -9,7 +9,7 @@ import Link from '../../Link';
 import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
-import { reduxForm } from 'redux-form';
+import { reduxForm, reset } from 'redux-form';
 import InlineForm from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { showDayPickerPopup } from '../../../actions';
@@ -32,7 +32,7 @@ class ProfileEditEducationFormSub extends Component {
         course,
         country,
         gradDate,
-        _educationId,
+        educationId,
       },
       typeOfCertChoice,
       countryChoice,
@@ -110,10 +110,32 @@ class ProfileEditEducationFormSub extends Component {
               </Col>
             </Row>
 
-            <Row className={s.educationFormHandle}>
-              <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
-              <button className={cx("btn", "btn-primary", s.formSubmit)}>Delete</button>
-            </Row>
+            {newForm ? (
+              <Row className={s.educationFormHandle}>
+                <button className={cx("btn", "btn-primary", s.formSubmit)}>Add New</button>
+                <button
+                  className={cx("btn", "btn-primary", s.formSubmit)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.props.resetForm();
+                  }}>
+                  Clear
+                </button>
+              </Row>
+            ) : (
+              <Row className={s.educationFormHandle}>
+                <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
+                <button
+                  className={cx("btn", "btn-primary", s.formSubmit)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.props.onDelete(educationId.value);
+                  }}>
+                  Delete
+                </button>
+              </Row>
+            )}
+
           </Grid>
 
         </form>
@@ -155,8 +177,7 @@ ProfileEditEducationFormSub.propTypes = {
 const reduxFormConfig = {
   form: 'ProfileEditEducationFormSub',
   fields: [
-    '_id',
-    '_educationId',
+    'educationId',
     'institute',
     'typeOfCert',
     'course',
@@ -174,6 +195,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
+  resetForm: () => dispatch(reset('ProfileEditEducationFormSub')),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditEducationFormSub);

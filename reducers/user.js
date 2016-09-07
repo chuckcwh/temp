@@ -193,6 +193,7 @@ const extendedUserData = (state = null, action) => {
     case ActionTypes.USER_EDUCATION_SUCCESS:
     case ActionTypes.USER_EDUCATION_CREATE_SUCCESS:
     case ActionTypes.USER_EDUCATION_EDIT_SUCCESS:
+    case ActionTypes.USER_EDUCATION_DELETE_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENTS_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENT_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENT_CREATE_SUCCESS:
@@ -244,7 +245,6 @@ const user = (state = {
     case ActionTypes.USER_TOKEN_REQUEST:
     case ActionTypes.USER_CREATE_REQUEST:
     case ActionTypes.USER_EDIT_REQUEST:
-    case ActionTypes.USER_EDUCATION_EDIT_REQUEST:
     case ActionTypes.LOGIN_REQUEST:
     case ActionTypes.LOGIN_CLIENT_REQUEST:
       return Object.assign({}, state, {
@@ -295,6 +295,7 @@ const user = (state = {
     case ActionTypes.USER_EDUCATION_SUCCESS:
     case ActionTypes.USER_EDUCATION_CREATE_SUCCESS:
     case ActionTypes.USER_EDUCATION_EDIT_SUCCESS:
+    case ActionTypes.USER_EDUCATION_DELETE_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENTS_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENT_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENT_CREATE_SUCCESS:

@@ -44,9 +44,9 @@ class ProfileEdit extends Component {
     }
   }
 
-  handleTabSelect(index) {
+  handleTabSelect = (index) => {
     this.setState({ selectedTabIndex: index })
-  }
+  };
 
   onFormSubmit(data) {
     console.log('submit data', data);
@@ -93,7 +93,7 @@ class ProfileEdit extends Component {
               </div>
               {user && (
                 <SideTabList
-                  onSelect={this.handleTabSelect.bind(this)}
+                  onSelect={this.handleTabSelect}
                   selectedIndex={this.state.selectedTabIndex}
                   selectable
                 >

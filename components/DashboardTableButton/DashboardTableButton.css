@@ -11,6 +11,10 @@
   border-radius: 5px;
   border: 1px solid #787878;
 
+  &:hover {
+    text-decoration: none;
+  }
+
   &.blue:hover {
     text-decoration: none;
     background-color: #21a1de;

@@ -11,7 +11,7 @@ import LoginForm from '../LoginForm';
 import ForgotPasswordForm from '../ForgotPasswordForm';
 import ResetPasswordForm from '../ResetPasswordForm';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import { getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
+import { BOOKING_FAILURE, getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
 
 class Account extends Component {
@@ -28,8 +28,8 @@ class Account extends Component {
   }
 
   componentDidMount() {
-    if (this.props.booking && this.props.booking.id && !this.props.booking.isHPVerified) {
-      this.props.showVerifyBookingPopup(this.props.booking.id);
+    if (this.props.booking && this.props.booking._id && !this.props.booking.adhocClient.isVerified) {
+      this.props.showVerifyBookingPopup(this.props.booking._id);
     }
   }
 
@@ -38,17 +38,17 @@ class Account extends Component {
       bid: props.bid || this.state.bid,
       contact: props.contact || this.state.contact,
     });
-    if (props.booking && props.booking.id && !props.booking.isHPVerified) {
-      this.props.showVerifyBookingPopup(props.booking.id);
+    if (props.booking && props.booking._id && !props.booking.adhocClient.isVerified) {
+      this.props.showVerifyBookingPopup(props.booking._id);
     }
   }
 
   onVerified = () => {
     this.props.getBooking({
-      bookingId: this.state.bid,
-      contact: this.state.contact,
+      bookingId: this.props.booking && this.props.booking._id,
+      contact: this.props.booking && this.props.booking.contact,
     }).then((res) => {
-      if (res.response && res.response.status < 1) {
+      if (res && res.type === BOOKING_FAILURE) {
         this.props.showAlertPopup('Sorry, we are not able to find your booking.');
       }
     });

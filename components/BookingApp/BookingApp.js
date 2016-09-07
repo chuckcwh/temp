@@ -207,7 +207,7 @@ class BookingApp extends Component {
         <BookingPostComplete />
       );
     } else if (location && location.pathname === '/booking-manage') {
-      if (this.props.booking && this.props.booking && this.props.booking.id && this.props.booking.isHPVerified) {
+      if (this.props.booking && this.props.booking._id && this.props.booking.adhocClient.isVerified) {
         component = (
           <BookingDetails />
         );
@@ -215,7 +215,7 @@ class BookingApp extends Component {
         component = (
           <Account
             type="find-booking"
-            bid={this.props.booking && this.props.booking && this.props.booking.id}
+            bid={this.props.booking && this.props.booking && this.props.booking._id}
             mobilePhone={location && location.query && location.query.mobilePhone}
           />
         );

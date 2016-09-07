@@ -18,15 +18,18 @@ const config = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.CONFIG_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true,
         didInvalidate: false
-      })
+      }
     case ActionTypes.CONFIG_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         didInvalidate: false,
-        data: action.response && Object.assign({}, action.response.data, {
+        data: action.response && action.response.data && {
+          ...action.response.data,
           countriesByValues: normalize(action.response.data.countries, 'value'),
           gendersByValues: normalize(action.response.data.genders, 'value'),
           languagesByValues: normalize(action.response.data.languages, 'value'),
@@ -34,9 +37,9 @@ const config = (state = {
           religionsByValues: normalize(action.response.data.religions, 'value'),
           timeSlotsByValues: normalize(action.response.data.timeSlots, 'value'),
           sessionStatusesByValues: normalize(action.response.data.sessionStatuses, 'value'),
-        }),
+        },
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state
   }
@@ -57,10 +60,11 @@ const services = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.CATEGORIES_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true,
         didInvalidate: false
-      })
+      }
     case ActionTypes.CATEGORIES_SUCCESS:
       let categories = {}, categoriesBySlug = {}
       action.response && action.response.data.forEach((category) => {
@@ -69,10 +73,11 @@ const services = (state = {
           categoriesBySlug[category.slug] = category
         }
       })
-      return Object.assign({}, state, {
+      return {
+        ...state,
         categories,
         categoriesBySlug,
-      })
+      }
     case ActionTypes.SERVICES_SUCCESS:
       let servicesHash = {}, ids = [], rankedServices = [], servicesUnderCategory = {}, servicesUnderSlug = {}
       action.response && action.response.data.forEach((service) => {
@@ -100,7 +105,8 @@ const services = (state = {
       //   result[category.name] = category;
       //   return result;
       // }, {});
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         didInvalidate: false,
         data: servicesHash,
@@ -111,7 +117,7 @@ const services = (state = {
         servicesUnderCategory,
         servicesUnderSlug,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state
   }
@@ -126,23 +132,26 @@ const booking = (state = {
     case ActionTypes.BOOKING_REQUEST:
     case ActionTypes.BOOKING_CREATE_REQUEST:
     case ActionTypes.BOOKING_EDIT_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.BOOKING_SUCCESS:
     case ActionTypes.BOOKING_CREATE_SUCCESS:
     case ActionTypes.BOOKING_EDIT_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     case ActionTypes.BOOKING_DESTROY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: null,
         lastUpdated: undefined
-      })
+      }
     default:
       return state
   }
@@ -155,15 +164,17 @@ const session = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.SESSION_CREATE_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.SESSION_CREATE_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: action.response && action.response.data,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state
   }
@@ -177,16 +188,18 @@ const sessions = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.SESSIONS_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: normalize(action.response && action.response.data),
         dataByPatient: normalizeMultiple(action.response && action.response.data, 'patient'),
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state
   }
@@ -196,10 +209,11 @@ const sessionsByUser = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
     case ActionTypes.SESSIONS_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         [action.data.client || action.data.provider]:
           sessions(state[action.data.client || action.data.provider], action)
-      })
+      }
     default:
       return state
   }
@@ -213,21 +227,23 @@ const patients = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.PATIENTS_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.PATIENTS_SUCCESS:
       let hash = {}, ids = []
       action.response && action.response.data.forEach((patient) => {
         hash[patient._id] = patient
         ids.push(patient._id)
       })
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: hash,
         ids: ids,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     case ActionTypes.PATIENT_SUCCESS:
       if (action.response && action.response.data && action.response.data.id && state.data[action.response.data.id]) {
         let newState = Object.assign({}, state)
@@ -240,9 +256,10 @@ const patients = (state = {
     case ActionTypes.LOGIN_SUCCESS:
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
     case ActionTypes.USER_EDIT_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         data: normalize(action.response.data && action.response.data.patients)
-      })
+      }
     default:
       return state
   }
@@ -253,18 +270,20 @@ const patientsByClient = (state = {}, action) => {
     case ActionTypes.PATIENTS_REQUEST:
     case ActionTypes.PATIENTS_SUCCESS:
     case ActionTypes.PATIENT_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         [action.data.userId]: patients(state[action.data.userId], action)
-      })
+      }
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
     case ActionTypes.USER_CREATE_SUCCESS:
     case ActionTypes.LOGIN_SUCCESS:
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
     case ActionTypes.USER_EDIT_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         [action.response.data._id]: patients(state[action.response.data._id], action)
-      })
+      }
     default:
       return state
   }
@@ -277,15 +296,17 @@ const availableSchedules = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.AVAILABLE_SCHEDULES_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.AVAILABLE_SCHEDULES_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: action.response.data,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state
   }
@@ -332,15 +353,17 @@ const totalSessionsCount = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.STATS_SESSIONS_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.STATS_SESSIONS_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: action.response && action.response.count,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state;
   }
@@ -353,15 +376,17 @@ const rankedServices = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.STATS_SERVICES_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.STATS_SERVICES_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: action.response && action.response.services,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state;
   }
@@ -374,15 +399,17 @@ const rankedSubcategories = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.STATS_SUBCATEGORIES_REQUEST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true
-      })
+      }
     case ActionTypes.STATS_SUBCATEGORIES_SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
         data: action.response && action.response.subCategories,
         lastUpdated: action.response && action.response.receivedAt
-      })
+      }
     default:
       return state;
   }

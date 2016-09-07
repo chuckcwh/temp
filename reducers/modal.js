@@ -62,17 +62,19 @@ const daypicker = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_DAYPICKER:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         visible: true,
         source: action.source,
         value: action.value
-      });
+      };
     case ActionTypes.HIDE_MODAL_DAYPICKER:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         visible: false,
         source: null,
         value: new Date()
-      });
+      };
     default:
       return state;
   }
@@ -84,14 +86,16 @@ const verifyBooking = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_VERIFYBOOKING:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         visible: true,
         bookingId: action.bookingId
-      });
+      };
     case ActionTypes.HIDE_MODAL_VERIFYBOOKING:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         visible: false
-      });
+      };
     default:
       return state;
   }
@@ -106,17 +110,19 @@ const resendVerifyBooking = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_RESENDVERIFYBOOKING:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         visible: true,
         bookingId: action.bookingId
-      });
+      };
     case ActionTypes.HIDE_MODAL_RESENDVERIFYBOOKING:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         visible: false,
         hp: undefined,
         error: undefined,
         pending: false
-      });
+      };
     default:
       return state;
   }

@@ -633,7 +633,7 @@ function fetchAction(route) {
 
 function shouldFetch(state, action) {
   const obj = action.entity && state[action.entity]
-  if (!(obj && obj.data)) {
+  if (!(obj && obj.data && obj.data._id)) {
     return true
   }
   if (obj.isFetching) {

@@ -244,10 +244,29 @@ export function isId(val) {
   return true; 
 }
 
+export function formatSessionAlias(alias) {
+  const nChars = 6;
+  const strAlias = '' + alias;
+  let result = strAlias;
+  for (let i = 0; i < (nChars - strAlias.length); i++) {
+    result = '0' + result;
+  }
+  return result;
+}
+
 export function normalize(array, id = '_id') {
   if (!array || !Array.isArray(array)) return;
   return array.reduce((result, elem) => {
     result[elem[id]] = elem;
+    return result;
+  }, {})
+}
+
+export function normalizeMultiple(array, id = '_id') {
+  if (!array || !Array.isArray(array)) return;
+  return array.reduce((result, elem) => {
+    if (!result[elem[id]]) result[elem[id]] = [];
+    result[elem[id]].push(elem);
     return result;
   }, {})
 }
@@ -315,8 +334,10 @@ const u = {
   isInt,
   isFloat,
   isId,
+  formatSessionAlias,
 
   normalize,
+  normalizeMultiple,
 
   isAdmin,
   isClient,

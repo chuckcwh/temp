@@ -105,6 +105,7 @@ class ProfileEditBasicForm extends Component {
                     <input type="text" id="dob" name="dob" placeholder="YYYY-MM-DD" {...dob} />
                     <span onClick={() => this.props.showDayPickerPopup(dob.value, 'profileEditBasicForm')}></span>
                   </div>
+                  {dob.touched && dob.error && <div className={s.formError}>{dob.error}</div>}
                 </div>
             </div>
 
@@ -132,30 +133,28 @@ class ProfileEditBasicForm extends Component {
               </div>
             </div>
 
-            <div>
-              <div className="TableRow">
-                <div className="TableRowItem1">Occupation</div>
-                <div className="TableRowItem2">
-                  <input type="text" {...occupation} />
-                  {occupation.touched && occupation.error && <div className={s.formError}>{occupation.error}</div>}
-                </div>
+            <div className="TableRow">
+              <div className="TableRowItem1">Occupation</div>
+              <div className="TableRowItem2">
+                <input type="text" {...occupation} />
+                {occupation.touched && occupation.error && <div className={s.formError}>{occupation.error}</div>}
               </div>
+            </div>
 
-              <div className="TableRow">
-                <div className="TableRowItem1">Marital Status</div>
-                <div className="TableRowItem2">
-                  <div className={cx("select", s.selectInput)}>
-                    <span></span>
-                    <select id={maritalStatus} name={maritalStatus} {...maritalStatus} value={maritalStatus.value || ''}>
-                      <option value="">-- Select --</option>
-                      <option value="Single">Single</option>
-                      <option value="Married">Married</option>
-                      <option value="Divorced">Divorced</option>
-                      <option value="Widowed">Widowed</option>
-                    </select>
-                  </div>
-                  {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
+            <div className="TableRow">
+              <div className="TableRowItem1">Marital Status</div>
+              <div className="TableRowItem2">
+                <div className={cx("select", s.selectInput)}>
+                  <span></span>
+                  <select id={maritalStatus} name={maritalStatus} {...maritalStatus} value={maritalStatus.value || ''}>
+                    <option value="">-- Select --</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                  </select>
                 </div>
+                {maritalStatus.touched && maritalStatus.error && <div className={s.formError}>{maritalStatus.error}</div>}
               </div>
             </div>
 
@@ -169,7 +168,7 @@ class ProfileEditBasicForm extends Component {
                       <select id={profession} name={profession} {...profession} value={profession.value || ''}>
                         <option value="">-- Select --</option>
                         {professionChoice && professionChoice.map(item => (
-                          <option key={professionChoice.indexOf(item)} value={item}>{item}</option>
+                          <option key={professionChoice.indexOf(item)} value={item.value}>{item.name}</option>
                         ))}
                       </select>
                     </div>
@@ -181,6 +180,7 @@ class ProfileEditBasicForm extends Component {
                   <div className="TableRowItem1">Provider Skills</div>
                   <div className="TableRowItem2">
                     <MultiSelect
+                      className={s.multiSelect}
                       options={skillsChoice}
                       {...skills}
                     />
@@ -271,7 +271,7 @@ const mapStateToProps = (state) => {
     },
     genderChoice: state.config.data && state.config.data.genders,
     idTypeChoice: state.config.data && state.config.data.residences,
-    professionChoice: ['doctor', 'nurse', 'therapist', 'tcm', 'others'],
+    professionChoice: state.config.data && state.config.data.nurseProfessions,  // provider only
     skillsChoice: [{label: 'Caregiver Training', value: 'Caregiver Training'}, {label: 'General Accompany', value: 'General Accompany'}],
     user,
   }

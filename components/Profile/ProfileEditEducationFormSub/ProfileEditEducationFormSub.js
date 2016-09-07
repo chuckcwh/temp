@@ -22,6 +22,7 @@ class ProfileEditEducationFormSub extends Component {
 
   onNext = (values) => {
     this.props.onNext(values);
+    this.props.resetForm();
   };
 
   render() {
@@ -47,10 +48,10 @@ class ProfileEditEducationFormSub extends Component {
 
     return (
       <div>
-        <DayPickerPopup title="Year of Graduation" />
+        <DayPickerPopup title="Date Picker" />
 
         <form className={s.ProfileEditEducationFormSub} onSubmit={handleSubmit(this.onNext)}>
-          <Grid fluid className={cx(s.educationFormTable, !newForm && s.newForm)}>
+          <Grid fluid className={cx(s.educationFormTable, newForm && s.newForm)}>
             <Row className={s.mainCat}>
               <Col xs={12} sm={7} className={s.mainCatFields}>
                 <div className={s.mainCatContainer}>
@@ -71,6 +72,7 @@ class ProfileEditEducationFormSub extends Component {
                       ))}
                     </select>
                   </div>
+                  {typeOfCert.touched && typeOfCert.error && <div className={s.formError}>{typeOfCert.error}</div>}
                 </div>
               </Col>
               <Col xs={12} sm={5} className={s.mainCatFields}>
@@ -92,6 +94,7 @@ class ProfileEditEducationFormSub extends Component {
                       ))}
                     </select>
                   </div>
+                  {country.touched && country.error && <div className={s.formError}>{country.error}</div>}
                 </div>
               </Col>
               <Col xs={12} sm={4} className={s.mainCatFields}>
@@ -102,17 +105,20 @@ class ProfileEditEducationFormSub extends Component {
                     <span onClick={() => {
                       this.props.showDayPickerPopup(
                         gradDate.value,
-                        {main: 'ProfileEditEducationFormSub', sub: _educationId.value}
+                        {main: 'ProfileEditEducationFormSub', sub: educationId.value}
                       )}}>
                     </span>
                   </div>
+                  {gradDate.touched && gradDate.error && <div className={s.formError}>{gradDate.error}</div>}
                 </div>
               </Col>
             </Row>
 
             {newForm ? (
               <Row className={s.educationFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Add New</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
+                  Add New
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {
@@ -124,7 +130,9 @@ class ProfileEditEducationFormSub extends Component {
               </Row>
             ) : (
               <Row className={s.educationFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
+                  Save Changes
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {
@@ -161,12 +169,14 @@ const validate = values => {
   }
   if (!values.gradDate) {
     errors.gradDate = 'Required';
+  } else if (!/^\d{2}[/]\d{4}$/i.test(values.gradDate)) {
+    errors.gradDate = 'Invalid date of graduation (e.g. MM/YYYY)';
   }
   return errors
 }
 
 ProfileEditEducationFormSub.propTypes = {
-  user: PropTypes.object,
+  // user: PropTypes.object,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,

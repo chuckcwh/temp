@@ -119,6 +119,10 @@ export const USER_EXPERIENCE_EDIT_REQUEST = 'USER_EXPERIENCE_EDIT_REQUEST'
 export const USER_EXPERIENCE_EDIT_SUCCESS = 'USER_EXPERIENCE_EDIT_SUCCESS'
 export const USER_EXPERIENCE_EDIT_FAILURE = 'USER_EXPERIENCE_EDIT_FAILURE'
 
+export const USER_EXPERIENCE_DELETE_REQUEST = 'USER_EXPERIENCE_DELETE_REQUEST'
+export const USER_EXPERIENCE_DELETE_SUCCESS = 'USER_EXPERIENCE_DELETE_SUCCESS'
+export const USER_EXPERIENCE_DELETE_FAILURE = 'USER_EXPERIENCE_DELETE_FAILURE'
+
 export const USER_EDUCATIONS_REQUEST = 'USER_EDUCATIONS_REQUEST'
 export const USER_EDUCATIONS_SUCCESS = 'USER_EDUCATIONS_SUCCESS'
 export const USER_EDUCATIONS_FAILURE = 'USER_EDUCATIONS_FAILURE'
@@ -154,6 +158,10 @@ export const USER_ACHIEVEMENT_CREATE_FAILURE = 'USER_ACHIEVEMENT_CREATE_FAILURE'
 export const USER_ACHIEVEMENT_EDIT_REQUEST = 'USER_ACHIEVEMENT_EDIT_REQUEST'
 export const USER_ACHIEVEMENT_EDIT_SUCCESS = 'USER_ACHIEVEMENT_EDIT_SUCCESS'
 export const USER_ACHIEVEMENT_EDIT_FAILURE = 'USER_ACHIEVEMENT_EDIT_FAILURE'
+
+export const USER_ACHIEVEMENT_DELETE_REQUEST = 'USER_ACHIEVEMENT_DELETE_REQUEST'
+export const USER_ACHIEVEMENT_DELETE_SUCCESS = 'USER_ACHIEVEMENT_DELETE_SUCCESS'
+export const USER_ACHIEVEMENT_DELETE_FAILURE = 'USER_ACHIEVEMENT_DELETE_FAILURE'
 
 export const USER_REVIEWS_REQUEST = 'USER_REVIEWS_REQUEST'
 export const USER_REVIEWS_SUCCESS = 'USER_REVIEWS_SUCCESS'
@@ -429,6 +437,11 @@ function fetchAction(route) {
       endpoint: '/users/:userId/experiences/:experienceId',
       method: 'put'
     },
+    deleteUserExperience: {
+      types: [ USER_EXPERIENCE_DELETE_REQUEST, USER_EXPERIENCE_DELETE_SUCCESS, USER_EXPERIENCE_DELETE_FAILURE ],
+      endpoint: '/users/:userId/experiences/:experienceId',
+      method: 'del'
+    },
     getUserEducations: {
       types: [ USER_EDUCATIONS_REQUEST, USER_EDUCATIONS_SUCCESS, USER_EDUCATIONS_FAILURE ],
       endpoint: '/users/:userId/educations',
@@ -473,6 +486,11 @@ function fetchAction(route) {
       types: [ USER_ACHIEVEMENT_EDIT_REQUEST, USER_ACHIEVEMENT_EDIT_SUCCESS, USER_ACHIEVEMENT_EDIT_FAILURE ],
       endpoint: '/users/:userId/achievements/:achievementId',
       method: 'put'
+    },
+    deleteUserAchievement: {
+      types: [ USER_ACHIEVEMENT_DELETE_REQUEST, USER_ACHIEVEMENT_DELETE_SUCCESS, USER_ACHIEVEMENT_DELETE_FAILURE ],
+      endpoint: '/users/:userId/achievements/:achievementId',
+      method: 'del'
     },
     getUserReviews: {
       types: [ USER_REVIEWS_REQUEST, USER_REVIEWS_SUCCESS, USER_REVIEWS_FAILURE ],
@@ -814,6 +832,10 @@ export function editUserExperience(params) {
   return fetch('editUserExperience', params);
 }
 
+export function deleteUserExperience(params) {
+  return fetch('deleteUserExperience', params);
+}
+
 export function getUserEducations(params) {
   return fetch('getUserEducations', params);
 }
@@ -848,6 +870,10 @@ export function createUserAchievement(params) {
 
 export function editUserAchievement(params) {
   return fetch('editUserAchievement', params);
+}
+
+export function deleteUserAchievement(params) {
+  return fetch('deleteUserAchievement', params);
 }
 
 export function getUserReviews(params) {

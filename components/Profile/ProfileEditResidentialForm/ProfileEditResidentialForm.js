@@ -89,7 +89,7 @@ class ProfileEditResidentialForm extends Component {
               <div className="TableRowItem1">Address<sup>*</sup></div>
               <div className="TableRowItem2">
                 <textarea className={s.addrInput} id="description" name="description" placeholder="Enter Address" {...description} />
-                {description.touched && description.error && <div className={s.bookingLocationFormError}>{description.error}</div>}
+                {description.touched && description.error && <div className={s.formError}>{description.error}</div>}
               </div>
             </div>
 

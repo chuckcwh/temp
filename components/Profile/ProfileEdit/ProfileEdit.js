@@ -101,9 +101,9 @@ class ProfileEdit extends Component {
                   <SideTab><MdHome /><span>Residential Details</span></SideTab>
                   <SideTab><FaComments /><span>Cultural Details</span></SideTab>
                   {isProvider(user) && ([
-                    <SideTab><FaBook /><span>Education History</span></SideTab>,
-                    <SideTab><FaBriefcase /><span>Employment History</span></SideTab>,
-                    <SideTab><FaTrophy /><span>Achievements</span></SideTab>
+                    <SideTab key={1}><FaBook /><span>Education History</span></SideTab>,
+                    <SideTab key={2}><FaBriefcase /><span>Employment History</span></SideTab>,
+                    <SideTab key={3}><FaTrophy /><span>Achievements</span></SideTab>
                   ])}
                   <SideTab><FaImage /><span>Profile Picture</span></SideTab>
                   <SideTab><FaLock /><span>Password</span></SideTab>

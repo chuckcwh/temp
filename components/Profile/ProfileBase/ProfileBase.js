@@ -46,7 +46,7 @@ export class ProfileBase extends Component {
       ageGroup: dob && (<p><MdPerson /> {this.getAgeGroup(dob)}</p>),
       address: address && address.neighborhood && (<p><MdLocationOn/> {address.neighborhood}</p>),
       raceReligion: (race || religion) && (<p><TiWorld /> {race}{race && religion && ' - '}{religion}</p>),
-      languages: languages.length && (<p><FaComment /> {`${languages.join(', ')}`}</p>),
+      languages: languages && languages.length && (<p><FaComment /> {`${languages.join(', ')}`}</p>),
       nationality: nationality && (<p><FaFlag /> {nationality}</p>),
       name,
       avatar

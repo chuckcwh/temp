@@ -520,7 +520,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
@@ -547,7 +547,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         default:
           return state;
       }
@@ -564,7 +564,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
@@ -591,7 +591,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         default:
           return state;
       }
@@ -608,7 +608,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
@@ -635,7 +635,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         default:
           return state;
       }
@@ -652,7 +652,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         case ActionTypes.GEOCODE_SUCCESS:
           if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
             return {
@@ -679,7 +679,7 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         default:
           return state;
       }
@@ -696,15 +696,18 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         default:
           return state;
       }
     },
     ProfileEditEducationFormSub: (state, action) => {
+      console.log('state', state);
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
           const { main, sub } = action.source;
+
+
           if (main === 'ProfileEditEducationFormSub') {
             return {
               ...state,
@@ -717,11 +720,53 @@ const bookingApp = combineReducers({
               }
             }
           }
-          break;
+          return state;
         default:
           return state;
       }
-    }
+    },
+    ProfileEditEmploymentFormSub: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          const { main, sub, name } = action.source;
+          if (main === 'ProfileEditEmploymentFormSub') {
+            return {
+              ...state,
+              [sub]: {
+                ...state[sub],
+                [name]: {
+                  ...state[sub][name],
+                  value: moment(action.value).format('MM/YYYY')
+                }
+              }
+            }
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
+    ProfileEditAchievementFormSub: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          const { main, sub } = action.source;
+          if (main === 'ProfileEditAchievementFormSub') {
+            return {
+              ...state,
+              [sub]: {
+                ...state[sub],
+                dateObtained: {
+                  ...state[sub].dateObtained,
+                  value: moment(action.value).format('MM/YYYY')
+                }
+              }
+            }
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
   })
 });
 

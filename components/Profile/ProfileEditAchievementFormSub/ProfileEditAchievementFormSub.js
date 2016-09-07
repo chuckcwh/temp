@@ -61,7 +61,7 @@ class ProfileEditAchievementFormSub extends Component {
                   <p>Date Obtained</p>
                   <div className={cx("DateInput", s.dateInputContainer)}>
                     <input className={s.dateInput} type="text" id="dateObtained" name="dateObtained" placeholder="MM/YYYY" {...dateObtained} />
-                    <span onClick={() => this.props.showDayPickerPopup(dateObtained.value, 'ProfileEditAchievementFormSub')}></span>
+                    <span onClick={() => this.props.showDayPickerPopup(dateObtained.value, {main: 'ProfileEditAchievementFormSub', sub: achievementId.value})}></span>
                   </div>
                   {dateObtained.touched && dateObtained.error && <div className={s.formError}>{dateObtained.error}</div>}
                 </div>

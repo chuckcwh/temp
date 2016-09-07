@@ -755,8 +755,8 @@ const bookingApp = combineReducers({
               ...state,
               [sub]: {
                 ...state[sub],
-                gradDate: {
-                  ...state[sub].gradDate,
+                dateObtained: {
+                  ...state[sub].dateObtained,
                   value: moment(action.value).format('MM/YYYY')
                 }
               }

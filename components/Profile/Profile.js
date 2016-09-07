@@ -61,7 +61,7 @@ class Profile extends Component {
                           </span>
                         )}
                         {skills && skills.map(item => (
-                          <span className={s.eachSkill}>{item}</span>
+                          <span key={skills.indexOf(item)} className={s.eachSkill}>{item}</span>
                         ))}
                       </p>
                     </Col>

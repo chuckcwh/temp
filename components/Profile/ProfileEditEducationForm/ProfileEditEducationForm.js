@@ -10,8 +10,7 @@ import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import { editUser, editUserEducation, createUserEducation, deleteUserEducation } from '../../../actions';
-import DayPickerPopup from '../../DayPickerPopup';
+import { editUserEducation, createUserEducation, deleteUserEducation } from '../../../actions';
 // sub component
 import ProfileEditEducationFormSub from '../ProfileEditEducationFormSub/ProfileEditEducationFormSub';
 // react-icons
@@ -26,7 +25,7 @@ class ProfileEditEducationForm extends Component {
     this.state = {}
   }
 
-  onChangeEducation = (values) => {
+  onChangeForm = (values) => {
     console.log('form values', values);
     return new Promise((resolve, reject) => {
       this.props.editUserEducation({
@@ -44,7 +43,7 @@ class ProfileEditEducationForm extends Component {
     })
   };
 
-  onDeleteEducation = (educationId) => {
+  onDelForm = (educationId) => {
     console.log('delete action', educationId);
     return new Promise((resolve, reject) => {
       this.props.deleteUserEducation({
@@ -56,7 +55,7 @@ class ProfileEditEducationForm extends Component {
     })
   };
 
-  onAddEducation = (values) => {
+  onAddForm = (values) => {
     console.log('new form', values);
     return new Promise((resolve, reject) => {
       this.props.createUserEducation({
@@ -83,7 +82,6 @@ class ProfileEditEducationForm extends Component {
           <ProfileEditEducationFormSub
             key={item._id}
             formKey={item._id}
-
             initialValues={{
               educationId: item._id,
               institute: item.institute,
@@ -92,14 +90,14 @@ class ProfileEditEducationForm extends Component {
               country: item.country,
               gradDate: moment(item.gradDate).format('MM/YYYY'),
             }}
-            onNext={this.onChangeEducation}
-            onDelete={this.onDeleteEducation}
+            onNext={this.onChangeForm}
+            onDelete={this.onDelForm}
           />
         ))}
 
         <ProfileEditEducationFormSub
           formKey='new'
-          onNext={this.onAddEducation}
+          onNext={this.onAddForm}
           newForm
         />
 
@@ -124,7 +122,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  editUser: (params) => dispatch(editUser(params)),
   createUserEducation: (params) => dispatch(createUserEducation(params)),
   editUserEducation: (params) => dispatch(editUserEducation(params)),
   deleteUserEducation: (params) => dispatch(deleteUserEducation(params)),

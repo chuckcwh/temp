@@ -119,6 +119,10 @@ export const USER_EXPERIENCE_EDIT_REQUEST = 'USER_EXPERIENCE_EDIT_REQUEST'
 export const USER_EXPERIENCE_EDIT_SUCCESS = 'USER_EXPERIENCE_EDIT_SUCCESS'
 export const USER_EXPERIENCE_EDIT_FAILURE = 'USER_EXPERIENCE_EDIT_FAILURE'
 
+export const USER_EXPERIENCE_DELETE_REQUEST = 'USER_EXPERIENCE_DELETE_REQUEST'
+export const USER_EXPERIENCE_DELETE_SUCCESS = 'USER_EXPERIENCE_DELETE_SUCCESS'
+export const USER_EXPERIENCE_DELETE_FAILURE = 'USER_EXPERIENCE_DELETE_FAILURE'
+
 export const USER_EDUCATIONS_REQUEST = 'USER_EDUCATIONS_REQUEST'
 export const USER_EDUCATIONS_SUCCESS = 'USER_EDUCATIONS_SUCCESS'
 export const USER_EDUCATIONS_FAILURE = 'USER_EDUCATIONS_FAILURE'
@@ -428,6 +432,11 @@ function fetchAction(route) {
       types: [ USER_EXPERIENCE_EDIT_REQUEST, USER_EXPERIENCE_EDIT_SUCCESS, USER_EXPERIENCE_EDIT_FAILURE ],
       endpoint: '/users/:userId/experiences/:experienceId',
       method: 'put'
+    },
+    deleteUserExperience: {
+      types: [ USER_EXPERIENCE_DELETE_REQUEST, USER_EXPERIENCE_DELETE_SUCCESS, USER_EXPERIENCE_DELETE_FAILURE ],
+      endpoint: '/users/:userId/experiences/:experienceId',
+      method: 'del'
     },
     getUserEducations: {
       types: [ USER_EDUCATIONS_REQUEST, USER_EDUCATIONS_SUCCESS, USER_EDUCATIONS_FAILURE ],
@@ -812,6 +821,10 @@ export function createUserExperience(params) {
 
 export function editUserExperience(params) {
   return fetch('editUserExperience', params);
+}
+
+export function deleteUserExperience(params) {
+  return fetch('deleteUserExperience', params);
 }
 
 export function getUserEducations(params) {

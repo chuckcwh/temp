@@ -47,10 +47,10 @@ class ProfileEditEducationFormSub extends Component {
 
     return (
       <div>
-        <DayPickerPopup title="Year of Graduation" />
+        <DayPickerPopup title="Date Picker" />
 
         <form className={s.ProfileEditEducationFormSub} onSubmit={handleSubmit(this.onNext)}>
-          <Grid fluid className={cx(s.educationFormTable, !newForm && s.newForm)}>
+          <Grid fluid className={cx(s.educationFormTable, newForm && s.newForm)}>
             <Row className={s.mainCat}>
               <Col xs={12} sm={7} className={s.mainCatFields}>
                 <div className={s.mainCatContainer}>
@@ -166,7 +166,7 @@ const validate = values => {
 }
 
 ProfileEditEducationFormSub.propTypes = {
-  user: PropTypes.object,
+  // user: PropTypes.object,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,

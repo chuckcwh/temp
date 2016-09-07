@@ -7,8 +7,8 @@
   padding-bottom: 40px;
 
   & .employmentFormTable {
-    background-color: #FaFaFa;
-    border: 1px solid #EEEEEE;
+    background: rgba(253, 188, 29, 0.15);
+    border: 1px solid transparent;
     box-shadow: 0 0 1px E6E6E6;
     border-radius: 10px;
 
@@ -59,7 +59,7 @@
       }
     }
 
-    & .educationFormHandle {
+    & .experienceFormHandle {
       margin: 50px 10px 40px;
       text-align: right;
       display: block;
@@ -68,6 +68,11 @@
         margin: 0 10px;
       }
     }
+  }
+
+  & .newForm {
+    background-color: #FaFaFa;
+    border: 1px solid #EEEEEE;
   }
 
 }

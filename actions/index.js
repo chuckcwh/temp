@@ -274,7 +274,8 @@ function fetchAction(route) {
       endpoint: '/config',
       method: 'get',
       auth: 'app',
-      entity: 'config'
+      entity: 'config',
+      defaultEntity: {}
     },
     getCategories: {
       types: [ CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE ],
@@ -626,7 +627,9 @@ function fetchAction(route) {
 
 function shouldFetch(state, action) {
   const obj = action.entity && state[action.entity]
-  if (!(obj && obj.data && obj.data._id)) {
+  if (!(obj && obj.data && Array.isArray(obj.data) && obj.data.length)) {
+    return true
+  } else if (!(obj && obj.data && typeof obj.data === 'object' && (action.defaultEntity ? (JSON.stringify(obj.data) !== JSON.stringify(action.defaultEntity)) : obj.data._id))) {
     return true
   }
   if (obj.isFetching) {

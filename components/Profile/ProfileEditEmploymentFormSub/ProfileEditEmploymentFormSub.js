@@ -22,6 +22,7 @@ class ProfileEditEmploymentFormSub extends Component {
 
   onNext = (values) => {
     this.props.onNext(values);
+    this.props.resetForm();
   };
 
   render() {

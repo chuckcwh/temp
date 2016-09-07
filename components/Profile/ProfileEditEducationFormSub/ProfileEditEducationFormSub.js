@@ -22,6 +22,7 @@ class ProfileEditEducationFormSub extends Component {
 
   onNext = (values) => {
     this.props.onNext(values);
+    this.props.resetForm();
   };
 
   render() {
@@ -112,7 +113,9 @@ class ProfileEditEducationFormSub extends Component {
 
             {newForm ? (
               <Row className={s.educationFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Add New</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)}>
+                  Add New
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {

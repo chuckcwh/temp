@@ -46,7 +46,7 @@ const timeslots = (state = null, action) => {
   }
 }
 
-const booker = (state = null, action) => {
+const booker = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.ORDER_SET_BOOKER:
       return action.booker;

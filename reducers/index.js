@@ -7,7 +7,7 @@ import user from './user';
 import modal from './modal';
 import order from './order';
 import userData from './user';
-import { normalize, appendAllServices, parseCategories } from '../core/util';
+import { normalize, normalizeMultiple, appendAllServices, parseCategories } from '../core/util';
 import sortBy from 'lodash/sortBy';
 import moment from 'moment';
 
@@ -33,6 +33,7 @@ const config = (state = {
           racesByValues: normalize(action.response.data.races, 'value'),
           religionsByValues: normalize(action.response.data.religions, 'value'),
           timeSlotsByValues: normalize(action.response.data.timeSlots, 'value'),
+          sessionStatusesByValues: normalize(action.response.data.sessionStatuses, 'value'),
         }),
         lastUpdated: action.response && action.response.receivedAt
       })
@@ -172,7 +173,7 @@ const sessions = (state = {
   isFetching: false,
   didInvalidate: true,
   data: null,
-  ids: null
+  dataByPatient: null
 }, action) => {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
@@ -180,15 +181,10 @@ const sessions = (state = {
         isFetching: true
       })
     case ActionTypes.SESSIONS_SUCCESS:
-      let hash = {}, ids = []
-      action.response && action.response.data.forEach((session) => {
-        hash[session.id] = session
-        ids.push(session.id)
-      })
       return Object.assign({}, state, {
         isFetching: false,
-        data: hash,
-        ids: ids,
+        data: normalize(action.response && action.response.data),
+        dataByPatient: normalizeMultiple(action.response && action.response.data, 'patient'),
         lastUpdated: action.response && action.response.receivedAt
       })
     default:
@@ -196,24 +192,13 @@ const sessions = (state = {
   }
 }
 
-const sessionsByClient = (state = {}, action) => {
+const sessionsByUser = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
     case ActionTypes.SESSIONS_SUCCESS:
       return Object.assign({}, state, {
-        [action.data.client]: sessions(state[action.data.client], action)
-      })
-    default:
-      return state
-  }
-}
-
-const sessionsAvailToNurse = (state ={}, action) => {
-  switch (action.type) {
-    case ActionTypes.SESSIONS_REQUEST:
-    case ActionTypes.SESSIONS_SUCCESS:
-      return Object.assign({}, state, {
-        [action.data.provider]: sessions(state[action.data.provider], action)
+        [action.data.client || action.data.provider]:
+          sessions(state[action.data.client || action.data.provider], action)
       })
     default:
       return state
@@ -457,8 +442,7 @@ const bookingApp = combineReducers({
   services,
   booking,
   session,
-  sessionsByClient,
-  sessionsAvailToNurse,
+  sessionsByUser,
   patientsByClient,
   availableSchedules,
   // paypal,

@@ -38,9 +38,21 @@ export const SESSIONS_REQUEST = 'SESSIONS_REQUEST'
 export const SESSIONS_SUCCESS = 'SESSIONS_SUCCESS'
 export const SESSIONS_FAILURE = 'SESSIONS_FAILURE'
 
+export const SESSIONS_SUGGESTED_REQUEST = 'SESSIONS_SUGGESTED_REQUEST'
+export const SESSIONS_SUGGESTED_SUCCESS = 'SESSIONS_SUGGESTED_SUCCESS'
+export const SESSIONS_SUGGESTED_FAILURE = 'SESSIONS_SUGGESTED_FAILURE'
+
+export const SESSION_REQUEST = 'SESSION_REQUEST'
+export const SESSION_SUCCESS = 'SESSION_SUCCESS'
+export const SESSION_FAILURE = 'SESSION_FAILURE'
+
 export const SESSION_CREATE_REQUEST = 'SESSION_CREATE_REQUEST'
 export const SESSION_CREATE_SUCCESS = 'SESSION_CREATE_SUCCESS'
 export const SESSION_CREATE_FAILURE = 'SESSION_CREATE_FAILURE'
+
+export const SESSION_EDIT_REQUEST = 'SESSION_EDIT_REQUEST'
+export const SESSION_EDIT_SUCCESS = 'SESSION_EDIT_SUCCESS'
+export const SESSION_EDIT_FAILURE = 'SESSION_EDIT_FAILURE'
 
 export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
 export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
@@ -313,10 +325,27 @@ function fetchAction(route) {
       method: 'get',
       entity: 'sessions'
     },
+    getSuggestedSessions: {
+      types: [ SESSIONS_SUGGESTED_REQUEST, SESSIONS_SUGGESTED_SUCCESS, SESSIONS_SUGGESTED_FAILURE ],
+      endpoint: '/sessions/suggested',
+      method: 'get',
+      entity: 'sessions'
+    },
+    getSession: {
+      types: [ SESSION_REQUEST, SESSION_SUCCESS, SESSION_FAILURE ],
+      endpoint: '/sessions/:sessionId',
+      method: 'get',
+      entity: 'sessions'
+    },
     createSession: {
       types: [ SESSION_CREATE_REQUEST, SESSION_CREATE_SUCCESS, SESSION_CREATE_FAILURE ],
       endpoint: '/sessions',
       method: 'post'
+    },
+    editSession: {
+      types: [ SESSION_EDIT_REQUEST, SESSION_EDIT_SUCCESS, SESSION_EDIT_FAILURE ],
+      endpoint: '/sessions/:sessionId',
+      method: 'put'
     },
     login: {
       types: [ LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE ],
@@ -733,10 +762,6 @@ export function editBooking(params) {
   return fetch('editBooking', params);
 }
 
-export function getCases(params) {
-  return fetch('getCases', params);
-}
-
 export function getAvailableSchedules(params) {
   return fetch('getAvailableSchedules', params);
 }
@@ -917,6 +942,22 @@ export function editPatient(params) {
 
 export function getSessions(params) {
   return fetch('getSessions', params);
+}
+
+export function getSuggestedSessions(params) {
+  return fetch('getSuggestedSessions', params);
+}
+
+export function getSession(params) {
+  return fetch('getSession', params);
+}
+
+export function createSession(params) {
+  return fetch('createSession', params);
+}
+
+export function editSession(params) {
+  return fetch('editSession', params);
 }
 
 export function getPromo(params) {

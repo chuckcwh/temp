@@ -690,26 +690,28 @@ class BookingLocationUser extends Component {
           </div>
           {userDetails}
         </div>
-        <div className={s.bookingLocationUserBodyEditSection}>
-          <div className={s.bookingLocationUserBodyAddPatient}>
-            <button className="btn btn-primary" onClick={this.onClickAddPatient}>Add New Patient</button>
-            <span>or</span>
-          </div>
-          <div className={s.bookingLocationUserBodySelectPatient}>
-            <span>Select Existing Patient</span>
-            <div className="select">
-              <span></span>
-              <select name="patientId" value={this.state.patientId} onChange={this.onChangePatient}>
-                <option value="">Select Patient</option>
-                {
-                  this.props.patients && Object.keys(this.props.patients).map((id) => (
-                    <option key={id} value={id}>{this.props.patients[id].name}</option>
-                  ))
-                }
-              </select>
+        {this.props.patients && Object.values(this.props.patients).length > 0 &&
+          <div className={s.bookingLocationUserBodyEditSection}>
+            <div className={s.bookingLocationUserBodyAddPatient}>
+              <button className="btn btn-primary" onClick={this.onClickAddPatient}>Add New Patient</button>
+              <span>or</span>
+            </div>
+            <div className={s.bookingLocationUserBodySelectPatient}>
+              <span>Select Existing Patient</span>
+              <div className="select">
+                <span></span>
+                <select name="patientId" value={this.state.patientId} onChange={this.onChangePatient}>
+                  <option value="">Select Patient</option>
+                  {
+                    this.props.patients && Object.keys(this.props.patients).map((id) => (
+                      <option key={id} value={id}>{this.props.patients[id].name}</option>
+                    ))
+                  }
+                </select>
+              </div>
             </div>
           </div>
-        </div>
+        }
         <div className={s.bookingLocationUserBodyEditSection}>
           <div className={s.bookingLocationUserBodyEditSectionTitle}>
             <h3>Patient Details</h3>

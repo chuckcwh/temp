@@ -154,9 +154,14 @@ const validate = values => {
   }
   if (!values.startDate) {
     errors.startDate = 'Required';
+  } else if (!/^\d{2}[/]\d{4}$/i.test(values.startDate)) {
+    errors.startDate = 'Invalid start date (e.g. MM/YYYY)';
   }
   if (!values.position) {
     errors.position = 'Required';
+  }
+  if (values.endDate && !/^\d{2}[/]\d{4}$/i.test(values.endDate)) {
+    errors.endDate = 'Invalid end date (e.g. MM/YYYY)';
   }
   return errors
 }

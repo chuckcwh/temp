@@ -126,6 +126,8 @@ const validate = values => {
   }
   if (!values.dateObtained) {
     errors.dateObtained = 'Required';
+  } else if (!/^\d{2}[/]\d{4}$/i.test(values.dateObtained)) {
+    errors.dateObtained = 'Invalid date of obtained (e.g. MM/YYYY)';
   }
   if (!values.description) {
     errors.description = 'Required';

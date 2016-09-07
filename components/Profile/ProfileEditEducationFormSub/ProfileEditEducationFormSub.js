@@ -164,6 +164,8 @@ const validate = values => {
   }
   if (!values.gradDate) {
     errors.gradDate = 'Required';
+  } else if (!/^\d{2}[/]\d{4}$/i.test(values.gradDate)) {
+    errors.gradDate = 'Invalid date of graduation (e.g. MM/YYYY)';
   }
   return errors
 }

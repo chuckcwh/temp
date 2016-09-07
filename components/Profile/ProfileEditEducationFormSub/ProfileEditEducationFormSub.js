@@ -72,6 +72,7 @@ class ProfileEditEducationFormSub extends Component {
                       ))}
                     </select>
                   </div>
+                  {typeOfCert.touched && typeOfCert.error && <div className={s.formError}>{typeOfCert.error}</div>}
                 </div>
               </Col>
               <Col xs={12} sm={5} className={s.mainCatFields}>
@@ -93,6 +94,7 @@ class ProfileEditEducationFormSub extends Component {
                       ))}
                     </select>
                   </div>
+                  {country.touched && country.error && <div className={s.formError}>{country.error}</div>}
                 </div>
               </Col>
               <Col xs={12} sm={4} className={s.mainCatFields}>
@@ -107,13 +109,14 @@ class ProfileEditEducationFormSub extends Component {
                       )}}>
                     </span>
                   </div>
+                  {gradDate.touched && gradDate.error && <div className={s.formError}>{gradDate.error}</div>}
                 </div>
               </Col>
             </Row>
 
             {newForm ? (
               <Row className={s.educationFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
                   Add New
                 </button>
                 <button
@@ -127,7 +130,9 @@ class ProfileEditEducationFormSub extends Component {
               </Row>
             ) : (
               <Row className={s.educationFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
+                  Save Changes
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {

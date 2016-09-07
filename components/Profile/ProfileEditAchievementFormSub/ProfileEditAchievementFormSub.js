@@ -78,14 +78,16 @@ class ProfileEditAchievementFormSub extends Component {
                 <div className={s.mainCatContainer}>
                   <p>Short Description</p>
                   <textarea className={s.textareaInput} id="description" name="description" placeholder="Job responsibilities, work accomplished etc." {...description} />
-                  {description.touched && description.error && <div className={s.bookingLocationFormError}>{description.error}</div>}
+                  {description.touched && description.error && <div className={s.formError}>{description.error}</div>}
                 </div>
               </Col>
             </Row>
 
             {newForm ? (
               <Row className={s.achievementFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Add New</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
+                  Add New
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {
@@ -97,7 +99,9 @@ class ProfileEditAchievementFormSub extends Component {
               </Row>
             ) : (
               <Row className={s.achievementFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
+                  Save Changes
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {
@@ -127,7 +131,7 @@ const validate = values => {
   if (!values.dateObtained) {
     errors.dateObtained = 'Required';
   } else if (!/^\d{2}[/]\d{4}$/i.test(values.dateObtained)) {
-    errors.dateObtained = 'Invalid date of obtained (e.g. MM/YYYY)';
+    errors.dateObtained = 'Invalid obtained date (e.g. MM/YYYY)';
   }
   if (!values.description) {
     errors.description = 'Required';

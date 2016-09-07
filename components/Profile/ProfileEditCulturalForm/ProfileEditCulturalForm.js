@@ -69,6 +69,7 @@ class ProfileEditCulturalForm extends Component {
                     ))}
                   </select>
                 </div>
+                {race.touched && race.error && <div className={s.formError}>{race.error}</div>}
               </div>
             </div>
 
@@ -84,6 +85,7 @@ class ProfileEditCulturalForm extends Component {
                     ))}
                   </select>
                 </div>
+                {religion.touched && religion.error && <div className={s.formError}>{religion.error}</div>}
               </div>
             </div>
 
@@ -94,6 +96,7 @@ class ProfileEditCulturalForm extends Component {
                   options={languageChoice && Object.values(languageChoice).map(i => ({ label: i.name, value: i.value }))}
                   {...languages}
                 />
+              {languages.touched && languages.error && <div className={s.formError}>{languages.error}</div>}
               </div>
             </div>
 
@@ -109,6 +112,7 @@ class ProfileEditCulturalForm extends Component {
                     ))}
                   </select>
                 </div>
+                {nationality.touched && nationality.error && <div className={s.formError}>{nationality.error}</div>}
               </div>
             </div>
 

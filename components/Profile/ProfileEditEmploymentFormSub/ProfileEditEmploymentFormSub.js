@@ -74,6 +74,7 @@ class ProfileEditEmploymentFormSub extends Component {
                     <input className={s.dateInput} type="text" id="startDate" name="startDate" placeholder="MM/YYYY" {...startDate} />
                     <span onClick={() => this.props.showDayPickerPopup(startDate.value, {main: 'ProfileEditEmploymentFormSub', sub: experienceId.value, name: 'startDate'})}></span>
                   </div>
+                  {startDate.touched && startDate.error && <div className={s.formError}>{startDate.error}</div>}
                 </div>
               </Col>
               <Col xs={12} sm={4} className={s.mainCatFields}>
@@ -83,6 +84,7 @@ class ProfileEditEmploymentFormSub extends Component {
                     <input className={s.dateInput} type="text" id="endDate" name="endDate" placeholder="MM/YYYY" {...endDate} />
                     <span onClick={() => this.props.showDayPickerPopup(endDate.value, {main: 'ProfileEditEmploymentFormSub', sub: experienceId.value, name: 'endDate'})}></span>
                   </div>
+                  {endDate.touched && endDate.error && <div className={s.formError}>{endDate.error}</div>}
                 </div>
               </Col>
               <Col xs={12} sm={4} className={s.mainCatFields}>
@@ -97,20 +99,23 @@ class ProfileEditEmploymentFormSub extends Component {
                       ))}
                     </select>
                   </div>
+                  {country.touched && country.error && <div className={s.formError}>{country.error}</div>}
                 </div>
               </Col>
               <Col xs={12} sm={12} className={s.mainCatFields}>
                 <div className={s.mainCatContainer}>
                   <p>Area of Responsibilities</p>
                   <textarea className={s.textareaInput} id="description" name="description" placeholder="Job responsibilities, work accomplished etc." {...description} />
-                  {description.touched && description.error && <div className={s.bookingLocationFormError}>{description.error}</div>}
+                  {description.touched && description.error && <div className={s.formError}>{description.error}</div>}
                 </div>
               </Col>
             </Row>
 
             {newForm ? (
               <Row className={s.experienceFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Add New</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
+                  Add New
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {
@@ -122,7 +127,9 @@ class ProfileEditEmploymentFormSub extends Component {
               </Row>
             ) : (
               <Row className={s.experienceFormHandle}>
-                <button className={cx("btn", "btn-primary", s.formSubmit)}>Save Changes</button>
+                <button className={cx("btn", "btn-primary", s.formSubmit)} type="submit" disabled={invalid || submitting}>
+                  Save Changes
+                </button>
                 <button
                   className={cx("btn", "btn-primary", s.formSubmit)}
                   onClick={(e) => {
@@ -150,7 +157,7 @@ const validate = values => {
     errors.employer = 'Required';
   }
   if (!values.description) {
-    errors.employer = 'Required';
+    errors.description = 'Required';
   }
   if (!values.startDate) {
     errors.startDate = 'Required';

@@ -18,4 +18,8 @@
     color: red;
   }
 
+  & .multiSelect {
+    margin-top: 20px;
+  }
+
 }

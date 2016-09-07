@@ -66,4 +66,8 @@
     background-color: #FaFaFa;
     border: 1px solid #EEEEEE;
   }
+
+  & .formError {
+    color: red;
+  }
 }

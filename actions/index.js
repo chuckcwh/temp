@@ -289,13 +289,6 @@ function fetchAction(route) {
       auth: 'app',
       entity: 'services'
     },
-    getLanguages: {
-      types: [ LANGUAGES_REQUEST, LANGUAGES_SUCCESS, LANGUAGES_FAILURE ],
-      endpoint: '/getLanguages',
-      method: 'get',
-      auth: 'app',
-      entity: 'languages'
-    },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
       endpoint: '/bookings/:bookingId',
@@ -676,10 +669,6 @@ export function fetchServices() {
         return new Promise((resolve) => resolve());
       });
   }
-}
-
-export function fetchLanguages() {
-  return fetch('getLanguages');
 }
 
 export function getBooking(params) {

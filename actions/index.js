@@ -30,10 +30,6 @@ export const BOOKING_EDIT_REQUEST = 'BOOKING_EDIT_REQUEST'
 export const BOOKING_EDIT_SUCCESS = 'BOOKING_EDIT_SUCCESS'
 export const BOOKING_EDIT_FAILURE = 'BOOKING_EDIT_FAILURE'
 
-export const BOOKING_SESSION_CANCEL_REQUEST = 'BOOKING_SESSION_CANCEL_REQUEST'
-export const BOOKING_SESSION_CANCEL_SUCCESS = 'BOOKING_SESSION_CANCEL_SUCCESS'
-export const BOOKING_SESSION_CANCEL_FAILURE = 'BOOKING_SESSION_CANCEL_FAILURE'
-
 export const SESSIONS_REQUEST = 'SESSIONS_REQUEST'
 export const SESSIONS_SUCCESS = 'SESSIONS_SUCCESS'
 export const SESSIONS_FAILURE = 'SESSIONS_FAILURE'
@@ -53,6 +49,10 @@ export const SESSION_CREATE_FAILURE = 'SESSION_CREATE_FAILURE'
 export const SESSION_EDIT_REQUEST = 'SESSION_EDIT_REQUEST'
 export const SESSION_EDIT_SUCCESS = 'SESSION_EDIT_SUCCESS'
 export const SESSION_EDIT_FAILURE = 'SESSION_EDIT_FAILURE'
+
+export const SESSION_CANCEL_REQUEST = 'SESSION_CANCEL_REQUEST'
+export const SESSION_CANCEL_SUCCESS = 'SESSION_CANCEL_SUCCESS'
+export const SESSION_CANCEL_FAILURE = 'SESSION_CANCEL_FAILURE'
 
 export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
 export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
@@ -315,12 +315,6 @@ function fetchAction(route) {
       endpoint: '/bookings/:_id',
       method: 'post',
     },
-    cancelBookingSession: {
-      types: [ BOOKING_SESSION_CANCEL_REQUEST, BOOKING_SESSION_CANCEL_SUCCESS, BOOKING_SESSION_CANCEL_FAILURE ],
-      endpoint: '/cancelCaseSession',
-      method: 'post',
-      auth: 'app'
-    },
     getSessions: {
       types: [ SESSIONS_REQUEST, SESSIONS_SUCCESS, SESSIONS_FAILURE ],
       endpoint: '/sessions',
@@ -347,6 +341,11 @@ function fetchAction(route) {
     editSession: {
       types: [ SESSION_EDIT_REQUEST, SESSION_EDIT_SUCCESS, SESSION_EDIT_FAILURE ],
       endpoint: '/sessions/:sessionId',
+      method: 'put'
+    },
+    cancelSession: {
+      types: [ SESSION_CANCEL_REQUEST, SESSION_CANCEL_SUCCESS, SESSION_CANCEL_FAILURE ],
+      endpoint: '/sessions/:sessionId/cancel',
       method: 'put'
     },
     login: {
@@ -776,8 +775,8 @@ export function getAvailableSchedules(params) {
   return fetch('getAvailableSchedules', params);
 }
 
-export function cancelBookingSession(params, booking) {
-  return fetch('cancelBookingSession', params);
+export function cancelSession(params) {
+  return fetch('cancelSession', params);
 }
 
 export function login(params) {

@@ -9,7 +9,7 @@ import Container from '../Container';
 import InlineForm from '../InlineForm';
 import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
-import { fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession,
+import { SESSION_CANCEL_SUCCESS, fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession,
   showConfirmPopup, showInlineForm } from '../../actions';
 import { configToName } from '../../core/util';
 import history from '../../core/history';
@@ -189,14 +189,15 @@ class BookingDetails extends Component {
 
   onCancelSession = (session) => () => {
     this.props.showConfirmPopup('Are you sure you want to cancel this session?', () => {
-      this.props.cancelBookingSession({
-        dateObjId: session.id,
-        token: this.props.booking.token,
-      }, this.props.booking).then((res) => {
-        if (res.response && res.response.status === 1) {
+      this.props.cancelSession({
+        sessionId: session._id,
+        bookingId: this.props.booking._id,
+        bookingToken: this.props.booking.adhocClient.contact,
+      }).then((res) => {
+        if (res && res.type === SESSION_CANCEL_SUCCESS) {
           this.props.getBooking({
             bookingId: this.props.booking._id,
-            contact: this.props.booking.adhocClient.contact,
+            bookingToken: this.props.booking.adhocClient.contact,
           });
         }
       });
@@ -331,9 +332,13 @@ class BookingDetails extends Component {
           </div>
         </div>
         <div className="TableRow">
+          <div className="TableRowItem1">Mobile Number</div>
+          <div className="TableRowItem3">{booking && booking.adhocPatient && booking.adhocPatient.contact}</div>
+        </div>
+        <div className="TableRow">
           <div className="TableRowItem1">Additional Notes</div>
           <div className="TableRowItem3">
-            {booking && booking.case && booking.case.notes}
+            {booking && booking.sessions && booking.sessions[0] && booking.sessions[0].additionalInfo}
           </div>
         </div>
       </div>
@@ -416,18 +421,18 @@ class BookingDetails extends Component {
         {
           booking && booking.sessions.map(session => (
               <div className="TableRow" key={session._id}>
-                <div className="TableRowItem2">{moment(session.dateTimeStart).format('D MMM YY')}</div>
+                <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>
                 <div className="TableRowItem2">
                   {configToName(config, 'timeSlotsByValue', session.timeSlot)}
                 </div>
                 <div className="TableRowItem2">
-                  $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : session.price}
+                  $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
                 </div>
                 <div className="TableRowItem2">
-                  {configToName(config, 'sessionStatusesByValue', session.status)}
+                  {configToName(config, 'sessionPhasesByValue', session.phase)}
                 </div>
                 <div className="TableRowItem1">
-                  {session.status === 'Active' && moment(session.dateTimeStart).isAfter(moment(), 'day')
+                  {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')
                     && <CloseButton onCloseClicked={this.onCancelSession(session)} />}
                 </div>
               </div>

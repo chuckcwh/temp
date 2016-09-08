@@ -16,7 +16,7 @@ class BookingLocationUserPatientForm extends Component {
 
   render() {
     const {
-      fields: { name, dob, nric, contact, gender, postal, unit, description, lat, lng, region, neighborhood, isPatient },
+      fields: { name, dob, idNum, contact, gender, postal, unit, description, lat, lng, region, neighborhood, isPatient },
       invalid,
       handleSubmit,
       submitFailed,
@@ -33,7 +33,7 @@ class BookingLocationUserPatientForm extends Component {
             </label>
           </div>
           <div className={s.bookingLocationUserPatientFormGroup}>
-            <input type="text" placeholder="Full Name*" {...name} disabled={isPatient.value === true} />
+            <input type="text" placeholder="Name*" {...name} disabled={isPatient.value === true} />
             {name.touched && name.error && <div className={s.bookingLocationUserPatientFormError}>{name.error}</div>}
           </div>
           <div className={s.bookingLocationUserPatientFormGroup}>
@@ -41,8 +41,8 @@ class BookingLocationUserPatientForm extends Component {
             {contact.touched && contact.error && <div className={s.bookingLocationUserPatientFormError}>{contact.error}</div>}
           </div>
           <div className={s.bookingLocationUserPatientFormGroup}>
-            <input type="text" placeholder="NRIC*" {...nric} />
-            {nric.touched && nric.error && <div className={s.bookingLocationUserPatientFormError}>{nric.error}</div>}
+            <input type="text" placeholder="IC*" {...idNum} />
+            {idNum.touched && idNum.error && <div className={s.bookingLocationUserPatientFormError}>{idNum.error}</div>}
           </div>
           <div className={s.bookingLocationUserPatientFormGroup}>
             <div className="DateInput">
@@ -107,10 +107,10 @@ const validate = values => {
   } else if (moment().isSameOrBefore(values.dob, 'day')) {
     errors.dob = 'Date must be earlier than today';
   }
-  if (!values.nric) {
-    errors.nric = 'Required';
-  } else if (!/[A-Z]\d{7}[A-Z]/i.test(values.nric)) {
-    errors.nric = 'Invalid NRIC (e.g. S1234567A)';
+  if (!values.idNum) {
+    errors.idNum = 'Required';
+  } else if (!/[A-Z]\d{7}[A-Z]/i.test(values.idNum)) {
+    errors.idNum = 'Invalid idNum (e.g. S1234567A)';
   }
   if (values.contact && !/^([+]65)[8-9]{1}[0-9]{7}$/.test(values.contact)) {
     errors.contact = 'Invalid mobile number';
@@ -147,7 +147,7 @@ BookingLocationUserPatientForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'bookingLocationUserPatientForm',
-  fields: ['userName', 'userContact', 'name', 'dob', 'nric', 'contact', 'gender', 'postal', 'unit', 'description', 'lat', 'lng', 'region', 'neighborhood', 'isPatient'],
+  fields: ['userName', 'userContact', 'name', 'dob', 'idNum', 'contact', 'gender', 'postal', 'unit', 'description', 'lat', 'lng', 'region', 'neighborhood', 'isPatient'],
   validate,
 };
 

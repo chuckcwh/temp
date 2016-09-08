@@ -22,7 +22,7 @@ const submit = (values, dispatch) => (
     } else {
       dispatch(getBooking({
         bookingId: values.bid,
-        contact: values.contact,
+        bookingToken: values.contact,
       })).then((res) => {
         if (res && res.type === BOOKING_SUCCESS) {
           resolve();

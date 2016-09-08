@@ -452,7 +452,7 @@ class BookingLocationUser extends Component {
       this.props.createPatient({
         userId: this.props.user && this.props.user._id,
         name: values.name,
-        nric: values.nric,
+        idNum: values.idNum,
         contact: values.contact,
         gender: values.gender,
         dob: values.dob,

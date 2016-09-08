@@ -22,6 +22,7 @@ class BookingPatientForm extends Component {
         patientName,
         patientDob,
         patientContact,
+        patientpatientIdNum,
         patientGender,
         additionalInfo,
         isPatient,
@@ -81,16 +82,20 @@ class BookingPatientForm extends Component {
               {patientName.touched && patientName.error && <div className={s.bookingPatientFormError}>{patientName.error}</div>}
             </div>
             <div className={s.bookingPatientFormGroup}>
+              <input type="text" placeholder="Mobile Number*" {...patientContact} />
+              {patientContact.touched && patientContact.error &&
+                <div className={s.bookingPatientFormError}>{patientContact.error}</div>}
+            </div>
+            <div className={s.bookingPatientFormGroup}>
+              <input type="text" placeholder="IC*" {...patientpatientIdNum} />
+              {patientpatientIdNum.touched && patientpatientIdNum.error && <div className={s.bookingPatientFormError}>{patientpatientIdNum.error}</div>}
+            </div>
+            <div className={s.bookingPatientFormGroup}>
               <div className="DateInput">
                 <input type="text" placeholder="Birth Date* (YYYY-MM-DD)" {...patientDob} />
                 <span onClick={() => this.props.showDayPickerPopup(patientDob.value, 'bookingLocationForm')}></span>
               </div>
               {patientDob.touched && patientDob.error && <div className={s.bookingPatientFormError}>{patientDob.error}</div>}
-            </div>
-            <div className={s.bookingPatientFormGroup}>
-              <input type="text" placeholder="Mobile Number*" {...patientContact} />
-              {patientContact.touched && patientContact.error &&
-                <div className={s.bookingPatientFormError}>{patientContact.error}</div>}
             </div>
             <div className={s.bookingPatientFormGroup}>
               {
@@ -172,6 +177,11 @@ const validate = values => {
   } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.patientContact)) {
     errors.patientContact = 'Invalid mobile number (e.g. 98765432)';
   }
+  if (!values.patientIdNum) {
+    errors.patientIdNum = 'Required';
+  } else if (!/[A-Z]\d{7}[A-Z]/i.test(values.patientIdNum)) {
+    errors.patientIdNum = 'Invalid patientIdNum (e.g. S1234567A)';
+  }
   if (!values.patientGender) {
     errors.patientGender = 'Required';
   }
@@ -200,6 +210,7 @@ const reduxFormConfig = {
     'patientName',
     'patientDob',
     'patientContact',
+    'patientpatientIdNum',
     'patientGender',
     'additionalInfo',
     'postalCode',

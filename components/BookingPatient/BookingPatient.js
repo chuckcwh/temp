@@ -49,6 +49,7 @@ class BookingPatient extends Component {
         patientName: values.patientName,
         patientDob: values.patientDob,
         patientContact: values.patientContact,
+        patientIdNum: values.patientIdNum,
         patientGender: values.patientGender,
         additionalInfo: values.additionalInfo,
         isPatient: values.isPatient,

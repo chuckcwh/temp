@@ -21,8 +21,13 @@ import FaLock from 'react-icons/lib/fa/lock';
 class ProfileEditEmploymentFormSub extends Component {
 
   onNext = (values) => {
-    this.props.onNext(values);
-    this.props.resetForm();
+    const { onNext, newForm, resetForm } = this.props;
+
+    onNext(values);
+
+    if (newForm) {
+      resetForm();
+    }
   };
 
   render() {
@@ -150,6 +155,8 @@ class ProfileEditEmploymentFormSub extends Component {
 
 const validate = values => {
   const errors = {};
+  const startDateFormat = moment(values.startDate, 'MM/YYYY').format();
+  const endDateFormat = moment(values.endDate, 'MM/YYYY').format();
   if (!values.country) {
     errors.country = 'Required';
   }
@@ -169,6 +176,8 @@ const validate = values => {
   }
   if (values.endDate && !/^\d{2}[/]\d{4}$/i.test(values.endDate)) {
     errors.endDate = 'Invalid end date (e.g. MM/YYYY)';
+  } else if (values.startDate && values.endDate && !moment(endDateFormat).isAfter(startDateFormat)) {
+    errors.endDate = 'End Date before start date'
   }
   return errors
 }

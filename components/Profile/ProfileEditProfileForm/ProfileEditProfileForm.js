@@ -73,12 +73,38 @@ class ProfileEditProfileForm extends Component {
     this.setState({ processing: "uploading..." });
 
     return new Promise((resolve, reject) => {
-      this.props.getS3Policy().then((res) => {
+      this.props.getS3Policy({
+        fileName: this.state.newAvatarName,
+        fileType: this.state.fileType,
+      }).then((res) => {
+
         if (res && res.type === 'GET_S3_POLICY_SUCCESS') {
-          console.log('response', res.response);
+          const {signedRequest, url} = res.response;
+          console.log('response', signedRequest, url);
+
+          const xhr = new XMLHttpRequest();
+          // xhr.onreadystatechange = () => {
+          //   uploadFile(this.state.newAvatar, signedRequest, url);
+          // }
+          xhr.open('PUT', signedRequest);
+          xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                document.getElementById('preview').src = url;
+                document.getElementById('avatar-url').value = url;
+              } else {
+                this.setState({ processing: 'Upload error' })
+              }
+            }
+          }
+          xhr.send(this.state.newAvatar);
+
+          this.setState({ processing: null });
+
+        } else {
+          this.setState({ processing: 'Upload error' })
         }
 
-        this.setState({ processing: null });
       })
     })
   };
@@ -146,7 +172,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  getS3Policy: () => dispatch(getS3Policy()),
+  getS3Policy: (params) => dispatch(getS3Policy(params)),
 
 });
 

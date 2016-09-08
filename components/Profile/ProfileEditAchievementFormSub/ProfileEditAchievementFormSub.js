@@ -21,8 +21,13 @@ import FaLock from 'react-icons/lib/fa/lock';
 class ProfileEditAchievementFormSub extends Component {
 
   onNext = (values) => {
-    this.props.onNext(values);
-    this.props.resetForm();
+    const { onNext, newForm, resetForm } = this.props;
+
+    onNext(values);
+
+    if (newForm) {
+      resetForm();
+    }
   };
 
   render() {

@@ -58,6 +58,9 @@ const educations = (state = {}, action) => {
     case ActionTypes.USER_EDUCATION_CREATE_SUCCESS:
     case ActionTypes.USER_EDUCATION_EDIT_SUCCESS:
       return { ...state, [action.response.data._id]: action.response.data };
+    // case ActionTypes.USER_EDUCATION_DELETE_SUCCESS:
+    //   const newState = delete action.response.data._id;
+    //   return { ...newState };
     default:
       return state;
   }
@@ -141,6 +144,7 @@ const extendedUserData = (state = {}, action) => {
     case ActionTypes.USER_EXPERIENCE_SUCCESS:
     case ActionTypes.USER_EXPERIENCE_CREATE_SUCCESS:
     case ActionTypes.USER_EXPERIENCE_EDIT_SUCCESS:
+    case ActionTypes.USER_EXPERIENCE_DELETE_SUCCESS:
     case ActionTypes.USER_EDUCATIONS_SUCCESS:
     case ActionTypes.USER_EDUCATION_SUCCESS:
     case ActionTypes.USER_EDUCATION_CREATE_SUCCESS:
@@ -150,6 +154,7 @@ const extendedUserData = (state = {}, action) => {
     case ActionTypes.USER_ACHIEVEMENT_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENT_CREATE_SUCCESS:
     case ActionTypes.USER_ACHIEVEMENT_EDIT_SUCCESS:
+    case ActionTypes.USER_ACHIEVEMENT_DELETE_SUCCESS:
     case ActionTypes.USER_REVIEWS_SUCCESS:
     case ActionTypes.USER_REVIEW_SUCCESS:
     case ActionTypes.USER_REVIEW_CREATE_SUCCESS:
@@ -250,6 +255,7 @@ const user = (state = {
     case ActionTypes.USER_EXPERIENCE_SUCCESS:
     case ActionTypes.USER_EXPERIENCE_CREATE_SUCCESS:
     case ActionTypes.USER_EXPERIENCE_EDIT_SUCCESS:
+    case ActionTypes.USER_EXPERIENCE_DELETE_SUCCESS:
     case ActionTypes.USER_EDUCATIONS_SUCCESS:
     case ActionTypes.USER_EDUCATION_SUCCESS:
     case ActionTypes.USER_EDUCATION_CREATE_SUCCESS:

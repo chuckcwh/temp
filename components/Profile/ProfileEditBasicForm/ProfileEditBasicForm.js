@@ -34,7 +34,7 @@ class ProfileEditBasicForm extends Component {
         profession: values.profession,
         skills: typeof(values.skills) === 'string' ? (values.skills && values.skills.split(',')) : values.skills,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     });
   }

@@ -703,7 +703,6 @@ const bookingApp = combineReducers({
       }
     },
     ProfileEditEducationFormSub: (state, action) => {
-      console.log('state', state);
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
           const { main, sub } = action.source;

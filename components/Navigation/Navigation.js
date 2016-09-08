@@ -9,7 +9,7 @@ import Logo from '../Logo';
 import Link from '../Link';
 import { destroyUser } from '../../actions';
 import history from '../../core/history';
-import { isBookingPage, blog, isClient, isProvider } from '../../core/util';
+import { isBookingPage, blog, isClient, isProvider, isAdmin } from '../../core/util';
 
 class Navigation extends Component {
 
@@ -159,6 +159,74 @@ class Navigation extends Component {
                     className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
                     to="/schedule"
                   >SCHEDULE</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <a className={classNames(s.navigationLink)} onClick={this.handleLogout}>LOGOUT</a>
+                </li>
+              </ul>
+            </div>
+          </Container>
+        </div>
+      );
+    } else if (user && isAdmin(user)) {
+      return (
+        <div className={s.navWrapper}>
+          <Menu id={"mobile-menu"} width={180} isOpen={this.state.visible} right>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/dashboard') ? s.navigationLinkActive : '')}
+                to="/dashboard"
+              >DASHBOARD</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/cases') ? s.navigationLinkActive : '')}
+                to="/promocode-manage"
+              >PROMOCODE MANAGEMENT</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
+                to="/case-manage"
+              >CASE MANAGEMENT</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/profile') ? s.navigationLinkActive : '')}
+                to="/users-manage"
+              >USERS MANAGEMENT</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <a className={s.navigationLink} onClick={this.handleLogout}>LOGOUT</a>
+            </li>
+          </Menu>
+          <Container>
+            <div className={s.navigationWrapper}>
+              <Logo />
+              <ul className={classNames(s.navigation, this.state.visible ? 'visible' : '')} role="menu">
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/dashboard') ? s.navigationLinkActive : '')}
+                    to="/dashboard"
+                  >DASHBOARD</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/cases') ? s.navigationLinkActive : '')}
+                    to="/promocode-manage"
+                  >PROMOCODE MANAGEMENT</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
+                    to="/case-manage"
+                  >CASE MANAGEMENT</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
+                    to="/users-manage"
+                  >USERS MANAGEMENT</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <a className={classNames(s.navigationLink)} onClick={this.handleLogout}>LOGOUT</a>

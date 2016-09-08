@@ -118,5 +118,17 @@
   {
     "path": "/schedule",
     "page": "./pages/schedule"
+  },
+  {
+    "path": "/promocode-manage",
+    "page": "./pages/promocode-manage"
+  },
+  {
+    "path": "/case-manage",
+    "page": "./pages/case-manage"
+  },
+  {
+    "path": "/users-manage",
+    "page": "./pages/users-manage"
   }
 ]

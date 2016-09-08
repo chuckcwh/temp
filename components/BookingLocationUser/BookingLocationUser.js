@@ -12,7 +12,7 @@ import { USER_EDIT_SUCCESS, PATIENTS_SUCCESS, PATIENT_CREATE_SUCCESS, PATIENT_ED
   editPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
   setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import history from '../../core/history';
-import { isNextLastPage } from '../../core/util';
+import { isNextLastPage, configToName } from '../../core/util';
 
 const imgPencil = require('../pencil.png');
 
@@ -592,9 +592,7 @@ class BookingLocationUser extends Component {
           <div className="TableRow">
             <div className="TableRowItem1">Gender</div>
             <div className="TableRowItem3">
-              {this.props.patients[this.state.patientId].gender &&
-                config.gendersByValues[this.props.patients[this.state.patientId].gender] &&
-                config.gendersByValues[this.props.patients[this.state.patientId].gender].name}
+              {configToName(config, 'gendersByValue', this.props.patients[this.state.patientId].gender)}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientGender')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
@@ -624,18 +622,14 @@ class BookingLocationUser extends Component {
           <div className="TableRow">
             <div className="TableRowItem1">Race</div>
             <div className="TableRowItem3">
-              {this.props.patients[this.state.patientId].race &&
-                config.racesByValues[this.props.patients[this.state.patientId].race] &&
-                config.racesByValues[this.props.patients[this.state.patientId].race].name}
+              {configToName(config, 'racesByValue', this.props.patients[this.state.patientId].race)}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientRace')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Religion</div>
             <div className="TableRowItem3">
-              {this.props.patients[this.state.patientId].religion &&
-                config.religionsByValues[this.props.patients[this.state.patientId].religion] &&
-                config.religionsByValues[this.props.patients[this.state.patientId].religion].name}
+              {configToName(config, 'religionsByValue', this.props.patients[this.state.patientId].religion)}
               &nbsp;<a href="#" onClick={this.onClickEdit('patientReligion')}><img src={imgPencil} alt="Edit" /></a>
             </div>
           </div>

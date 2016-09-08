@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import s from './BookingSidebar.css';
 import Link from '../Link';
+import { configToName } from '../../core/util';
 import history from '../../core/history';
 
 const BookingSidebar = (props) => {
@@ -97,7 +98,7 @@ const BookingSidebar = (props) => {
             <div className={s.bookingSidebarItem}>
             {
               sessions && sessions.map((session, index) => (
-                <div key={index}>{session.date && moment(session.date, 'YYYY-MM-DD').format('DD MMM')} - {config && config.timeSlotsByValues && config.timeSlotsByValues[session.time].name}</div>
+                <div key={index}>{session.date && moment(session.date, 'YYYY-MM-DD').format('DD MMM')} - {configToName(config, 'timeSlotsByValue', session.time)}</div>
               ))
             }
             </div>

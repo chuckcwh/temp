@@ -12,6 +12,7 @@ import FaUser from 'react-icons/lib/fa/user';
 import FaMedkit from 'react-icons/lib/fa/medkit';
 import FaSitemap from 'react-icons/lib/fa/sitemap';
 import FaArrowCircleRight from 'react-icons/lib/fa/arrow-circle-right';
+import { configToName } from '../../core/util';
 
 class PatientsList extends Component {
 
@@ -58,9 +59,7 @@ class PatientsList extends Component {
                       <h3>{patient.name}</h3>
                       {patient.gender !== '' && <span>
                         <FaUser />
-                        &nbsp;{config && config.gendersByValues &&
-                          config.gendersByValues[patient.gender] &&
-                          config.gendersByValues[patient.gender].name}, {age} years old
+                        &nbsp;{configToName(config, 'gendersByValue', patient.gender)}, {age} years old
                       </span>}
                       {patient.mainDiagnosis && <span>
                         <FaMedkit /> {patient.mainDiagnosis}

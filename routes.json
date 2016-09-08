@@ -124,6 +124,10 @@
     "page": "./pages/promocode-manage"
   },
   {
+    "path": "/promocode-manage/:add",
+    "page": "./pages/promocode-manage"
+  },
+  {
     "path": "/case-manage",
     "page": "./pages/case-manage"
   },

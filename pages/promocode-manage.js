@@ -9,7 +9,7 @@ export default class extends Component {
 
   render() {
     return (
-      <PromocodeManage />
+      <PromocodeManage {...this.props}/>
     );
   }
 

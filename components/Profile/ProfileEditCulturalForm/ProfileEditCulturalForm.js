@@ -28,7 +28,7 @@ class ProfileEditCulturalForm extends Component {
         languages: typeof(values.languages) === 'string' ? (values.languages && values.languages.split(',')) : values.languages,
         nationality: values.nationality,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };

@@ -31,7 +31,7 @@ class ProfileEditAchievementForm extends Component {
         description: values.description,
         isVerified: false,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   }
@@ -43,7 +43,7 @@ class ProfileEditAchievementForm extends Component {
         userId: this.props.userId,
         achievementId,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };
@@ -59,7 +59,7 @@ class ProfileEditAchievementForm extends Component {
         description: values.description,
         isVerified: false,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };

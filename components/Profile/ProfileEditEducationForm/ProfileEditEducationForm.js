@@ -32,7 +32,7 @@ class ProfileEditEducationForm extends Component {
         isVerified: false,
         typeOfCert: values.typeOfCert,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };
@@ -44,7 +44,7 @@ class ProfileEditEducationForm extends Component {
         userId: this.props.userId,
         educationId,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };
@@ -61,7 +61,7 @@ class ProfileEditEducationForm extends Component {
         isVerified: false,
         typeOfCert: values.typeOfCert,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };

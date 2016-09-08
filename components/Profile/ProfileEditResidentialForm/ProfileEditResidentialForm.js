@@ -36,7 +36,7 @@ class ProfileEditResidentialForm extends Component {
                 lng: res.lng,
               }
             }).then((res) => {
-              console.log('response', res);
+              // console.log('response', res);
             })
           })
         }

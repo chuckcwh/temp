@@ -1010,8 +1010,8 @@ export function getRankedServices() {
   return fetch('getRankedServices');
 }
 
-export function getS3Policy() {
-  return fetch('getS3Policy');
+export function getS3Policy(params) {
+  return fetch('getS3Policy', params);
 }
 
 export function getRankedSubcategories() {

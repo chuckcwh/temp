@@ -18,18 +18,18 @@ import FaLock from 'react-icons/lib/fa/lock';
 class ProfileEditPasswordForm extends Component {
 
   onSubmit = (values) => {
-    console.log('values', values);
+    // console.log('values', values);
     return new Promise((resolve, reject) => {
       this.props.changePassword({
         _userId: values._userId,
         oldPassword: values.currPwd,
         newPassword: values.newPwd,
       }).then((res) => {
-        if (res && res.type === CHANGE_PASSWORD_SUCCESS) {
-          console.log('response success', res);
-        } else if (res && res.type === CHANGE_PASSWORD_FAILURE) {
-          console.log('response fail', res);
-        }
+        // if (res && res.type === CHANGE_PASSWORD_SUCCESS) {
+        //   console.log('response success', res);
+        // } else if (res && res.type === CHANGE_PASSWORD_FAILURE) {
+        //   console.log('response fail', res);
+        // }
       })
     })
   }

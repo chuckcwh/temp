@@ -33,7 +33,7 @@ class ProfileEditEmploymentForm extends Component {
         position: values.position,
         isVerified: false,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   }
@@ -45,7 +45,7 @@ class ProfileEditEmploymentForm extends Component {
         userId: this.props.userId,
         experienceId,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };
@@ -63,7 +63,7 @@ class ProfileEditEmploymentForm extends Component {
         position: values.position,
         isVerified: false,
       }).then((res) => {
-        console.log('response', res);
+        // console.log('response', res);
       })
     })
   };

@@ -20,7 +20,7 @@ import FaLock from 'react-icons/lib/fa/lock';
 class ProfileEditEducationForm extends Component {
 
   onChangeForm = (values) => {
-    console.log('form values', values);
+    // console.log('form values', values);
     return new Promise((resolve, reject) => {
       this.props.editUserEducation({
         userId: this.props.userId,
@@ -38,7 +38,7 @@ class ProfileEditEducationForm extends Component {
   };
 
   onDelForm = (educationId) => {
-    console.log('delete action', educationId);
+    // console.log('delete action', educationId);
     return new Promise((resolve, reject) => {
       this.props.deleteUserEducation({
         userId: this.props.userId,
@@ -50,7 +50,7 @@ class ProfileEditEducationForm extends Component {
   };
 
   onAddForm = (values) => {
-    console.log('new form', values);
+    // console.log('new form', values);
     return new Promise((resolve, reject) => {
       this.props.createUserEducation({
         userId: this.props.userId,

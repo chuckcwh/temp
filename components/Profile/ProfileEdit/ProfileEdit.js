@@ -32,8 +32,6 @@ import FaBriefcase from 'react-icons/lib/fa/briefcase';
 import FaTrophy from 'react-icons/lib/fa/trophy';
 
 
-const dataUrl = 'https://ebeecare-dev.s3.amazonaws.com/';
-
 class ProfileEdit extends Component {
 
   constructor(props) {
@@ -85,7 +83,7 @@ class ProfileEdit extends Component {
           <div className={s.editWrapper}>
             <div className={s.sideBar}>
               <div className={s.userImage}>
-                <img src={user.picture ? `${dataUrl}${user.picture}` : require('../../../assets/images/noimage.gif')} />
+                <img src={user.avatar ? user.avatar : require('../../../assets/images/noimage.gif')} key={user.avatar ? user.avatar : 'noimage'} />
               </div>
               {user && (
                 <SideTabList

@@ -11,7 +11,7 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import { getS3Policy } from '../../../actions';
+import { USER_EDIT_SUCCESS, GET_S3_POLICY_SUCCESS, getS3Policy, editUser } from '../../../actions';
 
 
 const s3Url = 'https://ebeecare-dev.s3.amazonaws.com/';
@@ -53,7 +53,7 @@ class ProfileEditProfileForm extends Component {
         this.setState({
           newAvatar: upload.target.result,
           newAvatarName: file.name,
-          filetype: file.type,
+          fileType: file.type,
         })
       }
       reader.readAsDataURL(file);
@@ -63,49 +63,47 @@ class ProfileEditProfileForm extends Component {
   }
 
   _crop = () => {
-    this.setState({
-      newAvatarSelected: this.refs.cropper.getCroppedCanvas().toDataURL()
-    })
+    this.refs.cropper.getCroppedCanvas().toBlob((blob) => {
+      this.setState({
+        newAvatarSelected: blob,
+      });
+    }, this.state.fileType);
   };
 
   onHandleUpload = (e) => {
     e.preventDefault();
     this.setState({ processing: "uploading..." });
 
-    return new Promise((resolve, reject) => {
-      this.props.getS3Policy({
-        fileName: this.state.newAvatarName,
-        fileType: this.state.fileType,
-      }).then((res) => {
+    this.props.getS3Policy({
+      fileName: this.state.newAvatarName,
+      fileType: this.state.fileType,
+    }).then((res) => {
 
-        if (res && res.type === 'GET_S3_POLICY_SUCCESS') {
-          const {signedRequest, url} = res.response;
-          console.log('response', signedRequest, url);
+      if (res && res.type === GET_S3_POLICY_SUCCESS) {
+        const {signedRequest, url} = res.response;
 
-          const xhr = new XMLHttpRequest();
-          // xhr.onreadystatechange = () => {
-          //   uploadFile(this.state.newAvatar, signedRequest, url);
-          // }
-          xhr.open('PUT', signedRequest);
-          xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                document.getElementById('preview').src = url;
-                document.getElementById('avatar-url').value = url;
-              } else {
-                this.setState({ processing: 'Upload error' })
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', signedRequest);
+
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            this.props.editUser({
+              userId: this.props.userId,
+              avatar: url,
+            }).then(res => {
+              if (res && res.type === USER_EDIT_SUCCESS) {
+                this.setState({ processing: null });
               }
-            }
+            })
+          } else {
+            this.setState({ processing: 'Server request error' })
           }
-          xhr.send(this.state.newAvatar);
-
-          this.setState({ processing: null });
-
-        } else {
-          this.setState({ processing: 'Upload error' })
         }
+        xhr.send(this.state.newAvatarSelected);
+      } else {
+        this.setState({ processing: 'Server request error' })
+      }
 
-      })
     })
   };
 
@@ -133,8 +131,6 @@ class ProfileEditProfileForm extends Component {
         <p className={s.formUpload}>
           <span className={s.formUploadNote}>Note!</span> Max File Size: 4MB
         </p>
-
-
 
         <label for="file-upload" className={cx("btn", "btn-primary", s.inputLabel)}>
           <input type="file" className={s.inputfile} onChange={this.handleFile} />
@@ -167,13 +163,14 @@ const mapStateToProps = (state) => {
   const user = state.user.data;
 
   return {
-    avatar: user && (user.avatar ? `${s3Url}${avatar}` : require('../../../assets/images/noimage.gif')),
+    userId: user && user._id,
+    avatar: user && (user.avatar ? user.avatar : require('../../../assets/images/noimage.gif')),
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
   getS3Policy: (params) => dispatch(getS3Policy(params)),
-
+  editUser: (params) => dispatch(editUser(params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileEditProfileForm);

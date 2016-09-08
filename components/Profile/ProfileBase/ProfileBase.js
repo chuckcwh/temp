@@ -63,7 +63,9 @@ export class ProfileBase extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <img src={profile.avatar} className={s.profileImg} />
+                  <Loader className="spinner">
+                    <img src={profile.avatar} className={s.profileImg} />
+                  </Loader>
                 </div>
                 <p>{profile.name}</p>
               </div>
@@ -100,7 +102,7 @@ const mapStateToProps = (state) => {
   const countriesByValues = config && config.countriesByValues;
 
   return {
-    avatar: user && (user.avatar ? `${s3Url}${avatar}` : require('../../../assets/images/noimage.gif')),
+    avatar: user && user.avatar ? user.avatar : require('../../../assets/images/noimage.gif'),
     gender: user && user.gender && gendersByValues && gendersByValues[user.gender].name,
     dob: user && user.dob,
     address: user && user.address,

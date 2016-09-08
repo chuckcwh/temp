@@ -14,8 +14,13 @@ class UsersManage extends Component {
 
   render() {
     return (
-      <div className="UsersManage">
-        UsersManage page
+      <div className="s.user-manage">
+        <Header title="User Manage" />
+        <Container>
+          <div>
+            user manage
+          </div>
+        </Container>
       </div>
     );
   }

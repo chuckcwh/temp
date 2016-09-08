@@ -14,8 +14,13 @@ class CaseManage extends Component {
 
   render() {
     return (
-      <div className="CaseManage">
-        CaseManage page
+      <div className="s.case-manage">
+        <Header title="Case Manage" />
+        <Container>
+          <div>
+            case manage
+          </div>
+        </Container>
       </div>
     );
   }

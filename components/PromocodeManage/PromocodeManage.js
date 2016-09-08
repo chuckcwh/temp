@@ -14,8 +14,13 @@ class PromocodeManage extends Component {
 
   render() {
     return (
-      <div className="PromocodeManage">
-        PromocodeManage page
+      <div className="s.promocode-manage">
+        <Header title="Promocode Manage" />
+        <Container>
+          <div>
+            promocode manage
+          </div>
+        </Container>
       </div>
     );
   }

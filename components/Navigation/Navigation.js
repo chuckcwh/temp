@@ -180,19 +180,19 @@ class Navigation extends Component {
             </li>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink, (location.pathname === '/cases') ? s.navigationLinkActive : '')}
+                className={classNames(s.navigationLink, (location.pathname === '/promocode-manage') ? s.navigationLinkActive : '')}
                 to="/promocode-manage"
               >PROMOCODE MANAGEMENT</Link>
             </li>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
+                className={classNames(s.navigationLink, (location.pathname === '/case-manage') ? s.navigationLinkActive : '')}
                 to="/case-manage"
               >CASE MANAGEMENT</Link>
             </li>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink, (location.pathname === '/profile') ? s.navigationLinkActive : '')}
+                className={classNames(s.navigationLink, (location.pathname === '/users-manage') ? s.navigationLinkActive : '')}
                 to="/users-manage"
               >USERS MANAGEMENT</Link>
             </li>
@@ -212,19 +212,19 @@ class Navigation extends Component {
                 </li>
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/cases') ? s.navigationLinkActive : '')}
+                    className={classNames(s.navigationLink, (location.pathname === '/promocode-manage') ? s.navigationLinkActive : '')}
                     to="/promocode-manage"
                   >PROMOCODE MANAGEMENT</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
+                    className={classNames(s.navigationLink, (location.pathname === '/case-manage') ? s.navigationLinkActive : '')}
                     to="/case-manage"
                   >CASE MANAGEMENT</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
+                    className={classNames(s.navigationLink, (location.pathname === '/users-manage') ? s.navigationLinkActive : '')}
                     to="/users-manage"
                   >USERS MANAGEMENT</Link>
                 </li>

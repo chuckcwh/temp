@@ -30,13 +30,14 @@ const config = (state = {
         didInvalidate: false,
         data: action.response && action.response.data && {
           ...action.response.data,
-          countriesByValues: normalize(action.response.data.countries, 'value'),
-          gendersByValues: normalize(action.response.data.genders, 'value'),
-          languagesByValues: normalize(action.response.data.languages, 'value'),
-          racesByValues: normalize(action.response.data.races, 'value'),
-          religionsByValues: normalize(action.response.data.religions, 'value'),
-          timeSlotsByValues: normalize(action.response.data.timeSlots, 'value'),
-          sessionStatusesByValues: normalize(action.response.data.sessionStatuses, 'value'),
+          bookingStatusesByValue: normalize(action.response.data.bookingStatuses, 'value'),
+          countriesByValue: normalize(action.response.data.countries, 'value'),
+          gendersByValue: normalize(action.response.data.genders, 'value'),
+          languagesByValue: normalize(action.response.data.languages, 'value'),
+          racesByValue: normalize(action.response.data.races, 'value'),
+          religionsByValue: normalize(action.response.data.religions, 'value'),
+          timeSlotsByValue: normalize(action.response.data.timeSlots, 'value'),
+          sessionStatusesByValue: normalize(action.response.data.sessionStatuses, 'value'),
         },
         lastUpdated: action.response && action.response.receivedAt
       }

@@ -8,7 +8,7 @@ import ConfirmPopup from '../ConfirmPopup';
 import { getAvailableSchedules, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage,
   createBookingWithOptions, showAlertPopup, showConfirmPopup } from '../../actions';
 import history from '../../core/history';
-import util from '../../core/util';
+import { isNextLastPage, calcRate, configToName } from '../../core/util';
 
 class BookingResults extends Component {
 
@@ -67,7 +67,7 @@ class BookingResults extends Component {
         schedules[i] = Object.assign(session, { date: timeslot.date });
         if (session.time) {
           checkedData[`session${i}`] = true;
-          sum += util.calcRate(schedules[i], this.props.order.promoCode, this.props.order.service);
+          sum += calcRate(schedules[i], this.props.order.promoCode, this.props.order.service);
         } else {
           session.disabled = true;
         }
@@ -159,7 +159,7 @@ class BookingResults extends Component {
       // console.log(schedules);
       this.props.setOrderSessions(schedules);
       // console.log(this.state);
-      util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
+      isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
 
       // Delay execution till order is updated
       // this.props.createCaseWithOrder(this.props.order);
@@ -197,7 +197,7 @@ class BookingResults extends Component {
       // console.log(schedules);
       this.props.setOrderSessions(schedules);
       // console.log(this.state);
-      util.isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
+      isNextLastPage('booking3c', this.props.lastPage) && this.props.setLastPage('booking3c');
     }
   };
 
@@ -205,7 +205,7 @@ class BookingResults extends Component {
     let sum = 0;
     for (let i = 0; i < this.state.schedules.length; i++) {
       if (this.state[`session${i}`]) {
-        sum += util.calcRate(this.state.schedules[i], props.order.promoCode, props.order.service);
+        sum += calcRate(this.state.schedules[i], props.order.promoCode, props.order.service);
       }
     }
     props.setOrderSum(sum);
@@ -242,7 +242,7 @@ class BookingResults extends Component {
                 priceText;
               const rate = session.price;
               if (orderPromoCode) {
-                discountedRate = util.calcRate(session, order.promoCode, order.service);
+                discountedRate = calcRate(session, order.promoCode, order.service);
                 if (discountedRate === rate) {
                   // empty discountedRate if there is actually no discount
                   discountedRate = null;
@@ -276,7 +276,7 @@ class BookingResults extends Component {
                     <div className={s.bookingResultsCheckboxLabelMetaWrapper}>
                       <div className={s.bookingResultsCheckboxLabelMeta}>
                         <span>{session ? moment(session.date, 'YYYY-MM-DD').format('DD MMM') : ''}</span>
-                        <span>{session.time ? config && config.timeSlotsByValues && config.timeSlotsByValues[session.time].name : 'Not Available'}</span>
+                        <span>{session.time ? configToName(config, 'timeSlotsByValue', session.time) : 'Not Available'}</span>
                         <span>{session.time ? priceText : ''}</span>
                       </div>
                     </div>

@@ -271,6 +271,10 @@ export function normalizeMultiple(array, id = '_id') {
   }, {})
 }
 
+export function configToName(config, map, value) {
+  return config && config[map] && config[map][value] && config[map][value].name;
+}
+
 /**
  * User utility functions
  */
@@ -338,6 +342,7 @@ const u = {
 
   normalize,
   normalizeMultiple,
+  configToName,
 
   isAdmin,
   isClient,

@@ -8,7 +8,7 @@ import Link from '../Link';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
 import { fetchServices } from '../../actions';
-import { formatSessionAlias } from '../../core/util';
+import { configToName, formatSessionAlias } from '../../core/util';
 
 class DashboardPendingConf extends Component {
 
@@ -58,8 +58,7 @@ class DashboardPendingConf extends Component {
                           <Col xs={8} md={2}>{moment(session.date).format('ll')}</Col>
                           <Col xs={4}>Time</Col>
                           <Col xs={8} md={2}>
-                            {config && config.timeSlotsByValues && config.timeSlotsByValues[session.timeSlot] &&
-                              config.timeSlotsByValues[session.timeSlot].name}
+                            {configToName(config, 'timeSlotsByValue', session.timeSlot)}
                           </Col>
                           <Col xs={4}>Service</Col>
                           <Col xs={8} md={1}>
@@ -69,8 +68,7 @@ class DashboardPendingConf extends Component {
                           <Col xs={8} md={1}>{session.price}</Col>
                           <Col xs={4}>Status</Col>
                           <Col xs={8} md={1}>
-                            {config && config.sessionStatusesByValues && config.sessionStatusesByValues[session.status] &&
-                              config.sessionStatusesByValues[session.status].name}
+                            {configToName(config, 'sessionStatusesByValue', session.status)}
                           </Col>
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={1}>

@@ -95,21 +95,21 @@ ProfileBase.propTypes = {
 const mapStateToProps = (state) => {
   const user = state.user.data;
   const config = state.config.data;
-  const gendersByValues = config && config.gendersByValues;
-  const raceByValues = config && config.raceByValues;
-  const religionsByValues = config && config.religionsByValues;
-  const languagesByValues = config && config.languagesByValues;
-  const countriesByValues = config && config.countriesByValues;
+  const gendersByValue = config && config.gendersByValue;
+  const raceByValue = config && config.raceByValue;
+  const religionsByValue = config && config.religionsByValue;
+  const languagesByValue = config && config.languagesByValue;
+  const countriesByValue = config && config.countriesByValue;
 
   return {
     avatar: user && user.avatar ? user.avatar : require('../../../assets/images/noimage.gif'),
     gender: user && user.gender && gendersByValues && gendersByValues[user.gender].name,
     dob: user && user.dob,
     address: user && user.address,
-    race: user && user.race && raceByValues && raceByValues[user.race].name,
-    religion: user && user.religion && religionsByValues && religionsByValues[user.religion].name,
-    languages: user && user.languages  && languagesByValues && user.languages.map(item => (languagesByValues[item].name)),
-    nationality: user && user.nationality && countriesByValues && countriesByValues[user.nationality].name,
+    race: user && user.race && raceByValue && raceByValue[user.race].name,
+    religion: user && user.religion && religionsByValue && religionsByValue[user.religion].name,
+    languages: user && user.languages  && languagesByValue && user.languages.map(item => (languagesByValue[item].name)),
+    nationality: user && user.nationality && countriesByValue && countriesByValue[user.nationality].name,
     name: user && user.name,
 }};
 

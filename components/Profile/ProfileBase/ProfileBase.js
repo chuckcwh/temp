@@ -9,6 +9,7 @@ import Link from '../../Link';
 import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
+import imgBlankAvatar from '../../../assets/images/noimage.gif';
 // react-icons
 import MdAccessiblity from 'react-icons/lib/md/accessibility';
 import MdPerson from 'react-icons/lib/md/person';
@@ -16,8 +17,7 @@ import MdLocationOn from 'react-icons/lib/md/location-on';
 import TiWorld from 'react-icons/lib/ti/world';
 import FaComment from 'react-icons/lib/fa/comment';
 import FaFlag from 'react-icons/lib/fa/flag';
-const imgBlankAvatar = require('../../../assets/images/noimage.gif');
-const s3Url = 'https://ebeecare-dev.s3.amazonaws.com/';
+
 
 export class ProfileBase extends Component {
 
@@ -38,9 +38,10 @@ export class ProfileBase extends Component {
   };
 
   render() {
-    const { avatar, gender, dob, address, race, religion, languages, nationality, name } = this.props;
+    const { user, gender, dob, address, race, religion, languages, nationality, name } = this.props;
 
     const profile = {
+      avatar: user && user.avatar ? user.avatar : imgBlankAvatar,
       gender: gender && (<p><MdAccessiblity /> {gender}</p>),
       ageGroup: dob && (<p><MdPerson /> {this.getAgeGroup(dob)}</p>),
       address: address && address.neighborhood && (<p><MdLocationOn/> {address.neighborhood}</p>),
@@ -48,7 +49,6 @@ export class ProfileBase extends Component {
       languages: languages && languages.length && (<p><FaComment /> {`${languages.join(', ')}`}</p>),
       nationality: nationality && (<p><FaFlag /> {nationality}</p>),
       name,
-      avatar
     }
 
     return(
@@ -62,7 +62,7 @@ export class ProfileBase extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <Loader className="spinner" loaded={profile.avatar}>
+                  <Loader className="spinner" loaded={user && user.email}>
                     <img src={profile.avatar} className={s.profileImg} />
                   </Loader>
                 </div>
@@ -102,7 +102,6 @@ const mapStateToProps = (state) => {
 
   return {
     user,
-    avatar: user && user.avatar ? user.avatar : imgBlankAvatar,
     gender: user && user.gender && gendersByValue && gendersByValue[user.gender].name,
     dob: user && user.dob,
     address: user && user.address,

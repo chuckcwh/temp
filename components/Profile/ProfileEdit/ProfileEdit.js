@@ -12,6 +12,7 @@ import { isAdmin, isClient, isProvider, getUserName } from '../../../core/util';
 import SideTabList from '../../SideTabList';
 import SideTab from '../../SideTab';
 import { fetchLanguages } from '../../../actions';
+import imgBlankAvatar from '../../../assets/images/noimage.gif';
 // Sub Components
 import ProfileEditBasicForm from '../ProfileEditBasicForm/ProfileEditBasicForm';
 import ProfileEditResidentialForm from '../ProfileEditResidentialForm/ProfileEditResidentialForm';
@@ -82,10 +83,12 @@ class ProfileEdit extends Component {
         <Container>
           <div className={s.editWrapper}>
             <div className={s.sideBar}>
-              <div className={s.userImage}>
-                <img src={user.avatar ? user.avatar : require('../../../assets/images/noimage.gif')} key={user.avatar ? user.avatar : 'noimage'} />
-              </div>
-              {user && (
+
+              <Loader className="spinner" loaded={user && user.email}>
+                <div className={s.userImage}>
+                  <img src={user.avatar ? user.avatar : imgBlankAvatar} key={user.avatar ? user.avatar : 'noimage'} />
+                </div>
+
                 <SideTabList
                   onSelect={this.handleTabSelect}
                   selectedIndex={this.state.selectedTabIndex}
@@ -102,7 +105,8 @@ class ProfileEdit extends Component {
                   <SideTab><FaImage /><span>Profile Picture</span></SideTab>
                   <SideTab><FaLock /><span>Password</span></SideTab>
                 </SideTabList>
-              )}
+              </Loader>
+              
             </div>
             <div className={s.editPanel}>
               {content}

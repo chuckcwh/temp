@@ -184,7 +184,7 @@ class ProfileEditBasicForm extends Component {
                       options={skillsChoice}
                       {...skills}
                     />
-                  {skills.touched && skills.error && <div className={s.formError}>{skills.error}</div>}
+                    {skills.touched && skills.error && <div className={s.formError}>{skills.error}</div>}
                   </div>
                 </div>
               </div>

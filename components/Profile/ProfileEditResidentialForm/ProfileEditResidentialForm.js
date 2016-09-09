@@ -123,7 +123,7 @@ class ProfileEditResidentialForm extends Component {
           </div>
 
           <div className={s.formSectionSubmit}>
-            {submitFailed && invalid && <div className={s.creditsWithdrawBankFormError}>You have one or more form field errors.</div>}
+            {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
             <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save Changes</button>
           </div>
         </form>

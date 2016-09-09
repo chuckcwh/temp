@@ -16,8 +16,7 @@ import MdLocationOn from 'react-icons/lib/md/location-on';
 import TiWorld from 'react-icons/lib/ti/world';
 import FaComment from 'react-icons/lib/fa/comment';
 import FaFlag from 'react-icons/lib/fa/flag';
-
-
+const imgBlankAvatar = require('../../../assets/images/noimage.gif');
 const s3Url = 'https://ebeecare-dev.s3.amazonaws.com/';
 
 export class ProfileBase extends Component {
@@ -63,7 +62,7 @@ export class ProfileBase extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <Loader className="spinner">
+                  <Loader className="spinner" loaded={profile.avatar}>
                     <img src={profile.avatar} className={s.profileImg} />
                   </Loader>
                 </div>
@@ -102,8 +101,9 @@ const mapStateToProps = (state) => {
   const countriesByValue = config && config.countriesByValue;
 
   return {
-    avatar: user && user.avatar ? user.avatar : require('../../../assets/images/noimage.gif'),
-    gender: user && user.gender && gendersByValues && gendersByValues[user.gender].name,
+    user,
+    avatar: user && user.avatar ? user.avatar : imgBlankAvatar,
+    gender: user && user.gender && gendersByValue && gendersByValue[user.gender].name,
     dob: user && user.dob,
     address: user && user.address,
     race: user && user.race && raceByValue && raceByValue[user.race].name,

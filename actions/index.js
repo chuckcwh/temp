@@ -87,6 +87,10 @@ export const PATIENT_EDIT_REQUEST = 'PATIENT_EDIT_REQUEST'
 export const PATIENT_EDIT_SUCCESS = 'PATIENT_EDIT_SUCCESS'
 export const PATIENT_EDIT_FAILURE = 'PATIENT_EDIT_FAILURE'
 
+export const PATIENT_DELETE_REQUEST = 'PATIENT_DELETE_REQUEST'
+export const PATIENT_DELETE_SUCCESS = 'PATIENT_DELETE_SUCCESS'
+export const PATIENT_DELETE_FAILURE = 'PATIENT_DELETE_FAILURE'
+
 export const USER_DEVICES_REQUEST = 'USER_DEVICES_REQUEST'
 export const USER_DEVICES_SUCCESS = 'USER_DEVICES_SUCCESS'
 export const USER_DEVICES_FAILURE = 'USER_DEVICES_FAILURE'
@@ -564,6 +568,11 @@ function fetchAction(route) {
       types: [ PATIENT_EDIT_REQUEST, PATIENT_EDIT_SUCCESS, PATIENT_EDIT_FAILURE ],
       endpoint: '/users/:userId/patients/:patientId',
       method: 'put'
+    },
+    deletePatient: {
+      types: [ PATIENT_DELETE_REQUEST, PATIENT_DELETE_SUCCESS, PATIENT_DELETE_FAILURE ],
+      endpoint: '/users/:userId/patients/:patientId',
+      method: 'del'
     },
     getAvailableSchedules: {
       types: [ AVAILABLE_SCHEDULES_REQUEST, AVAILABLE_SCHEDULES_SUCCESS, AVAILABLE_SCHEDULES_FAILURE ],

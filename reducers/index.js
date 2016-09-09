@@ -225,7 +225,6 @@ const patients = (state = {
   isFetching: false,
   didInvalidate: true,
   data: {},
-  ids: []
 }, action) => {
   switch (action.type) {
     case ActionTypes.PATIENTS_REQUEST:
@@ -234,24 +233,32 @@ const patients = (state = {
         isFetching: true
       }
     case ActionTypes.PATIENTS_SUCCESS:
-      let hash = {}, ids = []
+      let hash = {}
       action.response && action.response.data.forEach((patient) => {
         hash[patient._id] = patient
-        ids.push(patient._id)
       })
       return {
         ...state,
         isFetching: false,
         data: hash,
-        ids: ids,
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.PATIENT_SUCCESS:
-      if (action.response && action.response.data && action.response.data.id && state.data[action.response.data.id]) {
-        let newState = Object.assign({}, state)
-        newState.data[action.response.data.id] = action.response.data
-        return newState
+      if (action.response && action.response.data && action.response.data.id && state.data[action.response.data._id]) {
+        return {
+          ...state,
+          isFetching: false,
+          data: {
+            ...state.data,
+            [action.response.data._id]: action.response.data,
+          },
+          lastUpdated: action.response && action.response.receivedAt
+        }
       }
+    case ActionTypes.PATIENT_DELETE_SUCCESS:
+      const newState = { ...state };
+      action.data && action.data.patientId && delete newState[action.data.patientId];
+      return newState;
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
     case ActionTypes.USER_CREATE_SUCCESS:
@@ -272,6 +279,7 @@ const patientsByClient = (state = {}, action) => {
     case ActionTypes.PATIENTS_REQUEST:
     case ActionTypes.PATIENTS_SUCCESS:
     case ActionTypes.PATIENT_SUCCESS:
+    case ActionTypes.PATIENT_DELETE_SUCCESS:
       return {
         ...state,
         [action.data.userId]: patients(state[action.data.userId], action)

@@ -48,7 +48,7 @@ class ProfileEdit extends Component {
   };
 
   render() {
-    const { user } = this.props;
+    const { user, userFetching } = this.props;
     const { selectedTabIndex } = this.state;
     let content;
 
@@ -82,9 +82,9 @@ class ProfileEdit extends Component {
       <div className={s.profileEdit}>
         <Container>
           <div className={s.editWrapper}>
-            <div className={s.sideBar}>
 
-              <Loader className="spinner" loaded={user && user.email}>
+            <div className={s.sideBar}>
+              <Loader className="spinner" loaded={userFetching}>
                 <div className={s.userImage}>
                   <img src={user.avatar ? user.avatar : imgBlankAvatar} key={user.avatar ? user.avatar : 'noimage'} />
                 </div>
@@ -106,11 +106,12 @@ class ProfileEdit extends Component {
                   <SideTab><FaLock /><span>Password</span></SideTab>
                 </SideTabList>
               </Loader>
-              
             </div>
+
             <div className={s.editPanel}>
               {content}
             </div>
+
           </div>
         </Container>
       </div>
@@ -126,6 +127,7 @@ ProfileEdit.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
+  userFetching: state.user.isFetching,
 });
 
 export default connect(mapStateToProps)(ProfileEdit);

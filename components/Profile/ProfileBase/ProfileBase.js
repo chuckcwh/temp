@@ -38,7 +38,18 @@ export class ProfileBase extends Component {
   };
 
   render() {
-    const { user, gender, dob, address, race, religion, languages, nationality, name } = this.props;
+    const {
+      user,
+      gender,
+      dob,
+      address,
+      race,
+      religion,
+      languages,
+      nationality,
+      name,
+      userFetching,
+    } = this.props;
 
     const profile = {
       avatar: user && user.avatar ? user.avatar : imgBlankAvatar,
@@ -62,7 +73,7 @@ export class ProfileBase extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <Loader className="spinner" loaded={user && user.email}>
+                  <Loader className="spinner" loaded={userFetching}>
                     <img src={profile.avatar} className={s.profileImg} />
                   </Loader>
                 </div>
@@ -102,6 +113,7 @@ const mapStateToProps = (state) => {
 
   return {
     user,
+    userFetching: state.user.isFetching,
     gender: user && user.gender && gendersByValue && gendersByValue[user.gender].name,
     dob: user && user.dob,
     address: user && user.address,

@@ -9,7 +9,7 @@ import Link from '../../Link';
 import Header from '../../Header';
 import history from '../../../core/history';
 import util from '../../../core/util';
-import { reduxForm } from 'redux-form';
+import { reduxForm, change } from 'redux-form';
 import InlineForm from '../../MultiSelect';
 import { fetchAddress, editUser } from '../../../actions';
 // react-icons
@@ -18,31 +18,39 @@ import FaLock from 'react-icons/lib/fa/lock';
 
 class ProfileEditResidentialForm extends Component {
 
+  onPostalChange = (postal) => {
+    if (/^[0-9]{6}$/i.test(postal)) {
+      new Promise((resolve, reject) => {
+        this.props.fetchAddress(postal).then((res) => {
+          if (res.type === 'GEOCODE_SUCCESS') {
+            this.props.changeFieldValue('lat', res.lat);
+            this.props.changeFieldValue('lng', res.lng);
+            this.props.changeFieldValue('neighborhood', res.neighborhood);
+          }
+        })
+      })
+    }
+  };
+
   onSubmit = (values) => {
     return new Promise((resolve,reject) => {
-      this.props.fetchAddress(values.postal).then((res) => {
-        if (res.type === 'GEOCODE_SUCCESS') {
-          return new Promise((resolve, reject) => {
-            this.props.editUser({
-              _id: values._id,
-              address: {
-                postal: values.postal,
-                unit: values.unit,
-                description: values.description,
-                neighborhood: values.neighborhood,
-                region: values.region,
-                country: values.country,
-                lat: res.lat,
-                lng: res.lng,
-              }
-            }).then((res) => {
-              // console.log('response', res);
-            })
-          })
+      this.props.editUser({
+        _id: values._id,
+        address: {
+          postal: values.postal,
+          unit: values.unit,
+          description: values.description,
+          neighborhood: values.neighborhood,
+          region: values.region,
+          country: values.country,
+          lat: values.lat,
+          lng: values.lng,
         }
-      });
+      }).then((res) => {
+        // console.log('response', res);
+      })
     });
-  }
+  };
 
   render() {
     const {
@@ -72,7 +80,7 @@ class ProfileEditResidentialForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Postal Code<sup>*</sup></div>
               <div className="TableRowItem2">
-                <input type="text" {...postal} />
+                <input type="text" {...postal} onBlur={() => this.onPostalChange(postal.value)} />
                 {postal.touched && postal.error && <div className={s.formError}>{postal.error}</div>}
               </div>
             </div>
@@ -96,7 +104,7 @@ class ProfileEditResidentialForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Neighborhood</div>
               <div className="TableRowItem2">
-                <input type="text" {...neighborhood} disabled/>
+                <input type="text" {...neighborhood} />
                 {/*}
                 <div className={cx("select", s.selectInput)}>
                   <span></span>
@@ -192,6 +200,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   fetchAddress: (postal) => dispatch(fetchAddress(postal)),
   editUser: (params) => dispatch(editUser(params)),
+  changeFieldValue: (field, value) => dispatch(change('ProfileEditResidentialForm', field, value)),
 })
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(ProfileEditResidentialForm);

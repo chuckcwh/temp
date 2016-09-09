@@ -255,6 +255,14 @@ export const TRANSACTION_BANK_CREATE_REQUEST = 'TRANSACTION_BANK_CREATE_REQUEST'
 export const TRANSACTION_BANK_CREATE_SUCCESS = 'TRANSACTION_BANK_CREATE_SUCCESS'
 export const TRANSACTION_BANK_CREATE_FAILURE = 'TRANSACTION_BANK_CREATE_FAILURE'
 
+export const VERIFY_USER_PIN_REQUEST = 'VERIFY_USER_PIN_REQUEST'
+export const VERIFY_USER_PIN_SUCCESS = 'VERIFY_USER_PIN_SUCCESS'
+export const VERIFY_USER_PIN_FAILURE = 'VERIFY_USER_PIN_FAILURE'
+
+export const RESEND_VERIFY_USER_PIN_REQUEST = 'RESEND_VERIFY_USER_PIN_REQUEST'
+export const RESEND_VERIFY_USER_PIN_SUCCESS = 'RESEND_VERIFY_USER_PIN_SUCCESS'
+export const RESEND_VERIFY_USER_PIN_FAILURE = 'RESEND_VERIFY_USER_PIN_FAILURE'
+
 export const VERIFY_BOOKING_PIN_REQUEST = 'VERIFY_BOOKING_PIN_REQUEST'
 export const VERIFY_BOOKING_PIN_SUCCESS = 'VERIFY_BOOKING_PIN_SUCCESS'
 export const VERIFY_BOOKING_PIN_FAILURE = 'VERIFY_BOOKING_PIN_FAILURE'
@@ -289,18 +297,18 @@ function fetchAction(route) {
       entity: 'config',
       defaultEntity: {}
     },
-    getCategories: {
-      types: [ CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE ],
-      endpoint: '/categories',
-      method: 'get',
-      entity: 'services'
-    },
     getServices: {
       types: [ SERVICES_REQUEST, SERVICES_SUCCESS, SERVICES_FAILURE ],
       endpoint: '/services',
       method: 'get',
       auth: 'app',
-      entity: 'services'
+      entity: 'services',
+      defaultEntity: {}
+    },
+    getCategories: {
+      types: [ CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE ],
+      endpoint: '/categories',
+      method: 'get'
     },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
@@ -604,6 +612,16 @@ function fetchAction(route) {
       method: 'post',
       auth: 'app'
     },
+    verifyUserPin: {
+      types: [ VERIFY_USER_PIN_REQUEST, VERIFY_USER_PIN_SUCCESS, VERIFY_USER_PIN_FAILURE ],
+      endpoint: '/users/:userId/verifyPin',
+      method: 'put',
+    },
+    resendVerifyUserPin: {
+      types: [ RESEND_VERIFY_USER_PIN_REQUEST, RESEND_VERIFY_USER_PIN_SUCCESS, RESEND_VERIFY_USER_PIN_FAILURE ],
+      endpoint: '/users/:userId/resendVerifyPin',
+      method: 'put',
+    },
     verifyBookingPin: {
       types: [ VERIFY_BOOKING_PIN_REQUEST, VERIFY_BOOKING_PIN_SUCCESS, VERIFY_BOOKING_PIN_FAILURE ],
       endpoint: '/bookings/verifyPin',
@@ -655,7 +673,8 @@ function shouldFetch(state, action) {
   const obj = action.entity && state[action.entity]
   if (!(obj && obj.data && Array.isArray(obj.data) && obj.data.length)) {
     return true
-  } else if (!(obj && obj.data && typeof obj.data === 'object' && (action.defaultEntity ? (JSON.stringify(obj.data) !== JSON.stringify(action.defaultEntity)) : obj.data._id))) {
+  } else if (!(obj && obj.data && typeof obj.data === 'object'
+    && (action.defaultEntity ? (JSON.stringify(obj.data) !== JSON.stringify(action.defaultEntity)) : obj.data._id))) {
     return true
   }
   if (obj.isFetching) {
@@ -1002,6 +1021,14 @@ export function createBankTransferTransaction(params) {
   return fetch('createBankTransferTransaction', params);
 }
 
+export function verifyUserPin(params) {
+  return fetch('verifyUserPin', params);
+}
+
+export function resendVerifyUserPin(params) {
+  return fetch('resendVerifyUserPin', params);
+}
+
 export function verifyBookingPin(params) {
   return fetch('verifyBookingPin', params);
 }
@@ -1199,6 +1226,10 @@ export const SHOW_MODAL_LOGIN = 'SHOW_MODAL_LOGIN'
 export const HIDE_MODAL_LOGIN = 'HIDE_MODAL_LOGIN'
 export const SHOW_MODAL_DAYPICKER = 'SHOW_MODAL_DAYPICKER'
 export const HIDE_MODAL_DAYPICKER = 'HIDE_MODAL_DAYPICKER'
+export const SHOW_MODAL_VERIFYUSER = 'SHOW_MODAL_VERIFYUSER'
+export const HIDE_MODAL_VERIFYUSER = 'HIDE_MODAL_VERIFYUSER'
+export const SHOW_MODAL_RESENDVERIFYUSER = 'SHOW_MODAL_RESENDVERIFYUSER'
+export const HIDE_MODAL_RESENDVERIFYUSER = 'HIDE_MODAL_RESENDVERIFYUSER'
 export const SHOW_MODAL_VERIFYBOOKING = 'SHOW_MODAL_VERIFYBOOKING'
 export const HIDE_MODAL_VERIFYBOOKING = 'HIDE_MODAL_VERIFYBOOKING'
 export const SHOW_MODAL_RESENDVERIFYBOOKING = 'SHOW_MODAL_RESENDVERIFYBOOKING'
@@ -1259,6 +1290,32 @@ export function hideDayPickerPopup(value, source) {
     type: HIDE_MODAL_DAYPICKER,
     source: source,
     value: value
+  }
+}
+
+export function showVerifyUserPopup(userId) {
+  return {
+    type: SHOW_MODAL_VERIFYUSER,
+    userId: userId
+  }
+}
+
+export function hideVerifyUserPopup() {
+  return {
+    type: HIDE_MODAL_VERIFYUSER
+  }
+}
+
+export function showResendVerifyUserPopup(userId) {
+  return {
+    type: SHOW_MODAL_RESENDVERIFYUSER,
+    userId: userId
+  }
+}
+
+export function hideResendVerifyUserPopup() {
+  return {
+    type: HIDE_MODAL_RESENDVERIFYUSER
   }
 }
 

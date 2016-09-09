@@ -10,8 +10,9 @@ import SignupForm from '../SignupForm';
 import LoginForm from '../LoginForm';
 import ForgotPasswordForm from '../ForgotPasswordForm';
 import ResetPasswordForm from '../ResetPasswordForm';
+import VerifyUserPopup from '../VerifyUserPopup';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import { BOOKING_FAILURE, getBooking, setLastPage, showAlertPopup, showVerifyBookingPopup } from '../../actions';
+import { USER_SUCCESS, BOOKING_FAILURE, getUser, getBooking, setLastPage, showAlertPopup, showVerifyUserPopup, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
 
 class Account extends Component {
@@ -36,17 +37,27 @@ class Account extends Component {
   componentWillReceiveProps(props) {
     this.setState({
       bid: props.bid || this.state.bid,
-      contact: props.contact || this.state.contact,
+      btoken: props.contact || this.state.btoken,
     });
-    if (props.booking && props.booking._id && !props.booking.adhocClient.isVerified) {
+    if (props.booking && props.booking !== this.props.booking && props.booking._id && !props.booking.adhocClient.isVerified) {
       this.props.showVerifyBookingPopup(props.booking._id);
     }
   }
 
-  onVerified = () => {
+  onVerifiedUser = () => {
+    this.props.getUser({
+      userId: this.props.user && this.props.user._id,
+    }).then((res) => {
+      if (res && res.type === USER_SUCCESS) {
+        history.push({ pathname: '/dashboard', query: location.query });
+      }
+    });
+  };
+
+  onVerifiedBooking = () => {
     this.props.getBooking({
       bookingId: this.props.booking && this.props.booking._id,
-      contact: this.props.booking && this.props.booking.contact,
+      bookingToken: this.props.booking && this.props.booking.contact,
     }).then((res) => {
       if (res && res.type === BOOKING_FAILURE) {
         this.props.showAlertPopup('Sorry, we are not able to find your booking.');
@@ -64,7 +75,7 @@ class Account extends Component {
             <Loader
               className="spinner"
               loaded={(!(!(this.props.bookingFetching) && location && location.query
-                && location.query.bid && location.query.contact))}
+                && location.query.bid && location.query.btoken))}
             >
               <FindBookingForm />
             </Loader>
@@ -75,7 +86,11 @@ class Account extends Component {
       components = (
         <div className={s.accountContainer}>
           <div className={classNames(s.accountSignup, s.accountContainerItem)}>
-            <SignupForm {...this.props} />
+            <SignupForm {...this.props}
+              onSuccess={() => {
+                this.props.showVerifyUserPopup(this.props.user._id);
+              }}
+            />
           </div>
         </div>
       );
@@ -110,7 +125,8 @@ class Account extends Component {
         <Container>
           {components}
         </Container>
-        <VerifyBookingPopup onVerified={this.onVerified} />
+        <VerifyBookingPopup onVerified={this.onVerifiedBooking} />
+        <VerifyUserPopup onVerified={this.onVerifiedUser} />
       </div>
     );
   }
@@ -122,28 +138,32 @@ Account.propTypes = {
   contact: React.PropTypes.string,
   type: React.PropTypes.string,
 
+  user: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
-  user: React.PropTypes.object,
   patient: React.PropTypes.object,
 
+  getUser: React.PropTypes.func,
   getBooking: React.PropTypes.func,
   setLastPage: React.PropTypes.func,
   showAlertPopup: React.PropTypes.func,
+  showVerifyUserPopup: React.PropTypes.func,
   showVerifyBookingPopup: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
+  user: state.user.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
-  user: state.user,
   patient: state.patient,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getUser: (params) => dispatch(getUser(params)),
   getBooking: (params) => dispatch(getBooking(params)),
   setLastPage: (page) => dispatch(setLastPage(page)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
+  showVerifyUserPopup: (userId) => dispatch(showVerifyUserPopup(userId)),
   showVerifyBookingPopup: (bookingId) => dispatch(showVerifyBookingPopup(bookingId)),
 });
 

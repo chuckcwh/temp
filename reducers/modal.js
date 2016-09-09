@@ -80,6 +80,54 @@ const daypicker = (state = {
   }
 }
 
+const verifyUser = (state = {
+  visible: false,
+  userId: ''
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.SHOW_MODAL_VERIFYUSER:
+      return {
+        ...state,
+        visible: true,
+        userId: action.userId
+      };
+    case ActionTypes.HIDE_MODAL_VERIFYUSER:
+      return {
+        ...state,
+        visible: false
+      };
+    default:
+      return state;
+  }
+}
+
+const resendVerifyUser = (state = {
+  visible: false,
+  userId: '',
+  hp: '',
+  error: '',
+  pending: false
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.SHOW_MODAL_RESENDVERIFYUSER:
+      return {
+        ...state,
+        visible: true,
+        userId: action.userId
+      };
+    case ActionTypes.HIDE_MODAL_RESENDVERIFYUSER:
+      return {
+        ...state,
+        visible: false,
+        hp: '',
+        error: '',
+        pending: false
+      };
+    default:
+      return state;
+  }
+}
+
 const verifyBooking = (state = {
   visible: false,
   bookingId: ''
@@ -133,8 +181,10 @@ const modal = combineReducers({
   confirm,
   login,
   daypicker,
+  verifyUser,
+  resendVerifyUser,
   verifyBooking,
-  resendVerifyBooking
+  resendVerifyBooking,
 })
 
 export default modal;

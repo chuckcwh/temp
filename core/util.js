@@ -296,7 +296,7 @@ export function getUserName(user) {
 }
 
 export function getUserCurrentCredits(user) {
-  return user && user.credit && (!isNaN(user.credit.current) && parseFloat(user.credit.current).toFixed(2)) || '-';
+  return user && user.credits && (!isNaN(user.credits.current) && parseFloat(user.credits.current).toFixed(2)) || '-';
 }
 
 const u = {

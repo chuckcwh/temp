@@ -776,6 +776,24 @@ const bookingApp = combineReducers({
           return state;
       }
     },
+    promocodeManageAddForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          const { main, name } = action.source;
+          if (main === 'promocodeManageAddForm') {
+            return {
+              ...state,
+              [name]: {
+                ...state[name],
+                value: action.value,
+              }
+            }
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
   })
 });
 

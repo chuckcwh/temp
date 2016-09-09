@@ -43,18 +43,22 @@ class PromocodeManage extends Component {
 
           {user && add && <PromocodeManageAddForm />}
 
-          <Link
-            className={cx('btn', 'btn-primary', s.addLink)}
-            to="/promocode-manage/add">
-            New Promo Code
-          </Link>
+          {user && !add && (
+            <div>
+              <Link
+              className={cx('btn', 'btn-primary', s.addLink)}
+              to="/promocode-manage/add">
+              New Promo Code
+              </Link>
 
-          <div>
-            <Waypoint
-              onEnter={this._handleWaypointEnter}
-              onLeave={this._handleWaypointLeave}
-            />
-          </div>
+              <div>
+                <Waypoint
+                onEnter={this._handleWaypointEnter}
+                onLeave={this._handleWaypointLeave}
+                />
+              </div>
+            </div>
+          )}
         </Container>
       </div>
     );

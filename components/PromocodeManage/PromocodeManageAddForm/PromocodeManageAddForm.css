@@ -1,1 +1,37 @@
 @import '../../variables.css';
+
+
+.promocodeManageAddForm {
+  & .mainCat {
+    & .mainCatCol {
+      padding: 0 30px;
+
+      & .mainCatContainer {
+
+        & .inputField {
+          text-align: right;
+
+          & .dateInput, .textInput {
+            margin-right: 0;
+          }
+
+          & .multiSelect {
+            text-align: left;
+          }
+
+          & .discountTypeInput {
+            width: 110px;
+          }
+
+          & .descriptionInput {
+            width: 100%;
+          }
+        }
+
+        & .inlineField {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}

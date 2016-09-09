@@ -66,7 +66,7 @@ class ProfileEditResidentialForm extends Component {
         lng,
       },
       neighborhoodChoice,
-      regionChoice,
+      // regionChoice,
       invalid,
       handleSubmit,
       submitFailed,
@@ -193,7 +193,7 @@ const mapStateToProps = (state) => {
       lng: user && user.address && user.address.lng,
     },
     neighborhoodChoice: state.config.data && state.config.data.neighborhoods,
-    regionChoice: state.config.data && state.config.data.regions,
+    // regionChoice: state.config.data && state.config.data.regions,
   }
 };
 

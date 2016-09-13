@@ -22,7 +22,10 @@ class PatientsFormSecond extends Component {
         postal,
         unit,
         description,
+        lat,
+        lng,
         region,
+        neighborhood,
       },
       invalid,
       handleSubmit,
@@ -127,7 +130,10 @@ const reduxFormConfig = {
     'postal',
     'unit',
     'description',
+    'lat',
+    'lng',
     'region',
+    'neighborhood',
   ],
   // destroyOnUnmount: false,
   validate,
@@ -140,18 +146,26 @@ const mapStateToProps = (state, ownProps) => {
     state.patientsByClient[state.user.data._id].data[ownProps.params.patientId] &&
     state.patientsByClient[state.user.data._id].data[ownProps.params.patientId].address || {};
   const {
+    sameAddress,
     postal,
     unit,
     description,
+    lat,
+    lng,
     region,
+    neighborhood,
   } = patientAddress;
   return {
     config: state.config.data,
     initialValues: {
+      sameAddress,
       postal,
       unit,
       description,
+      lat,
+      lng,
       region,
+      neighborhood,
     },
   };
 };

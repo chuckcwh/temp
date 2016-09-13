@@ -45,7 +45,7 @@ class PatientsForm extends Component {
   handleSave = (formIndex) => (values) => {
     return new Promise((resolve, reject) => {
       if (this.props.action === 'add') {
-        const { postal, unit, description, region, ...rest } = values;
+        const { postal, unit, description, lat, lng, region, neighborhood, ...rest } = values;
         this.props.createPatient({
           ...rest,
           address: {

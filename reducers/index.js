@@ -650,6 +650,56 @@ const bookingApp = combineReducers({
           return state;
       }
     },
+    patientsFormSecond: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.GEOCODE_SUCCESS:
+          if (state.postal && state.postal.value && action.postal && state.postal.value == action.postal) {
+            return {
+              ...state,
+              description: {
+                ...state.description,
+                value: action.description,
+              },
+              lat: {
+                ...state.lat,
+                value: action.lat
+              },
+              lng: {
+                ...state.lng,
+                value: action.lng
+              },
+              region: {
+                ...state.region,
+                value: action.region
+              },
+              neighborhood: {
+                ...state.neighborhood,
+                value: action.neighborhood
+              }
+            }
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
+    creditsTopupForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'creditsTopupForm') {
+            return {
+              ...state,
+              transDate: {
+                ...state.transDate,
+                value: action.value
+              }
+            }
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
     inlineForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:

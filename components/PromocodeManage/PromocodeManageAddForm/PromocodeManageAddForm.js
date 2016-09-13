@@ -1,29 +1,76 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Loader from 'react-loader';
+import DayPicker, { DateUtils } from 'react-day-picker';
+import some from 'lodash/some';
+import remove from 'lodash/remove';
 import cx from 'classnames';
 import moment from 'moment';
-import s from './PromocodeManageAddForm.css';
-import Container from '../../Container';
-import Link from '../../Link';
-import Header from '../../Header';
-import history from '../../../core/history';
 import { getUserName } from '../../../core/util';
-import { isAdmin } from '../../../core/util';
 import { reduxForm } from 'redux-form';
-import { showDayPickerPopup } from '../../../actions';
+import 'react-day-picker/lib/style.css';
+import s from './PromocodeManageAddForm.css';
+import { showDayPickerPopup, fetchServices, createPromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import Loader from 'react-loader';
 
 
 class PromocodeManageAddForm extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedDates: [],
+    };
+  }
+
+  componentDidMount() {
+    this.props.fetchServices();
+  }
+
+  onSelectDay = (e, day) => {
+    if (!this.isDisabled(day)) {
+      const days = this.state.selectedDates;
+
+      if (some(days, item => DateUtils.isSameDay(item, day))) {
+        remove(days, item => DateUtils.isSameDay(item, day));
+      } else {
+        days.push(day);
+        days.sort((a, b) => a.getTime() - b.getTime());
+      }
+
+      this.setState({ selectedDates: days });
+    }
+  };
+
+  isDisabled = (day) => {
+    const d = DateUtils.clone(day);
+    d.setDate(d.getDate() - 1);
+    return DateUtils.isPastDay(d);
+  };
+
   onSubmit = (values) => {
     console.log('values', values);
-    // return new Promise((resolve, reject) => [
-    //
-    // ])
+    return new Promise((resolve, reject) => [
+      this.props.createPromo({
+        code: values.code,
+        services: values.services,
+        name: values.name,
+        description: values.description,
+        date: {
+          dateTimeStart: moment(values.startDate).format('YYYY-MM-DD'),
+          dateTimeEnd: moment(values.endDate).format('YYYY-MM-DD'),
+          voidDates: this.state.selectedDates
+        }
+        
+        regions: values.regions,
+        discountRate: values.discountRate,
+        discountType: values.discountType,
+      }).then((res) => {
+        console.log('response', res);
+      })
+    ])
   };
 
   render() {
@@ -41,6 +88,8 @@ class PromocodeManageAddForm extends Component {
         description,
       },
       regionChoice,
+      servicesChoice,
+      discountTypeChoice,
       showDayPickerPopup,
       user,
 
@@ -50,8 +99,7 @@ class PromocodeManageAddForm extends Component {
       submitting,
     } = this.props;
 
-    const servicesChoice = [{label: 'Stroke Rehabilitation', value: 'Stroke Rehabilitation'}, {label: 'Pain Relief Therapy', value: 'Pain Relief Therapy'}];
-    const discountTypeChoice = ['SGD', '%'];
+    const { selectedDates } = this.state;
 
     return (
       <div>
@@ -97,7 +145,7 @@ class PromocodeManageAddForm extends Component {
                   <div className={s.inputField}>
                     <MultiSelect
                       className={s.multiSelect}
-                      options={servicesChoice}
+                      options={Object.values(servicesChoice).map(item => ({label: item.name, value: item._id}))}
                       {...services}
                     />
                     {services.touched && services.error && <div className={s.formError}>{services.error}</div>}
@@ -116,9 +164,24 @@ class PromocodeManageAddForm extends Component {
 
                 <div className={s.mainCatContainer}>
                   <p>Black Out Days</p>
-                  <div className="DateInput">
-                    <input type="text" id="blackOutDays" name="blackOutDays" placeholder="DD-MM-YYYY" {...blackOutDays} />
-                    <span onClick={() => this.props.showDayPickerPopup(blackOutDays.value, 'promocodeManageAddForm')}></span>
+                  <div className="text-center">
+                    <DayPicker
+                      numberOfMonths={1}
+                      modifiers={{
+                        selected: day => selectedDates
+                          && some(selectedDates, item => DateUtils.isSameDay(item, day)),
+                        disabled: this.isDisabled,
+                      }}
+                      onDayClick={this.onSelectDay}
+                    />
+                  </div>
+                  <div className="text-center">
+                    {selectedDates.length ? <h3>Selected Dates:</h3> : ""}
+                    {
+                      selectedDates && selectedDates.map((day) => (
+                        <div key={day.getTime()}>{moment(day).format('DD MMM YYYY, dddd')}</div>
+                      ))
+                    }
                   </div>
                   {blackOutDays.touched && blackOutDays.error && <div className={s.formError}>{blackOutDays.error}</div>}
                 </div>
@@ -137,7 +200,7 @@ class PromocodeManageAddForm extends Component {
                     <div className={s.inlineField}>
                       <div className={cx("select", s.dateInput)}>
                         <span></span>
-                        <select className={s.discountTypeInput} id={discountType} name={discountType} {...discountType} value={discountType.value || 'SGD'}>
+                        <select className={s.discountTypeInput} id={discountType} name={discountType} {...discountType} value={discountType.value}>
                           {discountTypeChoice && discountTypeChoice.map(item => (
                             <option key={discountTypeChoice.indexOf(item)} value={item}>{item}</option>
                           ))}
@@ -194,8 +257,8 @@ const validate = values => {
 
 
 PromocodeManageAddForm.propTypes = {
-  // onEnter: PropTypes.func,
-  // onLeave: PropTypes.func,
+  servicesChoice: React.PropTypes.object,
+  fetchServices: React.PropTypes.func,
 };
 
 const reduxFormConfig = {
@@ -218,14 +281,22 @@ const reduxFormConfig = {
 const mapStateToProps = (state) => {
   const user = state.user.data;
   const config = state.config.data;
+  const discountTypeChoice = ['SGD', '%'];
 
   return {
+    initialValues: {
+      discountType: discountTypeChoice[0],
+    },
     regionChoice: config && config.regions,
+    servicesChoice: state.services.data,
+    discountTypeChoice,
     user,
 }};
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchServices: () => dispatch(fetchServices()),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
+  createPromo: (params) => dispatch(createPromo(params)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(PromocodeManageAddForm);

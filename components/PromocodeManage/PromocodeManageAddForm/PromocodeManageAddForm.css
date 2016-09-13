@@ -11,7 +11,7 @@
         & .inputField {
           text-align: right;
 
-          & .dateInput, .textInput {
+          & .dateInput, & .textInput {
             margin-right: 0;
           }
 
@@ -33,5 +33,10 @@
         }
       }
     }
+  }
+
+  & .formSectionSubmit {
+    text-align: center;
+    margin: 40px auto 80px;
   }
 }

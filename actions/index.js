@@ -243,6 +243,10 @@ export const PROMO_REQUEST = 'PROMO_REQUEST'
 export const PROMO_SUCCESS = 'PROMO_SUCCESS'
 export const PROMO_FAILURE = 'PROMO_FAILURE'
 
+export const CREATE_PROMO_REQUEST = 'CREATE_PROMO_REQUEST'
+export const CREATE_PROMO_SUCCESS = 'CREATE_PROMO_SUCCESS'
+export const CREATE_PROMO_FAILURE = 'CREATE_PROMO_FAILURE'
+
 export const TRANSACTION_PAYPAL_CREATE_REQUEST = 'TRANSACTION_PAYPAL_CREATE_REQUEST'
 export const TRANSACTION_PAYPAL_CREATE_SUCCESS = 'TRANSACTION_PAYPAL_CREATE_SUCCESS'
 export const TRANSACTION_PAYPAL_CREATE_FAILURE = 'TRANSACTION_PAYPAL_CREATE_FAILURE'
@@ -593,6 +597,11 @@ function fetchAction(route) {
       endpoint: '/checkPromocode',
       method: 'get',
       auth: 'app'
+    },
+    createPromo: {
+      types: [ CREATE_PROMO_REQUEST, CREATE_PROMO_SUCCESS, CREATE_PROMO_FAILURE ],
+      endpoint: '/promos',
+      method: 'post',
     },
     createPaypalTransaction: {
       types: [ TRANSACTION_PAYPAL_CREATE_REQUEST, TRANSACTION_PAYPAL_CREATE_SUCCESS, TRANSACTION_PAYPAL_CREATE_FAILURE ],
@@ -1011,6 +1020,10 @@ export function editSession(params) {
 
 export function getPromo(params) {
   return fetch('getPromo', params);
+}
+
+export function createPromo(params) {
+  return fetch('createPromo', params);
 }
 
 export function createPaypalTransaction(params) {

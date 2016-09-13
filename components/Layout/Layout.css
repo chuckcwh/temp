@@ -401,6 +401,7 @@ textarea:disabled {
 }
 
 :global .select {
+  display: inline-block;
   position: relative;
   margin: 20px 20px 0 0;
 

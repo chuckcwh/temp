@@ -1,6 +1,6 @@
 @import '../variables.css';
 
-.dashboardPendingPayment {
+.dashboardAppointments {
   display: block;
   position: relative;
 
@@ -28,6 +28,14 @@
 
   & .cases {
     padding-top: 60px;
+
+    & .casesFilter {
+      text-align: right;
+
+      & :global .select {
+        margin: 20px 0 0 10px;
+      }
+    }
 
     & .dashboardDataTable {
       padding: 0;

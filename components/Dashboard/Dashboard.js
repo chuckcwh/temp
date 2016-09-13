@@ -12,6 +12,7 @@ import DashboardStatButton from '../DashboardStatButton';
 import DashboardNextAppt from '../DashboardNextAppt';
 import DashboardPendingConf from '../DashboardPendingConf';
 import DashboardPendingPayment from '../DashboardPendingPayment';
+import DashboardAppointments from '../DashboardAppointments';
 import NurseAvailableCases from '../NurseAvailableCases';
 import { fetchServices, getPatients, getSessions, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
@@ -49,166 +50,31 @@ class Dashboard extends Component {
     let dashboardStats,
       dashboardBody;
 
-    let tableContentBlob;
-    const confirmedApptSessions = []; // next appointments
-    const pendingConfirmationApptSessions = []; // pending appointments
-    const pastApptSessions = []; // past appointments
-    // var pendingPaymentAppointmentSession = [] // pending payment cases
-
-    var earliestNewApptDate;
-    var earliestNewAppt;
-
-    // Table content data structure
-    function createTableContentBlob(patients, cases) {
-      if (!patients || !cases) return [];
-      const tableContentBlob = [];
-      let patientFound = false;
-      patients && Object.values(patients).forEach((patient, index) => {
-        cases && Object.values(sessions).forEach((cas) => {
-          if (patient.id === cas.patient) {
-            tableContentBlob.forEach((patientBlob) => {
-              if (patientBlob.patientId === patient.id) {
-                patientFound = true;
-                patientBlob.cases.push(cas);
-              }
-            });
-            if (!patientFound) {
-              tableContentBlob.push({
-                patientId: patient.id,
-                patient: patient,
-                cases: [cas]
-              });
-            }
-            patientFound = false;
-          }
-        });
-      });
-      return tableContentBlob;
-    }
-    tableContentBlob = createTableContentBlob(patients, sessions);
-    // console.log(tableContentBlob);
-
-    // Create eventsArray to be supplied to calendar
-    const eventsArray = [];
-    let sessionAppointment;
-    tableContentBlob.forEach((patientBlob) => {
-      patientBlob && patientBlob.cases && patientBlob.cases.forEach((cas) => {
-        if (cas.dates.length) {
-          cas.dates.forEach((date) => {
-            sessionAppointment = {
-              caseId: cas.id,
-              sessionId: date.id,
-              casePrice: cas.price,
-              price: date.pcode ? (date.price - (date.price * date.pdiscount / 100)).toFixed(2) : date.price,
-              // service: this.props.services[cas.service],
-              date: date.dateTimeStart.substr(0, 10),
-              time: date.dateTimeStart.substr(11),
-              estTime: date.estTime,
-              caseNotes: cas.notes,
-              patientId: patientBlob.patient.id,
-              patientFullName: patientBlob.patient.fullName,
-              patientColor: patientBlob.patient.colorCode,
-              isPaid: cas.isPaid,
-              location: cas.addresses.length ? cas.addresses[0].address : 'N/A',
-              engagedId: '',
-              sessionStatus: 'pendingConf',
-              sessionMode: date.status, // Temp -> Cancelled or Active
-              caseStatus: cas.status, // Accepting Quotes, Closed, Completed, Expired
-              stage: '', // If session appointment has not been accepted yet, stage is empty string
-              nurseId: ''
-            };
-            if (cas.quotes.length) { // Quote gets removed when session gets deleted
-              cas.quotes.forEach((quote) => {
-                if (quote.dateObjId === date.id) {
-                  sessionAppointment.sessionStatus = 'engaged';
-                  // Pending visit, pending documentation, pending review, completed
-                  sessionAppointment.stage = quote.casesEngaged[0].status;
-                  sessionAppointment.engagedId = quote.casesEngaged[0].id;
-                  sessionAppointment.nurseId = quote.nurse;
-                }
-              });
-            }
-            eventsArray.push(sessionAppointment);
-          });
-        }
-      });
-    });
-    // console.log(eventsArray);
-
-    // Sorts appointment into dashboard tab category according to type
-    eventsArray.forEach((event) => {
-      var now = moment();
-      if (event.caseStatus === 'Expired') {
-        pastApptSessions.push(event);
-      } else {
-        if (moment(event.date, 'YYYY-MM-DD').isSameOrAfter(now, 'day')) {
-          if (event.sessionStatus === "engaged" && event.isPaid) {
-            if (event.stage === "Pending Visit") {
-              confirmedApptSessions.push(event);
-            }
-          }
-          if (event.sessionStatus === 'pendingConf' || event.sessionStatus === 'engaged') {
-            if (!event.isPaid && event.caseStatus === 'Accepting Quotes') {
-              pendingConfirmationApptSessions.push(event);
-            }
-          }
-        } else if (moment(event.date, 'YYYY-MM-DD').isBefore(now, 'day')) {
-          if (event.caseStatus === "Closed" || event.caseStatus === "Completed") {
-            pastApptSessions.push(event);
-          }
-        }
+    const stats = {
+      nextAppt: 0,
+      pendingConf: 0,
+      pendingPayment: 0,
+      others: 0,
+    };
+    sessions && Object.values(sessions).map(session => {
+      switch (session.phase) {
+        case 'awaiting-caregiver':
+          stats.pendingConf++;
+          break;
+        case 'pending-payment':
+          stats.pendingPayment += session.price;
+          break;
+        case 'pending-visit':
+          stats.nextAppt++;
+          break;
+        default:
+          stats.others++;
+          break;
       }
     });
 
-    function getPendingPaymentCases(patients, cases) {
-      if (!patients || !cases) return {};
-      const pendingPaymentCases = {};
-      Object.values(patients).forEach((patient) => {
-        Object.values(sessions).forEach((cas) => {
-          if (patient.id === cas.patient) {
-            if (cas.status === "Closed" && !cas.isPaid) {
-              if (!pendingPaymentCases[cas.patient]) {
-                pendingPaymentCases[cas.patient] = {
-                  patientFullName: patient.fullName,
-                  cases: [cas]
-                }
-              } else {
-                pendingPaymentCases[cas.patient].cases.push(cas);
-              }
-            }
-          }
-        });
-      });
-      return pendingPaymentCases;
-    }
-    const pendingPaymentCases = getPendingPaymentCases(patients, sessions);
-
     if (user) {
       if (isClient(user)) {
-        const activeSessions = pendingConfirmationApptSessions.filter(function(session) {
-          return session.sessionMode === "Active";
-        });
-        const totalPendingAmt = (function getTotalPendingAmt (patients) {
-          let totalPendingAmt = 0;
-          let discountedPrice;
-          for (let patientId in patients) {
-            patients[patientId] && patients[patientId].cases.forEach((cas) => {
-              // if(cas.pcode) {
-              //   discountedPrice = Number(cas.price) - (Number(cas.price) * ( Number(cas.pdiscount) / 100 ));
-              //   totalPendingAmt += Number(discountedPrice);
-              // } else {
-                totalPendingAmt += Number(cas.price);
-              // }
-            });
-          }
-          return totalPendingAmt.toFixed(2);
-        })(pendingPaymentCases);
-
-        var pendingVisitAppts = confirmedApptSessions.filter(function(session) {
-          return session.isPaid;
-        });
-        var allAppointments = pendingVisitAppts.concat(pastApptSessions);
-
         dashboardStats = (
           <div className={s.dashboardStatsWrapper}>
             <DashboardStatButton
@@ -216,7 +82,7 @@ class Dashboard extends Component {
               color="blue"
               icon="bell"
               text="Next Appointment"
-              stat={confirmedApptSessions.length}
+              stat={stats.nextAppt}
               onClick={() => this.setState({
                 panelChoice: 'Next Appointment'
               })}
@@ -225,7 +91,7 @@ class Dashboard extends Component {
               color="green"
               icon="hourglass"
               text="Pending Confirmation"
-              stat={activeSessions.length}
+              stat={stats.pendingConf}
               onClick={() => this.setState({
                 panelChoice: 'Pending Confirmation'
               })}
@@ -234,7 +100,7 @@ class Dashboard extends Component {
               color="red"
               icon="coin"
               text="Pending Payment"
-              stat={`$ ${totalPendingAmt}`}
+              stat={`$ ${parseFloat(stats.pendingPayment).toFixed(2)}`}
               onClick={() => this.setState({
                 panelChoice: 'Pending Payment'
               })}
@@ -243,7 +109,7 @@ class Dashboard extends Component {
               color="orange"
               icon="checklist"
               text="Appointments"
-              stat={allAppointments.length}
+              stat={stats.others}
               onClick={() => this.setState({
                 panelChoice: 'Appointments'
               })}
@@ -254,23 +120,19 @@ class Dashboard extends Component {
         if (panelChoice === 'Pending Confirmation') {
           dashboardBody = (
             <div className={s.dashboardBody}>
-              <DashboardPendingConf
-                confirmedApptSessions={confirmedApptSessions}
-              />
+              <DashboardPendingConf />
             </div>
           )
         } else if (panelChoice === 'Pending Payment') {
           dashboardBody = (
             <div className={s.dashboardBody}>
-              <DashboardPendingPayment
-                confirmedApptSessions={confirmedApptSessions}
-              />
+              <DashboardPendingPayment />
             </div>
           )
         } else if (panelChoice === 'Appointments') {
           dashboardBody = (
             <div className={s.dashboardBody}>
-              <div className="dashboard-all-appointment">Appointment</div>
+              <DashboardAppointments />
             </div>
           )
         } else {

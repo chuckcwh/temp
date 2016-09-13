@@ -23,7 +23,7 @@ import BookingDetails from '../BookingDetails';
 import Account from '../Account';
 import AlertPopup from '../AlertPopup';
 import LoginPopup from '../LoginPopup';
-import { fetchServicesIfNeeded, getBooking, getUserWithToken, setPostStatus } from '../../actions';
+import { getBooking, getUserWithToken, setPostStatus } from '../../actions';
 import history from '../../core/history';
 import { isNavigationAllowed } from '../../core/util';
 
@@ -234,12 +234,10 @@ class BookingApp extends Component {
 BookingApp.propTypes = {
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
-  services: React.PropTypes.object,
   postStatus: React.PropTypes.string,
   user: React.PropTypes.object,
   lastPage: React.PropTypes.string,
 
-  fetchServicesIfNeeded: React.PropTypes.func,
   getBooking: React.PropTypes.func,
   getUserWithToken: React.PropTypes.func,
   setPostStatus: React.PropTypes.func,
@@ -248,14 +246,12 @@ BookingApp.propTypes = {
 const mapStateToProps = (state) => ({
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
-  services: state.services,
   postStatus: state.postStatus,
   user: state.user.data,
   lastPage: state.lastPage,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchServicesIfNeeded: () => dispatch(fetchServicesIfNeeded()),
   getBooking: (params) => dispatch(getBooking(params)),
   getUserWithToken: (params) => dispatch(getUserWithToken(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),

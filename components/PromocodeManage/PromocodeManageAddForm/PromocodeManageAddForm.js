@@ -5,7 +5,6 @@ import some from 'lodash/some';
 import remove from 'lodash/remove';
 import cx from 'classnames';
 import moment from 'moment';
-import { getUserName } from '../../../core/util';
 import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
 import s from './PromocodeManageAddForm.css';
@@ -13,7 +12,6 @@ import { showDayPickerPopup, fetchServices, createPromo } from '../../../actions
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import Loader from 'react-loader';
 
 
 class PromocodeManageAddForm extends Component {
@@ -55,7 +53,7 @@ class PromocodeManageAddForm extends Component {
     return new Promise((resolve, reject) => [
       this.props.createPromo({
         code: values.code,
-        services: values.services,
+        services: values.services, // need to be splitted into id & value
         name: values.name,
         description: values.description,
         date: {
@@ -89,9 +87,9 @@ class PromocodeManageAddForm extends Component {
       },
       regionChoice,
       servicesChoice,
+      servicesFetching,
       discountTypeChoice,
       showDayPickerPopup,
-      user,
 
       invalid,
       handleSubmit,
@@ -100,6 +98,15 @@ class PromocodeManageAddForm extends Component {
     } = this.props;
 
     const { selectedDates } = this.state;
+    const flattenServicesChoice = servicesChoice && Object.values(servicesChoice).reduce((result, service) => {
+      service.classes.map(serviceClass => {
+        result.push({
+          label: `${service.name} (${parseFloat(serviceClass.duration)} hr${parseFloat(service.duration) > 1 ? 's' : ''})`,
+          value: `${service._id}:${serviceClass.duration}`,
+        })
+      })
+      return result;
+    }, []) || [];
 
     return (
       <div>
@@ -108,6 +115,7 @@ class PromocodeManageAddForm extends Component {
         <form className={s.promocodeManageAddForm} onSubmit={handleSubmit(this.onSubmit)}>
           <Grid fluid>
             <Row className={s.mainCat}>
+
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
                   <p>Valid Date</p>
@@ -145,7 +153,7 @@ class PromocodeManageAddForm extends Component {
                   <div className={s.inputField}>
                     <MultiSelect
                       className={s.multiSelect}
-                      options={Object.values(servicesChoice).map(item => ({label: item.name, value: item._id}))}
+                      options={flattenServicesChoice}
                       {...services}
                     />
                     {services.touched && services.error && <div className={s.formError}>{services.error}</div>}
@@ -200,7 +208,7 @@ class PromocodeManageAddForm extends Component {
                     <div className={s.inlineField}>
                       <div className={cx("select", s.dateInput)}>
                         <span></span>
-                        <select className={s.discountTypeInput} id={discountType} name={discountType} {...discountType} value={discountType.value}>
+                        <select className={s.discountTypeInput} id={discountType} name={discountType} {...discountType}>
                           {discountTypeChoice && discountTypeChoice.map(item => (
                             <option key={discountTypeChoice.indexOf(item)} value={item}>{item}</option>
                           ))}
@@ -258,6 +266,7 @@ const validate = values => {
 
 PromocodeManageAddForm.propTypes = {
   servicesChoice: React.PropTypes.object,
+  servicesFetching: React.PropTypes.bool,
   fetchServices: React.PropTypes.func,
 };
 
@@ -289,8 +298,8 @@ const mapStateToProps = (state) => {
     },
     regionChoice: config && config.regions,
     servicesChoice: state.services.data,
+    servicesFetching: state.services.isFetching,
     discountTypeChoice,
-    user,
 }};
 
 const mapDispatchToProps = (dispatch) => ({

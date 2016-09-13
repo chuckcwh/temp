@@ -9,7 +9,6 @@ import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 import Waypoint from 'react-waypoint';
-import { getUserName } from '../../core/util';
 // Sub Component
 import PromocodeManageAddForm from './PromocodeManageAddForm/PromocodeManageAddForm';
 
@@ -46,9 +45,9 @@ class PromocodeManage extends Component {
           {user && !add && (
             <div>
               <Link
-              className={cx('btn', 'btn-primary', s.addLink)}
-              to="/promocode-manage/add">
-              New Promo Code
+                className={cx('btn', 'btn-primary', s.addLink)}
+                to="/promocode-manage/add">
+                New Promo Code
               </Link>
 
               <div>
@@ -59,6 +58,7 @@ class PromocodeManage extends Component {
               </div>
             </div>
           )}
+
         </Container>
       </div>
     );

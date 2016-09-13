@@ -73,7 +73,7 @@ export class ProfileBase extends Component {
             <div className={s.profileWindow}>
               <div className={s.imgSection}>
                 <div className={s.imgContainer}>
-                  <Loader className="spinner" loaded={userFetching}>
+                  <Loader className="spinner" loaded={!userFetching}>
                     <img src={profile.avatar} className={s.profileImg} />
                   </Loader>
                 </div>

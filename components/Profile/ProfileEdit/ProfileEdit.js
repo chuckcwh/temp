@@ -84,7 +84,7 @@ class ProfileEdit extends Component {
           <div className={s.editWrapper}>
 
             <div className={s.sideBar}>
-              <Loader className="spinner" loaded={userFetching}>
+              <Loader className="spinner" loaded={!userFetching}>
                 <div className={s.userImage}>
                   <img src={user.avatar ? user.avatar : imgBlankAvatar} key={user.avatar ? user.avatar : 'noimage'} />
                 </div>

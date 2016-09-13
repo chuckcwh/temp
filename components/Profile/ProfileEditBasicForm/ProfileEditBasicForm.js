@@ -11,7 +11,7 @@ import history from '../../../core/history';
 import { isAdmin, isClient, isProvider, getUserName } from '../../../core/util';
 import { reduxForm } from 'redux-form';
 import InlineForm from '../../MultiSelect';
-import { showDayPickerPopup, editUser } from '../../../actions';
+import { showDayPickerPopup, fetchServices, editUser } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 // react-icons
@@ -19,6 +19,10 @@ import FaLock from 'react-icons/lib/fa/lock';
 
 
 class ProfileEditBasicForm extends Component {
+
+  componentDidMount() {
+    this.props.fetchServices();
+  }
 
   onSubmit = (values) => {
     return new Promise((resolve, reject) => {
@@ -181,7 +185,7 @@ class ProfileEditBasicForm extends Component {
                   <div className="TableRowItem2">
                     <MultiSelect
                       className={s.multiSelect}
-                      options={skillsChoice}
+                      options={skillsChoice && Object.values(skillsChoice).map(item => ({value: item._id, label: item.name}))}
                       {...skills}
                     />
                     {skills.touched && skills.error && <div className={s.formError}>{skills.error}</div>}
@@ -272,12 +276,13 @@ const mapStateToProps = (state) => {
     genderChoice: state.config.data && state.config.data.genders,
     idTypeChoice: state.config.data && state.config.data.residences,
     professionChoice: state.config.data && state.config.data.nurseProfessions,  // provider only
-    skillsChoice: [{label: 'Caregiver Training', value: 'Caregiver Training'}, {label: 'General Accompany', value: 'General Accompany'}],
+    skillsChoice: state.services.data,
     user,
   }
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchServices: () => dispatch(fetchServices()),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   editUser: (params) => dispatch(editUser(params)),
 })

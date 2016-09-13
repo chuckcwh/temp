@@ -62,8 +62,8 @@ class PromocodeManageAddForm extends Component {
           dateTimeStart: moment(values.startDate).format('YYYY-MM-DD'),
           dateTimeEnd: moment(values.endDate).format('YYYY-MM-DD'),
           voidDates: this.state.selectedDates
-        }
-        
+        },
+
         regions: values.regions,
         discountRate: values.discountRate,
         discountType: values.discountType,

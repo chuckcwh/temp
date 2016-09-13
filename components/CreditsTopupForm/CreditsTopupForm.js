@@ -8,11 +8,12 @@ class CreditsTopupForm extends Component {
 
   render() {
     const {
-      fields: { deposit, method, ref },
+      fields: { deposit, method, transRef, transDate },
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
+      user,
     } = this.props;
     return (
       <form className={s.creditsTopupForm} onSubmit={handleSubmit}>
@@ -45,7 +46,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} name="credit">
-                    SGD 0.00
+                    {`SGD ${user && parseFloat(user.credits.current + deposit.value).toFixed(2)}`}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>Balance Credits after Deposit</div>
                 </div>
@@ -71,7 +72,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} name="credit">
-                    SGD 0.00
+                    {`SGD ${user && parseFloat(user.credits.current + deposit.value).toFixed(2)}`}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>Balance Credits after Deposit</div>
                 </div>
@@ -104,10 +105,23 @@ class CreditsTopupForm extends Component {
           </div>
           <div className={s.creditsTopupFormSection}>
             <div className="TableRow">
-              <div className="TableRowItem1">Transaction Reference Number*</div>
+              <div className="TableRowItem1">Transaction Reference No.*</div>
               <div className="TableRowItem2">
-                <input type="text" {...ref} />
-                {ref.touched && ref.error && <div className={s.creditsTopupFormError}>{ref.error}</div>}
+                <input type="text" {...transRef} />
+                {transRef.touched && transRef.error && <div className={s.creditsTopupFormError}>{transRef.error}</div>}
+              </div>
+            </div>
+            <div className="TableRow">
+              <div className="TableRowItem1">Transaction Date*</div>
+              <div className="TableRowItem2">
+                <div className="DateInput">
+                  <input type="text" {...transDate} />
+                  <span
+                    onClick={() =>
+                      this.props.showDayPickerPopup && this.props.showDayPickerPopup(transDate.value, 'creditsTopupForm')}
+                  ></span>
+                </div>
+                {transDate.touched && transDate.error && <div className={s.creditsTopupFormError}>{transDate.error}</div>}
               </div>
             </div>
             <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>
@@ -131,8 +145,11 @@ const validate = values => {
   if (!values.method) {
     errors.method = 'Required';
   }
-  if (values.method === 'bank' && !values.ref) {
-    errors.ref = 'Required';
+  if (values.method === 'bank' && !values.transRef) {
+    errors.transRef = 'Required';
+  }
+  if (values.method === 'bank' && !values.transDate) {
+    errors.transDate = 'Required';
   }
   return errors;
 };
@@ -143,14 +160,16 @@ CreditsTopupForm.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  showDayPickerPopup: PropTypes.func.isRequired,
   // showAlertPopup: PropTypes.func.isRequired,
   // fetchAddress: PropTypes.func.isRequired,
   // onNext: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const reduxFormConfig = {
   form: 'creditsTopupForm',
-  fields: ['deposit', 'method', 'ref'],
+  fields: ['deposit', 'method', 'transRef', 'transDate'],
   validate,
 };
 

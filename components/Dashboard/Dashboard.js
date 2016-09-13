@@ -13,7 +13,8 @@ import DashboardNextAppt from '../DashboardNextAppt';
 import DashboardPendingConf from '../DashboardPendingConf';
 import DashboardPendingPayment from '../DashboardPendingPayment';
 import DashboardAppointments from '../DashboardAppointments';
-import NurseAvailableCases from '../NurseAvailableCases';
+import DashboardAvailableCases from '../DashboardAvailableCases';
+import DashboardOngoingCases from '../DashboardOngoingCases';
 import { fetchServices, getPatients, getSessions, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import { isClient, isProvider } from '../../core/util';
@@ -34,6 +35,10 @@ class Dashboard extends Component {
       && this.props.getSessions({
         client: this.props.user._id,
       });
+    this.props.user && isProvider(this.props.user)
+      && this.props.getSessions({
+        provider: this.props.user._id,
+      });
   }
 
   componentWillReceiveProps(props) {
@@ -41,6 +46,10 @@ class Dashboard extends Component {
       props.user && isClient(props.user)
         && this.props.getSessions({
           client: props.user._id,
+        });
+      props.user && isProvider(props.user)
+        && this.props.getSessions({
+          provider: props.user._id,
         });
     }
   }
@@ -142,7 +151,6 @@ class Dashboard extends Component {
             </div>
           )
         }
-
       } else if (isProvider(user)) {
         dashboardStats = (
           <div className={s.dashboardStatsWrapper}>
@@ -151,31 +159,53 @@ class Dashboard extends Component {
               icon="bell"
               text="Available Cases"
               stat={'0'}
+              onClick={() => this.setState({
+                panelChoice: 'Available Cases'
+              })}
             />
             <DashboardStatButton
               color="orange"
               icon="hourglass"
               text="Ongoing Cases"
               stat={'0'}
+              onClick={() => this.setState({
+                panelChoice: 'Ongoing Cases'
+              })}
             />
             <DashboardStatButton
               color="green"
-              icon="checklist"
+              icon="coin"
               text="Completed Cases"
               stat={'0'}
+              onClick={() => this.setState({
+                panelChoice: 'Completed Cases'
+              })}
             />
             <DashboardStatButton
               color="red"
-              icon="coin"
-              text="Total Credits"
+              icon="checklist"
+              text="Other Cases"
               stat={`$ ${0}`}
-              to="/credits"
+              onClick={() => this.setState({
+                panelChoice: 'Other Cases'
+              })}
             />
           </div>
         );
-        dashboardBody = (
-          <NurseAvailableCases />
-        );
+        const {panelChoice} = this.state;
+        if (panelChoice === 'Ongoing Cases') {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <DashboardOngoingCases />
+            </div>
+          )
+        } else {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <DashboardAvailableCases />
+            </div>
+          )
+        }
       }
     }
     return (

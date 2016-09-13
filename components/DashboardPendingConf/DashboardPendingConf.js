@@ -33,27 +33,27 @@ class DashboardPendingConf extends Component {
             sessionsByPatient && Object.keys(sessionsByPatient).map(patientId => {
               const patientName = patients && patients[patientId] && patients[patientId].name;
               const filteredSessions = sessionsByPatient[patientId].filter(session => session.phase === 'awaiting-caregiver');
+              if (filteredSessions.length === 0) {
+                return;
+              }
               return (
                 <DashboardDataTable css={s} key={patientId}>
                   <Grid fluid className={s.dashboardDataTable}>
                     <p className={s.name}>{patientName}</p>
                     <Row className={s.lgHeader}>
                       <Col md={2}>ID</Col>
-                      <Col md={2}>Follow up</Col>
                       <Col md={2}>Date</Col>
                       <Col md={2}>Time</Col>
-                      <Col md={1}>Service</Col>
+                      <Col md={2}>Service</Col>
                       <Col md={1}>Price</Col>
                       <Col md={1}>Status</Col>
-                      <Col md={1}>Action(s)</Col>
+                      <Col md={2}>Action(s)</Col>
                     </Row>
                     {
                       filteredSessions && filteredSessions.map(session => (
                         <Row className={s.sessionDetails} key={session._id}>
                           <Col xs={4}>ID</Col>
                           <Col xs={8} md={2}>{formatSessionAlias(session.alias)}</Col>
-                          <Col xs={4}>Follow up</Col>
-                          <Col xs={8} md={2}>{session.followUp}</Col>
                           <Col xs={4}>Date</Col>
                           <Col xs={8} md={2}>{moment(session.date).format('ll')}</Col>
                           <Col xs={4}>Time</Col>
@@ -61,17 +61,20 @@ class DashboardPendingConf extends Component {
                             {configToName(config, 'timeSlotsByValue', session.timeSlot)}
                           </Col>
                           <Col xs={4}>Service</Col>
-                          <Col xs={8} md={1}>
-                            {services && services[session.service] && services[session.service].name}
+                          <Col xs={8} md={2}>
+                            {`${services && services[session.service] && services[session.service].name} `
+                              + `(${services && services[session.service] && services[session.service].classesHash
+                                  && services[session.service].classesHash[session.serviceClassId]
+                                  && services[session.service].classesHash[session.serviceClassId].duration}hrs)`}
                           </Col>
                           <Col xs={4}>Price</Col>
-                          <Col xs={8} md={1}>{session.price}</Col>
+                          <Col xs={8} md={1}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
                           <Col xs={4}>Status</Col>
                           <Col xs={8} md={1}>
-                            {configToName(config, 'sessionStatusesByValue', session.status)}
+                            {configToName(config, 'sessionPhasesByValue', session.phase)}
                           </Col>
                           <Col xs={4}>Action(s)</Col>
-                          <Col xs={8} md={1}>
+                          <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
                             <DashboardTableButton>Cancel</DashboardTableButton>
                           </Col>

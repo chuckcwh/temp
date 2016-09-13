@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 import Loader from 'react-loader';
 import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import s from './DashboardPendingPayment.css';
-import 'react-day-picker/lib/style.css';
-import Container from '../Container';
+import s from './DashboardAppointments.css';
 import Link from '../Link';
-import Header from '../Header';
-import ServiceCard from '../ServiceCard';
-import { fetchServices } from '../../actions';
-import history from '../../core/history';
-import util from '../../core/util';
-import shuffle from 'lodash/shuffle';
 import DashboardDataTable from '../DashboardDataTable';
+import DashboardTableButton from '../DashboardTableButton';
+import { fetchServices } from '../../actions';
+import { configToName, formatSessionAlias } from '../../core/util';
 
-class DashboardPendingPayment extends Component {
+class DashboardAppointments extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedFilter: '',
+    };
   }
 
   componentDidMount() {
@@ -30,15 +26,39 @@ class DashboardPendingPayment extends Component {
   render() {
     const { config, services, patients, sessions, sessionsFetching, sessionsByPatient } = this.props;
     return (
-      <div className={s.dashboardPendingPayment}>
-
+      <div className={s.dashboardAppointments}>
         <Loader className="spinner" loaded={!this.props.sessionsFetching}>
           <Link className={s.dashboardInfoBtn} to="/booking1">Book Appointment</Link>
           <div className={s.cases}>
+            <div className={s.casesFilter}>
+              <span><strong>Status</strong></span>
+              <div className="select">
+                <span></span>
+                <select value={this.state.selectedFilter || ''}>
+                  <option value="">Show All</option>
+                  <option value="pending-visit">Pending Visit</option>
+                  <option value="completed">Completed</option>
+                  <option value="expired">Expired</option>
+                </select>
+              </div>
+            </div>
           {
             sessionsByPatient && Object.keys(sessionsByPatient).map(patientId => {
               const patientName = patients && patients[patientId] && patients[patientId].name;
-              const filteredSessions = sessionsByPatient[patientId].filter(session => session.phase === 'pending-payment');
+              const filteredSessions = sessionsByPatient[patientId].filter(session => {
+                switch (this.state.selectedFilter) {
+                  case 'pending-visit':
+                    return session.phase === 'pending-visit';
+                  case 'completed':
+                    return session.status === 'completed';
+                  case 'expired':
+                    return session.status === 'expired';
+                  default:
+                    return (session.phase === 'pending-visit'
+                      || session.status === 'completed'
+                      || session.status === 'expired');
+                }
+              });
               if (filteredSessions.length === 0) {
                 return;
               }
@@ -94,39 +114,32 @@ class DashboardPendingPayment extends Component {
           }
           </div>
         </Loader>
-
       </div>
     );
   }
 
 }
 
-DashboardPendingPayment.propTypes = {
+DashboardAppointments.propTypes = {
   config: React.PropTypes.object,
-  // user: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
-  servicesTree: React.PropTypes.array,
-  servicesTreeHash: React.PropTypes.object,
-  servicesSubtypesHash: React.PropTypes.object,
-  servicesSubtypesHashBySlug: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
-  patientIds: React.PropTypes.array,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
+  sessionsByPatient: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func,
-  // getPatients: React.PropTypes.func,
-  // getCases: React.PropTypes.func,
+  getPatients: React.PropTypes.func,
+  getSessions: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   config: state.config.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  // servicesTree: state.services.dashboardTree,
-  // servicesTreeHash: state.services.dashboardTreeHash,
-  // servicesSubtypesHash: state.services.subTypesHash,
-  // servicesSubtypesHashBySlug: state.services.subTypesHashBySlug,
+  servicesTree: state.services.dashboardTree,
   patients: state.user.data && state.user.data._id
     && state.patientsByClient[state.user.data._id]
     && state.patientsByClient[state.user.data._id].data,
@@ -146,8 +159,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
-  // getPatients: (params) => dispatch(getPatients(params)),
-  // getCases: (params) => dispatch(getCases(params)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPendingPayment);
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardAppointments);

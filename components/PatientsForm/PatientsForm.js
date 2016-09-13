@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import s from './PatientsForm.css';
-import { fetchLanguages, fetchAddress, getPatients, showDayPickerPopup } from '../../actions';
+import { PATIENT_CREATE_SUCCESS, PATIENT_EDIT_SUCCESS,
+  createPatient, editPatient, fetchLanguages, fetchAddress, getPatients, showDayPickerPopup } from '../../actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Link from '../Link';
@@ -41,8 +42,58 @@ class PatientsForm extends Component {
     this.setState({ selectedTabIndex: this.state.selectedTabIndex - 1 });
   };
 
+  handleSave = (formIndex) => (values) => {
+    return new Promise((resolve, reject) => {
+      if (this.props.action === 'add') {
+        const { postal, unit, description, region, ...rest } = values;
+        this.props.createPatient({
+          ...rest,
+          address: {
+            postal,
+            unit,
+            description,
+            region,
+          },
+          userId: this.props.user._id,
+        }).then(res => {
+          if (res && res.type === PATIENT_CREATE_SUCCESS) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      } else if (this.props.action === 'edit') {
+        if (formIndex === 2) {
+          this.props.editPatient({
+            address: { ...values },
+            userId: this.props.user._id,
+            patientId: this.props.params.patientId,
+          }).then(res => {
+            if (res && res.type === PATIENT_EDIT_SUCCESS) {
+              resolve();
+            } else {
+              reject();
+            }
+          });
+        } else {
+          this.props.editPatient({
+            ...values,
+            userId: this.props.user._id,
+            patientId: this.props.params.patientId,
+          }).then(res => {
+            if (res && res.type === PATIENT_EDIT_SUCCESS) {
+              resolve();
+            } else {
+              reject();
+            }
+          });
+        }
+      } else reject('Invalid form action');
+    });
+  };
+
   render() {
-    const { action, patients, showDayPickerPopup, fetchAddress } = this.props;
+    const { params, action, patients, showDayPickerPopup, fetchAddress } = this.props;
     const { selectedTabIndex } = this.state;
     return (
       <div className={s.patientsForm}>
@@ -60,14 +111,117 @@ class PatientsForm extends Component {
             </SideTabList>
           </div>
           <div className={s.patientsFormPanel}>
-            {selectedTabIndex === 0
-              && <PatientsFormFirst action={action} onSubmit={this.nextPage} showDayPickerPopup={showDayPickerPopup} />}
-            {selectedTabIndex === 1
-              && <PatientsFormSecond action={action} previousPage={this.previousPage} onSubmit={this.nextPage} fetchAddress={fetchAddress} />}
-            {selectedTabIndex === 2
-              && <PatientsFormThird action={action} previousPage={this.previousPage} onSubmit={this.nextPage} />}
-            {selectedTabIndex === 3
-              && <PatientsFormFourth action={action} previousPage={this.previousPage} onSubmit={this.nextPage} />}
+            {action === 'add' && selectedTabIndex === 0 &&
+              <PatientsFormFirst
+                params={params}
+                action={action}
+                onSubmit={this.nextPage}
+                showDayPickerPopup={showDayPickerPopup}
+                form="patientsForm"
+                destroyOnUnmount={false}
+              />
+            }
+            {action === 'add' && selectedTabIndex === 1 &&
+              <PatientsFormSecond
+                params={params}
+                action={action}
+                previousPage={this.previousPage}
+                onSubmit={this.nextPage}
+                fetchAddress={fetchAddress}
+                form="patientsForm"
+                destroyOnUnmount={false}
+              />
+            }
+            {action === 'add' && selectedTabIndex === 2 &&
+              <PatientsFormThird
+                params={params}
+                action={action}
+                previousPage={this.previousPage}
+                onSubmit={this.nextPage}
+                form="patientsForm"
+                destroyOnUnmount={false}
+              />
+            }
+            {action === 'add' && selectedTabIndex === 3 &&
+              <PatientsFormFourth
+                params={params}
+                action={action}
+                previousPage={this.previousPage}
+                fields={
+                  [
+                    'name',
+                    'gender',
+                    'dob',
+                    'idNum',
+                    'idType',
+                    'maritalStatus',
+                    'relationship',
+                    'sameAddress',
+                    'postal',
+                    'unit',
+                    'description',
+                    'region',
+                    'race',
+                    'religion',
+                    'languages',
+                    'mobility',
+                    'diagnosis',
+                    'specialNotes',
+                  ]
+                }
+                onSubmit={this.handleSave(4)}
+                form="patientsForm"
+                destroyOnUnmount={false}
+              />
+            }
+            {action === 'edit' && selectedTabIndex === 0 &&
+              <PatientsFormFirst
+                params={params}
+                action={action}
+                onSubmit={this.handleSave(1)}
+                showDayPickerPopup={showDayPickerPopup}
+                form="patientsFormFirst"
+                destroyOnUnmount={true}
+              />
+            }
+            {action === 'edit' && selectedTabIndex === 1 &&
+              <PatientsFormSecond
+                params={params}
+                action={action}
+                previousPage={this.previousPage}
+                onSubmit={this.handleSave(2)}
+                fetchAddress={fetchAddress}
+                form="patientsFormSecond"
+                destroyOnUnmount={true}
+              />
+            }
+            {action === 'edit' && selectedTabIndex === 2 &&
+              <PatientsFormThird
+                params={params}
+                action={action}
+                previousPage={this.previousPage}
+                onSubmit={this.handleSave(3)}
+                form="patientsFormThird"
+                destroyOnUnmount={true}
+              />
+            }
+            {action === 'edit' && selectedTabIndex === 3 &&
+              <PatientsFormFourth
+                params={params}
+                action={action}
+                previousPage={this.previousPage}
+                fields={
+                  [
+                    'mobility',
+                    'diagnosis',
+                    'specialNotes',
+                  ]
+                }
+                onSubmit={this.handleSave(4)}
+                form="patientsFormFourth"
+                destroyOnUnmount={true}
+              />
+            }
           </div>
         </div>
         <DayPickerPopup title="Date of Birth" />
@@ -76,14 +230,16 @@ class PatientsForm extends Component {
   }
 }
 
-
 PatientsForm.propTypes = {
+  params: React.PropTypes.object,
   action: React.PropTypes.string.isRequired,
 
   user: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
 
+  createPatient: React.PropTypes.func.isRequired,
+  editPatient: React.PropTypes.func.isRequired,
   fetchAddress: React.PropTypes.func.isRequired,
   getPatients: React.PropTypes.func.isRequired,
   showDayPickerPopup: React.PropTypes.func.isRequired,
@@ -100,6 +256,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  createPatient: (params) => dispatch(createPatient(params)),
+  editPatient: (params) => dispatch(editPatient(params)),
   fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
   getPatients: (params) => dispatch(getPatients(params)),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),

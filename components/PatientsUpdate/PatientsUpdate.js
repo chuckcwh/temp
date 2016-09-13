@@ -27,7 +27,7 @@ class PatientsUpdate extends Component {
 
   componentWillReceiveProps(props) {
     if (this.props.action === 'edit') {
-      if (props.user && !this.props.user) {
+      if (props.user !== this.props.user) {
         props.user
           && props.user._id
           && props.getPatients({ userId: props.user._id });
@@ -48,7 +48,7 @@ class PatientsUpdate extends Component {
         form = <PatientsForm action={action} />;
         break;
       case 'edit':
-        form = <PatientsForm action={action} />;
+        form = <PatientsForm params={params} action={action} />;
         patientName = patients && params.patientId && patients[params.patientId] && patients[params.patientId].name;
         break;
       default:

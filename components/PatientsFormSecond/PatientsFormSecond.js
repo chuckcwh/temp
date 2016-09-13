@@ -8,10 +8,10 @@ import s from './PatientsFormSecond.css';
 class PatientsFormSecond extends Component {
 
   componentWillReceiveProps(props) {
-    const { fields: { postalCode } } = this.props;
-    const newPostalCode = props && props.fields && props.fields.postalCode;
-    if (newPostalCode.value.length === 6 && newPostalCode.value !== postalCode.value) {
-      this.props.fetchAddress(newPostalCode.value);
+    const { fields: { postal } } = this.props;
+    const newpostal = props && props.fields && props.fields.postal;
+    if (newpostal.value.length === 6 && newpostal.value !== postal.value) {
+      this.props.fetchAddress(newpostal.value);
     }
   }
 
@@ -19,13 +19,14 @@ class PatientsFormSecond extends Component {
     const {
       fields: {
         sameAddress,
-        postalCode,
-        unitNumber,
-        address,
+        postal,
+        unit,
+        description,
         region,
       },
       invalid,
       handleSubmit,
+      pristine,
       submitFailed,
       submitting,
       previousPage,
@@ -43,26 +44,26 @@ class PatientsFormSecond extends Component {
           <div className="TableRow">
             <div className="TableRowItem1">Postal Code*</div>
             <div className="TableRowItem2">
-              <input type="text" id="postalCode" name="postalCode" {...postalCode} />
-              {postalCode.touched && postalCode.error && <div className={s.patientsFormSecondError}>{postalCode.error}</div>}
+              <input type="text" id="postal" name="postal" {...postal} />
+              {postal.touched && postal.error && <div className={s.patientsFormSecondError}>{postal.error}</div>}
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Unit Number</div>
             <div className="TableRowItem2">
-              <input type="text" id="unitNumber" name="unitNumber" {...unitNumber} />
-              {unitNumber.touched && unitNumber.error && <div className={s.patientsFormSecondError}>{unitNumber.error}</div>}
+              <input type="text" id="unit" name="unit" {...unit} />
+              {unit.touched && unit.error && <div className={s.patientsFormSecondError}>{unit.error}</div>}
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Address*</div>
             <div className="TableRowItem2">
               <textarea
-                name="address"
-                {...address}
-                value={address.value || ''}
+                name="description"
+                {...description}
+                value={description.value || ''}
               />
-              {address.touched && address.error && <div className={s.patientsFormSecondError}>{address.error}</div>}
+              {description.touched && description.error && <div className={s.patientsFormSecondError}>{description.error}</div>}
             </div>
           </div>
           <div className="TableRow">
@@ -81,7 +82,7 @@ class PatientsFormSecond extends Component {
               <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Next</button>
             </div>
           }
-          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>}
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || pristine || submitting}>Save</button>}
         </div>
       </form>
     );
@@ -91,18 +92,18 @@ class PatientsFormSecond extends Component {
 
 const validate = values => {
   const errors = {};
-  if (!values.postalCode) {
-    errors.client_firstName = 'Required';
-  } else if (values.postalCode.length > 6) {
-    errors.postalCode = 'Cannot be more than 6 characters';
+  if (!values.postal) {
+    errors.postal = 'Required';
+  } else if (values.postal.length > 6) {
+    errors.postal = 'Cannot be more than 6 characters';
   }
-  if (values.unitNumber && values.unitNumber.length > 10) {
-    errors.unitNumber = 'Cannot be more than 10 characters';
+  if (values.unit && values.unit.length > 10) {
+    errors.unit = 'Cannot be more than 10 characters';
   }
-  if (!values.address) {
-    errors.address = 'Required';
-  } else if (values.address.length > 50) {
-    errors.address = 'Cannot be more than 50 characters';
+  if (!values.description) {
+    errors.description = 'Required';
+  } else if (values.description.length > 50) {
+    errors.description = 'Cannot be more than 50 characters';
   }
   return errors;
 };
@@ -111,6 +112,7 @@ PatientsFormSecond.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   previousPage: PropTypes.func.isRequired,
@@ -122,34 +124,34 @@ const reduxFormConfig = {
   form: 'patientsForm',
   fields: [
     'sameAddress',
-    'postalCode',
-    'unitNumber',
-    'address',
+    'postal',
+    'unit',
+    'description',
     'region',
   ],
-  destroyOnUnmount: false,
+  // destroyOnUnmount: false,
   validate,
 };
 
-const mapStateToProps = (state) => {
-  const { order } = state;
+const mapStateToProps = (state, ownProps) => {
+  const patientAddress = state.patientsByClient && state.user.data && state.user.data._id && ownProps.params &&
+    ownProps.params.patientId && state.patientsByClient[state.user.data._id] &&
+    state.patientsByClient[state.user.data._id].data &&
+    state.patientsByClient[state.user.data._id].data[ownProps.params.patientId] &&
+    state.patientsByClient[state.user.data._id].data[ownProps.params.patientId].address || {};
+  const {
+    postal,
+    unit,
+    description,
+    region,
+  } = patientAddress;
   return {
+    config: state.config.data,
     initialValues: {
-      // client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // client_firstName: order && order.booker && order.booker.client_firstName || undefined,
-      // client_lastName: order && order.booker && order.booker.client_lastName || undefined,
-      // patient_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // patient_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
-      // patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
-      // patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-      // patient_gender: order && order.booker && order.booker.patient_gender || undefined,
-      // additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
-      // isPatient: order && order.booker && order.booker.isPatient || undefined,
-      // postalCode: order && order.location && order.location.postalCode || undefined,
-      // address: order && order.location && order.location.address || undefined,
-      // unitNumber: order && order.location && order.location.unitNumber || undefined,
+      postal,
+      unit,
+      description,
+      region,
     },
   };
 };

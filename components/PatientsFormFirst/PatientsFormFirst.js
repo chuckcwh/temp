@@ -11,16 +11,17 @@ class PatientsFormFirst extends Component {
   render() {
     const {
       fields: {
-        fullName,
+        name,
         gender,
         dob,
-        IDnum,
-        IDtype,
+        idNum,
+        idType,
         maritalStatus,
         relationship,
       },
       invalid,
       handleSubmit,
+      pristine,
       submitFailed,
       submitting,
       action,
@@ -30,10 +31,10 @@ class PatientsFormFirst extends Component {
       <form className={s.patientsFormFirst} onSubmit={handleSubmit}>
         <div className={s.patientsFormFirstSection}>
           <div className="TableRow">
-            <div className="TableRowItem1">Full Name (as per NRIC)*</div>
+            <div className="TableRowItem1">Full Name (as per IC)*</div>
             <div className="TableRowItem2">
-              <input type="text" id="fullName" name="fullName" {...fullName} />
-              {fullName.touched && fullName.error && <div className={s.patientsFormFirstError}>{fullName.error}</div>}
+              <input type="text" {...name} />
+              {name.touched && name.error && <div className={s.patientsFormFirstError}>{name.error}</div>}
             </div>
           </div>
           <div className="TableRow">
@@ -42,7 +43,7 @@ class PatientsFormFirst extends Component {
               <div className="select">
                 <span></span>
                 <select id="gender" name="gender" {...gender} value={gender.value || ''}>
-                  <option value="">-- Select --</option>
+                  {!gender.value && <option value="">-- Select --</option>}
                   {
                     config && config.genders && config.genders.map((option) => (
                       <option value={option.value} key={option.value}>{option.name}</option>
@@ -57,7 +58,7 @@ class PatientsFormFirst extends Component {
             <div className="TableRowItem1">Date of Birth*</div>
             <div className="TableRowItem2">
               <div className="DateInput">
-                <input type="text" id="dob" name="dob" placeholder="YYYY-MM-DD" {...dob} />
+                <input type="text" placeholder="YYYY-MM-DD" {...dob} />
                 <span onClick={() => this.props.showDayPickerPopup(dob.value, 'patientsForm')}></span>
               </div>
               {dob.touched && dob.error && <div className={s.patientsFormFirstError}>{dob.error}</div>}
@@ -66,8 +67,8 @@ class PatientsFormFirst extends Component {
           <div className="TableRow">
             <div className="TableRowItem1">Identification Number*</div>
             <div className="TableRowItem2">
-              <input type="text" id="IDnum" name="IDnum" placeholder="S1234567A" {...IDnum} />
-              {IDnum.touched && IDnum.error && <div className={s.patientsFormFirstError}>{IDnum.error}</div>}
+              <input type="text" placeholder="S1234567A" {...idNum} />
+              {idNum.touched && idNum.error && <div className={s.patientsFormFirstError}>{idNum.error}</div>}
             </div>
           </div>
           <div className="TableRow">
@@ -75,19 +76,16 @@ class PatientsFormFirst extends Component {
             <div className="TableRowItem2">
               <div className="select">
                 <span></span>
-                <select id="IDtype" name="IDtype" {...IDtype} value={IDtype.value || ''}>
-                  <option value="">-- Select --</option>
-                  <option value="Singapore Pink IC">Singapore Pink IC</option>
-                  <option value="Singapore Blue IC">Singapore Blue IC</option>
-                  <option value="Others">Others</option>
+                <select id="idType" name="idType" {...idType} value={idType.value || ''}>
+                  {!idType.value && <option value="">-- Select --</option>}
                   {
-                    /* input.options.map((option) => (
+                    config && config.idTypes && config.idTypes.map((option) => (
                       <option value={option.value} key={option.value}>{option.name}</option>
-                    )) */
+                    ))
                   }
                 </select>
               </div>
-              {IDtype.touched && IDtype.error && <div className={s.patientsFormFirstError}>{IDtype.error}</div>}
+              {idType.touched && idType.error && <div className={s.patientsFormFirstError}>{idType.error}</div>}
             </div>
           </div>
           <div className="TableRow">
@@ -96,9 +94,9 @@ class PatientsFormFirst extends Component {
               <div className="select">
                 <span></span>
                 <select id="maritalStatus" name="maritalStatus" {...maritalStatus} value={maritalStatus.value || ''}>
-                  <option value="">-- Select --</option>
+                  {!maritalStatus.value && <option value="">-- Select --</option>}
                   {
-                    config && config.maritalStatus && config.maritalStatus.map((option) => (
+                    config && config.maritalStatuses && config.maritalStatuses.map((option) => (
                       <option value={option.value} key={option.value}>{option.name}</option>
                     ))
                   }
@@ -114,23 +112,15 @@ class PatientsFormFirst extends Component {
               <div className="select">
                 <span></span>
                 <select id="relationship" name="relationship" {...relationship} value={relationship.value || ''}>
-                  <option value="">-- Select --</option>
-                  <option value="Spouse">Spouse</option>
-                  <option value="Sibling">Sibling</option>
-                  <option value="Divorced">Divorced</option>
-                  <option value="Widowed">Widowed</option>
-                  <option value="Single">Single</option>
-                  <option value="Married">Married</option>
-                  <option value="Divorced">Divorced</option>
-                  <option value="Widowed">Widowed</option>
+                  {!relationship.value && <option value="">-- Select --</option>}
                   {
-                    /* input.options.map((option) => (
+                    config && config.relationships && config.relationships.map((option) => (
                       <option value={option.value} key={option.value}>{option.name}</option>
-                    )) */
+                    ))
                   }
                 </select>
               </div>
-              {IDtype.touched && IDtype.error && <div className={s.patientsFormFirstError}>{IDtype.error}</div>}
+              {idType.touched && idType.error && <div className={s.patientsFormFirstError}>{idType.error}</div>}
             </div>
           </div>
         </div>
@@ -142,7 +132,7 @@ class PatientsFormFirst extends Component {
               <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Next</button>
             </div>
           }
-          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>}
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || pristine || submitting}>Save</button>}
         </div>
       </form>
     );
@@ -152,10 +142,10 @@ class PatientsFormFirst extends Component {
 
 const validate = values => {
   const errors = {};
-  if (!values.fullName) {
-    errors.fullName = 'Required';
-  } else if (values.fullName.length > 50) {
-    errors.fullName = 'Cannot be more than 50 characters';
+  if (!values.name) {
+    errors.name = 'Required';
+  } else if (values.name.length > 50) {
+    errors.name = 'Cannot be more than 50 characters';
   }
   if (!values.gender) {
     errors.gender = 'Required';
@@ -167,13 +157,13 @@ const validate = values => {
   } else if (moment().isSameOrBefore(values.dob, 'day')) {
     errors.dob = 'Date must be earlier than today';
   }
-  if (!values.IDnum) {
-    errors.IDnum = 'Required';
-  } else if (values.IDnum.length > 9) {
-    errors.IDnum = 'Cannot be more than 9 characters';
+  if (!values.idNum) {
+    errors.idNum = 'Required';
+  } else if (values.idNum.length > 9) {
+    errors.idNum = 'Cannot be more than 9 characters';
   }
-  if (!values.IDtype) {
-    errors.IDtype = 'Required';
+  if (!values.idType) {
+    errors.idType = 'Required';
   }
   return errors;
 };
@@ -182,6 +172,7 @@ PatientsFormFirst.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   showDayPickerPopup: PropTypes.func.isRequired,
@@ -192,38 +183,42 @@ PatientsFormFirst.propTypes = {
 const reduxFormConfig = {
   form: 'patientsForm',
   fields: [
-    'fullName',
+    'name',
     'gender',
     'dob',
-    'IDnum',
-    'IDtype',
+    'idNum',
+    'idType',
     'maritalStatus',
     'relationship',
   ],
-  destroyOnUnmount: false,
+  // destroyOnUnmount: false,
   validate,
 };
 
-const mapStateToProps = (state) => {
-  // const { order } = state;
+const mapStateToProps = (state, ownProps) => {
+  const patient = state.patientsByClient && state.user.data && state.user.data._id && ownProps.params &&
+    ownProps.params.patientId && state.patientsByClient[state.user.data._id] &&
+    state.patientsByClient[state.user.data._id].data &&
+    state.patientsByClient[state.user.data._id].data[ownProps.params.patientId] || {};
+  const {
+    name,
+    gender,
+    dob,
+    idNum,
+    idType,
+    maritalStatus,
+    relationship,
+  } = patient;
   return {
     config: state.config.data,
     initialValues: {
-      // client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // client_firstName: order && order.booker && order.booker.client_firstName || undefined,
-      // client_lastName: order && order.booker && order.booker.client_lastName || undefined,
-      // patient_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // patient_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
-      // patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
-      // patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-      // patient_gender: order && order.booker && order.booker.patient_gender || undefined,
-      // additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
-      // isPatient: order && order.booker && order.booker.isPatient || undefined,
-      // postalCode: order && order.location && order.location.postalCode || undefined,
-      // address: order && order.location && order.location.address || undefined,
-      // unitNumber: order && order.location && order.location.unitNumber || undefined,
+      name,
+      gender,
+      dob: moment(dob).format('YYYY-MM-DD'),
+      idNum,
+      idType,
+      maritalStatus,
+      relationship,
     },
   };
 };

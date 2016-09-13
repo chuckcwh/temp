@@ -1,34 +1,45 @@
 import React, { Component } from 'react';
 import s from './PatientsList.css';
-import { getPatients } from '../../actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Link from '../Link';
 import Container from '../Container';
 import Header from '../Header';
+import ConfirmPopup from '../ConfirmPopup';
 import DashboardTableButton from '../DashboardTableButton';
 import Loader from 'react-loader';
 import FaUser from 'react-icons/lib/fa/user';
 import FaMedkit from 'react-icons/lib/fa/medkit';
 import FaSitemap from 'react-icons/lib/fa/sitemap';
 import FaArrowCircleRight from 'react-icons/lib/fa/arrow-circle-right';
+import { PATIENT_DELETE_SUCCESS, getPatients, deletePatient, showConfirmPopup } from '../../actions';
 import { configToName } from '../../core/util';
 
 class PatientsList extends Component {
 
   componentDidMount() {
-    this.props.client
-      && this.props.client.id
+    this.props.user
+      && this.props.user._id
       && this.props.getPatients({ userId: this.props.user._id });
   }
 
   componentWillReceiveProps(props) {
-    if (props.client && !this.props.client) {
-      props.client
-        && props.client.id
+    if (props.user !== this.props.user) {
+      props.user
+        && props.user.id
         && props.getPatients({ userId: props.user._id });
     }
   }
+
+  handleDelete = (patientId) => () => {
+    this.props.showConfirmPopup(`Are you sure you want to delete patient ${this.props.patients && this.props.patients[patientId] && this.props.patients[patientId].name}?`,
+    () => {
+      this.props.deletePatient({
+        userId: this.props.user._id,
+        patientId: patientId,
+      });
+    });
+  };
 
   render() {
     const { config, patients } = this.props;
@@ -51,15 +62,13 @@ class PatientsList extends Component {
             </div>
             {
               patients && Object.values(patients).map((patient) => {
-                const currentYear = new Date().getFullYear();
-                const age = currentYear - patient.dob.split('-')[0];
                 return (
                   <div className={s.patientBlock} key={patient._id}>
                     <div className={s.patientText}>
                       <h3>{patient.name}</h3>
-                      {patient.gender !== '' && <span>
+                      {patient.gender && <span>
                         <FaUser />
-                        &nbsp;{configToName(config, 'gendersByValue', patient.gender)}, {age} years old
+                        &nbsp;{configToName(config, 'gendersByValue', patient.gender)}, {patient && patient.dob && (new Date().getFullYear() - patient.dob.split('-')[0])} years old
                       </span>}
                       {patient.mainDiagnosis && <span>
                         <FaMedkit /> {patient.mainDiagnosis}
@@ -82,7 +91,7 @@ class PatientsList extends Component {
                       <DashboardTableButton color="green" to={`/patients/${patient._id}`}>
                         <span className={s.patientBtnText}>Edit</span>
                       </DashboardTableButton>
-                      <DashboardTableButton color="red">
+                      <DashboardTableButton color="red" onClick={this.handleDelete(patient._id)}>
                         <span className={s.patientBtnText}>Delete</span>
                       </DashboardTableButton>
                     </div>
@@ -92,6 +101,7 @@ class PatientsList extends Component {
             }
           </Loader>
         </Container>
+        <ConfirmPopup />
       </div>
     );
   }
@@ -105,6 +115,8 @@ PatientsList.propTypes = {
   patientsFetching: React.PropTypes.bool,
 
   getPatients: React.PropTypes.func.isRequired,
+  deletePatient: React.PropTypes.func.isRequired,
+  showConfirmPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -120,6 +132,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getPatients: (params) => dispatch(getPatients(params)),
+  deletePatient: (params) => dispatch(deletePatient(params)),
+  showConfirmPopup: (message, accept) => dispatch(showConfirmPopup(message, accept)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientsList);

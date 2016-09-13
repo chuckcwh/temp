@@ -23,6 +23,7 @@ class PatientsFormThird extends Component {
       },
       invalid,
       handleSubmit,
+      pristine,
       submitFailed,
       submitting,
       previousPage,
@@ -85,7 +86,7 @@ class PatientsFormThird extends Component {
               <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Next</button>
             </div>
           }
-          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>}
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || pristine || submitting}>Save</button>}
         </div>
       </form>
     );
@@ -102,7 +103,7 @@ const validate = values => {
     errors.religion = 'Required';
   }
   if (!values.languages) {
-    errors.religion = 'Required';
+    errors.languages = 'Required';
   }
   return errors;
 };
@@ -111,6 +112,7 @@ PatientsFormThird.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   previousPage: PropTypes.func.isRequired,
@@ -126,30 +128,26 @@ const reduxFormConfig = {
     'religion',
     'languages',
   ],
-  destroyOnUnmount: false,
+  // destroyOnUnmount: false,
   validate,
 };
 
-const mapStateToProps = (state) => {
-  const { order } = state;
+const mapStateToProps = (state, ownProps) => {
+  const patient = state.patientsByClient && state.user.data && state.user.data._id && ownProps.params &&
+    ownProps.params.patientId && state.patientsByClient[state.user.data._id] &&
+    state.patientsByClient[state.user.data._id].data &&
+    state.patientsByClient[state.user.data._id].data[ownProps.params.patientId] || {};
+  const {
+    race,
+    religion,
+    languages,
+  } = patient;
   return {
     config: state.config.data,
     initialValues: {
-      // client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // client_firstName: order && order.booker && order.booker.client_firstName || undefined,
-      // client_lastName: order && order.booker && order.booker.client_lastName || undefined,
-      // patient_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // patient_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
-      // patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
-      // patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-      // patient_gender: order && order.booker && order.booker.patient_gender || undefined,
-      // additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
-      // isPatient: order && order.booker && order.booker.isPatient || undefined,
-      // postalCode: order && order.location && order.location.postalCode || undefined,
-      // address: order && order.location && order.location.address || undefined,
-      // unitNumber: order && order.location && order.location.unitNumber || undefined,
+      race,
+      religion,
+      languages,
     },
   };
 };

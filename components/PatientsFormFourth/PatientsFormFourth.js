@@ -11,15 +11,17 @@ class PatientsFormFourth extends Component {
     const {
       fields: {
         mobility,
-        mainDiagnosis,
+        diagnosis,
         specialNotes,
       },
       invalid,
       handleSubmit,
+      pristine,
       submitFailed,
       submitting,
       previousPage,
       action,
+      config,
     } = this.props;
     return (
       <form className={s.patientsFormFourth} onSubmit={handleSubmit}>
@@ -30,13 +32,11 @@ class PatientsFormFourth extends Component {
               <div className="select">
                 <span></span>
                 <select id="mobility" name="mobility" {...mobility} value={mobility.value || ''}>
-                  <option value="">-- Select --</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
+                  {!mobility.value && <option value="">-- Select --</option>}
                   {
-                    /* input.options.map((option) => (
-                      <option value={option.value}>{option.label}</option>
-                    )) */
+                    config && config.mobilities.map((option) => (
+                      <option value={option.value}>{option.name}</option>
+                    ))
                   }
                 </select>
               </div>
@@ -47,12 +47,12 @@ class PatientsFormFourth extends Component {
             <div className="TableRowItem1">Main Diagnosis</div>
             <div className="TableRowItem2">
               <textarea
-                name="mainDiagnosis"
+                name="diagnosis"
                 placeholder="e.g. Diabetes Type II, Stroke etc."
-                {...mainDiagnosis}
-                value={mainDiagnosis.value || ''}
+                {...diagnosis}
+                value={diagnosis.value || ''}
               />
-              {mainDiagnosis.touched && mainDiagnosis.error && <div className={s.patientsFormFourthError}>{mainDiagnosis.error}</div>}
+              {diagnosis.touched && diagnosis.error && <div className={s.patientsFormFourthError}>{diagnosis.error}</div>}
             </div>
           </div>
           <div className="TableRow">
@@ -60,7 +60,7 @@ class PatientsFormFourth extends Component {
             <div className="TableRowItem2">
               <textarea
                 name="specialNotes"
-                placeholder="Enter information about the patient that you wish to reveal to nurses. Note that all nurses can view this."
+                placeholder="Enter info about the patient that you wish to reveal to the caregiver. Note that all caregivers can view this."
                 {...specialNotes}
                 value={specialNotes.value || ''}
               />
@@ -76,7 +76,7 @@ class PatientsFormFourth extends Component {
               <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>
             </div>
           }
-          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save</button>}
+          {action === 'edit' && <button className="btn btn-primary" type="submit" disabled={invalid || pristine || submitting}>Save</button>}
         </div>
       </form>
     );
@@ -96,6 +96,7 @@ PatientsFormFourth.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   previousPage: PropTypes.func.isRequired,
@@ -104,34 +105,31 @@ PatientsFormFourth.propTypes = {
 
 const reduxFormConfig = {
   form: 'patientsForm',
-  fields: [
-    'mobility',
-    'mainDiagnosis',
-    'specialNotes',
-  ],
-  destroyOnUnmount: false,
+  // fields: [
+  //   'mobility',
+  //   'diagnosis',
+  //   'specialNotes',
+  // ],
+  // destroyOnUnmount: false,
   validate,
 };
 
-const mapStateToProps = (state) => {
-  const { order } = state;
+const mapStateToProps = (state, ownProps) => {
+  const patient = state.patientsByClient && state.user.data && state.user.data._id && ownProps.params &&
+    ownProps.params.patientId && state.patientsByClient[state.user.data._id] &&
+    state.patientsByClient[state.user.data._id].data &&
+    state.patientsByClient[state.user.data._id].data[ownProps.params.patientId] || {};
+  const {
+    mobility,
+    diagnosis,
+    specialNotes,
+  } = patient;
   return {
+    config: state.config.data,
     initialValues: {
-      // client_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // client_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // client_firstName: order && order.booker && order.booker.client_firstName || undefined,
-      // client_lastName: order && order.booker && order.booker.client_lastName || undefined,
-      // patient_contactEmail: order && order.booker && order.booker.client_contactEmail || undefined,
-      // patient_contactNumber: order && order.booker && order.booker.client_contactNumber || undefined,
-      // patient_firstName: order && order.booker && order.booker.patient_firstName || undefined,
-      // patient_lastName: order && order.booker && order.booker.patient_lastName || undefined,
-      // patient_dob: order && order.booker && order.booker.patient_dob || undefined,
-      // patient_gender: order && order.booker && order.booker.patient_gender || undefined,
-      // additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
-      // isPatient: order && order.booker && order.booker.isPatient || undefined,
-      // postalCode: order && order.location && order.location.postalCode || undefined,
-      // address: order && order.location && order.location.address || undefined,
-      // unitNumber: order && order.location && order.location.unitNumber || undefined,
+      mobility,
+      diagnosis,
+      specialNotes,
     },
   };
 };

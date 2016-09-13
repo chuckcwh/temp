@@ -985,6 +985,10 @@ export function editPatient(params) {
   return fetch('editPatient', params);
 }
 
+export function deletePatient(params) {
+  return fetch('deletePatient', params);
+}
+
 export function getSessions(params) {
   return fetch('getSessions', params);
 }

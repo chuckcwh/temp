@@ -34,6 +34,11 @@ class CaseManageAddForm extends Component {
         this.setState({
           userList: res.response.data.length && res.response.data.filter(user => user.role === 'client') || []
         })
+
+        
+        clientName,
+        clientEmail,
+        clientMobile,
       }
     });
   }
@@ -100,23 +105,27 @@ class CaseManageAddForm extends Component {
     const {
       fields: {
         userClass,
+        // ad-hoc
         name,
         email,
         mobile,
+        // registered user
         clientName,
         clientEmail,
         clientMobile,
+        // patient
         patientName,
         patientGender,
         patientDOB,
+        patientNote,
+        patientPostal,
+        patientUnit,
+        patientAddr,
+        // case
         services,
         dates,
         time,
-        postal,
-        unit,
-        addr,
         caseNote,
-        patientNote,
       },
       userClassChoice,
       genderChoice,
@@ -168,71 +177,37 @@ class CaseManageAddForm extends Component {
             <Row className={s.mainCat}>
               <Col xs={12} md={6} className={s.mainCatCol}>
                 {userClass.value === 'Ad-hoc' && (
-                  <div>
-                    <div className={s.mainCatContainer}>
-                      <p>Client Name</p>
-                      <div className={s.inputField}>
-                        <input type="text" className={s.textInput} {...name} />
-                        {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
-                      </div>
-                    </div>
-
-                    <div className={s.mainCatContainer}>
-                      <p>Client Email</p>
-                      <div className={s.inputField}>
-                        <input type="text" className={s.textInput} {...email} />
-                        {email.touched && email.error && <div className={s.formError}>{email.error}</div>}
-                      </div>
+                  <div className={s.mainCatContainer}>
+                    <p>Client Name</p>
+                    <div className={s.inputField}>
+                      <input type="text" className={s.textInput} {...name} />
+                      {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
                     </div>
                   </div>
                 )}
-
-                {/*
                 {userClass.value === 'Registered User' && userList && (
-                  <div>
-                    <div className={s.mainCatContainer}>
-                      <p>Client</p>
-                      <div className={cx("select", s.dateInput)}>
-                        <span></span>
-                        <select className={s.discountTypeInput} id={clientName} name={clientName} {...clientName} onChange={this.onGetPatients} value={clientName.value}>
-                          {userList.map(item => (
-                            <option key={userList.indexOf(item)} value={item._id}>{item.name}</option>
-                          ))}
-                        </select>
-                      </div>
-                      {clientName.touched && clientName.error && <div className={s.formError}>{clientName.error}</div>}
+                  <div className={s.mainCatContainer}>
+                    <p>Client Name</p>
+                    <div className={cx("select", s.dateInput)}>
+                      <span></span>
+                      <select className={s.discountTypeInput} id={clientName} name={clientName} {...clientName} onChange={this.onGetPatients} value={clientName.value}>
+                        {userList.map(item => (
+                          <option key={userList.indexOf(item)} value={item._id}>{item.name}</option>
+                        ))}
+                      </select>
                     </div>
-
-                    <div className={s.mainCatContainer}>
-                      <p>Email</p>
-                      <div className={cx("select", s.dateInput)}>
-                        <span></span>
-                        <select className={s.discountTypeInput} id={name} name={name} {...name} onChange={this.onGetPatients}>
-                          <option value="">-- SELECT --</option>
-                          {userList.map(item => (
-                            <option key={userList.indexOf(item)} value={item._id}>{item.name}</option>
-                          ))}
-                        </select>
-                      </div>
-                      {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
-                    </div>
-
-                    <div className={s.mainCatContainer}>
-                      <p>Mobile Phone</p>
-                      <div className={cx("select", s.dateInput)}>
-                        <span></span>
-                        <select className={s.discountTypeInput} id={name} name={name} {...name} onChange={this.onGetPatients}>
-                          <option value="">-- SELECT --</option>
-                          {userList.map(item => (
-                            <option key={userList.indexOf(item)} value={item._id}>{item.name}</option>
-                          ))}
-                        </select>
-                      </div>
-                      {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
-                    </div>
+                    {clientName.touched && clientName.error && <div className={s.formError}>{clientName.error}</div>}
                   </div>
                 )}
-                */}
+
+                <div className={s.mainCatContainer}>
+                  <p>Client Email</p>
+                  <div className={s.inputField}>
+                    <input type="text" className={s.textInput} {...email} />
+                    {email.touched && email.error && <div className={s.formError}>{email.error}</div>}
+                  </div>
+                </div>
+
               </Col>
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
@@ -306,35 +281,35 @@ class CaseManageAddForm extends Component {
                 */}
 
                 <div className={s.mainCatContainer}>
-                  <p>Patient Postal Code</p>
+                  <p>Patient postal Code</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...postal} />
-                    {postal.touched && postal.error && <div className={s.formError}>{postal.error}</div>}
+                    <input type="text" className={s.textInput} {...patientPostal} />
+                    {patientPostal.touched && patientPostal.error && <div className={s.formError}>{patientPostal.error}</div>}
                   </div>
                 </div>
               </Col>
 
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Patient Unit Number</p>
+                  <p>Patient unit Number</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...unit} />
-                    {unit.touched && unit.error && <div className={s.formError}>{unit.error}</div>}
+                    <input type="text" className={s.textInput} {...patientUnit} />
+                    {patientUnit.touched && patientUnit.error && <div className={s.formError}>{patientUnit.error}</div>}
                   </div>
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Patient Address</p>
+                  <p>Patient address</p>
                   <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="addr" name="addr" placeholder="Enter Address" {...addr} />
-                    {addr.touched && addr.error && <div className={s.formError}>{addr.error}</div>}
+                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" placeholder="Enter patient address" {...patientAddr} />
+                    {patientAddr.touched && patientAddr.error && <div className={s.formError}>{patientAddr.error}</div>}
                   </div>
                 </div>
 
                 <div className={s.mainCatContainer}>
                   <p>Patient Note</p>
                   <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="addr" name="addr" {...patientNote} />
+                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" {...patientNote} />
                     {patientNote.touched && patientNote.error && <div className={s.formError}>{patientNote.error}</div>}
                   </div>
                 </div>
@@ -376,7 +351,7 @@ class CaseManageAddForm extends Component {
                 <div className={s.mainCatContainer}>
                   <p>Case Note</p>
                   <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="addr" name="addr" {...caseNote} />
+                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" {...caseNote} />
                     {caseNote.touched && caseNote.error && <div className={s.formError}>{caseNote.error}</div>}
                   </div>
                 </div>
@@ -439,20 +414,23 @@ const reduxFormConfig = {
     'name',
     'email',
     'mobile',
+    // registered user
     'clientName',
     'clientEmail',
     'clientMobile',
+    // patient
     'patientName',
     'patientGender',
     'patientDOB',
+    'patientNote',
+    'patientPostal',
+    'patientUnit',
+    'patientAddr',
+    // case
     'services',
     'dates',
     'time',
-    'postal',
-    'unit',
-    'addr',
     'caseNote',
-    'patientNote',
   ],
   validate,
 }

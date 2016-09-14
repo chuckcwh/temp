@@ -1,25 +1,64 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import classNames from 'classnames';
+import cx from 'classnames';
 import moment from 'moment';
 import s from './CaseManage.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
-import { getUserName } from '../../core/util';
+import Waypoint from 'react-waypoint';
+// Sub Component
+import CaseManageAddForm from './CaseManageAddForm/CaseManageAddForm';
+
 
 class CaseManage extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentIndex: 0,
+    }
+  }
+
+  _handleWaypointEnter = () => {
+    console.log('enter');
+  };
+
+  _handelWaypointLeave = () => {
+    console.log('leave');
+  };
+
   render() {
+    const { add } = this.props.params;
+    const { user } = this.props;
+
     return (
       <div className="s.case-manage">
         <Header title="Case Manage" />
         <Container>
-          <div>
-            case manage
-          </div>
+
+          {user && add && <CaseManageAddForm />}
+
+          {user && !add && (
+            <div>
+              <Link
+                className={cx('btn', 'btn-primary', s.addLink)}
+                to="/case-manage/add">
+                New Case
+              </Link>
+
+              <div>
+                <Waypoint
+                onEnter={this._handleWaypointEnter}
+                onLeave={this._handleWaypointLeave}
+                />
+              </div>
+            </div>
+          )}
+
         </Container>
       </div>
     );
@@ -27,6 +66,8 @@ class CaseManage extends Component {
 }
 
 CaseManage.propTypes = {
+  onEnter: PropTypes.func,
+  onLeave: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

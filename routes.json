@@ -132,6 +132,10 @@
     "page": "./pages/case-manage"
   },
   {
+    "path": "/case-manage/:add",
+    "page": "./pages/case-manage"
+  },
+  {
     "path": "/users-manage",
     "page": "./pages/users-manage"
   }

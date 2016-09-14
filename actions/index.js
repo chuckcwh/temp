@@ -58,6 +58,10 @@ export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
 export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
 export const USER_CREATE_FAILURE = 'USER_CREATE_FAILURE'
 
+export const USER_LIST_REQUEST = 'USER_LIST_REQUEST'
+export const USER_LIST_SUCCESS = 'USER_LIST_SUCCESS'
+export const USER_LIST_FAILURE = 'USER_LIST_FAILURE'
+
 export const USER_REQUEST = 'USER_REQUEST'
 export const USER_SUCCESS = 'USER_SUCCESS'
 export const USER_FAILURE = 'USER_FAILURE'
@@ -373,6 +377,11 @@ function fetchAction(route) {
       types: [ LOGIN_CLIENT_REQUEST, LOGIN_CLIENT_SUCCESS, LOGIN_CLIENT_FAILURE ],
       endpoint: '/auth/local',
       method: 'post',
+    },
+    getUserList: {
+      types: [ USER_LIST_REQUEST, USER_LIST_SUCCESS, USER_LIST_FAILURE ],
+      endpoint: '/users',
+      method: 'get'
     },
     createUser: {
       types: [ USER_CREATE_REQUEST, USER_CREATE_SUCCESS, USER_CREATE_FAILURE ],
@@ -826,6 +835,10 @@ export function loginClient(params) {
 
 export function createUser(params) {
   return fetch('createUser', params);
+}
+
+export function getUserList(params) {
+  return fetch('getUserList', params);
 }
 
 export function getUser(params) {

@@ -9,7 +9,7 @@ export default class extends Component {
 
   render() {
     return (
-      <CaseManage />
+      <CaseManage {...this.props} />
     );
   }
 

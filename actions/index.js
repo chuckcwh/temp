@@ -345,7 +345,7 @@ function fetchAction(route) {
       types: [ SESSIONS_SUGGESTED_REQUEST, SESSIONS_SUGGESTED_SUCCESS, SESSIONS_SUGGESTED_FAILURE ],
       endpoint: '/sessions/suggested',
       method: 'get',
-      entity: 'sessions'
+      entity: 'suggestedSessions'
     },
     getSession: {
       types: [ SESSION_REQUEST, SESSION_SUCCESS, SESSION_FAILURE ],

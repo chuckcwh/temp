@@ -34,7 +34,7 @@ class DashboardAppointments extends Component {
               <span><strong>Status</strong></span>
               <div className="select">
                 <span></span>
-                <select value={this.state.selectedFilter || ''}>
+                <select onChange={(e) => this.setState({ selectedFilter: e.target.value })} value={this.state.selectedFilter || ''}>
                   <option value="">Show All</option>
                   <option value="pending-visit">Pending Visit</option>
                   <option value="completed">Completed</option>

@@ -225,6 +225,29 @@ const sessionsByUser = (state = {}, action) => {
   }
 }
 
+const suggestedSessions = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: {},
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.SESSIONS_SUGGESTED_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.SESSIONS_SUGGESTED_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: normalize(action.response && action.response.data),
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    default:
+      return state
+  }
+}
+
 const patients = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -485,6 +508,7 @@ const bookingApp = combineReducers({
   session,
   sessionsByUser,
   patientsByClient,
+  suggestedSessions,
   availableSchedules,
   // paypal,
   totalSessionsCount,

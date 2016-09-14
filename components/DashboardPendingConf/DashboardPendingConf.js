@@ -25,7 +25,6 @@ class DashboardPendingConf extends Component {
     const { config, services, patients, sessions, sessionsFetching, sessionsByPatient } = this.props;
     return (
       <div className={s.dashboardPendingConf}>
-
         <Loader className="spinner" loaded={!this.props.sessionsFetching}>
           <Link className={s.dashboardInfoBtn} to="/booking1">Book Appointment</Link>
           <div className={s.cases}>
@@ -88,7 +87,6 @@ class DashboardPendingConf extends Component {
           }
           </div>
         </Loader>
-
       </div>
     );
   }

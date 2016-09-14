@@ -44,7 +44,7 @@ class DashboardOtherCases extends Component {
               <span><strong>Status</strong></span>
               <div className="select">
                 <span></span>
-                <select value={this.state.selectedFilter || ''}>
+                <select onChange={(e) => this.setState({ selectedFilter: e.target.value })} value={this.state.selectedFilter || ''}>
                   <option value="">Show All</option>
                   <option value="cancelled">Cancelled</option>
                   <option value="expired">Expired</option>

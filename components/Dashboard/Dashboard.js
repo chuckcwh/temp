@@ -15,6 +15,8 @@ import DashboardPendingPayment from '../DashboardPendingPayment';
 import DashboardAppointments from '../DashboardAppointments';
 import DashboardAvailableCases from '../DashboardAvailableCases';
 import DashboardOngoingCases from '../DashboardOngoingCases';
+import DashboardCompletedCases from '../DashboardCompletedCases';
+import DashboardOtherCases from '../DashboardOtherCases';
 import { fetchServices, getPatients, getSessions, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import { isClient, isProvider } from '../../core/util';
@@ -197,6 +199,18 @@ class Dashboard extends Component {
           dashboardBody = (
             <div className={s.dashboardBody}>
               <DashboardOngoingCases />
+            </div>
+          )
+        } else if (panelChoice === 'Completed Cases') {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <DashboardCompletedCases />
+            </div>
+          )
+        } else if (panelChoice === 'Other Cases') {
+          dashboardBody = (
+            <div className={s.dashboardBody}>
+              <DashboardOtherCases />
             </div>
           )
         } else {

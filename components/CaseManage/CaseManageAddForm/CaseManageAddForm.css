@@ -57,4 +57,9 @@
     margin: 40px auto 80px;
   }
 
+  & .formError {
+    color: red;
+    text-align: right;
+  }
+
 }

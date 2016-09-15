@@ -6,10 +6,10 @@ import moment from 'moment';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import s from './CaseManageAddForm.css';
-import { reduxForm } from 'redux-form';
+import { reduxForm, change } from 'redux-form';
 import Header from '../../Header';
 import history from '../../../core/history';
-import { showDayPickerPopup, fetchServices, getUserList, getPatients } from '../../../actions';
+import { showDayPickerPopup, fetchServices, getUserList, getPatients, createSession } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import MultiSelect from '../../MultiSelect';
@@ -32,15 +32,63 @@ class CaseManageAddForm extends Component {
     this.props.getUserList().then((res) => {
       if (res.type === 'USER_LIST_SUCCESS') {
         this.setState({
-          userList: res.response.data.length && res.response.data.filter(user => user.role === 'client') || []
+          userList: res.response.data.length && res.response.data.filter(user => user.role === 'client').sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0) || []
         })
-
-        
-        clientName,
-        clientEmail,
-        clientMobile,
       }
     });
+  }
+
+  onSetUserClass = (e) => {
+    e.preventDefault();
+
+    const userClass = e.target.value;
+
+    this.props.resetForm();
+    this.props.changeFieldValue('userClass', userClass);
+  }
+
+  onSetRegUser = (e) => {
+    e.preventDefault();
+
+    const userId = e.target.value;
+
+    this.setState({ patientList: [] });
+    if (userId) {
+      const user = this.state.userList.find(item => item._id === userId);
+      this.props.changeFieldValue('clientNameOrId', user._id);
+      this.props.changeFieldValue('clientEmail', user.email);
+      this.props.changeFieldValue('clientMobile', user.contact);
+
+      this.props.getPatients({ userId }).then((res) => {
+        if (res.type === 'PATIENTS_SUCCESS' && res.response.data.length) {
+          this.setState({
+            patientList: res.response.data,
+            patientListErr: false
+          })
+        } else {
+          this.setState({
+            patientListErr: true
+          })
+        }
+      })
+    }
+  };
+
+  onSetRegUserPatient = (e) => {
+    e.preventDefault();
+
+    const patientId = e.target.value;
+
+    if (patientId) {
+      const patient = this.state.patientList.find(item => item._id === patientId);
+      console.log('patient', patient);
+      this.props.changeFieldValue('patientNameOrId', patient._id);
+      this.props.changeFieldValue('patientGender', patient.gender);
+      this.props.changeFieldValue('patientDOB', moment(patient.dob).format('YYYY-MM-DD'));
+      this.props.changeFieldValue('patientPostal', patient.address && patient.address.postal);
+      this.props.changeFieldValue('patientUnit', patient.address && patient.address.unit);
+      this.props.changeFieldValue('patientAddr', patient.address && patient.address.description);
+    }
   }
 
   onSelectDay = (e, day) => {
@@ -62,20 +110,6 @@ class CaseManageAddForm extends Component {
     const d = DateUtils.clone(day);
     d.setDate(d.getDate() - 1);
     return DateUtils.isPastDay(d);
-  };
-
-  onGetPatients = (e) => {
-    e.preventDefault();
-
-    const userId = e.target.value;
-    this.props.getPatients({ userId }).then((res) => {
-      if (res.type === 'PATIENTS_SUCCESS' && res.response.data.length) {
-        this.setState({
-          patientList: res.response.data || []
-        })
-      }
-    })
-
   };
 
   onSubmit = (values) => {
@@ -105,16 +139,12 @@ class CaseManageAddForm extends Component {
     const {
       fields: {
         userClass,
-        // ad-hoc
-        name,
-        email,
-        mobile,
-        // registered user
-        clientName,
+        // client
+        clientNameOrId,
         clientEmail,
         clientMobile,
         // patient
-        patientName,
+        patientNameOrId,
         patientGender,
         patientDOB,
         patientNote,
@@ -139,7 +169,7 @@ class CaseManageAddForm extends Component {
       submitting,
     } = this.props;
 
-    const { userList, patientList, selectedDates } = this.state;
+    const { userList, patientList, patientListErr, selectedDates } = this.state;
     const flattenServicesChoice = servicesChoice && Object.values(servicesChoice).reduce((result, service) => {
       service.classes.map(serviceClass => {
         result.push({
@@ -160,12 +190,12 @@ class CaseManageAddForm extends Component {
             {/* user type */}
             <Row className={s.mainUser}>
               <Col xs={12} md={12}>
-                <span>User Type&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>User Type*&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <div className={cx("select", s.userType)}>
                   <span></span>
-                  <select className={s.discountTypeInput} id={userClass} name={userClass} {...userClass}>
+                  <select className={s.discountTypeInput} id={userClass} name={userClass} {...userClass} onChange={this.onSetUserClass}>
                     {userClassChoice && userClassChoice.map(item => (
-                      <option key={userClassChoice.indexOf(item)} value={item}>{item}</option>
+                      <option key={userClassChoice.indexOf(item)} value={item.value}>{item.label}</option>
                     ))}
                   </select>
                 </div>
@@ -176,45 +206,47 @@ class CaseManageAddForm extends Component {
             {/* client info */}
             <Row className={s.mainCat}>
               <Col xs={12} md={6} className={s.mainCatCol}>
-                {userClass.value === 'Ad-hoc' && (
+                {userClass.value === 'Registered User' && userList ? (
                   <div className={s.mainCatContainer}>
-                    <p>Client Name</p>
+                    <p>Client Name*</p>
                     <div className={s.inputField}>
-                      <input type="text" className={s.textInput} {...name} />
-                      {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
+                      <div className={cx("select", s.selectInput)}>
+                        <span></span>
+                        <select id={clientNameOrId} name={clientNameOrId} {...clientNameOrId} onChange={this.onSetRegUser}>
+                          <option value="">-- SELECT --</option>
+                          {userList.map(item => (
+                            <option key={userList.indexOf(item)} value={item._id}>{item.name}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
+                    {patientListErr && <div className={s.formError}>This client has no patient</div> || clientNameOrId.touched && clientNameOrId.error && <div className={s.formError}>{clientNameOrId.error}</div>}
                   </div>
-                )}
-                {userClass.value === 'Registered User' && userList && (
+                ) : (
                   <div className={s.mainCatContainer}>
-                    <p>Client Name</p>
-                    <div className={cx("select", s.dateInput)}>
-                      <span></span>
-                      <select className={s.discountTypeInput} id={clientName} name={clientName} {...clientName} onChange={this.onGetPatients} value={clientName.value}>
-                        {userList.map(item => (
-                          <option key={userList.indexOf(item)} value={item._id}>{item.name}</option>
-                        ))}
-                      </select>
+                    <p>Client Name*</p>
+                    <div className={s.inputField}>
+                      <input type="text" className={s.textInput} {...clientNameOrId} />
+                      {clientNameOrId.touched && clientNameOrId.error && <div className={s.formError}>{clientNameOrId.error}</div>}
                     </div>
-                    {clientName.touched && clientName.error && <div className={s.formError}>{clientName.error}</div>}
                   </div>
                 )}
 
                 <div className={s.mainCatContainer}>
-                  <p>Client Email</p>
+                  <p>Client Email*</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...email} />
-                    {email.touched && email.error && <div className={s.formError}>{email.error}</div>}
+                    <input type="text" className={s.textInput} {...clientEmail} disabled={userClass.value === 'Registered User'}/>
+                    {clientEmail.touched && clientEmail.error && <div className={s.formError}>{clientEmail.error}</div>}
                   </div>
                 </div>
 
               </Col>
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Client Mobile</p>
+                  <p>Client Mobile*</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...mobile} />
-                    {mobile.touched && mobile.error && <div className={s.formError}>{mobile.error}</div>}
+                    <input type="text" className={s.textInput} {...clientMobile} disabled={userClass.value === 'Registered User'}/>
+                    {clientMobile.touched && clientMobile.error && <div className={s.formError}>{clientMobile.error}</div>}
                   </div>
                 </div>
               </Col>
@@ -224,19 +256,31 @@ class CaseManageAddForm extends Component {
             <Row className={s.mainCat}>
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Patient Name</p>
+                  <p>Patient Name*</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...patientName} />
-                    {patientName.touched && patientName.error && <div className={s.formError}>{patientName.error}</div>}
+                    {userClass.value === 'Registered User' ? (
+                      <div className={cx("select", s.selectInput)}>
+                        <span></span>
+                        <select id={patientNameOrId} name={patientNameOrId} {...patientNameOrId} onChange={this.onSetRegUserPatient} disabled={!userClass.value === 'Registered User' || !clientNameOrId.value || !patientList}>
+                          <option value="">-- SELECT --</option>
+                          {patientList && patientList.map(item => (
+                            <option key={patientList.indexOf(item)} value={item._id}>{item.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    ) : (
+                      <input type="text" className={s.textInput} {...patientNameOrId} />
+                    )}
                   </div>
+                  {patientNameOrId.touched && patientNameOrId.error && <div className={s.formError}>{patientNameOrId.error}</div>}
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Patient Gender</p>
+                  <p>Patient Gender*</p>
                   <div className={s.inputField}>
                     <div className={cx("select", s.selectInput)}>
                       <span></span>
-                      <select id={patientGender} name={patientGender} {...patientGender} value={patientGender.value}>
+                      <select id={patientGender} name={patientGender} {...patientGender} value={patientGender.value} disabled={userClass.value === 'Registered User'}>
                         <option value="">-- Select --</option>
                         {genderChoice && genderChoice.map(item => (
                           <option key={genderChoice.indexOf(item)} value={item.value}>{item.name}</option>
@@ -247,10 +291,10 @@ class CaseManageAddForm extends Component {
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Patient DOB</p>
+                  <p>Patient DOB*</p>
                   <div className={s.inputField}>
                     <div className={cx("DateInput", s.dateInput)}>
-                      <input className={s.dateInput} type="text" id="patientDOB" name="patientDOB" placeholder="YYYY-MM-DD" {...patientDOB} />
+                      <input className={s.dateInput} type="text" id="patientDOB" name="patientDOB" placeholder="YYYY-MM-DD" {...patientDOB} disabled={userClass.value === 'Registered User'}/>
                       <span onClick={() => this.props.showDayPickerPopup(patientDOB.value, 'caseManageAddForm')}>
                         </span>
                       </div>
@@ -258,40 +302,19 @@ class CaseManageAddForm extends Component {
                   </div>
                 </div>
 
-                {/*
-                {patientList ? (
-                  <div className={s.mainCatContainer}>
-                    <p>Patient</p>
-                    <div className={cx("select", s.dateInput)}>
-                      <span></span>
-                      <select className={s.discountTypeInput} id={patientName} name={patientName} {...patientName}>
-                        <option value="">-- SELECT --</option>
-                        {patientList.map(item => (
-                          <option key={patientList.indexOf(item)} value={item._id}>{item.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    {patientName.touched && patientName.error && <div className={s.formError}>{patientName.error}</div>}
-                  </div>
-                ) : (
-                  <div className={s.mainCatContainer}>
-                    <p>This user has no patients.</p>
-                  </div>
-                )}
-                */}
+              </Col>
 
+              <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Patient postal Code</p>
+                  <p>Patient postal Code*</p>
                   <div className={s.inputField}>
                     <input type="text" className={s.textInput} {...patientPostal} />
                     {patientPostal.touched && patientPostal.error && <div className={s.formError}>{patientPostal.error}</div>}
                   </div>
                 </div>
-              </Col>
 
-              <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Patient unit Number</p>
+                  <p>Patient unit Number*</p>
                   <div className={s.inputField}>
                     <input type="text" className={s.textInput} {...patientUnit} />
                     {patientUnit.touched && patientUnit.error && <div className={s.formError}>{patientUnit.error}</div>}
@@ -299,7 +322,7 @@ class CaseManageAddForm extends Component {
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Patient address</p>
+                  <p>Patient address*</p>
                   <div className={s.inputField}>
                     <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" placeholder="Enter patient address" {...patientAddr} />
                     {patientAddr.touched && patientAddr.error && <div className={s.formError}>{patientAddr.error}</div>}
@@ -320,7 +343,7 @@ class CaseManageAddForm extends Component {
             <Row className={s.mainCat}>
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Services Required</p>
+                  <p>Services Required*</p>
                   <div className={s.inputField}>
                     <div className={cx("select", s.selectInput)}>
                       <span></span>
@@ -336,7 +359,7 @@ class CaseManageAddForm extends Component {
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Time Required</p>
+                  <p>Time Required*</p>
                   <div className={s.inlineField}>
                     {timeChoice.map(item => (
                       <div>
@@ -358,7 +381,7 @@ class CaseManageAddForm extends Component {
               </Col>
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Date Required</p>
+                  <p>Date Required*</p>
                   <div className="text-center">
                     <DayPicker
                       numberOfMonths={1}
@@ -398,6 +421,10 @@ class CaseManageAddForm extends Component {
 const validate = values => {
   const errors = {};
 
+  // if (values.userClass === 'Registered User' && values.clientNameOrId && patientList) {
+  //   errors.clientNameOrId = 'The user has no patient.';
+  // }
+
   return errors
 }
 
@@ -410,16 +437,12 @@ const reduxFormConfig = {
   form: 'caseManageAddForm',
   fields: [
     'userClass',
-    // ad-hoc
-    'name',
-    'email',
-    'mobile',
-    // registered user
-    'clientName',
+    // client
+    'clientNameOrId',
     'clientEmail',
     'clientMobile',
     // patient
-    'patientName',
+    'patientNameOrId',
     'patientGender',
     'patientDOB',
     'patientNote',
@@ -437,7 +460,7 @@ const reduxFormConfig = {
 
 const mapStateToProps = (state) => {
   const user = state.user.data;
-  const userClassChoice = ['Ad-hoc', 'Registered User'];
+  const userClassChoice = [{label: 'Ad-hoc', value: 'Ad-hoc'}, {label: 'Registered User', value: 'Registered User'}];
   const timeChoice = [{label: 'Morning', value: 'morning'}, {label: 'Afternoon', value: 'afternoon'}, {label: 'Evening', value: 'evening'}];
 
   return {
@@ -457,6 +480,9 @@ const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   getUserList: () => dispatch(getUserList()),
   getPatients: (params) => dispatch(getPatients(params)),
+  createSession: (params) => dispatch(createSession(params)),
+  resetForm: () => dispatch(reset('caseManageAddForm')),
+  changeFieldValue: (field, value) => dispatch(change('caseManageAddForm', field, value)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(CaseManageAddForm);

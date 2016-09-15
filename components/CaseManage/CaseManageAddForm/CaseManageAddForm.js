@@ -114,6 +114,18 @@ class CaseManageAddForm extends Component {
 
   onSubmit = (values) => {
     console.log('values', values);
+    const a = {
+      service: values.service && values.services.split(':')[0],
+      serviceClassId: values.service && values.services.split(':')[1],
+      timeSlot: values.time,
+      date: this.state.selectedDates[0],   // backend only accept 1 date now
+      additionalInfo: this.state.caseNote,
+
+    }
+    console.log('a', a)
+    return new Promise((resolve, reject) => {
+      this.props.createSession(a)
+    })
     // return new Promise((resolve, reject) => [
     //   this.props.createPromo({
     //     code: values.code,

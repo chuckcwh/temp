@@ -117,7 +117,7 @@ class CaseManageAddForm extends Component {
     // return new Promise((resolve, reject) => [
     //   this.props.createPromo({
     //     code: values.code,
-    //     services: values.services,
+    //     service: values.service,
     //     name: values.name,
     //     description: values.description,
     //     date: {
@@ -152,14 +152,13 @@ class CaseManageAddForm extends Component {
         patientUnit,
         patientAddr,
         // case
-        services,
-        dates,
+        service,
         time,
         caseNote,
       },
       userClassChoice,
       genderChoice,
-      servicesChoice,
+      serviceChoice,
       timeChoice,
       showDayPickerPopup,
 
@@ -170,7 +169,7 @@ class CaseManageAddForm extends Component {
     } = this.props;
 
     const { userList, patientList, patientListErr, selectedDates } = this.state;
-    const flattenServicesChoice = servicesChoice && Object.values(servicesChoice).reduce((result, service) => {
+    const flattenServiceChoice = serviceChoice && Object.values(serviceChoice).reduce((result, service) => {
       service.classes.map(serviceClass => {
         result.push({
           name: `${service.name} (${parseFloat(serviceClass.duration)} hr${parseFloat(service.duration) > 1 ? 's' : ''})`,
@@ -343,18 +342,18 @@ class CaseManageAddForm extends Component {
             <Row className={s.mainCat}>
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
-                  <p>Services Required*</p>
+                  <p>Service Required*</p>
                   <div className={s.inputField}>
                     <div className={cx("select", s.selectInput)}>
                       <span></span>
-                      <select id={patientGender} name={patientGender} {...patientGender} value={patientGender.value}>
+                      <select id={service} name={service} {...service} value={service.value}>
                         <option value="">-- Select --</option>
-                        {flattenServicesChoice && flattenServicesChoice.map(item => (
-                          <option key={flattenServicesChoice.indexOf(item)} value={item.value}>{item.name}</option>
+                        {flattenServiceChoice && flattenServiceChoice.map(item => (
+                          <option key={flattenServiceChoice.indexOf(item)} value={item.value}>{item.name}</option>
                         ))}
                       </select>
                     </div>
-                    {services.touched && services.error && <div className={s.formError}>{services.error}</div>}
+                    {service.touched && service.error && <div className={s.formError}>{service.error}</div>}
                   </div>
                 </div>
 
@@ -401,7 +400,6 @@ class CaseManageAddForm extends Component {
                       ))
                     }
                   </div>
-                  {dates.touched && dates.error && <div className={s.formError}>{dates.error}</div>}
                 </div>
               </Col>
             </Row>
@@ -410,7 +408,7 @@ class CaseManageAddForm extends Component {
 
           <div className={s.formSectionSubmit}>
             {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
-            <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save Changes</button>
+            <button className="btn btn-primary" type="submit" disabled={invalid || submitting || !selectedDates.length}>Save Changes</button>
           </div>
         </form>
       </div>
@@ -421,15 +419,57 @@ class CaseManageAddForm extends Component {
 const validate = values => {
   const errors = {};
 
-  // if (values.userClass === 'Registered User' && values.clientNameOrId && patientList) {
-  //   errors.clientNameOrId = 'The user has no patient.';
-  // }
+  if (!values.clientNameOrId) {
+    errors.clientNameOrId = 'Required';
+  }
+
+  if (values.userClass === 'Ad-hoc' && !values.clientEmail) {
+    errors.clientEmail = 'Required';
+  }
+
+  if (values.userClass === 'Ad-hoc' && !values.clientMobile) {
+    errors.clientMobile = 'Required';
+  }
+
+  if (!values.patientNameOrId) {
+    errors.patientNameOrId = 'Required';
+  }
+
+  if (values.userClass === 'Ad-hoc' && !values.patientGender) {
+    errors.patientGender = 'Required';
+  }
+
+  if (values.userClass === 'Ad-hoc' && !values.patientDOB) {
+    errors.patientDOB = 'Required';
+  }
+
+  if (!values.patientPostal) {
+    errors.patientPostal = 'Required';
+  } else if (!/^[0-9]{6}$/i.test(values.patientPostal)) {
+    errors.patientPostal = 'Invalid postal code (e.g. 123456)';
+  }
+
+  if (!values.patientUnit) {
+    errors.patientUnit = 'Required';
+  }
+
+  if (!values.patientAddr) {
+    errors.patientAddr = 'Required';
+  }
+
+  if (!values.service) {
+    errors.service = 'Required';
+  }
+
+  if (!values.time) {
+    errors.time = 'Required';
+  }
 
   return errors
 }
 
 CaseManageAddForm.propTypes = {
-  servicesChoice: React.PropTypes.object,
+  serviceChoice: React.PropTypes.object,
   fetchServices: React.PropTypes.func,
 };
 
@@ -450,8 +490,7 @@ const reduxFormConfig = {
     'patientUnit',
     'patientAddr',
     // case
-    'services',
-    'dates',
+    'service',
     'time',
     'caseNote',
   ],
@@ -465,10 +504,10 @@ const mapStateToProps = (state) => {
 
   return {
     initialValues: {
-      userClass: userClassChoice[0],
+      userClass: userClassChoice[0].value,
     },
     genderChoice: state.config.data && state.config.data.genders,
-    servicesChoice: state.services.data,
+    serviceChoice: state.services.data,
     userClassChoice,
     timeChoice,
     user,

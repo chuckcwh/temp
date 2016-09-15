@@ -872,6 +872,23 @@ const bookingApp = combineReducers({
           return state;
       }
     },
+    caseManageAddForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'caseManageAddForm') {
+            return {
+              ...state,
+              patientDOB: {
+                ...state.patientDOB,
+                value: action.value
+              }
+            }
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
   })
 });
 

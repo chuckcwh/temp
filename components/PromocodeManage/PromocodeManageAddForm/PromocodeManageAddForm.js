@@ -49,8 +49,6 @@ class PromocodeManageAddForm extends Component {
   };
 
   onSubmit = (values) => {
-    console.log('values', values);
-
     const serviceReturn = values.services && values.services.split(',').map(service => {
       const q = service.split(':');
       return {id: q[0], classId: q[1]}
@@ -58,23 +56,21 @@ class PromocodeManageAddForm extends Component {
 
     const regionReturn = values.regions && values.regions.split(',');
 
-    const a = {
-      code: values.code,
-      services: serviceReturn || [], // need to be splitted into id & value
-      name: values.name,
-      description: values.description,
-      date: {
-        dateTimeStart: values.startDate,
-        dateTimeEnd: values.endDate,
-        voidDates: this.state.selectedDates || []
-      },
-      regions: regionReturn || [],
-      discountRate: +(values.discountRate),
-      discountType: values.discountType,
-    };
-    console.log('a', a);
     return new Promise((resolve, reject) => [
-      this.props.createPromo(a).then((res) => {
+      this.props.createPromo({
+        code: values.code,
+        services: serviceReturn || [],
+        name: values.name,
+        description: values.description,
+        date: {
+          dateTimeStart: values.startDate,
+          dateTimeEnd: values.endDate,
+          voidDates: this.state.selectedDates || []
+        },
+        regions: regionReturn || [],
+        discountRate: +(values.discountRate),
+        discountType: values.discountType,
+      }).then((res) => {
         if (res.type === 'CREATE_PROMO_SUCCESS') {
           this.props.resetForm();
         }

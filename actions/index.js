@@ -219,9 +219,9 @@ export const USER_SCHEDULE_EDIT_REQUEST = 'USER_SCHEDULE_EDIT_REQUEST'
 export const USER_SCHEDULE_EDIT_SUCCESS = 'USER_SCHEDULE_EDIT_SUCCESS'
 export const USER_SCHEDULE_EDIT_FAILURE = 'USER_SCHEDULE_EDIT_FAILURE'
 
-export const USER_CREDITS_DEPOSIT_REQUEST = 'USER_CREDITS_DEPOSIT_REQUEST'
-export const USER_CREDITS_DEPOSIT_SUCCESS = 'USER_CREDITS_DEPOSIT_SUCCESS'
-export const USER_CREDITS_DEPOSIT_FAILURE = 'USER_CREDITS_DEPOSIT_FAILURE'
+export const USER_CREDITS_TOPUP_REQUEST = 'USER_CREDITS_TOPUP_REQUEST'
+export const USER_CREDITS_TOPUP_SUCCESS = 'USER_CREDITS_TOPUP_SUCCESS'
+export const USER_CREDITS_TOPUP_FAILURE = 'USER_CREDITS_TOPUP_FAILURE'
 
 export const USER_CREDITS_WITHDRAW_REQUEST = 'USER_CREDITS_WITHDRAW_REQUEST'
 export const USER_CREDITS_WITHDRAW_SUCCESS = 'USER_CREDITS_WITHDRAW_SUCCESS'
@@ -606,9 +606,9 @@ function fetchAction(route) {
       endpoint: '/users/:userId/schedules/:scheduleId',
       method: 'put'
     },
-    depositCredits: {
-      types: [ USER_CREDITS_DEPOSIT_REQUEST, USER_CREDITS_DEPOSIT_SUCCESS, USER_CREDITS_DEPOSIT_FAILURE ],
-      endpoint: '/users/:userId/depositCredits',
+    topupCredits: {
+      types: [ USER_CREDITS_TOPUP_REQUEST, USER_CREDITS_TOPUP_SUCCESS, USER_CREDITS_TOPUP_FAILURE ],
+      endpoint: '/users/:userId/topupCredits',
       method: 'post'
     },
     withdrawCredits: {
@@ -1026,8 +1026,8 @@ export function getUserWithToken(params) {
   return fetch('getUserWithToken', params);
 }
 
-export function depositCredits(params) {
-  return fetch('depositCredits', params);
+export function topupCredits(params) {
+  return fetch('topupCredits', params);
 }
 
 export function withdrawCredits(params) {

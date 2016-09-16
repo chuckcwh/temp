@@ -29,7 +29,7 @@ class Account extends Component {
   }
 
   componentDidMount() {
-    if (this.props.booking && this.props.booking._id && !this.props.booking.adhocClient.isVerified) {
+    if (this.props.booking && this.props.booking._id && this.props.booking.adhocClient && !this.props.booking.adhocClient.isVerified) {
       this.props.showVerifyBookingPopup(this.props.booking._id);
     }
   }
@@ -39,7 +39,7 @@ class Account extends Component {
       bid: props.bid || this.state.bid,
       btoken: props.contact || this.state.btoken,
     });
-    if (props.booking && props.booking !== this.props.booking && props.booking._id && !props.booking.adhocClient.isVerified) {
+    if (props.booking && props.booking !== this.props.booking && props.booking._id && props.booking.adhocClient && !props.booking.adhocClient.isVerified) {
       this.props.showVerifyBookingPopup(props.booking._id);
     }
   }

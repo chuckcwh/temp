@@ -1,3 +1,8 @@
 @import '../variables.css';
 
-/* .bookingApp {} */
+
+.promocodeManage {
+  & .addLink {
+    text-align: right;
+  }
+}

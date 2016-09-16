@@ -8,7 +8,6 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
-import Waypoint from 'react-waypoint';
 // Sub Component
 import CaseManageAddForm from './CaseManageAddForm/CaseManageAddForm';
 
@@ -22,14 +21,6 @@ class CaseManage extends Component {
       currentIndex: 0,
     }
   }
-
-  _handleWaypointEnter = () => {
-    console.log('enter');
-  };
-
-  _handelWaypointLeave = () => {
-    console.log('leave');
-  };
 
   render() {
     const { add } = this.props.params;
@@ -49,13 +40,6 @@ class CaseManage extends Component {
                 to="/case-manage/add">
                 New Case
               </Link>
-
-              <div>
-                <Waypoint
-                onEnter={this._handleWaypointEnter}
-                onLeave={this._handleWaypointLeave}
-                />
-              </div>
             </div>
           )}
 

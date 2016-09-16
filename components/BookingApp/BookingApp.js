@@ -21,7 +21,6 @@ import BookingSidebar from '../BookingSidebar';
 import BookingPostSidebar from '../BookingPostSidebar';
 import BookingDetails from '../BookingDetails';
 import Account from '../Account';
-import AlertPopup from '../AlertPopup';
 import LoginPopup from '../LoginPopup';
 import { getBooking, getUserWithToken, setPostStatus } from '../../actions';
 import history from '../../core/history';
@@ -224,7 +223,6 @@ class BookingApp extends Component {
     return (
       <div className="BookingApp">
         {component}
-        <AlertPopup />
         <LoginPopup />
       </div>
     );

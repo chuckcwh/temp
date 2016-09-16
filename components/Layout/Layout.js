@@ -3,6 +3,7 @@ import '../../assets/fonts/proxima-nova.css';
 import s from './Layout.css';
 import Navigation from '../Navigation';
 import Footer from '../Footer';
+import AlertPopup from '../AlertPopup';
 import history from '../../core/history';
 
 const Layout = (props) => {
@@ -13,6 +14,7 @@ const Layout = (props) => {
         <div className={s.body}>
           {props.children}
         </div>
+        <AlertPopup />
       </div>
     );
   }
@@ -23,6 +25,7 @@ const Layout = (props) => {
         {props.children}
       </div>
       <Footer />
+      <AlertPopup />
     </div>
   );
 };

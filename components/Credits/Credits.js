@@ -99,16 +99,6 @@ class Credits extends Component {
                   );
                 }
               })()}
-            { /*
-              {selectedTabIndex === 0
-                && <CreditsFirst action={action} onSubmit={this.nextPage} showDayPickerPopup={showDayPickerPopup} />}
-              {selectedTabIndex === 1
-                && <CreditsSecond action={action} previousPage={this.previousPage} onSubmit={this.nextPage} fetchAddress={fetchAddress} />}
-              {selectedTabIndex === 2
-                && <CreditsThird action={action} previousPage={this.previousPage} onSubmit={this.nextPage} languages={languages} />}
-              {selectedTabIndex === 3
-                && <CreditsFourth action={action} previousPage={this.previousPage} onSubmit={this.nextPage} />}
-            */ }
             </div>
           </div>
         </Container>

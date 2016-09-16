@@ -1,15 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import cx from 'classnames';
 import s from './CreditsWithdrawBankForm.css';
 
 class CreditsWithdrawBankForm extends Component {
 
   render() {
     const {
-      fields: { bank, branch, acctno },
+      fields: { bankCode, branchCode, acctNum },
       invalid,
       handleSubmit,
+      pristine,
       submitFailed,
       submitting,
     } = this.props;
@@ -19,28 +19,28 @@ class CreditsWithdrawBankForm extends Component {
           <div className="TableRow">
             <div className="TableRowItem1">Bank*</div>
             <div className="TableRowItem2">
-              <input type="text" {...bank} />
-              {bank.touched && bank.error && <div className={s.creditsWithdrawBankFormError}>{bank.error}</div>}
+              <input type="text" {...bankCode} />
+              {bankCode.touched && bankCode.error && <div className={s.creditsWithdrawBankFormError}>{bankCode.error}</div>}
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Branch No.*</div>
             <div className="TableRowItem2">
-              <input type="text" {...branch} />
-              {branch.touched && branch.error && <div className={s.creditsWithdrawBankFormError}>{branch.error}</div>}
+              <input type="text" {...branchCode} />
+              {branchCode.touched && branchCode.error && <div className={s.creditsWithdrawBankFormError}>{branchCode.error}</div>}
             </div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Bank Account No.*</div>
             <div className="TableRowItem2">
-              <input type="text" placeholder="Omit dashes" {...acctno} />
-              {acctno.touched && acctno.error && <div className={s.creditsWithdrawBankFormError}>{acctno.error}</div>}
+              <input type="text" placeholder="Omit dashes" {...acctNum} />
+              {acctNum.touched && acctNum.error && <div className={s.creditsWithdrawBankFormError}>{acctNum.error}</div>}
             </div>
           </div>
         </div>
         <div className={s.creditsWithdrawBankFormSection}>
           {submitFailed && invalid && <div className={s.creditsWithdrawBankFormError}>You have one or more form field errors.</div>}
-          <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Update</button>
+          <button className="btn btn-primary" type="submit" disabled={invalid || pristine || submitting}>Update</button>
         </div>
       </form>
     );
@@ -50,23 +50,18 @@ class CreditsWithdrawBankForm extends Component {
 
 const validate = values => {
   const errors = {};
-  // if (!values.postalCode) {
-  //   errors.postalCode = 'Required';
-  // } else if (!/^[0-9]{6}$/i.test(values.postalCode)) {
-  //   errors.postalCode = 'Invalid postal code (e.g. 123456)';
-  // }
-  if (!values.bank) {
-    errors.bank = 'Required';
+  if (!values.bankCode) {
+    errors.bankCode = 'Required';
   }
-  if (!values.branch) {
-    errors.branch = 'Required';
-  } else if (!/\d+/i.test(values.branch)) {
-    errors.branch = 'Invalid branch number';
+  if (!values.branchCode) {
+    errors.branchCode = 'Required';
+  } else if (!/\d+/i.test(values.branchCode)) {
+    errors.branchCode = 'Invalid branch number';
   }
-  if (!values.acctno) {
-    errors.acctno = 'Required';
-  } else if (!/\d+/i.test(values.acctno)) {
-    errors.branch = 'Invalid branch number';
+  if (!values.acctNum) {
+    errors.acctNum = 'Required';
+  } else if (!/\d+/i.test(values.acctNum)) {
+    errors.acctNum = 'Invalid account number';
   }
   return errors;
 };
@@ -75,26 +70,25 @@ CreditsWithdrawBankForm.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  // showLoginPopup: PropTypes.func.isRequired,
-  // fetchAddress: PropTypes.func.isRequired,
-  // onNext: PropTypes.func.isRequired,
 };
 
 const reduxFormConfig = {
   form: 'creditsWithdrawBankForm',
-  fields: ['bank', 'branch', 'acctno'],
+  fields: ['bankCode', 'branchCode', 'acctNum'],
+  destroyOnUnmount: true,
   validate,
 };
 
 const mapStateToProps = (state) => {
-  const { order } = state;
+  const { user } = state;
   return {
     initialValues: {
-      // postalCode: order && order.location && order.location.postalCode || undefined,
-      // address: order && order.location && order.location.address || undefined,
-      // unitNumber: order && order.location && order.location.unitNumber || undefined,
+      bankCode: user && user.data && user.data.bankDetails && user.data.bankDetails.bankCode || undefined,
+      branchCode: user && user.data && user.data.bankDetails && user.data.bankDetails.branchCode || undefined,
+      acctNum: user && user.data && user.data.bankDetails && user.data.bankDetails.acctNum || undefined,
     },
   };
 };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import s from './CreditsWithdraw.css';
-import { } from '../../actions';
+import { USER_EDIT_SUCCESS, USER_CREDITS_WITHDRAW_SUCCESS, editUser, withdrawCredits, showAlertPopup } from '../../actions';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import moment from 'moment';
@@ -24,6 +24,37 @@ class CreditsWithdraw extends Component {
     // this.props.fetchLanguages();
   }
 
+  handleUpdateBankDetails = (values) => {
+    return new Promise((resolve, reject) => {
+      this.props.editUser({
+        userId: this.props.user._id,
+        bankDetails: { ...values },
+      }).then(res => {
+        if (res && res.type === USER_EDIT_SUCCESS) {
+          this.props.showAlertPopup('You have successfully updated your bank details.');
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    });
+  };
+
+  handleWithdrawCredits = (values) => {
+    return new Promise((resolve, reject) => {
+      this.props.withdrawCredits({
+        value: values.withdrawAmt,
+      }).then(res => {
+        if (res && res.type === USER_CREDITS_WITHDRAW_SUCCESS) {
+          this.props.showAlertPopup(`You have successfully submitted a request to withdraw.`);
+          resolve();
+        } else {
+          reject();
+        }
+      })
+    });
+  }
+
   render() {
     const { user } = this.props;
     const transactions = null;
@@ -31,11 +62,15 @@ class CreditsWithdraw extends Component {
       <div className={s.creditsWithdraw}>
         <div className={s.creditsWithdrawSection}>
           <h2>Bank Details</h2>
-          <CreditsWithdrawBankForm />
+          <CreditsWithdrawBankForm
+            onSubmit={this.handleUpdateBankDetails}
+          />
         </div>
         <div className={s.creditsWithdrawSection}>
           <h2>Withdraw Credits</h2>
-          <CreditsWithdrawAmountForm />
+          <CreditsWithdrawAmountForm
+            onSubmit={this.handleWithdrawCredits}
+          />
         </div>
       </div>
     );
@@ -45,20 +80,17 @@ class CreditsWithdraw extends Component {
 
 CreditsWithdraw.propTypes = {
   user: React.PropTypes.object,
-  client: React.PropTypes.object,
-  nurse: React.PropTypes.object,
 
   // fetchLanguages: React.PropTypes.func.isRequired,
   // fetchAddress: React.PropTypes.func.isRequired,
   // getPatients: React.PropTypes.func.isRequired,
   // showDayPickerPopup: React.PropTypes.func.isRequired,
+  editUser: React.PropTypes.func.isRequired,
+  showAlertPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  languages: state.languages.data,
   user: state.user.data,
-  client: state.user.data && state.user.data.clients && state.user.data.clients.length && state.user.data.clients[0],
-  nurse: state.user.data && state.user.data.nurses && state.user.data.nurses.length && state.user.data.nurses[0],
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -66,6 +98,8 @@ const mapDispatchToProps = (dispatch) => ({
   // fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
   // getPatients: (params) => dispatch(getPatients(params)),
   // showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
+  editUser: (params) => dispatch(editUser(params)),
+  showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditsWithdraw);

@@ -10,6 +10,7 @@ class CreditsWithdrawAmountForm extends Component {
       fields: { withdrawAmt },
       invalid,
       handleSubmit,
+      pristine,
       submitFailed,
       submitting,
     } = this.props;
@@ -26,7 +27,7 @@ class CreditsWithdrawAmountForm extends Component {
         </div>
         <div className={s.creditsWithdrawAmountFormSection}>
           {submitFailed && invalid && <div className={s.creditsWithdrawAmountFormError}>You have one or more form field errors.</div>}
-          <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Withdraw</button>
+          <button className="btn btn-primary" type="submit" disabled={invalid || pristine || submitting}>Withdraw</button>
         </div>
       </form>
     );
@@ -48,6 +49,7 @@ CreditsWithdrawAmountForm.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   // showLoginPopup: PropTypes.func.isRequired,
@@ -58,6 +60,7 @@ CreditsWithdrawAmountForm.propTypes = {
 const reduxFormConfig = {
   form: 'creditsWithdrawAmountForm',
   fields: ['withdrawAmt'],
+  destroyOnUnmount: true,
   validate,
 };
 

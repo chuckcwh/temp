@@ -291,6 +291,10 @@ export function isProvider(user) {
   return user && user.role === 'provider';
 }
 
+export function isActivatedProvider(user) {
+  return user && user.role === 'provider' && user.pinVerified && user.providerStatus.hasPassedInterview;
+}
+
 export function getUserName(user) {
   return user && user.name;
 }

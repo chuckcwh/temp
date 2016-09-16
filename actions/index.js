@@ -58,9 +58,9 @@ export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
 export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
 export const USER_CREATE_FAILURE = 'USER_CREATE_FAILURE'
 
-export const USER_LIST_REQUEST = 'USER_LIST_REQUEST'
-export const USER_LIST_SUCCESS = 'USER_LIST_SUCCESS'
-export const USER_LIST_FAILURE = 'USER_LIST_FAILURE'
+export const USERS_REQUEST = 'USERS_REQUEST'
+export const USERS_SUCCESS = 'USERS_SUCCESS'
+export const USERS_FAILURE = 'USERS_FAILURE'
 
 export const USER_REQUEST = 'USER_REQUEST'
 export const USER_SUCCESS = 'USER_SUCCESS'
@@ -243,6 +243,10 @@ export const AVAILABLE_SCHEDULES_REQUEST = 'AVAILABLE_SCHEDULES_REQUEST'
 export const AVAILABLE_SCHEDULES_SUCCESS = 'AVAILABLE_SCHEDULES_SUCCESS'
 export const AVAILABLE_SCHEDULES_FAILURE = 'AVAILABLE_SCHEDULES_FAILURE'
 
+export const PROMOS_REQUEST = 'PROMOS_REQUEST'
+export const PROMOS_SUCCESS = 'PROMOS_SUCCESS'
+export const PROMOS_FAILURE = 'PROMOS_FAILURE'
+
 export const PROMO_REQUEST = 'PROMO_REQUEST'
 export const PROMO_SUCCESS = 'PROMO_SUCCESS'
 export const PROMO_FAILURE = 'PROMO_FAILURE'
@@ -378,8 +382,8 @@ function fetchAction(route) {
       endpoint: '/auth/local',
       method: 'post',
     },
-    getUserList: {
-      types: [ USER_LIST_REQUEST, USER_LIST_SUCCESS, USER_LIST_FAILURE ],
+    getUsers: {
+      types: [ USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE ],
       endpoint: '/users',
       method: 'get'
     },
@@ -600,6 +604,11 @@ function fetchAction(route) {
       endpoint: '/users/schedules/available',
       method: 'get',
       entity: 'availableSchedules'
+    },
+    getPromos: {
+      types: [ PROMOS_REQUEST, PROMOS_SUCCESS, PROMOS_FAILURE ],
+      endpoint: '/promos',
+      method: 'get',
     },
     getPromo: {
       types: [ PROMO_REQUEST, PROMO_SUCCESS, PROMO_FAILURE ],
@@ -837,8 +846,8 @@ export function createUser(params) {
   return fetch('createUser', params);
 }
 
-export function getUserList(params) {
-  return fetch('getUserList', params);
+export function getUsers(params) {
+  return fetch('getUsers', params);
 }
 
 export function getUser(params) {
@@ -1029,6 +1038,10 @@ export function createSession(params) {
 
 export function editSession(params) {
   return fetch('editSession', params);
+}
+
+export function getPromos(params) {
+  return fetch ('getPromos', params);
 }
 
 export function getPromo(params) {

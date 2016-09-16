@@ -129,6 +129,29 @@ const services = (state = {
   }
 }
 
+const promos = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  data: {},
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.PROMOS_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.PROMOS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: action.response && action.response.data,
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    default:
+      return state
+  }
+}
+
 const booking = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -505,6 +528,7 @@ const bookingApp = combineReducers({
   config,
   services,
   booking,
+  promos,
   session,
   sessionsByUser,
   patientsByClient,

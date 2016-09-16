@@ -9,7 +9,7 @@ import s from './CaseManageAddForm.css';
 import { reduxForm, change } from 'redux-form';
 import Header from '../../Header';
 import history from '../../../core/history';
-import { showDayPickerPopup, fetchServices, getUserList, getPatients, createSession } from '../../../actions';
+import { showDayPickerPopup, fetchServices, getUsers, getPatients, createSession } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import MultiSelect from '../../MultiSelect';
@@ -29,7 +29,7 @@ class CaseManageAddForm extends Component {
 
   componentDidMount() {
     this.props.fetchServices();
-    this.props.getUserList().then((res) => {
+    this.props.getUsers().then((res) => {
       if (res.type === 'USER_LIST_SUCCESS') {
         this.setState({
           userList: res.response.data.length && res.response.data.filter(user => user.role === 'client').sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0) || []
@@ -529,7 +529,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
-  getUserList: () => dispatch(getUserList()),
+  getUsers: () => dispatch(getUsers()),
   getPatients: (params) => dispatch(getPatients(params)),
   createSession: (params) => dispatch(createSession(params)),
   resetForm: () => dispatch(reset('caseManageAddForm')),

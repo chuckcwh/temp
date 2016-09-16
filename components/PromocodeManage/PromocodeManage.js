@@ -9,6 +9,7 @@ import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 import Waypoint from 'react-waypoint';
+import { getPromos } from '../../actions';
 // Sub Component
 import PromocodeManageAddForm from './PromocodeManageAddForm/PromocodeManageAddForm';
 
@@ -23,6 +24,10 @@ class PromocodeManage extends Component {
     }
   }
 
+  componentDidMount() {
+    this.props.getPromos();
+  }
+
   _handleWaypointEnter = () => {
     console.log('enter');
   };
@@ -33,7 +38,7 @@ class PromocodeManage extends Component {
 
   render() {
     const { add } = this.props.params;
-    const { user } = this.props;
+    const { user, promos } = this.props;
 
     return (
       <div className="s.promocodeManage">
@@ -72,9 +77,11 @@ PromocodeManage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
+  promos: state.promos.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getPromos: () => dispatch(getPromos()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PromocodeManage);

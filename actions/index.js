@@ -54,6 +54,22 @@ export const SESSION_CANCEL_REQUEST = 'SESSION_CANCEL_REQUEST'
 export const SESSION_CANCEL_SUCCESS = 'SESSION_CANCEL_SUCCESS'
 export const SESSION_CANCEL_FAILURE = 'SESSION_CANCEL_FAILURE'
 
+export const APPLICATIONS_REQUEST = 'APPLICATIONS_REQUEST'
+export const APPLICATIONS_SUCCESS = 'APPLICATIONS_SUCCESS'
+export const APPLICATIONS_FAILURE = 'APPLICATIONS_FAILURE'
+
+export const APPLICATION_REQUEST = 'APPLICATION_REQUEST'
+export const APPLICATION_SUCCESS = 'APPLICATION_SUCCESS'
+export const APPLICATION_FAILURE = 'APPLICATION_FAILURE'
+
+export const APPLICATION_CREATE_REQUEST = 'APPLICATION_CREATE_REQUEST'
+export const APPLICATION_CREATE_SUCCESS = 'APPLICATION_CREATE_SUCCESS'
+export const APPLICATION_CREATE_FAILURE = 'APPLICATION_CREATE_FAILURE'
+
+export const APPLICATION_EDIT_REQUEST = 'APPLICATION_EDIT_REQUEST'
+export const APPLICATION_EDIT_SUCCESS = 'APPLICATION_EDIT_SUCCESS'
+export const APPLICATION_EDIT_FAILURE = 'APPLICATION_EDIT_FAILURE'
+
 export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
 export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
 export const USER_CREATE_FAILURE = 'USER_CREATE_FAILURE'
@@ -202,6 +218,14 @@ export const USER_SCHEDULE_CREATE_FAILURE = 'USER_SCHEDULE_CREATE_FAILURE'
 export const USER_SCHEDULE_EDIT_REQUEST = 'USER_SCHEDULE_EDIT_REQUEST'
 export const USER_SCHEDULE_EDIT_SUCCESS = 'USER_SCHEDULE_EDIT_SUCCESS'
 export const USER_SCHEDULE_EDIT_FAILURE = 'USER_SCHEDULE_EDIT_FAILURE'
+
+export const USER_CREDITS_DEPOSIT_REQUEST = 'USER_CREDITS_DEPOSIT_REQUEST'
+export const USER_CREDITS_DEPOSIT_SUCCESS = 'USER_CREDITS_DEPOSIT_SUCCESS'
+export const USER_CREDITS_DEPOSIT_FAILURE = 'USER_CREDITS_DEPOSIT_FAILURE'
+
+export const USER_CREDITS_WITHDRAW_REQUEST = 'USER_CREDITS_WITHDRAW_REQUEST'
+export const USER_CREDITS_WITHDRAW_SUCCESS = 'USER_CREDITS_WITHDRAW_SUCCESS'
+export const USER_CREDITS_WITHDRAW_FAILURE = 'USER_CREDITS_WITHDRAW_FAILURE'
 
 export const CHANGE_PASSWORD_REQUEST = 'CHANGE_PASSWORD_REQUEST'
 export const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS'
@@ -370,6 +394,28 @@ function fetchAction(route) {
     cancelSession: {
       types: [ SESSION_CANCEL_REQUEST, SESSION_CANCEL_SUCCESS, SESSION_CANCEL_FAILURE ],
       endpoint: '/sessions/:sessionId/cancel',
+      method: 'put'
+    },
+    getApplications: {
+      types: [ APPLICATIONS_REQUEST, APPLICATIONS_SUCCESS, APPLICATIONS_FAILURE ],
+      endpoint: '/applications',
+      method: 'get',
+      entity: 'applications'
+    },
+    getApplication: {
+      types: [ APPLICATION_REQUEST, APPLICATION_SUCCESS, APPLICATION_FAILURE ],
+      endpoint: '/applications/:applicationId',
+      method: 'get',
+      entity: 'applications'
+    },
+    createApplication: {
+      types: [ APPLICATION_CREATE_REQUEST, APPLICATION_CREATE_SUCCESS, APPLICATION_CREATE_FAILURE ],
+      endpoint: '/applications',
+      method: 'post'
+    },
+    editApplication: {
+      types: [ APPLICATION_EDIT_REQUEST, APPLICATION_EDIT_SUCCESS, APPLICATION_EDIT_FAILURE ],
+      endpoint: '/applications/:applicationId',
       method: 'put'
     },
     login: {
@@ -559,6 +605,16 @@ function fetchAction(route) {
       types: [ USER_SCHEDULE_EDIT_REQUEST, USER_SCHEDULE_EDIT_SUCCESS, USER_SCHEDULE_EDIT_FAILURE ],
       endpoint: '/users/:userId/schedules/:scheduleId',
       method: 'put'
+    },
+    depositCredits: {
+      types: [ USER_CREDITS_DEPOSIT_REQUEST, USER_CREDITS_DEPOSIT_SUCCESS, USER_CREDITS_DEPOSIT_FAILURE ],
+      endpoint: '/users/:userId/depositCredits',
+      method: 'post'
+    },
+    withdrawCredits: {
+      types: [ USER_CREDITS_WITHDRAW_REQUEST, USER_CREDITS_WITHDRAW_SUCCESS, USER_CREDITS_WITHDRAW_FAILURE ],
+      endpoint: '/users/:userId/withdrawCredits',
+      method: 'post'
     },
     editEmail: {
       types: [ EMAIL_EDIT_REQUEST, EMAIL_EDIT_SUCCESS, EMAIL_EDIT_FAILURE ],
@@ -970,6 +1026,14 @@ export function getUserWithToken(params) {
   return fetch('getUserWithToken', params);
 }
 
+export function depositCredits(params) {
+  return fetch('depositCredits', params);
+}
+
+export function withdrawCredits(params) {
+  return fetch('withdrawCredits', params);
+}
+
 export function changePassword(params) {
   return fetch('changePassword', params);
 }
@@ -1038,6 +1102,22 @@ export function createSession(params) {
 
 export function editSession(params) {
   return fetch('editSession', params);
+}
+
+export function getApplications(params) {
+  return fetch('getApplications', params);
+}
+
+export function getApplication(params) {
+  return fetch('getApplication', params);
+}
+
+export function createApplication(params) {
+  return fetch('createApplication', params);
+}
+
+export function editApplication(params) {
+  return fetch('editApplication', params);
 }
 
 export function getPromos(params) {

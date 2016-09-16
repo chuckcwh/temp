@@ -271,6 +271,43 @@ const suggestedSessions = (state = {
   }
 }
 
+const applications = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: {}
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.APPLICATIONS_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.APPLICATIONS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: normalize(action.response && action.response.data),
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    default:
+      return state
+  }
+}
+
+const applicationsByUser = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.APPLICATIONS_REQUEST:
+    case ActionTypes.APPLICATIONS_SUCCESS:
+      return {
+        ...state,
+        [action.data.provider]:
+          applications(state[action.data.provider], action)
+      }
+    default:
+      return state
+  }
+}
+
 const patients = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -531,6 +568,7 @@ const bookingApp = combineReducers({
   promos,
   session,
   sessionsByUser,
+  applicationsByUser,
   patientsByClient,
   suggestedSessions,
   availableSchedules,

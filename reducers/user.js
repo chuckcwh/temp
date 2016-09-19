@@ -125,13 +125,43 @@ const schedules = (state = {}, action) => {
       return state;
   }
 }
+
+const schedulesByDateSlot = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.USER_SUCCESS:
+    case ActionTypes.USER_TOKEN_SUCCESS:
+    case ActionTypes.USER_CREATE_SUCCESS:
+    case ActionTypes.LOGIN_SUCCESS:
+    case ActionTypes.LOGIN_CLIENT_SUCCESS:
+    case ActionTypes.USER_EDIT_SUCCESS:
+      return {
+        ...state,
+        ...(action.response.data && action.response.data.schedules.reduce((result, schedule) => {
+          const date = schedule.dateTimeStart.substr(0, 10);
+          if (!result[date]) result[date] = {};
+          result[date][schedule.timeSlot] = schedule;
+          return result;
+        }, {}))
+      };
+    case ActionTypes.USER_SCHEDULES_SUCCESS:
+      return { ...state, ...normalize(action.response.data) };
+    case ActionTypes.USER_SCHEDULE_SUCCESS:
+    case ActionTypes.USER_SCHEDULE_CREATE_SUCCESS:
+    case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:
+      return { ...state, [action.response.data._id]: action.response.data };
+    default:
+      return state;
+  }
+}
+
 const partialUserData = combineReducers({
   devices,
   experiences,
   educations,
   achievements,
   reviews,
-  schedules
+  schedules,
+  schedulesByDateSlot,
 })
 
 const extendedUserData = (state = {}, action) => {

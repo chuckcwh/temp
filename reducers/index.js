@@ -30,6 +30,7 @@ const config = (state = {
         didInvalidate: false,
         data: action.response && action.response.data && {
           ...action.response.data,
+          applicationStatusesByValue: normalize(action.response.data.applicationStatuses, 'value'),
           bookingStatusesByValue: normalize(action.response.data.bookingStatuses, 'value'),
           countriesByValue: normalize(action.response.data.countries, 'value'),
           gendersByValue: normalize(action.response.data.genders, 'value'),
@@ -294,7 +295,7 @@ const applications = (state = {
   }
 }
 
-const applicationsByUser = (state = {}, action) => {
+const applicationsByProvider = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.APPLICATIONS_REQUEST:
     case ActionTypes.APPLICATIONS_SUCCESS:
@@ -568,7 +569,7 @@ const bookingApp = combineReducers({
   promos,
   session,
   sessionsByUser,
-  applicationsByUser,
+  applicationsByProvider,
   patientsByClient,
   suggestedSessions,
   availableSchedules,

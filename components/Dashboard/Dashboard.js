@@ -17,7 +17,7 @@ import DashboardAvailableCases from '../DashboardAvailableCases';
 import DashboardOngoingCases from '../DashboardOngoingCases';
 import DashboardCompletedCases from '../DashboardCompletedCases';
 import DashboardOtherCases from '../DashboardOtherCases';
-import { fetchServices, getPatients, getSessions, setOrderService, setLastPage } from '../../actions';
+import { fetchServices, getPatients, getSessions, getApplications, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import { isClient, isProvider } from '../../core/util';
 import shuffle from 'lodash/shuffle';
@@ -38,7 +38,7 @@ class Dashboard extends Component {
         client: this.props.user._id,
       });
     this.props.user && isProvider(this.props.user)
-      && this.props.getSessions({
+      && this.props.getApplications({
         provider: this.props.user._id,
       });
   }
@@ -50,7 +50,7 @@ class Dashboard extends Component {
           client: props.user._id,
         });
       props.user && isProvider(props.user)
-        && this.props.getSessions({
+        && this.props.getApplications({
           provider: props.user._id,
         });
     }
@@ -277,12 +277,19 @@ const mapStateToProps = (state) => ({
   sessionsFetching: state.user.data && state.user.data._id
     && state.sessionsByUser[state.user.data._id]
     && state.sessionsByUser[state.user.data._id].isFetching,
+  applications: state.user.data && state.user.data._id
+    && state.applicationsByProvider[state.user.data._id]
+    && state.applicationsByProvider[state.user.data._id].data,
+  applicationsFetching: state.user.data && state.user.data._id
+    && state.applicationsByProvider[state.user.data._id]
+    && state.applicationsByProvider[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getPatients: (params) => dispatch(getPatients(params)),
   getSessions: (params) => dispatch(getSessions(params)),
+  getApplications: (params) => dispatch(getApplications(params)),
   setOrderService: (service) => dispatch(setOrderService(service)),
   setLastPage: (page) => dispatch(setLastPage(page)),
 });

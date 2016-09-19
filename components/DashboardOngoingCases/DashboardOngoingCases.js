@@ -22,14 +22,15 @@ class DashboardOngoingCases extends Component {
   }
 
   render() {
-    const { config, services, sessions, sessionsFetching } = this.props;
-    const filteredSessions = sessions && Object.values(sessions).filter(session => session.phase === 'pending-visit'
-      || session.phase === 'pending-documentation');
+    const { config, services, applications, applicationsFetching } = this.props;
+    const filteredApplications = applications && Object.values(applications).filter(application =>
+      application.status === 'accepted'
+    );
     return (
       <div className={s.dashboardOngoingCases}>
-        <Loader className="spinner" loaded={!sessionsFetching}>
+        <Loader className="spinner" loaded={!applicationsFetching}>
           <div className={s.cases}>
-          {filteredSessions && Object.values(filteredSessions).length > 0 &&
+          {filteredApplications && Object.values(filteredApplications).length > 0 &&
             <DashboardDataTable css={s}>
               <Grid fluid className={s.dashboardDataTable}>
                 <Row className={s.lgHeader}>
@@ -42,7 +43,7 @@ class DashboardOngoingCases extends Component {
                   <Col md={2}>Action(s)</Col>
                 </Row>
                 {
-                  filteredSessions && Object.values(filteredSessions).map(session => (
+                  filteredApplications && Object.values(filteredApplications).map(session => (
                     <Row className={s.sessionDetails} key={session._id}>
                       <Col xs={4}>ID</Col>
                       <Col xs={8} md={2}>{formatSessionAlias(session.alias)}</Col>
@@ -60,14 +61,14 @@ class DashboardOngoingCases extends Component {
                               && services[session.service].classesHash[session.serviceClassId].duration}hrs)`}
                       </Col>
                       <Col xs={4}>Price</Col>
-                      <Col xs={8} md={1}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
+                      <Col xs={8} md={1}>{`$${parseFloat(application.price).toFixed(2)}`}</Col>
                       <Col xs={4}>Status</Col>
                       <Col xs={8} md={1}>
-                        {configToName(config, 'sessionPhasesByValue', session.phase)}
+                        {configToName(config, 'applicationStatusesByValue', application.status)}
                       </Col>
                       <Col xs={4}>Action(s)</Col>
                       <Col xs={8} md={2}>
-                        <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
+                        <DashboardTableButton to={`/applications/${session._id}`}>View</DashboardTableButton>
                         <DashboardTableButton>Cancel</DashboardTableButton>
                       </Col>
                     </Row>
@@ -76,7 +77,7 @@ class DashboardOngoingCases extends Component {
               </Grid>
             </DashboardDataTable>
           }
-          {!(filteredSessions && Object.values(filteredSessions).length) &&
+          {!(filteredApplications && Object.values(filteredApplications).length) &&
             <p>No cases found.</p>
           }
           </div>
@@ -91,8 +92,8 @@ DashboardOngoingCases.propTypes = {
   config: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
-  sessions: React.PropTypes.object,
-  sessionsFetching: React.PropTypes.bool,
+  applications: React.PropTypes.object,
+  applicationsFetching: React.PropTypes.bool,
 
   fetchServices: React.PropTypes.func,
 };
@@ -101,12 +102,12 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  sessions: state.user.data && state.user.data._id
-    && state.sessionsByUser[state.user.data._id]
-    && state.sessionsByUser[state.user.data._id].data,
-  sessionsFetching: state.user.data && state.user.data._id
-    && state.sessionsByUser[state.user.data._id]
-    && state.sessionsByUser[state.user.data._id].isFetching,
+  applications: state.user.data && state.user.data._id
+    && state.applicationsByProvider[state.user.data._id]
+    && state.applicationsByProvider[state.user.data._id].data,
+  applicationsFetching: state.user.data && state.user.data._id
+    && state.applicationsByProvider[state.user.data._id]
+    && state.applicationsByProvider[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({

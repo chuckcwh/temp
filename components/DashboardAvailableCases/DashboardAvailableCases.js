@@ -7,13 +7,16 @@ import s from './DashboardAvailableCases.css';
 import Container from '../Container';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
-import { getSuggestedSessions } from '../../actions';
+import { APPLICATION_CREATE_SUCCESS, fetchServices, getSuggestedSessions, createApplication, showAlertPopup } from '../../actions';
+import { isActivatedProvider, configToName, formatSessionAlias } from '../../core/util';
 
 class DashboardAvailableCases extends Component {
 
   componentDidMount() {
+    this.props.fetchServices();
     this.props.user
       && this.props.user._id
+      && isActivatedProvider(this.props.user)
       && this.props.getSuggestedSessions({ providerId: this.props.user._id });
   }
 
@@ -21,35 +24,30 @@ class DashboardAvailableCases extends Component {
     newProps.user
       && newProps.user._id
       && this.props.user !== newProps.user
+      && isActivatedProvider(newProps.user)
       && newProps.getSuggestedSessions({ providerId: newProps.user._id });
   }
 
-  render() {
-    const { suggestedSessions, suggestedSessionsFetching } = this.props;
-    const rowArr = [];
-    suggestedSessions && Object.values(suggestedSessions).forEach((session) => {
-      session.dates.forEach((date) => {
-        const row = {};
-        const currentDate = moment();
-        const age = currentDate.diff(moment(session.patient.dob), 'years');
-        row.id = date.id;
-        row.sessionId = session.id;
-        row.service = session.service.name;
-        row.address = session.addresses[0].region;
-        row.date = moment(date.dateTimeStart).format('ddd, DD MMM YYYY');
-        row.estTime = date.estTime;
-        row.patient = `${session.patient.fullName} (${age}, ${session.patient.gender})`;
-        row.action = 'Accept';
-        row.price = `$${date.price}`;
-        row.notes = session.notes;
-        rowArr.push(row);
+  handleAccept = (sessionId) => () => {
+    if (this.props.user && this.props.user._id && isActivatedProvider(this.props.user)) {
+      this.props.createApplication({
+        provider: this.props.user._id,
+        session: sessionId,
+      }).then(res => {
+        if (res && res.type === APPLICATION_CREATE_SUCCESS) {
+          this.props.showAlertPopup('You have successfully accepted case #'
+            + `${formatSessionAlias(this.props.suggestedSessions[sessionId].alias)}.`);
+        }
       });
-    });
+    }
+  };
 
+  render() {
+    const { config, services, suggestedSessions, suggestedSessionsFetching } = this.props;
     return (
       <div className={s.dashboardAvailableCases}>
         <Container>
-          <Loader className="spinner" loaded={!this.props.suggestedSessionsFetching}>
+          <Loader className="spinner" loaded={!suggestedSessionsFetching}>
             <div className={s.cases}>
               {suggestedSessions && Object.values(suggestedSessions).length > 0 &&
                 <DashboardDataTable css={s}>
@@ -93,7 +91,7 @@ class DashboardAvailableCases extends Component {
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
-                            <DashboardTableButton>Cancel</DashboardTableButton>
+                            <DashboardTableButton onClick={this.handleAccept(session._id)}>Accept</DashboardTableButton>
                           </Col>
                         </Row>
                       ))
@@ -113,21 +111,33 @@ class DashboardAvailableCases extends Component {
 }
 
 DashboardAvailableCases.propTypes = {
+  config: React.PropTypes.object,
   user: React.PropTypes.object,
+  services: React.PropTypes.object,
+  servicesFetching: React.PropTypes.bool,
   suggestedSessions: React.PropTypes.object,
   suggestedSessionsFetching: React.PropTypes.bool,
 
+  fetchServices: React.PropTypes.func.isRequired,
   getSuggestedSessions: React.PropTypes.func.isRequired,
+  createApplication: React.PropTypes.func.isRequired,
+  showAlertPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   user: state.user.data,
+  services: state.services.data,
+  servicesFetching: state.services.isFetching,
   suggestedSessions: state.suggestedSessions.data,
   suggestedSessionsFetching: state.suggestedSessions.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchServices: () => dispatch(fetchServices()),
   getSuggestedSessions: (params) => dispatch(getSuggestedSessions(params)),
+  createApplication: (params) => dispatch(createApplication(params)),
+  showAlertPopup: (params) => dispatch(showAlertPopup(params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardAvailableCases);

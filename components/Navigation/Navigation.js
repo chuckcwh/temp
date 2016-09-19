@@ -118,12 +118,6 @@ class Navigation extends Component {
             </li>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink, (location.pathname === '/cases') ? s.navigationLinkActive : '')}
-                to="/cases"
-              >CASES</Link>
-            </li>
-            <li className={s.navigationItem}>
-              <Link
                 className={classNames(s.navigationLink, (location.pathname === '/schedule') ? s.navigationLinkActive : '')}
                 to="/schedule"
               >SCHEDULE</Link>
@@ -147,12 +141,6 @@ class Navigation extends Component {
                     className={classNames(s.navigationLink, (location.pathname === '/dashboard') ? s.navigationLinkActive : '')}
                     to="/dashboard"
                   >DASHBOARD</Link>
-                </li>
-                <li className={s.navigationItem}>
-                  <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/cases') ? s.navigationLinkActive : '')}
-                    to="/cases"
-                  >CASES</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <Link

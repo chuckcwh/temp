@@ -118,17 +118,17 @@ const BookingSidebar = (props) => {
 BookingSidebar.propTypes = {
   config: React.PropTypes.object.isRequired,
   services: React.PropTypes.object.isRequired,
-  patients: React.PropTypes.object.isRequired,
   order: React.PropTypes.object.isRequired,
+  patients: React.PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   config: state.config.data,
   services: state.services.data,
+  order: state.order,
   patients: state.user.data && state.user.data._id
     && state.patientsByClient[state.user.data._id]
     && state.patientsByClient[state.user.data._id].data,
-  order: state.order,
 });
 
 export default connect(mapStateToProps)(BookingSidebar);

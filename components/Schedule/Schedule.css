@@ -5,112 +5,94 @@
   position: relative;
 
   & .scheduleWrapper {
-    display: flex;
-    flex-flow: row wrap;
+    & .scheduleDayPicker {
+      & :global .DayPicker {
+        & :global .DayPicker-Day {
+          & :global .DayPicker-Day-Wrapper {
+            position: relative;
 
-    & .scheduleTabs {
-      flex: 3;
+            & :global .morning {
+              position: absolute;
+              left: 0;
+              height: 6px;
+              width: 6px;
+              border-radius: 50%;
+              background-color: #fda738;
+            }
+
+            & :global .afternoon {
+              position: absolute;
+              margin: auto;
+              left: 0;
+              right: 0;
+              height: 6px;
+              width: 6px;
+              border-radius: 50%;
+              background-color: #e95900;
+            }
+
+            & :global .evening {
+              position: absolute;
+              right: 0;
+              height: 6px;
+              width: 6px;
+              border-radius: 50%;
+              background-color: #21a1de;
+            }
+          }
+        }
+
+        & .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+          background-color: #8b9898;
+        }
+      }
     }
 
-    & .schedulePanel {
-      flex: 8;
-      margin-left: 30px;
+    & .scheduleLegend {
+      text-align: center;
 
-      @media (--xs-viewport) {
-        margin-left: 0;
+      & .scheduleLegendTimeslot {
+        display: inline-block;
+        padding-right: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+        color: #fff;
+
+        & input[type=checkbox]:checked + label > span {
+          color: #fff;
+        }
+
+        & input[type=checkbox] + label > span:first-child {
+          border-color: #fff;
+
+        }
+
+        & input[type=checkbox]:checked + label > span:first-child::before {
+          color: #fff;
+        }
+
+        &.scheduleLegendTimeslotMorning {
+          background: #fda738;
+        }
+
+        &.scheduleLegendTimeslotAfternoon {
+          background: #e95900;
+        }
+
+        &.scheduleLegendTimeslotEvening {
+          background: #21a1de;
+        }
       }
+    }
+
+    & .scheduleFooter {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      text-align: center;
     }
 
     @media (--xs-viewport) {
       flex-flow: column wrap;
-    }
-  }
-
-  & .addPatient {
-    margin-bottom: 30px;
-    padding: 12px 14px;
-    background-color: #FBF8F1;
-    border-radius: 10px;
-    font-size: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    & .addPatientBtn {
-      padding-left: 10px;
-    }
-  }
-
-  & .patientBlock {
-    background: #f7f7f7;
-    border-radius: 10px;
-    padding: 0 14px 10px 14px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-
-    @media (--sm-viewport) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    & .patientText {
-      flex: 1;
-
-      & h3 {
-        color: var(--brand-color);
-      }
-
-      & > span:not(:last-child) {
-        margin-right: 10px;
-      }
-    }
-
-    & .patientVisit {
-      flex: 1;
-      text-transform: uppercase;
-
-      & .patientVisitDetails {
-        display:inline-block;
-        width: 150px;
-
-        & > span {
-          color: #21a1de;
-          font-size: 20px;
-          font-weight: 200;
-        }
-      }
-    }
-
-    & .patientAction {
-      flex: 1;
-      text-align: right;
-
-      @media (--md-viewport) {
-        margin-top: 10px;
-      }
-
-      & button:last-child {
-        @media (--xs-viewport) {
-          margin-left: 0px;
-          margin-top: 10px;
-        }
-
-        @media (--md-viewport) {
-          margin-top: 10px;
-        }
-
-        @media (--lg-xviewport) {
-          margin-left: 20px;
-        }
-      }
-
-      & .patientBtnText {
-        font-size: 22px;
-        width: 140px;
-        display: inherit;
-      }
     }
   }
 }

@@ -784,24 +784,26 @@ function shouldFetch(state, action) {
   return obj.didInvalidate
 }
 
-function checkToFetch(route, data, dispatch, getState) {
+function checkToFetch(route, data, dispatch, getState, extend) {
   if (shouldFetch(getState(), fetchAction(route))) {
     if (data) {
       return dispatch({
         data,
-        [CALL_API]: fetchAction(route)
+        [CALL_API]: fetchAction(route),
+        extend,
       })
     } else {
       return dispatch({
-        [CALL_API]: fetchAction(route)
+        [CALL_API]: fetchAction(route),
+        extend,
       })
     }
   } else return new Promise((resolve) => resolve());
 }
 
-function fetch(route, data) {
+function fetch(route, data, extend = false) {
   return (dispatch, getState) =>
-    checkToFetch(route, data, dispatch, getState);
+    checkToFetch(route, data, dispatch, getState, extend);
 }
 
 export function fetchConfig() {
@@ -1146,8 +1148,8 @@ export function editApplication(params) {
   return fetch('editApplication', params);
 }
 
-export function getPromos(params) {
-  return fetch ('getPromos', params);
+export function getPromos(params, extend) {
+  return fetch('getPromos', params, extend);
 }
 
 export function getPromo(params) {

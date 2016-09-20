@@ -102,11 +102,13 @@ export default store => next => action => {
   return callApi(store, endpoint, method, action['data']).then(
     response => next(actionWith({
       response,
-      type: successType
+      type: successType,
+      extend: action['extend'],
     })),
     error => next(actionWith({
       type: failureType,
-      error: error.message || 'Something bad happened'
+      error: error.message || 'Something bad happened',
+      extend: action['extend'],
     }))
   )
 }

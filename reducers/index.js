@@ -132,8 +132,8 @@ const services = (state = {
 
 const promos = (state = {
   isFetching: false,
-  didInvalidate: false,
-  data: [],
+  didInvalidate: true,
+  data: {},
 }, action) => {
   switch (action.type) {
     case ActionTypes.PROMOS_REQUEST:
@@ -145,7 +145,12 @@ const promos = (state = {
       return {
         ...state,
         isFetching: false,
-        data: action.response && action.response.data,
+        data: action.extend
+          ? {
+            ...state.data,
+            ...normalize(action.response && action.response.data),
+          }
+          : normalize(action.response && action.response.data),
         lastUpdated: action.response && action.response.receivedAt
       }
     default:

@@ -96,7 +96,7 @@
     "react-select": "^0.9.1",
     "react-slick": "^0.12.0",
     "react-styleable": "^2.2.4",
-    "react-virtualized": "^7.24.3",
+    "react-virtualized": "^8.0.2",
     "redux-devtools": "^3.3.1",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",

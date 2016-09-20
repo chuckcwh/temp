@@ -9,11 +9,14 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
-import { InfiniteLoader, VirtualScroll } from 'react-virtualized';
+import { InfiniteLoader, AutoSizer, List, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
 // Sub Component
 import PromocodeManageAddForm from './PromocodeManageAddForm/PromocodeManageAddForm';
 
+
+const STATUS_LOADING = 1
+const STATUS_LOADED = 2
 
 class PromocodeManage extends Component {
 
@@ -21,37 +24,47 @@ class PromocodeManage extends Component {
     super(props);
 
     this.state = {
-      pageIndex: 1,
-      itemsPerLoading: 2,
-
       loadedRowsMap: {},
       loadedRowCount: 0,
       loadingRowCount: 0,
       renderScrollToIndex: null,
     }
+
+    this.loadMoreRows = this.loadMoreRows.bind(this);
   }
 
-  isRowLoaded = ({index}) => {
-    const {loadedRowsMap} = this.state;
-    return !!loadedRowsMap[index];
-  };
+  async loadMoreRows({startIndex, stopIndex}) {
+    // const {loadedRowsMap, loadingRowCount} = this.state;
+    //
+    // const increment = stopIndex - startIndex + 1;
+    //
+    // for (var i = startIndex; i <= stopIndex; i++) {
+    //   loadedRowsMap[i] = STATUS_LOADING;
+    // }
+    //
+    // this.setState({
+    //   loadingRowCount: loadingRowCount + increment
+    // })
 
-  loadMoreRows = ({startIndex, stopIndex}) => {
-    const { pageIndex, itemPerLoading } = this.state;
-
-    this.
-    this.props.getPromos({
-      count: itemsPerLoading,
-      page: pageIndex,
-      sorting: null,
+    return await this.props.getPromos({
+      count: 5,
+      page: 1,
     });
-    this.setState({pageIndex: pageIndex + 1})
-  };
+
+  }
+
+  rowRenderer = ({index, key, style}) => {
+    const {promos} = this.props;
+    console.log('index', index);
+    console.log('promos', promos);
+
+    return promos
+  }
 
   render() {
     const { add } = this.props.params;
     const { user, promos } = this.props;
-    const { pageIndex, loadedRowCount, loadingRowCount, randomScrollToIndex } = this.state;
+    const { loadedRowCount, loadingRowCount, randomScrollToIndex, loadedRowsMap } = this.state;
 
     return (
       <div className={s.promocodeManage}>
@@ -70,32 +83,40 @@ class PromocodeManage extends Component {
                 </Link>
               </div>
 
-
-
               <InfiniteLoader
-                isRowLoaded={this.isRowLoaded}
+                isRowLoaded={({index}) => !!loadedRowsMap[index]}
                 loadMoreRows={this.loadMoreRows}
-                rowCount={10000}
+                rowCount={promos.length ? promos.total : 1}
               >
-                {({ onRowsRendered, registerChild }) => {
-                  <VirtualScroll
-                    ref={registerChild}
-                    width={300}
+                {({ onRowsRendered, registerChild }) => (
+
+                  <Table
+                    ref='Table'
+                    width={500}
                     height={200}
-                    onRowsRendered={onRowsRendered}
-                    rowCount={promos.length}
-                    rowHeight={20}
-                    rowRenderer={
-                      ({index}) => promos[index].name
-                    }
-                  />
-                }}
+                    headerHeight={20}
+                    noRowsRenderer={() => <div>No data</div>}
+                    rowHeight={30}
+                    rowCount={promos.length ? promos.total : 1}
+                    rowGetter={({index}) => promos.length ? promos[index] : {}}
+                    rowRenderer={this.rowRenderer}
+                  >
+                    <Column
+                      label='code'
+                      dataKey='code'
+                      width={100}
+                    />
+                    <Column
+                      label='name'
+                      dataKey='name'
+                      width={100}
+                    />
+                  </Table>
+
+                )}
               </InfiniteLoader>
 
 
-              <div>
-
-              </div>
             </div>
           )}
 
@@ -106,13 +127,11 @@ class PromocodeManage extends Component {
 }
 
 PromocodeManage.propTypes = {
-  onEnter: PropTypes.func,
-  onLeave: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  promos: state.promos.data,
+  promos: state.promos.data || [],
 });
 
 const mapDispatchToProps = (dispatch) => ({

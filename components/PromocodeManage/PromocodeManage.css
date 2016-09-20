@@ -5,4 +5,13 @@
   & .addLink {
     text-align: right;
   }
+
+  & .tableList {
+    margin: 40px auto;
+    border: 1px solid grey;
+
+    & .tableListRow {
+      border-bottom: 1px solid lightgrey;
+    }
+  }
 }

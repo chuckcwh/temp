@@ -133,7 +133,7 @@ const services = (state = {
 const promos = (state = {
   isFetching: false,
   didInvalidate: false,
-  data: {},
+  data: [],
 }, action) => {
   switch (action.type) {
     case ActionTypes.PROMOS_REQUEST:

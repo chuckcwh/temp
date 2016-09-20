@@ -9,14 +9,11 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
-import { InfiniteLoader, AutoSizer, List, Table, Column } from 'react-virtualized';
+import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
 // Sub Component
 import PromocodeManageAddForm from './PromocodeManageAddForm/PromocodeManageAddForm';
 
-
-const STATUS_LOADING = 1
-const STATUS_LOADED = 2
 
 class PromocodeManage extends Component {
 
@@ -24,47 +21,33 @@ class PromocodeManage extends Component {
     super(props);
 
     this.state = {
-      loadedRowsMap: {},
-      loadedRowCount: 0,
-      loadingRowCount: 0,
-      renderScrollToIndex: null,
-    }
-
-    this.loadMoreRows = this.loadMoreRows.bind(this);
-  }
-
-  async loadMoreRows({startIndex, stopIndex}) {
-    // const {loadedRowsMap, loadingRowCount} = this.state;
-    //
-    // const increment = stopIndex - startIndex + 1;
-    //
-    // for (var i = startIndex; i <= stopIndex; i++) {
-    //   loadedRowsMap[i] = STATUS_LOADING;
-    // }
-    //
-    // this.setState({
-    //   loadingRowCount: loadingRowCount + increment
-    // })
-
-    return await this.props.getPromos({
-      count: 5,
       page: 1,
-    });
-
+    }
   }
 
-  rowRenderer = ({index, key, style}) => {
-    const {promos} = this.props;
-    console.log('index', index);
-    console.log('promos', promos);
+  componentDidMount() {
+    this.props.getPromos({
+      count: 7,
+      page: this.state.page,
+    }, true);
+  }
 
-    return promos
+  isRowLoaded = ({ index }) => {
+    return !!Object.values(this.props.promos)[index];
+  };
+
+  loadMoreRows = ({startIndex, stopIndex}) => {
+    this.setState({page: this.state.page + 1});
+
+    return this.props.getPromos({
+      count: 7,
+      page: this.state.page,
+    }, true);
   }
 
   render() {
-    const { add } = this.props.params;
+    const { add, edit, promoId } = this.props.params;
     const { user, promos } = this.props;
-    const { loadedRowCount, loadingRowCount, randomScrollToIndex, loadedRowsMap } = this.state;
 
     return (
       <div className={s.promocodeManage}>
@@ -73,7 +56,9 @@ class PromocodeManage extends Component {
 
           {user && add && <PromocodeManageAddForm />}
 
-          {user && !add && (
+          {user && edit && <PromocodeManageAddForm edit={true} promoId={promoId} />}
+
+          {user && !add && !edit && (
             <div>
               <div className={s.addLink}>
                 <Link
@@ -83,39 +68,91 @@ class PromocodeManage extends Component {
                 </Link>
               </div>
 
+
               <InfiniteLoader
-                isRowLoaded={({index}) => !!loadedRowsMap[index]}
+                isRowLoaded={this.isRowLoaded}
                 loadMoreRows={this.loadMoreRows}
-                rowCount={promos.length ? promos.total : 1}
+                rowCount={10000}
               >
                 {({ onRowsRendered, registerChild }) => (
 
-                  <Table
-                    ref='Table'
-                    width={500}
-                    height={200}
-                    headerHeight={20}
-                    noRowsRenderer={() => <div>No data</div>}
-                    rowHeight={30}
-                    rowCount={promos.length ? promos.total : 1}
-                    rowGetter={({index}) => promos.length ? promos[index] : {}}
-                    rowRenderer={this.rowRenderer}
-                  >
-                    <Column
-                      label='code'
-                      dataKey='code'
-                      width={100}
-                    />
-                    <Column
-                      label='name'
-                      dataKey='name'
-                      width={100}
-                    />
-                  </Table>
+                  <AutoSizer disableHeight>
+                    {({width}) => (
+                      <Table
+                        ref={registerChild}
+                        className={s.tableList}
+                        height={400}
+                        width={width}
 
+                        headerClassName={s.tableListHeader}
+                        headerHeight={30}
+
+                        onRowsRendered={onRowsRendered}
+                        noRowsRenderer={() => (<div>No data</div>)}
+                        rowHeight={50}
+                        rowClassName={s.tableListRow}
+                        rowCount={Object.values(promos).length}
+                        rowGetter={({index}) => Object.values(promos)[index]}
+                      >
+                        <Column
+                          label="#code"
+                          dataKey="code"
+                          width={100}
+                        />
+                        <Column
+                          label="name"
+                          dataKey="name"
+                          width={150}
+                        />
+                        <Column
+                          label="label"
+                          dataKey="isActive"
+                          cellRenderer={({cellData}) => cellData ? (
+                            <div className={s.tableListRadio}>
+                              Active
+                            </div>
+                          ) : null}
+                          width={80}
+                        />
+                        <Column
+                          label="start"
+                          dataKey="date"
+                          cellRenderer={({cellData}) => moment(cellData.dateTimeStart).format('YYYY-MM-DD')}
+                          width={130}
+                        />
+                        <Column
+                          label="end"
+                          dataKey="date"
+                          cellRenderer={({cellData}) => moment(cellData.dateTimeEnd).format('YYYY-MM-DD')}
+                          width={130}
+                        />
+                        <Column
+                          label="discount"
+                          dataKey="discountRate"
+                          cellRenderer={({rowData}) => `${rowData.discountRate} ${rowData.discountType}`}
+                          width={120}
+                        />
+                        <Column
+                          label="view"
+                          dataKey="_id"
+                          cellRenderer={({cellData}) => {
+                            return (
+                              <Link className={cx('btn', s.tableListToEdit)} to={`/promocode-manage/edit/${cellData}`}>
+                                Edit
+                              </Link>
+                          )}}
+                          width={100}
+                        />
+                        <Column
+                          label="description"
+                          dataKey="description"
+                          width={500}
+                        />
+                      </Table>
+                    )}
+                  </AutoSizer>
                 )}
               </InfiniteLoader>
-
 
             </div>
           )}
@@ -131,11 +168,11 @@ PromocodeManage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  promos: state.promos.data || [],
+  promos: state.promos.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getPromos: (params) => dispatch(getPromos(params)),
+  getPromos: (params, extend) => dispatch(getPromos(params, extend)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PromocodeManage);

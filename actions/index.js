@@ -686,9 +686,8 @@ function fetchAction(route) {
     },
     getPromo: {
       types: [ PROMO_REQUEST, PROMO_SUCCESS, PROMO_FAILURE ],
-      endpoint: '/checkPromocode',
+      endpoint: '/promos/:promoId',
       method: 'get',
-      auth: 'app'
     },
     createPromo: {
       types: [ CREATE_PROMO_REQUEST, CREATE_PROMO_SUCCESS, CREATE_PROMO_FAILURE ],

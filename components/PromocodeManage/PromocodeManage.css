@@ -8,10 +8,35 @@
 
   & .tableList {
     margin: 40px auto;
-    border: 1px solid grey;
 
-    & .tableListRow {
-      border-bottom: 1px solid lightgrey;
-    }
   }
+
+  & .tableListHeader {
+    color: lightgrey;
+    border-bottom: 1px solid lightgrey;
+  }
+
+  & .tableListRow:nth-child(even) {
+    background: lightgrey;
+  }
+
+  & .tableListRadio {
+    background-color: #fdbc1d;
+    color: #FFFFFF;
+    border-radius: 15px;
+    padding: 5px 3px;
+    text-align: center;
+    width: 55px;
+  }
+
+  & .tableListToEdit {
+    display: block;
+    background-color: #f78d00;
+    color: #FFFFFF;
+    border-radius: 15px;
+    padding: 5px 3px;
+    text-align: center;
+    width: 65px;
+  }
+
 }

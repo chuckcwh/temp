@@ -8,7 +8,7 @@ import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
 import s from './PromocodeManageAddForm.css';
-import { showDayPickerPopup, fetchServices, createPromo } from '../../../actions';
+import { showDayPickerPopup, fetchServices, createPromo, getPromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -24,7 +24,12 @@ class PromocodeManageAddForm extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchServices();
+    const { fetchServices, edit, promoId, getPromo } = this.props;
+    fetchServices();
+
+    if (edit) {
+      getPromo({ promoId });
+    }
   }
 
   onSelectDay = (e, day) => {
@@ -97,6 +102,7 @@ class PromocodeManageAddForm extends Component {
       servicesFetching,
       discountTypeChoice,
       showDayPickerPopup,
+      view,
 
       invalid,
       handleSubmit,
@@ -315,8 +321,9 @@ PromocodeManageAddForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'promocodeManageAddForm',
+  form: 'promocodeManageForm',
   fields: [
+    '_id',    // for edit use
     'startDate',
     'endDate',
     'services',
@@ -351,6 +358,7 @@ const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   createPromo: (params) => dispatch(createPromo(params)),
   resetForm: () => dispatch(reset('promocodeManageAddForm')),
+  getPromo: (params) => dispatch(getPromo(params)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(PromocodeManageAddForm);

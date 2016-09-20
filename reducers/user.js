@@ -114,9 +114,10 @@ const schedules = (state = {}, action) => {
     case ActionTypes.LOGIN_SUCCESS:
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
     case ActionTypes.USER_EDIT_SUCCESS:
-      return { ...state, ...normalize(action.response.data && action.response.data.schedules) };
+      return { ...normalize(action.response.data && action.response.data.schedules) };
     case ActionTypes.USER_SCHEDULES_SUCCESS:
-      return { ...state, ...normalize(action.response.data) };
+    case ActionTypes.USER_SCHEDULES_UPDATE_SUCCESS:
+      return { ...normalize(action.response.data) };
     case ActionTypes.USER_SCHEDULE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_CREATE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:
@@ -135,7 +136,6 @@ const schedulesByDateSlot = (state = {}, action) => {
     case ActionTypes.LOGIN_CLIENT_SUCCESS:
     case ActionTypes.USER_EDIT_SUCCESS:
       return {
-        ...state,
         ...(action.response.data && action.response.data.schedules.reduce((result, schedule) => {
           const date = schedule.dateTimeStart.substr(0, 10);
           if (!result[date]) result[date] = {};
@@ -144,11 +144,30 @@ const schedulesByDateSlot = (state = {}, action) => {
         }, {}))
       };
     case ActionTypes.USER_SCHEDULES_SUCCESS:
-      return { ...state, ...normalize(action.response.data) };
+    case ActionTypes.USER_SCHEDULES_UPDATE_SUCCESS:
+      return {
+        ...(action.response.data.reduce((result, schedule) => {
+          const date = schedule.dateTimeStart.substr(0, 10);
+          if (!result[date]) result[date] = {};
+          result[date][schedule.timeSlot] = schedule;
+          return result;
+        }, {}))
+      };
     case ActionTypes.USER_SCHEDULE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_CREATE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:
-      return { ...state, [action.response.data._id]: action.response.data };
+      return {
+        ...state,
+        [action.response.data.dateTimeStart.substr(0, 10)]:
+          state[action.response.data.dateTimeStart.substr(0, 10)] ?
+          {
+            ...state[action.response.data.dateTimeStart.substr(0, 10)],
+            [action.response.data.timeSlot]: action.response.data,
+          } :
+          {
+            [action.response.data.timeSlot]: action.response.data,
+          },
+      };
     default:
       return state;
   }
@@ -190,6 +209,7 @@ const extendedUserData = (state = {}, action) => {
     case ActionTypes.USER_REVIEW_CREATE_SUCCESS:
     case ActionTypes.USER_REVIEW_EDIT_SUCCESS:
     case ActionTypes.USER_SCHEDULES_SUCCESS:
+    case ActionTypes.USER_SCHEDULES_UPDATE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_CREATE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:
@@ -300,6 +320,7 @@ const user = (state = {
     case ActionTypes.USER_REVIEW_CREATE_SUCCESS:
     case ActionTypes.USER_REVIEW_EDIT_SUCCESS:
     case ActionTypes.USER_SCHEDULES_SUCCESS:
+    case ActionTypes.USER_SCHEDULES_UPDATE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_CREATE_SUCCESS:
     case ActionTypes.USER_SCHEDULE_EDIT_SUCCESS:

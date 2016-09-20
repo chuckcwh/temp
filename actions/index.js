@@ -207,6 +207,10 @@ export const USER_SCHEDULES_REQUEST = 'USER_SCHEDULES_REQUEST'
 export const USER_SCHEDULES_SUCCESS = 'USER_SCHEDULES_SUCCESS'
 export const USER_SCHEDULES_FAILURE = 'USER_SCHEDULES_FAILURE'
 
+export const USER_SCHEDULES_UPDATE_REQUEST = 'USER_SCHEDULES_UPDATE_REQUEST'
+export const USER_SCHEDULES_UPDATE_SUCCESS = 'USER_SCHEDULES_UPDATE_SUCCESS'
+export const USER_SCHEDULES_UPDATE_FAILURE = 'USER_SCHEDULES_UPDATE_FAILURE'
+
 export const USER_SCHEDULE_REQUEST = 'USER_SCHEDULE_REQUEST'
 export const USER_SCHEDULE_SUCCESS = 'USER_SCHEDULE_SUCCESS'
 export const USER_SCHEDULE_FAILURE = 'USER_SCHEDULE_FAILURE'
@@ -222,10 +226,6 @@ export const USER_SCHEDULE_EDIT_FAILURE = 'USER_SCHEDULE_EDIT_FAILURE'
 export const USER_SCHEDULE_DELETE_REQUEST = 'USER_SCHEDULE_DELETE_REQUEST'
 export const USER_SCHEDULE_DELETE_SUCCESS = 'USER_SCHEDULE_DELETE_SUCCESS'
 export const USER_SCHEDULE_DELETE_FAILURE = 'USER_SCHEDULE_DELETE_FAILURE'
-
-export const USER_SCHEDULE_UPDATE_REQUEST = 'USER_SCHEDULE_UPDATE_REQUEST'
-export const USER_SCHEDULE_UPDATE_SUCCESS = 'USER_SCHEDULE_UPDATE_SUCCESS'
-export const USER_SCHEDULE_UPDATE_FAILURE = 'USER_SCHEDULE_UPDATE_FAILURE'
 
 export const USER_CREDITS_TOPUP_REQUEST = 'USER_CREDITS_TOPUP_REQUEST'
 export const USER_CREDITS_TOPUP_SUCCESS = 'USER_CREDITS_TOPUP_SUCCESS'
@@ -619,8 +619,8 @@ function fetchAction(route) {
       endpoint: '/users/:userId/schedules/:scheduleId',
       method: 'del'
     },
-    updateUserSchedule: {
-      types: [ USER_SCHEDULE_UPDATE_REQUEST, USER_SCHEDULE_UPDATE_SUCCESS, USER_SCHEDULE_UPDATE_FAILURE ],
+    updateUserSchedules: {
+      types: [ USER_SCHEDULES_UPDATE_REQUEST, USER_SCHEDULES_UPDATE_SUCCESS, USER_SCHEDULES_UPDATE_FAILURE ],
       endpoint: '/users/:userId/schedules',
       method: 'post'
     },
@@ -1046,8 +1046,8 @@ export function deleteUserSchedule(params) {
   return fetch('deleteUserSchedule', params);
 }
 
-export function updateUserSchedule(params) {
-  return fetch('updateUserSchedule', params);
+export function updateUserSchedules(params) {
+  return fetch('updateUserSchedules', params);
 }
 
 export function getUserWithToken(params) {

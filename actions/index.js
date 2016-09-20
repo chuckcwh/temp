@@ -287,6 +287,26 @@ export const CREATE_PROMO_REQUEST = 'CREATE_PROMO_REQUEST'
 export const CREATE_PROMO_SUCCESS = 'CREATE_PROMO_SUCCESS'
 export const CREATE_PROMO_FAILURE = 'CREATE_PROMO_FAILURE'
 
+export const TRANSACTIONS_REQUEST = 'TRANSACTIONS_REQUEST'
+export const TRANSACTIONS_SUCCESS = 'TRANSACTIONS_SUCCESS'
+export const TRANSACTIONS_FAILURE = 'TRANSACTIONS_FAILURE'
+
+export const TRANSACTION_REQUEST = 'TRANSACTION_REQUEST'
+export const TRANSACTION_SUCCESS = 'TRANSACTION_SUCCESS'
+export const TRANSACTION_FAILURE = 'TRANSACTION_FAILURE'
+
+export const TRANSACTION_CREATE_REQUEST = 'TRANSACTION_CREATE_REQUEST'
+export const TRANSACTION_CREATE_SUCCESS = 'TRANSACTION_CREATE_SUCCESS'
+export const TRANSACTION_CREATE_FAILURE = 'TRANSACTION_CREATE_FAILURE'
+
+export const TRANSACTION_EDIT_REQUEST = 'TRANSACTION_EDIT_REQUEST'
+export const TRANSACTION_EDIT_SUCCESS = 'TRANSACTION_EDIT_SUCCESS'
+export const TRANSACTION_EDIT_FAILURE = 'TRANSACTION_EDIT_FAILURE'
+
+export const TRANSACTION_DELETE_REQUEST = 'TRANSACTION_DELETE_REQUEST'
+export const TRANSACTION_DELETE_SUCCESS = 'TRANSACTION_DELETE_SUCCESS'
+export const TRANSACTION_DELETE_FAILURE = 'TRANSACTION_DELETE_FAILURE'
+
 export const TRANSACTION_PAYPAL_CREATE_REQUEST = 'TRANSACTION_PAYPAL_CREATE_REQUEST'
 export const TRANSACTION_PAYPAL_CREATE_SUCCESS = 'TRANSACTION_PAYPAL_CREATE_SUCCESS'
 export const TRANSACTION_PAYPAL_CREATE_FAILURE = 'TRANSACTION_PAYPAL_CREATE_FAILURE'
@@ -694,6 +714,32 @@ function fetchAction(route) {
       types: [ CREATE_PROMO_REQUEST, CREATE_PROMO_SUCCESS, CREATE_PROMO_FAILURE ],
       endpoint: '/promos',
       method: 'post',
+    },
+    getTransactions: {
+      types: [ TRANSACTIONS_REQUEST, TRANSACTIONS_SUCCESS, TRANSACTIONS_FAILURE ],
+      endpoint: '/transactions',
+      method: 'get',
+      entity: 'transactions'
+    },
+    getTransaction: {
+      types: [ TRANSACTION_REQUEST, TRANSACTION_SUCCESS, TRANSACTION_FAILURE ],
+      endpoint: '/transactions/:transactionId',
+      method: 'get',
+    },
+    createTransaction: {
+      types: [ TRANSACTION_CREATE_REQUEST, TRANSACTION_CREATE_SUCCESS, TRANSACTION_CREATE_FAILURE ],
+      endpoint: '/transactions',
+      method: 'post',
+    },
+    editTransaction: {
+      types: [ TRANSACTION_EDIT_REQUEST, TRANSACTION_EDIT_SUCCESS, TRANSACTION_EDIT_FAILURE ],
+      endpoint: '/transactions/:transactionId',
+      method: 'put'
+    },
+    deleteTransaction: {
+      types: [ TRANSACTION_DELETE_REQUEST, TRANSACTION_DELETE_SUCCESS, TRANSACTION_DELETE_FAILURE ],
+      endpoint: '/transactions/:transactionId',
+      method: 'del'
     },
     createPaypalTransaction: {
       types: [ TRANSACTION_PAYPAL_CREATE_REQUEST, TRANSACTION_PAYPAL_CREATE_SUCCESS, TRANSACTION_PAYPAL_CREATE_FAILURE ],
@@ -1158,6 +1204,26 @@ export function getPromo(params) {
 
 export function createPromo(params) {
   return fetch('createPromo', params);
+}
+
+export function getTransactions(params, extend) {
+  return fetch('getTransactions', params, extend);
+}
+
+export function getTransaction(params) {
+  return fetch('getTransaction', params);
+}
+
+export function createTransaction(params) {
+  return fetch('createTransaction', params);
+}
+
+export function editTransaction(params) {
+  return fetch('editTransaction', params);
+}
+
+export function deleteTransaction(params) {
+  return fetch('deleteTransaction', params);
 }
 
 export function createPaypalTransaction(params) {

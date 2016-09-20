@@ -449,6 +449,34 @@ const availableSchedules = (state = {
 //   }
 // }
 
+const transactions = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: {},
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.TRANSACTIONS_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.TRANSACTIONS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: action.extend
+          ? {
+            ...state.data,
+            ...normalize(action.response && action.response.data),
+          }
+          : normalize(action.response && action.response.data),
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    default:
+      return state
+  }
+}
+
 const totalSessionsCount = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -579,6 +607,7 @@ const bookingApp = combineReducers({
   suggestedSessions,
   availableSchedules,
   // paypal,
+  transactions,
   totalSessionsCount,
   rankedServices,
   rankedSubcategories,

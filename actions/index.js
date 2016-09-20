@@ -207,6 +207,10 @@ export const USER_SCHEDULES_REQUEST = 'USER_SCHEDULES_REQUEST'
 export const USER_SCHEDULES_SUCCESS = 'USER_SCHEDULES_SUCCESS'
 export const USER_SCHEDULES_FAILURE = 'USER_SCHEDULES_FAILURE'
 
+export const USER_SCHEDULES_UPDATE_REQUEST = 'USER_SCHEDULES_UPDATE_REQUEST'
+export const USER_SCHEDULES_UPDATE_SUCCESS = 'USER_SCHEDULES_UPDATE_SUCCESS'
+export const USER_SCHEDULES_UPDATE_FAILURE = 'USER_SCHEDULES_UPDATE_FAILURE'
+
 export const USER_SCHEDULE_REQUEST = 'USER_SCHEDULE_REQUEST'
 export const USER_SCHEDULE_SUCCESS = 'USER_SCHEDULE_SUCCESS'
 export const USER_SCHEDULE_FAILURE = 'USER_SCHEDULE_FAILURE'
@@ -222,10 +226,6 @@ export const USER_SCHEDULE_EDIT_FAILURE = 'USER_SCHEDULE_EDIT_FAILURE'
 export const USER_SCHEDULE_DELETE_REQUEST = 'USER_SCHEDULE_DELETE_REQUEST'
 export const USER_SCHEDULE_DELETE_SUCCESS = 'USER_SCHEDULE_DELETE_SUCCESS'
 export const USER_SCHEDULE_DELETE_FAILURE = 'USER_SCHEDULE_DELETE_FAILURE'
-
-export const USER_SCHEDULE_UPDATE_REQUEST = 'USER_SCHEDULE_UPDATE_REQUEST'
-export const USER_SCHEDULE_UPDATE_SUCCESS = 'USER_SCHEDULE_UPDATE_SUCCESS'
-export const USER_SCHEDULE_UPDATE_FAILURE = 'USER_SCHEDULE_UPDATE_FAILURE'
 
 export const USER_CREDITS_TOPUP_REQUEST = 'USER_CREDITS_TOPUP_REQUEST'
 export const USER_CREDITS_TOPUP_SUCCESS = 'USER_CREDITS_TOPUP_SUCCESS'
@@ -286,6 +286,26 @@ export const PROMO_FAILURE = 'PROMO_FAILURE'
 export const CREATE_PROMO_REQUEST = 'CREATE_PROMO_REQUEST'
 export const CREATE_PROMO_SUCCESS = 'CREATE_PROMO_SUCCESS'
 export const CREATE_PROMO_FAILURE = 'CREATE_PROMO_FAILURE'
+
+export const TRANSACTIONS_REQUEST = 'TRANSACTIONS_REQUEST'
+export const TRANSACTIONS_SUCCESS = 'TRANSACTIONS_SUCCESS'
+export const TRANSACTIONS_FAILURE = 'TRANSACTIONS_FAILURE'
+
+export const TRANSACTION_REQUEST = 'TRANSACTION_REQUEST'
+export const TRANSACTION_SUCCESS = 'TRANSACTION_SUCCESS'
+export const TRANSACTION_FAILURE = 'TRANSACTION_FAILURE'
+
+export const TRANSACTION_CREATE_REQUEST = 'TRANSACTION_CREATE_REQUEST'
+export const TRANSACTION_CREATE_SUCCESS = 'TRANSACTION_CREATE_SUCCESS'
+export const TRANSACTION_CREATE_FAILURE = 'TRANSACTION_CREATE_FAILURE'
+
+export const TRANSACTION_EDIT_REQUEST = 'TRANSACTION_EDIT_REQUEST'
+export const TRANSACTION_EDIT_SUCCESS = 'TRANSACTION_EDIT_SUCCESS'
+export const TRANSACTION_EDIT_FAILURE = 'TRANSACTION_EDIT_FAILURE'
+
+export const TRANSACTION_DELETE_REQUEST = 'TRANSACTION_DELETE_REQUEST'
+export const TRANSACTION_DELETE_SUCCESS = 'TRANSACTION_DELETE_SUCCESS'
+export const TRANSACTION_DELETE_FAILURE = 'TRANSACTION_DELETE_FAILURE'
 
 export const TRANSACTION_PAYPAL_CREATE_REQUEST = 'TRANSACTION_PAYPAL_CREATE_REQUEST'
 export const TRANSACTION_PAYPAL_CREATE_SUCCESS = 'TRANSACTION_PAYPAL_CREATE_SUCCESS'
@@ -619,8 +639,8 @@ function fetchAction(route) {
       endpoint: '/users/:userId/schedules/:scheduleId',
       method: 'del'
     },
-    updateUserSchedule: {
-      types: [ USER_SCHEDULE_UPDATE_REQUEST, USER_SCHEDULE_UPDATE_SUCCESS, USER_SCHEDULE_UPDATE_FAILURE ],
+    updateUserSchedules: {
+      types: [ USER_SCHEDULES_UPDATE_REQUEST, USER_SCHEDULES_UPDATE_SUCCESS, USER_SCHEDULES_UPDATE_FAILURE ],
       endpoint: '/users/:userId/schedules',
       method: 'post'
     },
@@ -693,6 +713,32 @@ function fetchAction(route) {
       types: [ CREATE_PROMO_REQUEST, CREATE_PROMO_SUCCESS, CREATE_PROMO_FAILURE ],
       endpoint: '/promos',
       method: 'post',
+    },
+    getTransactions: {
+      types: [ TRANSACTIONS_REQUEST, TRANSACTIONS_SUCCESS, TRANSACTIONS_FAILURE ],
+      endpoint: '/transactions',
+      method: 'get',
+      entity: 'transactions'
+    },
+    getTransaction: {
+      types: [ TRANSACTION_REQUEST, TRANSACTION_SUCCESS, TRANSACTION_FAILURE ],
+      endpoint: '/transactions/:transactionId',
+      method: 'get',
+    },
+    createTransaction: {
+      types: [ TRANSACTION_CREATE_REQUEST, TRANSACTION_CREATE_SUCCESS, TRANSACTION_CREATE_FAILURE ],
+      endpoint: '/transactions',
+      method: 'post',
+    },
+    editTransaction: {
+      types: [ TRANSACTION_EDIT_REQUEST, TRANSACTION_EDIT_SUCCESS, TRANSACTION_EDIT_FAILURE ],
+      endpoint: '/transactions/:transactionId',
+      method: 'put'
+    },
+    deleteTransaction: {
+      types: [ TRANSACTION_DELETE_REQUEST, TRANSACTION_DELETE_SUCCESS, TRANSACTION_DELETE_FAILURE ],
+      endpoint: '/transactions/:transactionId',
+      method: 'del'
     },
     createPaypalTransaction: {
       types: [ TRANSACTION_PAYPAL_CREATE_REQUEST, TRANSACTION_PAYPAL_CREATE_SUCCESS, TRANSACTION_PAYPAL_CREATE_FAILURE ],
@@ -1045,8 +1091,8 @@ export function deleteUserSchedule(params) {
   return fetch('deleteUserSchedule', params);
 }
 
-export function updateUserSchedule(params) {
-  return fetch('updateUserSchedule', params);
+export function updateUserSchedules(params) {
+  return fetch('updateUserSchedules', params);
 }
 
 export function getUserWithToken(params) {
@@ -1157,6 +1203,26 @@ export function getPromo(params) {
 
 export function createPromo(params) {
   return fetch('createPromo', params);
+}
+
+export function getTransactions(params, extend) {
+  return fetch('getTransactions', params, extend);
+}
+
+export function getTransaction(params) {
+  return fetch('getTransaction', params);
+}
+
+export function createTransaction(params) {
+  return fetch('createTransaction', params);
+}
+
+export function editTransaction(params) {
+  return fetch('editTransaction', params);
+}
+
+export function deleteTransaction(params) {
+  return fetch('deleteTransaction', params);
 }
 
 export function createPaypalTransaction(params) {

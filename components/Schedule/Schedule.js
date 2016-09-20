@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import s from './Schedule.css';
-import { USER_SCHEDULE_UPDATE_FAILURE,
-  getUserSchedules, updateUserSchedule, showAlertPopup } from '../../actions';
+import { USER_SCHEDULES_UPDATE_FAILURE,
+  getUserSchedules, updateUserSchedules, showAlertPopup } from '../../actions';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import DayPicker, { DateUtils } from 'react-day-picker';
@@ -91,17 +91,14 @@ class Schedule extends Component {
           }
         });
       });
-      this.props.updateUserSchedule({
+      this.props.updateUserSchedules({
         userId: this.props.user._id,
         data: data,
       }).then((res) => {
-        if (res && res.type === USER_SCHEDULE_UPDATE_FAILURE) {
+        if (res && res.type === USER_SCHEDULES_UPDATE_FAILURE) {
           this.props.showAlertPopup('Sorry, there was a system error.')
         }
         this.setState({ selectedDates: [] });
-        this.props.getUserSchedules({
-          userId: this.props.user._id,
-        });
       });
     }
   };
@@ -178,7 +175,7 @@ Schedule.propTypes = {
   user: React.PropTypes.object,
 
   getUserSchedules: React.PropTypes.func.isRequired,
-  updateUserSchedule: React.PropTypes.func.isRequired,
+  updateUserSchedules: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
 };
 
@@ -189,7 +186,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getUserSchedules: (params) => dispatch(getUserSchedules(params)),
-  updateUserSchedule: (params) => dispatch(updateUserSchedule(params)),
+  updateUserSchedules: (params) => dispatch(updateUserSchedules(params)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });
 

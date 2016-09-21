@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
-import s from './CaseManage.css';
+import s from './AdminCaseManage.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 // Sub Component
-import CaseManageAddForm from './CaseManageAddForm/CaseManageAddForm';
+import AdminCaseManageForm from './AdminCaseManageForm/AdminCaseManageForm';
 
 
-class CaseManage extends Component {
+class AdminCaseManage extends Component {
 
   constructor(props) {
     super(props);
@@ -31,7 +31,7 @@ class CaseManage extends Component {
         <Header title="Case Manage" />
         <Container>
 
-          {user && add && <CaseManageAddForm />}
+          {user && add && <AdminCaseManageAddForm />}
 
           {user && !add && (
             <div>
@@ -49,7 +49,7 @@ class CaseManage extends Component {
   }
 }
 
-CaseManage.propTypes = {
+AdminCaseManage.propTypes = {
   onEnter: PropTypes.func,
   onLeave: PropTypes.func,
 };
@@ -61,4 +61,4 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CaseManage);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminCaseManage);

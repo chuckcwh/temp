@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CaseManage from '../components/CaseManage';
+import AdminCaseManage from '../components/AdminCaseManage';
 
 export default class extends Component {
 
@@ -9,7 +9,7 @@ export default class extends Component {
 
   render() {
     return (
-      <CaseManage {...this.props} />
+      <AdminCaseManage {...this.props} />
     );
   }
 

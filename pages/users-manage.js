@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import UsersManage from '../components/UsersManage';
+import AdminUsersManage from '../components/AdminUsersManage';
 
 export default class extends Component {
 
@@ -9,7 +9,7 @@ export default class extends Component {
 
   render() {
     return (
-      <UsersManage />
+      <AdminUsersManage />
     );
   }
 

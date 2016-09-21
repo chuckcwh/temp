@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import classNames from 'classnames';
 import moment from 'moment';
-import s from './UsersManage.css';
+import s from './AdminUsersManage.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 import { getUserName } from '../../core/util';
 
-class UsersManage extends Component {
+class AdminUsersManage extends Component {
 
   render() {
     return (
@@ -26,7 +26,7 @@ class UsersManage extends Component {
   }
 }
 
-UsersManage.propTypes = {
+AdminUsersManage.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
@@ -36,4 +36,4 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersManage);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminUsersManage);

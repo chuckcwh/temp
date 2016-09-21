@@ -12,7 +12,7 @@ import history from '../../core/history';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
 // Sub Component
-import PromocodeManageAddForm from './PromocodeManageAddForm/PromocodeManageAddForm';
+import PromocodeManageForm from './PromocodeManageForm/PromocodeManageForm';
 
 
 class PromocodeManage extends Component {
@@ -54,9 +54,9 @@ class PromocodeManage extends Component {
         <Header title="PromoCode Management" />
         <Container>
 
-          {user && add && <PromocodeManageAddForm />}
+          {user && add && <PromocodeManageForm />}
 
-          {user && edit && <PromocodeManageAddForm edit={true} promoId={promoId} />}
+          {user && edit && <PromocodeManageForm edit={true} promoId={promoId} />}
 
           {user && !add && !edit && (
             <div>

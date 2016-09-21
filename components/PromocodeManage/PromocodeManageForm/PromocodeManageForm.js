@@ -7,14 +7,14 @@ import cx from 'classnames';
 import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
-import s from './PromocodeManageAddForm.css';
+import s from './PromocodeManageForm.css';
 import { showDayPickerPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 
-class PromocodeManageAddForm extends Component {
+class PromocodeManageForm extends Component {
 
   constructor(props) {
     super(props);
@@ -136,7 +136,7 @@ class PromocodeManageAddForm extends Component {
       <div>
         <DayPickerPopup title='Date Picker' />
 
-        <form className={s.promocodeManageAddForm} onSubmit={handleSubmit(this.onSubmit)}>
+        <form className={s.promocodeManageForm} onSubmit={handleSubmit(this.onSubmit)}>
           <Grid fluid>
             <Row className={s.mainCat}>
 
@@ -163,7 +163,7 @@ class PromocodeManageAddForm extends Component {
                   <div className={s.inputField}>
                     <span>start*&nbsp;&nbsp;&nbsp;</span>
                     <div className={cx("DateInput", s.dateInput)}>
-                      <input className={s.dateInput} type="text" id="dateTimeStart" name="dateTimeStart" placeholder="YYYY-MM-DD" {...dateTimeStart} value={moment(dateTimeStart.value).format('YYYY-MM-DD')}/>
+                      <input className={s.dateInput} type="text" id="dateTimeStart" name="dateTimeStart" placeholder="YYYY-MM-DD" {...dateTimeStart} value={dateTimeStart.value && moment(dateTimeStart.value).format('YYYY-MM-DD')}/>
                       <span onClick={() => {
                           this.props.showDayPickerPopup(
                             dateTimeStart.value,
@@ -177,7 +177,7 @@ class PromocodeManageAddForm extends Component {
                   <div className={s.inputField}>
                     <span>end*&nbsp;&nbsp;&nbsp;</span>
                     <div className={cx("DateInput", s.dateInput)}>
-                      <input className={s.dateInput} type="text" id="dateTimeEnd" name="dateTimeEnd" placeholder="YYYY-MM-DD" {...dateTimeEnd} value={moment(dateTimeEnd.value).format('YYYY-MM-DD')}/>
+                      <input className={s.dateInput} type="text" id="dateTimeEnd" name="dateTimeEnd" placeholder="YYYY-MM-DD" {...dateTimeEnd} value={dateTimeEnd.value && moment(dateTimeEnd.value).format('YYYY-MM-DD')}/>
                       <span onClick={() => {
                         this.props.showDayPickerPopup(
                           dateTimeEnd.value,
@@ -325,7 +325,7 @@ const validate = values => {
 }
 
 
-PromocodeManageAddForm.propTypes = {
+PromocodeManageForm.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
@@ -383,4 +383,4 @@ const mapDispatchToProps = (dispatch) => ({
   deletePromo: (params) => dispatch(deletePromo(params)),
 });
 
-export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(PromocodeManageAddForm);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(PromocodeManageForm);

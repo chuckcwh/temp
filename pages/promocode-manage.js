@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PromocodeManage from '../components/PromocodeManage';
+import AdminPromocodeManage from '../components/AdminPromocodeManage';
 
 export default class extends Component {
 
@@ -9,7 +9,7 @@ export default class extends Component {
 
   render() {
     return (
-      <PromocodeManage {...this.props}/>
+      <AdminPromocodeManage {...this.props}/>
     );
   }
 

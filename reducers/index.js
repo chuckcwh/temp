@@ -951,11 +951,11 @@ const bookingApp = combineReducers({
           return state;
       }
     },
-    promocodeManageForm: (state, action) => {
+    adminPromocodeManageForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
           const { main, name } = action.source;
-          if (main === 'promocodeManageForm') {
+          if (main === 'adminPromocodeManageForm') {
             return {
               ...state,
               [name]: {
@@ -967,10 +967,6 @@ const bookingApp = combineReducers({
           return state;
         case ActionTypes.PROMO_SUCCESS:
           const { data } = action.response;
-          console.log('data', data);
-          const serviceList = "";
-
-          console.log('serviceList', serviceList);
           return {
             ...state,
             _id: { ...state._id, value: data._id },

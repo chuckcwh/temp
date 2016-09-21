@@ -7,14 +7,14 @@ import cx from 'classnames';
 import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
-import s from './PromocodeManageForm.css';
+import s from './AdminPromocodeManageForm.css';
 import { showDayPickerPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 
-class PromocodeManageForm extends Component {
+class AdminPromocodeManageForm extends Component {
 
   constructor(props) {
     super(props);
@@ -86,7 +86,7 @@ class PromocodeManageForm extends Component {
         discountRate: +(values.discountRate),
         discountType: values.discountType,
       }).then((res) => {
-        if (res.type === 'CREATE_PROMO_SUCCESS') {
+        if (res.type === 'PROMO_CREATE_SUCCESS') {
           this.props.resetForm();
         }
       })
@@ -136,7 +136,7 @@ class PromocodeManageForm extends Component {
       <div>
         <DayPickerPopup title='Date Picker' />
 
-        <form className={s.promocodeManageForm} onSubmit={handleSubmit(this.onSubmit)}>
+        <form className={s.adminPromocodeManageForm} onSubmit={handleSubmit(this.onSubmit)}>
           <Grid fluid>
             <Row className={s.mainCat}>
 
@@ -167,7 +167,7 @@ class PromocodeManageForm extends Component {
                       <span onClick={() => {
                           this.props.showDayPickerPopup(
                             dateTimeStart.value,
-                            {main: 'promocodeManageForm', name: 'dateTimeStart'}
+                            {main: 'adminPromocodeManageForm', name: 'dateTimeStart'}
                           )}}>
                         </span>
                       </div>
@@ -181,7 +181,7 @@ class PromocodeManageForm extends Component {
                       <span onClick={() => {
                         this.props.showDayPickerPopup(
                           dateTimeEnd.value,
-                          {main: 'promocodeManageForm', name: 'dateTimeEnd'}
+                          {main: 'adminPromocodeManageForm', name: 'dateTimeEnd'}
                         )}}>
                       </span>
                     </div>
@@ -325,7 +325,7 @@ const validate = values => {
 }
 
 
-PromocodeManageForm.propTypes = {
+AdminPromocodeManageForm.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
@@ -341,7 +341,7 @@ PromocodeManageForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'promocodeManageForm',
+  form: 'adminPromocodeManageForm',
   fields: [
     '_id',    // for edit use
     'dateTimeStart',
@@ -377,10 +377,10 @@ const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   createPromo: (params) => dispatch(createPromo(params)),
-  resetForm: () => dispatch(reset('promocodeManageForm')),
+  resetForm: () => dispatch(reset('adminPromocodeManageForm')),
   getPromo: (params) => dispatch(getPromo(params)),
   editPromo: (params) => dispatch(editPromo(params)),
   deletePromo: (params) => dispatch(deletePromo(params)),
 });
 
-export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(PromocodeManageForm);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminPromocodeManageForm);

@@ -4,7 +4,7 @@ import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
 import 'react-virtualized/styles.css';
-import s from './PromocodeManage.css';
+import s from './AdminPromocodeManage.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
@@ -12,10 +12,10 @@ import history from '../../core/history';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
 // Sub Component
-import PromocodeManageForm from './PromocodeManageForm/PromocodeManageForm';
+import AdminPromocodeManageForm from './AdminPromocodeManageForm/AdminPromocodeManageForm';
 
 
-class PromocodeManage extends Component {
+class AdminPromocodeManage extends Component {
 
   constructor(props) {
     super(props);
@@ -50,13 +50,13 @@ class PromocodeManage extends Component {
     const { user, promos } = this.props;
 
     return (
-      <div className={s.promocodeManage}>
+      <div className={s.adminPromocodeManage}>
         <Header title="PromoCode Management" />
         <Container>
 
-          {user && add && <PromocodeManageForm />}
+          {user && add && <AdminPromocodeManageForm />}
 
-          {user && edit && <PromocodeManageForm edit={true} promoId={promoId} />}
+          {user && edit && <AdminPromocodeManageForm edit={true} promoId={promoId} />}
 
           {user && !add && !edit && (
             <div>
@@ -163,7 +163,7 @@ class PromocodeManage extends Component {
   }
 }
 
-PromocodeManage.propTypes = {
+AdminPromocodeManage.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
@@ -175,4 +175,4 @@ const mapDispatchToProps = (dispatch) => ({
   getPromos: (params, extend) => dispatch(getPromos(params, extend)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PromocodeManage);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminPromocodeManage);

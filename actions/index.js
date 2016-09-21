@@ -283,9 +283,17 @@ export const PROMO_REQUEST = 'PROMO_REQUEST'
 export const PROMO_SUCCESS = 'PROMO_SUCCESS'
 export const PROMO_FAILURE = 'PROMO_FAILURE'
 
-export const CREATE_PROMO_REQUEST = 'CREATE_PROMO_REQUEST'
-export const CREATE_PROMO_SUCCESS = 'CREATE_PROMO_SUCCESS'
-export const CREATE_PROMO_FAILURE = 'CREATE_PROMO_FAILURE'
+export const PROMO_CREATE_REQUEST = 'PROMO_CREATE_REQUEST'
+export const PROMO_CREATE_SUCCESS = 'PROMO_CREATE_SUCCESS'
+export const PROMO_CREATE_FAILURE = 'PROMO_CREATE_FAILURE'
+
+export const PROMO_EDIT_REQUEST = 'PROMO_EDIT_REQUEST'
+export const PROMO_EDIT_SUCCESS = 'PROMO_EDIT_SUCCESS'
+export const PROMO_EDIT_FAILURE = 'PROMO_EDIT_FAILURE'
+
+export const PROMO_DELETE_REQUEST = 'PROMO_DELETE_REQUEST'
+export const PROMO_DELETE_SUCCESS = 'PROMO_DELETE_SUCCESS'
+export const PROMO_DELETE_FAILURE = 'PROMO_DELETE_FAILURE'
 
 export const TRANSACTIONS_REQUEST = 'TRANSACTIONS_REQUEST'
 export const TRANSACTIONS_SUCCESS = 'TRANSACTIONS_SUCCESS'
@@ -710,9 +718,20 @@ function fetchAction(route) {
       method: 'get',
     },
     createPromo: {
-      types: [ CREATE_PROMO_REQUEST, CREATE_PROMO_SUCCESS, CREATE_PROMO_FAILURE ],
+      types: [ PROMO_CREATE_REQUEST, PROMO_CREATE_SUCCESS, PROMO_CREATE_FAILURE ],
       endpoint: '/promos',
       method: 'post',
+    },
+    editPromo: {
+      types: [ PROMO_EDIT_REQUEST, PROMO_EDIT_SUCCESS, PROMO_EDIT_FAILURE ],
+      endpoint: '/promos/:promoId',
+      method: 'put',
+    },
+    deletePromo: {
+      types: [ PROMO_DELETE_REQUEST, PROMO_DELETE_SUCCESS, PROMO_DELETE_FAILURE ],
+      endpoint: '/promos/:promoId',
+      method: 'del',
+      auth: 'user',
     },
     getTransactions: {
       types: [ TRANSACTIONS_REQUEST, TRANSACTIONS_SUCCESS, TRANSACTIONS_FAILURE ],
@@ -1203,6 +1222,14 @@ export function getPromo(params) {
 
 export function createPromo(params) {
   return fetch('createPromo', params);
+}
+
+export function editPromo(params) {
+  return fetch('editPromo', params);
+}
+
+export function deletePromo(params) {
+  return fetch('deletePromo', params);
 }
 
 export function getTransactions(params, extend) {

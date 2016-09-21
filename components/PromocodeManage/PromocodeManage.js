@@ -116,14 +116,14 @@ class PromocodeManage extends Component {
                         />
                         <Column
                           label="start"
-                          dataKey="date"
-                          cellRenderer={({cellData}) => moment(cellData.dateTimeStart).format('YYYY-MM-DD')}
+                          dataKey="dateTimeStart"
+                          cellRenderer={({rowData}) => moment(rowData.dateTimeStart).format('YYYY-MM-DD')}
                           width={130}
                         />
                         <Column
                           label="end"
-                          dataKey="date"
-                          cellRenderer={({cellData}) => moment(cellData.dateTimeEnd).format('YYYY-MM-DD')}
+                          dataKey="dateTimeEnd"
+                          cellRenderer={({rowData}) => moment(rowData.dateTimeEnd).format('YYYY-MM-DD')}
                           width={130}
                         />
                         <Column

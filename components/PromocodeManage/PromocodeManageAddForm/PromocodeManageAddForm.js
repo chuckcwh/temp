@@ -8,7 +8,7 @@ import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
 import s from './PromocodeManageAddForm.css';
-import { showDayPickerPopup, fetchServices, createPromo, getPromo } from '../../../actions';
+import { showDayPickerPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -28,7 +28,13 @@ class PromocodeManageAddForm extends Component {
     fetchServices();
 
     if (edit) {
-      getPromo({ promoId });
+      getPromo({ promoId }).then(res => {
+        if (res.type === 'PROMO_FAILURE') {
+          // this.redirect('promocode-manage');   //TODO: page redirect while invalid promoId
+        } else if (res.type === 'PROMO_SUCCESS') {
+          this.setState({selectedDates: res.response.data.voidDates.map(item => new Date(item))})
+        }
+      });
     }
   }
 
@@ -53,6 +59,12 @@ class PromocodeManageAddForm extends Component {
     return DateUtils.isPastDay(d);
   };
 
+  onDeletePromo = (e) => {
+    e.preventDefault();
+    console.log('delete', this.props.fields._id.value);
+    this.props.deletePromo({promoId: this.props.fields._id.value});
+  }
+
   onSubmit = (values) => {
     const serviceReturn = values.services && values.services.split(',').map(service => {
       const q = service.split(':');
@@ -67,11 +79,9 @@ class PromocodeManageAddForm extends Component {
         services: serviceReturn || [],
         name: values.name,
         description: values.description,
-        date: {
-          dateTimeStart: values.startDate,
-          dateTimeEnd: values.endDate,
-          voidDates: this.state.selectedDates || []
-        },
+        dateTimeStart: values.dateTimeStart,
+        dateTimeEnd: values.dateTimeEnd,
+        voidDates: this.state.selectedDates || [],
         regions: regionReturn || [],
         discountRate: +(values.discountRate),
         discountType: values.discountType,
@@ -86,8 +96,8 @@ class PromocodeManageAddForm extends Component {
   render() {
     const {
       fields: {
-        startDate,
-        endDate,
+        dateTimeStart,
+        dateTimeEnd,
         services,
         regions,
         blackOutDays,
@@ -102,7 +112,7 @@ class PromocodeManageAddForm extends Component {
       servicesFetching,
       discountTypeChoice,
       showDayPickerPopup,
-      view,
+      edit,
 
       invalid,
       handleSubmit,
@@ -120,6 +130,7 @@ class PromocodeManageAddForm extends Component {
       })
       return result;
     }, []) || [];
+    console.log('selectedDates', selectedDates);
 
     return (
       <div>
@@ -131,56 +142,51 @@ class PromocodeManageAddForm extends Component {
 
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
+                  <p>Code*</p>
+                  <div className={s.inputField}>
+                    <span>#&nbsp;&nbsp;&nbsp;</span>
+                    <input type="text" className={s.textInput} {...code} />
+                    {code.touched && code.error && <div className={s.formError}>{code.error}</div>}
+                  </div>
+                </div>
+
+                <div className={s.mainCatContainer}>
+                  <p>Name*</p>
+                  <div className={s.inputField}>
+                    <input type="text" className={s.textInput} {...name} />
+                    {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
+                  </div>
+                </div>
+
+                <div className={s.mainCatContainer}>
                   <p>Valid Date*</p>
                   <div className={s.inputField}>
                     <span>start*&nbsp;&nbsp;&nbsp;</span>
                     <div className={cx("DateInput", s.dateInput)}>
-                      <input className={s.dateInput} type="text" id="startDate" name="startDate" placeholder="YYYY-MM-DD" {...startDate} />
+                      <input className={s.dateInput} type="text" id="dateTimeStart" name="dateTimeStart" placeholder="YYYY-MM-DD" {...dateTimeStart} value={moment(dateTimeStart.value).format('YYYY-MM-DD')}/>
                       <span onClick={() => {
                           this.props.showDayPickerPopup(
-                            startDate.value,
-                            {main: 'promocodeManageAddForm', name: 'startDate'}
+                            dateTimeStart.value,
+                            {main: 'promocodeManageForm', name: 'dateTimeStart'}
                           )}}>
                         </span>
                       </div>
-                      {startDate.touched && startDate.error && <div className={s.formError}>{startDate.error}</div>}
+                      {dateTimeStart.touched && dateTimeStart.error && <div className={s.formError}>{dateTimeStart.error}</div>}
                   </div>
 
                   <div className={s.inputField}>
                     <span>end*&nbsp;&nbsp;&nbsp;</span>
                     <div className={cx("DateInput", s.dateInput)}>
-                      <input className={s.dateInput} type="text" id="endDate" name="endDate" placeholder="YYYY-MM-DD" {...endDate} />
+                      <input className={s.dateInput} type="text" id="dateTimeEnd" name="dateTimeEnd" placeholder="YYYY-MM-DD" {...dateTimeEnd} value={moment(dateTimeEnd.value).format('YYYY-MM-DD')}/>
                       <span onClick={() => {
                         this.props.showDayPickerPopup(
-                          endDate.value,
-                          {main: 'promocodeManageAddForm', name: 'endDate'}
+                          dateTimeEnd.value,
+                          {main: 'promocodeManageForm', name: 'dateTimeEnd'}
                         )}}>
                       </span>
                     </div>
-                    {endDate.touched && endDate.error && <div className={s.formError}>{endDate.error}</div>}
+                    {dateTimeEnd.touched && dateTimeEnd.error && <div className={s.formError}>{dateTimeEnd.error}</div>}
                   </div>
-                </div>
-
-                <div className={s.mainCatContainer}>
-                  <p>Services (apply to all if not specified)</p>
-                  <div className={s.inputField}>
-                    <MultiSelect
-                      className={s.multiSelect}
-                      options={flattenServicesChoice}
-                      {...services}
-                    />
-                    {services.touched && services.error && <div className={s.formError}>{services.error}</div>}
-                  </div>
-                </div>
-
-                <div className={s.mainCatContainer}>
-                  <p>Applied to Regions (apply to all if not specified)</p>
-                  <MultiSelect
-                    className={s.multiSelect}
-                    options={regionChoice && regionChoice.map(item => ({label: item.name, value: item.value}))}
-                    {...regions}
-                  />
-                  {regions.touched && regions.error && <div className={s.formError}>{regions.error}</div>}
                 </div>
 
                 <div className={s.mainCatContainer}>
@@ -233,20 +239,25 @@ class PromocodeManageAddForm extends Component {
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Code*</p>
+                  <p>Services (apply to all if not specified)</p>
                   <div className={s.inputField}>
-                    <span>#&nbsp;&nbsp;&nbsp;</span>
-                    <input type="text" className={s.textInput} {...code} />
-                    {code.touched && code.error && <div className={s.formError}>{code.error}</div>}
+                    <MultiSelect
+                      className={s.multiSelect}
+                      options={flattenServicesChoice}
+                      {...services}
+                    />
+                    {services.touched && services.error && <div className={s.formError}>{services.error}</div>}
                   </div>
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Name*</p>
-                  <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...name} />
-                    {name.touched && name.error && <div className={s.formError}>{name.error}</div>}
-                  </div>
+                  <p>Applied to Regions (apply to all if not specified)</p>
+                  <MultiSelect
+                    className={s.multiSelect}
+                    options={regionChoice && regionChoice.map(item => ({label: item.name, value: item.value}))}
+                    {...regions}
+                  />
+                  {regions.touched && regions.error && <div className={s.formError}>{regions.error}</div>}
                 </div>
 
                 <div className={s.mainCatContainer}>
@@ -260,10 +271,19 @@ class PromocodeManageAddForm extends Component {
             </Row>
           </Grid>
 
-          <div className={s.formSectionSubmit}>
-            {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
-            <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save Changes</button>
-          </div>
+          {edit ? (
+            <div className={s.formSectionSubmit}>
+              {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
+              <button className="btn btn-primary">Set Expired</button>&nbsp;&nbsp;
+              <button className="btn btn-primary" disabled={invalid || submitting}>Update</button>&nbsp;&nbsp;
+              <button className="btn btn-secondary" onClick={this.onDeletePromo}>Delete</button>
+            </div>
+          ) : (
+            <div className={s.formSectionSubmit}>
+              {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
+              <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save Changes</button>
+            </div>
+          )}
         </form>
       </div>
     );
@@ -273,18 +293,18 @@ class PromocodeManageAddForm extends Component {
 const validate = values => {
   const errors = {};
 
-  if (!values.startDate) {
-    errors.startDate = 'Required';
-  } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.startDate)) {
-    errors.startDate = 'Invalid date (e.g. YYYY-MM-DD)';
+  if (!values.dateTimeStart) {
+    errors.dateTimeStart = 'Required';
+  } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.dateTimeStart)) {
+    errors.dateTimeStart = 'Invalid date (e.g. YYYY-MM-DD)';
   }
 
-  if (!values.endDate) {
-    errors.endDate = 'Required';
-  } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.endDate)) {
-    errors.endDate = 'Invalid date (e.g. YYYY-MM-DD)';
-  } else if (moment(values.startDate).isAfter(values.endDate, 'day')) {
-    errors.endDate = 'End date must be later';
+  if (!values.dateTimeEnd) {
+    errors.dateTimeEnd = 'Required';
+  } else if (!/^\d{4}[-]\d{2}[-]\d{2}$/i.test(values.dateTimeEnd)) {
+    errors.dateTimeEnd = 'Invalid date (e.g. YYYY-MM-DD)';
+  } else if (moment(values.dateTimeStart).isAfter(values.dateTimeEnd, 'day')) {
+    errors.dateTimeEnd = 'End date must be later';
   }
 
   if (!values.discountRate) {
@@ -324,8 +344,8 @@ const reduxFormConfig = {
   form: 'promocodeManageForm',
   fields: [
     '_id',    // for edit use
-    'startDate',
-    'endDate',
+    'dateTimeStart',
+    'dateTimeEnd',
     'services',
     'regions',
     'blackOutDays',
@@ -357,8 +377,10 @@ const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   createPromo: (params) => dispatch(createPromo(params)),
-  resetForm: () => dispatch(reset('promocodeManageAddForm')),
+  resetForm: () => dispatch(reset('promocodeManageForm')),
   getPromo: (params) => dispatch(getPromo(params)),
+  editPromo: (params) => dispatch(editPromo(params)),
+  deletePromo: (params) => dispatch(deletePromo(params)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(PromocodeManageAddForm);

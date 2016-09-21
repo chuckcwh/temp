@@ -966,8 +966,24 @@ const bookingApp = combineReducers({
           }
           return state;
         case ActionTypes.PROMO_SUCCESS:
-          console.log('action', action);
-          return state;
+          const { data } = action.response;
+          console.log('data', data);
+          const serviceList = "";
+
+          console.log('serviceList', serviceList);
+          return {
+            ...state,
+            _id: { ...state._id, value: data._id },
+            code: { ...state.code, value: data.code },
+            name: { ...state.name, value: data.name },
+            dateTimeStart: { ...state.dateTimeStart, value: data.dateTimeStart },
+            dateTimeEnd: { ...state.dateTimeEnd, value: data.dateTimeEnd },
+            discountRate: { ...state.discountRate, value: data.discountRate },
+            discountType: { ...state.discountType, value: data.discountType },
+            regions: { ...state.regions, value: data.regions },
+            services: { ...state.services, value: data.services && data.services.length && data.services.map(item => `${item.id}:${item.classId}`) },
+            description: { ...state.description, value: data.description },
+          };
         default:
           return state;
       }

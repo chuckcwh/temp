@@ -984,10 +984,10 @@ const bookingApp = combineReducers({
           return state;
       }
     },
-    caseManageAddForm: (state, action) => {
+    adminCaseManageForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
-          if (action.source === 'caseManageAddForm') {
+          if (action.source === 'adminCaseManageForm') {
             return {
               ...state,
               patientDOB: {

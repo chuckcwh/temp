@@ -31,7 +31,7 @@ class AdminCaseManage extends Component {
         <Header title="Case Manage" />
         <Container>
 
-          {user && add && <AdminCaseManageAddForm />}
+          {user && add && <AdminCaseManageForm />}
 
           {user && !add && (
             <div>

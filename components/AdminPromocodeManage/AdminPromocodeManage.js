@@ -85,6 +85,15 @@ class AdminPromocodeManage extends Component {
 
                         headerClassName={s.tableListHeader}
                         headerHeight={30}
+                        sort={({sortBy}) => {
+                          console.log('sortBy', sortBy);
+                          this.setState({page: 1});
+                          this.props.getPromos({
+                            count: 7,
+                            page: 1,
+                            sorting: {sortBy: 1},
+                          }, false);
+                        }}
 
                         onRowsRendered={onRowsRendered}
                         noRowsRenderer={() => (<div>No data</div>)}

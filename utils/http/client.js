@@ -3,14 +3,17 @@ import fetch from 'isomorphic-fetch';
 export default function (defaults = {}) {
   const host = defaults.host || '';
 
-  const query = (params) => {
-    const arr = [];
-    Object.keys(params).forEach((p) => {
-      if (Array.isArray(params[p]) || typeof params[p] === 'object') {
-        arr.push(`${encodeURIComponent(p)}=${encodeURIComponent(JSON.stringify(params[p]))}`);
-      } else arr.push(`${encodeURIComponent(p)}=${encodeURIComponent(params[p])}`);
-    });
-    return (arr.length > 0) ? arr.join('&') : '';
+  const serialize = (obj, prefix) => {
+    var str = [];
+    for (var p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+        str.push(typeof v == "object" ?
+          serialize(v, k) :
+          encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      }
+    }
+    return str.join("&");
   };
 
   const queryURL = (resource, qs) => (qs.length ? [resource, qs].join('?') : resource);
@@ -31,7 +34,7 @@ export default function (defaults = {}) {
   };
 
   const get = (resource, params = {}, headers = {}) =>
-    request(queryURL(resource, query(params)), 'GET', {}, headers);
+    request(queryURL(resource, serialize(params)), 'GET', {}, headers);
 
   const put = (resource, body = {}, headers = {}) =>
     request(resource, 'PUT', body, headers);
@@ -40,7 +43,7 @@ export default function (defaults = {}) {
     request(resource, 'POST', body, headers);
 
   const del = (resource, params = {}, headers = {}) =>
-    request(queryURL(resource, query(params)), 'DELETE', {}, headers);
+    request(queryURL(resource, serialize(params)), 'DELETE', {}, headers);
 
   return { request, get, put, post, del };
 }

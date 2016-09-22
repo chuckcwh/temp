@@ -327,6 +327,15 @@ const applications = (state = {
         data: normalize(action.response && action.response.data),
         lastUpdated: action.response && action.response.receivedAt
       }
+    case ActionTypes.APPLICATION_CREATE_SUCCESS:
+    case ActionTypes.APPLICATION_EDIT_SUCCESS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [action.response.data._id]: action.response && action.response.data
+        }
+      }
     default:
       return state
   }
@@ -336,6 +345,8 @@ const applicationsByProvider = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.APPLICATIONS_REQUEST:
     case ActionTypes.APPLICATIONS_SUCCESS:
+    case ActionTypes.APPLICATION_CREATE_SUCCESS:
+    case ActionTypes.APPLICATION_EDIT_SUCCESS:
       return {
         ...state,
         [action.data.provider]:

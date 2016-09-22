@@ -120,6 +120,7 @@ class AdminPromocodeManageForm extends Component {
       }).then((res) => {
         if (res.type === 'PROMO_CREATE_SUCCESS') {
           this.props.resetForm();
+          this.setState({selectedDates: []});
         }
       })
     ])

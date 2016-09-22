@@ -6,7 +6,7 @@ export default function (defaults = {}) {
   const query = (params) => {
     const arr = [];
     Object.keys(params).forEach((p) => {
-      if (Array.isArray(params[p])) {
+      if (Array.isArray(params[p]) || typeof params[p] === 'object') {
         arr.push(`${encodeURIComponent(p)}=${encodeURIComponent(JSON.stringify(params[p]))}`);
       } else arr.push(`${encodeURIComponent(p)}=${encodeURIComponent(params[p])}`);
     });

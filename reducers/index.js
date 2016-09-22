@@ -7,7 +7,7 @@ import user from './user';
 import modal from './modal';
 import order from './order';
 import userData from './user';
-import { normalize, normalizeMultiple, appendAllServices, parseCategories } from '../core/util';
+import { normalize, normalizeMultiple, removeByKey, appendAllServices, parseCategories } from '../core/util';
 import sortBy from 'lodash/sortBy';
 import moment from 'moment';
 
@@ -232,6 +232,7 @@ const sessions = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
+    case ActionTypes.SESSIONS_SUGGESTED_REQUEST:
       return {
         ...state,
         isFetching: true
@@ -242,6 +243,23 @@ const sessions = (state = {
         isFetching: false,
         data: normalize(action.response && action.response.data),
         dataByPatient: normalizeMultiple(action.response && action.response.data, 'patient'),
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.SESSIONS_SUGGESTED_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: normalize(action.response && action.response.data),
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.SESSION_SUGGESTED_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: {
+          ...state.data,
+          [action.data.sessionId]: action.response && action.response.data
+        },
         lastUpdated: action.response && action.response.receivedAt
       }
     default:
@@ -255,8 +273,16 @@ const sessionsByUser = (state = {}, action) => {
     case ActionTypes.SESSIONS_SUCCESS:
       return {
         ...state,
-        [action.data.client || action.data.provider]:
-          sessions(state[action.data.client || action.data.provider], action)
+        [action.data.client]:
+          sessions(state[action.data.client], action)
+      }
+    case ActionTypes.SESSIONS_SUGGESTED_REQUEST:
+    case ActionTypes.SESSIONS_SUGGESTED_SUCCESS:
+    case ActionTypes.SESSION_SUGGESTED_SUCCESS:
+      return {
+        ...state,
+        [action.data.providerId]:
+          sessions(state[action.data.providerId], action)
       }
     default:
       return state
@@ -358,9 +384,11 @@ const patients = (state = {
         }
       }
     case ActionTypes.PATIENT_DELETE_SUCCESS:
-      const newState = { ...state };
-      action.data && action.data.patientId && delete newState[action.data.patientId];
-      return newState;
+      return {
+        ...state,
+        data: removeByKey(state.data, action.data.patientId),
+        lastUpdated: action.response && action.response.receivedAt
+      };
     case ActionTypes.USER_SUCCESS:
     case ActionTypes.USER_TOKEN_SUCCESS:
     case ActionTypes.USER_CREATE_SUCCESS:

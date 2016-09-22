@@ -42,6 +42,10 @@ export const SESSION_REQUEST = 'SESSION_REQUEST'
 export const SESSION_SUCCESS = 'SESSION_SUCCESS'
 export const SESSION_FAILURE = 'SESSION_FAILURE'
 
+export const SESSION_SUGGESTED_REQUEST = 'SESSION_SUGGESTED_REQUEST'
+export const SESSION_SUGGESTED_SUCCESS = 'SESSION_SUGGESTED_SUCCESS'
+export const SESSION_SUGGESTED_FAILURE = 'SESSION_SUGGESTED_FAILURE'
+
 export const SESSION_CREATE_REQUEST = 'SESSION_CREATE_REQUEST'
 export const SESSION_CREATE_SUCCESS = 'SESSION_CREATE_SUCCESS'
 export const SESSION_CREATE_FAILURE = 'SESSION_CREATE_FAILURE'
@@ -416,6 +420,12 @@ function fetchAction(route) {
       endpoint: '/sessions/:sessionId',
       method: 'get',
       entity: 'sessions'
+    },
+    getSuggestedSession: {
+      types: [ SESSION_SUGGESTED_REQUEST, SESSION_SUGGESTED_SUCCESS, SESSION_SUGGESTED_FAILURE ],
+      endpoint: '/sessions/:sessionId',
+      method: 'get',
+      entity: 'suggestedSessions'
     },
     createSession: {
       types: [ SESSION_CREATE_REQUEST, SESSION_CREATE_SUCCESS, SESSION_CREATE_FAILURE ],
@@ -1187,6 +1197,10 @@ export function getSuggestedSessions(params) {
 
 export function getSession(params) {
   return fetch('getSession', params);
+}
+
+export function getSuggestedSession(params) {
+  return fetch('getSuggestedSession', params);
 }
 
 export function createSession(params) {

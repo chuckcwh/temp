@@ -271,6 +271,15 @@ export function normalizeMultiple(array, id = '_id') {
   }, {})
 }
 
+export function removeByKey(myObj, deleteKey) {
+  return Object.keys(myObj)
+    .filter(key => key !== deleteKey)
+    .reduce((result, current) => {
+      result[current] = myObj[current];
+      return result;
+  }, {})
+}
+
 export function configToName(config, map, value) {
   return config && config[map] && config[map][value] && config[map][value].name;
 }
@@ -346,6 +355,7 @@ const u = {
 
   normalize,
   normalizeMultiple,
+  removeByKey,
   configToName,
 
   isAdmin,

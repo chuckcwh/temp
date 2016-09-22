@@ -8,10 +8,10 @@ import { hideInlineForm } from '../../actions';
 class InlineForm extends Component {
 
   componentWillReceiveProps(props) {
-    const { fields: { postalCode } } = this.props;
-    const newPostalCode = props && props.fields && props.fields.postalCode;
-    if (newPostalCode && postalCode && newPostalCode.value.length === 6 && newPostalCode.value !== postalCode.value) {
-      this.props.fetchAddress && this.props.fetchAddress(newPostalCode.value);
+    const { fields: { postal } } = this.props;
+    const newPostal = props && props.fields && props.fields.postal;
+    if (newPostal && postal && newPostal.value.length === 6 && newPostal.value !== postal.value) {
+      this.props.fetchAddress && this.props.fetchAddress(newPostal.value);
     }
   }
 
@@ -94,7 +94,7 @@ class InlineForm extends Component {
                       <option value="">-- Select --</option>
                       {
                         input.options.map((option) => (
-                          <option value={option.value}>{option.label}</option>
+                          <option value={option.value} key={option.value}>{option.label}</option>
                         ))
                       }
                     </select>

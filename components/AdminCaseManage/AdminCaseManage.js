@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
+import 'react-virtualized/styles.css';
 import s from './AdminCaseManage.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
-import history from '../../core/history';
+import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
+import { getSessions } from '../../actions';
 // Sub Component
 import AdminCaseManageForm from './AdminCaseManageForm/AdminCaseManageForm';
 
@@ -18,8 +20,15 @@ class AdminCaseManage extends Component {
     super(props);
 
     this.state = {
-      currentIndex: 0,
+      page: 1,
     }
+  }
+
+  componentDidMount() {
+    this.props.getSessions({
+      count: 10,
+      page: this.state.page
+    }, true);
   }
 
   render() {
@@ -56,9 +65,11 @@ AdminCaseManage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
+  sessions: state.promos.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getSessions: (params, extend) => dispatch(getSessions(params, extend)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminCaseManage);

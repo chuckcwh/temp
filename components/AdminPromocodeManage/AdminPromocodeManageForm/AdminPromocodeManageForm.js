@@ -330,7 +330,7 @@ class AdminPromocodeManageForm extends Component {
           ) : (
             <div className={s.formSectionSubmit}>
               {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
-              <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Save Changes</button>
+              <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Add PromoCode</button>
             </div>
           )}
         </form>

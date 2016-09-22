@@ -154,12 +154,9 @@ const promos = (state = {
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.PROMO_DELETE_SUCCESS:
-      delete state.data[action.data.promoId];
-
       return {
         ...state,
-        isFetching: false,
-        data: state.data,
+        data: removeByKey(state.data, action.data.promoId),
         lastUpdated: action.response && action.response.receivedAt
       }
     default:

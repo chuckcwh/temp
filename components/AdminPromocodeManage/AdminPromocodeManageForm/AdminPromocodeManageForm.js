@@ -8,6 +8,7 @@ import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
 import s from './AdminPromocodeManageForm.css';
+import history from '../../../core/history';
 import { showDayPickerPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
@@ -30,7 +31,7 @@ class AdminPromocodeManageForm extends Component {
     if (edit) {
       getPromo({ promoId }).then(res => {
         if (res.type === 'PROMO_FAILURE') {
-          // this.redirect('promocode-manage');   //TODO: page redirect while invalid promoId
+          history.push({ pathname: '/promocode-manage' });
         } else if (res.type === 'PROMO_SUCCESS') {
           this.setState({selectedDates: res.response.data.voidDates.map(item => new Date(item))})
         }
@@ -61,15 +62,17 @@ class AdminPromocodeManageForm extends Component {
 
   onDeletePromo = (e) => {
     e.preventDefault();
-    console.log('delete', this.props.fields._id.value);
-    this.props.deletePromo({promoId: this.props.fields._id.value});
+
+    this.props.deletePromo({promoId: this.props.fields._id.value}, true).then(res => {
+      if (res.type === 'PROMO_DELETE_SUCCESS') {
+        history.push({ pathname: '/promocode-manage' });
+      }
+    });
   }
 
   onEditPromo = (e) => {
     e.preventDefault();
     const {fields} = this.props;
-
-    console.log('onEditPromo', fields);
 
     const serviceReturn = fields.services.value && fields.services.value.map(service => {
       const q = service.split(':');
@@ -427,7 +430,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetForm: () => dispatch(reset('adminPromocodeManageForm')),
   getPromo: (params) => dispatch(getPromo(params)),
   editPromo: (params) => dispatch(editPromo(params)),
-  deletePromo: (params) => dispatch(deletePromo(params)),
+  deletePromo: (params, extend) => dispatch(deletePromo(params, extend)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminPromocodeManageForm);

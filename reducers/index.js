@@ -153,6 +153,15 @@ const promos = (state = {
           : normalize(action.response && action.response.data),
         lastUpdated: action.response && action.response.receivedAt
       }
+    case ActionTypes.PROMO_DELETE_SUCCESS:
+      delete state.data[action.data.promoId];
+
+      return {
+        ...state,
+        isFetching: false,
+        data: state.data,
+        lastUpdated: action.response && action.response.receivedAt
+      }
     default:
       return state
   }

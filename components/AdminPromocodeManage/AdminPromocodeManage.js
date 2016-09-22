@@ -8,7 +8,6 @@ import s from './AdminPromocodeManage.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
-import history from '../../core/history';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
 // Sub Component

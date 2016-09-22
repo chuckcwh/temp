@@ -635,6 +635,7 @@ const bookingApp = combineReducers({
   booking,
   promos,
   session,
+  sessions,
   sessionsByUser,
   applicationsByProvider,
   patientsByClient,

@@ -21,6 +21,7 @@ class AdminPromocodeManage extends Component {
 
     this.state = {
       page: 1,
+      sortDirection: {},
     }
   }
 
@@ -47,6 +48,7 @@ class AdminPromocodeManage extends Component {
   render() {
     const { add, edit, promoId } = this.props.params;
     const { user, promos } = this.props;
+    const { sortDirection } = this.state;
 
     return (
       <div className={s.adminPromocodeManage}>
@@ -86,13 +88,19 @@ class AdminPromocodeManage extends Component {
                         headerClassName={s.tableListHeader}
                         headerHeight={30}
                         sort={({sortBy}) => {
-                          console.log('sortBy', sortBy);
-                          this.setState({page: 1});
+                          const sortDirectionData = () => {
+                            if (sortDirection) {
+                              Object.keys(sortDirection).map(item => sortDirection[item] ? (sortDirection[item] = 1) : (sortDirection[item] = -1));
+                              return sortDirection;
+                            }
+                            return {[sortBy]: sortDirection[sortBy] ? -1 : 1}
+                          };
                           this.props.getPromos({
                             count: 7,
                             page: 1,
-                            sorting: {sortBy: 1},
-                          }, false);
+                            sorting: sortDirectionData(),
+                          });
+                          this.setState({page: 1, sortDirection: {...sortDirection, [sortBy]: !sortDirection[sortBy]}});
                         }}
 
                         onRowsRendered={onRowsRendered}

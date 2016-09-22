@@ -20,6 +20,7 @@ import PatientsFormFirst from '../PatientsFormFirst';
 import PatientsFormSecond from '../PatientsFormSecond';
 import PatientsFormThird from '../PatientsFormThird';
 import PatientsFormFourth from '../PatientsFormFourth';
+import history from '../../core/history';
 
 class PatientsForm extends Component {
 
@@ -52,11 +53,15 @@ class PatientsForm extends Component {
             postal,
             unit,
             description,
+            lat,
+            lng,
             region,
+            neighborhood,
           },
           userId: this.props.user._id,
         }).then(res => {
           if (res && res.type === PATIENT_CREATE_SUCCESS) {
+            history.push({ pathname: '/patients' });
             resolve();
           } else {
             reject();
@@ -160,7 +165,10 @@ class PatientsForm extends Component {
                     'postal',
                     'unit',
                     'description',
+                    'lat',
+                    'lng',
                     'region',
+                    'neighborhood',
                     'race',
                     'religion',
                     'languages',

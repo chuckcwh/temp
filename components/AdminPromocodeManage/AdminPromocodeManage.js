@@ -88,19 +88,12 @@ class AdminPromocodeManage extends Component {
                         headerClassName={s.tableListHeader}
                         headerHeight={30}
                         sort={({sortBy}) => {
-                          const sortDirectionData = () => {
-                            if (sortDirection) {
-                              Object.keys(sortDirection).map(item => sortDirection[item] ? (sortDirection[item] = 1) : (sortDirection[item] = -1));
-                              return sortDirection;
-                            }
-                            return {[sortBy]: sortDirection[sortBy] ? -1 : 1}
-                          };
                           this.props.getPromos({
                             count: 7,
                             page: 1,
-                            sorting: sortDirectionData(),
+                            sorting: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1},
                           });
-                          this.setState({page: 1, sortDirection: {...sortDirection, [sortBy]: !sortDirection[sortBy]}});
+                          this.setState({page: 1, sortDirection: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1}});
                         }}
 
                         onRowsRendered={onRowsRendered}

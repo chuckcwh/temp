@@ -51,7 +51,7 @@ class AdminPromocodeManage extends Component {
 
     return (
       <div className={s.adminPromocodeManage}>
-        <Header title="PromoCode Management" />
+        <Header title={add && "Add PromoCode" || edit && "Edit PromoCode" || "PromoCode Management"} />
         <Container>
 
           {user && add && <AdminPromocodeManageForm />}
@@ -97,7 +97,7 @@ class AdminPromocodeManage extends Component {
                         <Column
                           label="#code"
                           dataKey="code"
-                          width={100}
+                          width={150}
                         />
                         <Column
                           label="name"

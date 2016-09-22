@@ -726,6 +726,7 @@ function fetchAction(route) {
       types: [ PROMO_EDIT_REQUEST, PROMO_EDIT_SUCCESS, PROMO_EDIT_FAILURE ],
       endpoint: '/promos/:promoId',
       method: 'put',
+      auth: 'user',
     },
     deletePromo: {
       types: [ PROMO_DELETE_REQUEST, PROMO_DELETE_SUCCESS, PROMO_DELETE_FAILURE ],

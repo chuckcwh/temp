@@ -26,6 +26,15 @@
           & .descriptionInput {
             width: 100%;
           }
+
+          & .isActiveInput {
+            display: inline-block;
+            /*margin-left: 15%;*/
+          }
+
+          & .isActiveInput:last-of-type {
+            margin-left: 15%;
+          }
         }
 
         & .inlineField {

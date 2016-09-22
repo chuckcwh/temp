@@ -65,6 +65,35 @@ class AdminPromocodeManageForm extends Component {
     this.props.deletePromo({promoId: this.props.fields._id.value});
   }
 
+  onEditPromo = (e) => {
+    e.preventDefault();
+    const {fields} = this.props;
+
+    console.log('onEditPromo', fields);
+
+    const serviceReturn = fields.services.value && fields.services.value.map(service => {
+      const q = service.split(':');
+      return {id: q[0], classId: q[1]}
+    })
+
+
+    this.props.editPromo({
+      promoId: fields._id.value,
+      isActive: !!fields.isActive.value,
+      code: fields.code.value,
+      services: serviceReturn || [],
+      name: fields.name.value,
+      description: fields.description.value,
+      dateTimeStart: fields.dateTimeStart.value,
+      dateTimeEnd: fields.dateTimeEnd.value,
+      voidDates: this.state.selectedDates || [],
+      regions: fields.regions.value || [],
+      discountRate: +(fields.discountRate.value),
+      discountType: fields.discountType.value,
+    })
+
+  }
+
   onSubmit = (values) => {
     const serviceReturn = values.services && values.services.split(',').map(service => {
       const q = service.split(':');
@@ -106,6 +135,7 @@ class AdminPromocodeManageForm extends Component {
         code,
         name,
         description,
+        isActive,
       },
       regionChoice,
       servicesChoice,
@@ -130,7 +160,6 @@ class AdminPromocodeManageForm extends Component {
       })
       return result;
     }, []) || [];
-    console.log('selectedDates', selectedDates);
 
     return (
       <div>
@@ -141,6 +170,24 @@ class AdminPromocodeManageForm extends Component {
             <Row className={s.mainCat}>
 
               <Col xs={12} md={6} className={s.mainCatCol}>
+
+                {edit && (
+                  <div className={s.mainCatContainer}>
+                    <p>Is Active</p>
+                    <div className={s.inputField}>
+                      <div className={s.isActiveInput}>
+                        <input type="radio" name='isActive' id='isActive_true' {...isActive} value={true} checked={!!isActive.value === true} />
+                        <label htmlFor='isActive_true'><span><span></span></span><span>Active</span></label>
+                      </div>
+
+                      <div className={s.isActiveInput}>
+                        <input type="radio" name='isActive' id='isActive_false' {...isActive} value="" checked={!!isActive.value === false} />
+                        <label htmlFor='isActive_false'><span><span></span></span><span>Expired</span></label>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className={s.mainCatContainer}>
                   <p>Code*</p>
                   <div className={s.inputField}>
@@ -163,7 +210,7 @@ class AdminPromocodeManageForm extends Component {
                   <div className={s.inputField}>
                     <span>start*&nbsp;&nbsp;&nbsp;</span>
                     <div className={cx("DateInput", s.dateInput)}>
-                      <input className={s.dateInput} type="text" id="dateTimeStart" name="dateTimeStart" placeholder="YYYY-MM-DD" {...dateTimeStart} value={dateTimeStart.value && moment(dateTimeStart.value).format('YYYY-MM-DD')}/>
+                      <input className={s.dateInput} type="text" id="dateTimeStart" name="dateTimeStart" placeholder="YYYY-MM-DD" {...dateTimeStart} value={dateTimeStart.value}/>
                       <span onClick={() => {
                           this.props.showDayPickerPopup(
                             dateTimeStart.value,
@@ -177,7 +224,7 @@ class AdminPromocodeManageForm extends Component {
                   <div className={s.inputField}>
                     <span>end*&nbsp;&nbsp;&nbsp;</span>
                     <div className={cx("DateInput", s.dateInput)}>
-                      <input className={s.dateInput} type="text" id="dateTimeEnd" name="dateTimeEnd" placeholder="YYYY-MM-DD" {...dateTimeEnd} value={dateTimeEnd.value && moment(dateTimeEnd.value).format('YYYY-MM-DD')}/>
+                      <input className={s.dateInput} type="text" id="dateTimeEnd" name="dateTimeEnd" placeholder="YYYY-MM-DD" {...dateTimeEnd} value={dateTimeEnd.value}/>
                       <span onClick={() => {
                         this.props.showDayPickerPopup(
                           dateTimeEnd.value,
@@ -274,8 +321,7 @@ class AdminPromocodeManageForm extends Component {
           {edit ? (
             <div className={s.formSectionSubmit}>
               {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
-              <button className="btn btn-primary">Set Expired</button>&nbsp;&nbsp;
-              <button className="btn btn-primary" disabled={invalid || submitting}>Update</button>&nbsp;&nbsp;
+              <button className="btn btn-primary" disabled={invalid || submitting} onClick={this.onEditPromo}>Update</button>&nbsp;&nbsp;
               <button className="btn btn-secondary" onClick={this.onDeletePromo}>Delete</button>
             </div>
           ) : (
@@ -344,6 +390,7 @@ const reduxFormConfig = {
   form: 'adminPromocodeManageForm',
   fields: [
     '_id',    // for edit use
+    'isActive', // for edit
     'dateTimeStart',
     'dateTimeEnd',
     'services',

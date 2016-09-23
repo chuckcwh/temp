@@ -24,6 +24,7 @@ class AdminCaseManageForm extends Component {
 
     this.state = {
       selectedDates: [],
+      geoLocation: {},
     }
   }
 
@@ -114,22 +115,82 @@ class AdminCaseManageForm extends Component {
 
   onSubmit = (values) => {
     console.log('values', values);
-    const data = {
-      service: values.service && values.service.split(':')[0],
-      serviceClassId: values.service && values.service.split(':')[1],
-      timeSlot: values.time,
-      date: this.state.selectedDates[0],   // backend only accept 1 date now
-      additionalInfo: this.state.caseNote,
 
+    const data = {
+      sessions: this.state.selectedDates.map(session => ({
+        service: values.service.split(':')[0],
+        serviceClass: values.service.split(':')[1],
+        address: {
+          description: values.addr,
+          unit: values.unit,
+          postal: values.postal,
+          lat: this.state.geoLocation.lat,
+          lng: this.state.geoLocation.lng,
+          region: this.state.geoLocation.region,
+          neighborhood: this.state.geoLocation.neighborhood,
+        },
+        date: moment(session).format('YYYY-MM-DD'),
+        timeSlot: values.time,
+        additionalInfo: values.caseNote,
+      })),
     }
 
-    if (values.userClass === 'Ad-hoc') {
-      data['adhocClient'] = {
+    if (values.userClass === 'Registered User') {
+      data.patient = values.patientNameOrId;  //TODO: it should take id only!
+      data.client = values.clientNameOrId;  //TODO: it should take id only!
+    } else {
+      data.adhocClient = {
         name: values.clientNameOrId,
         email: values.clientEmail,
-        contact: values.clientMobile
-      }
+        contact: values.clientMobile,
+      };
+      data.adhocPatient = {
+        name: values.patientNameOrId,
+        email: values.patientEmail,
+        contact: values.patientMobile,
+        dob: values.patientDOB,
+      };
     }
+    //TODO: add promocode
+
+    // data['services'] = {
+      // service: values.service && values.service.split(':')[0],
+      // serviceClassId: values.service && values.service.split(':')[1],
+      // timeSlot: values.time,
+      // date: this.state.selectedDates[0],
+      // additionalInfo: this.state.caseNote,
+    // }
+
+    // data['order'] = {
+    //   sessions: [],
+    //   service: values.service.split(':')[0],
+    //   serviceClass: values.service.split(':')[1],
+    //   location: {
+    //     description: values.addr,
+    //     unit: values.unit,
+    //     postal: values.postal,
+    //     lat: this.state.geoLocation.lat,
+    //     lng: this.state.geoLocation.lng,
+    //     region: this.state.geoLocation.region,
+    //     neighborhood: this.state.geoLocation.neighborhood,
+    //   },
+    //   patient: values.patientNameOrId, //TODO: check if it is id or object
+    //   booker: {
+    //     additionalInfo: values.patientNote,
+    //   }
+    // }
+    //
+    // if (values.userClass === 'Ad-hoc') {
+    //   data['user'] = {
+    //     name: values.clientNameOrId,
+    //     email: values.clientEmail,
+    //     contact: values.clientMobile
+    //   }
+    // } else {
+    //   data['user'] = {
+    //     //TODO: add "client" object
+    //   }
+    // }
     console.log('data', data)
 
     this.props.createBooking(data);
@@ -168,12 +229,12 @@ class AdminCaseManageForm extends Component {
       submitting,
     } = this.props;
 
-    const { userList, patientList, patientListErr, selectedDates } = this.state;
+    const { userList, patientList, patientListErr, selectedDates, geoLocation } = this.state;
     const flattenServiceChoice = serviceChoice && Object.values(serviceChoice).reduce((result, service) => {
       service.classes.map(serviceClass => {
         result.push({
           name: `${service.name} (${parseFloat(serviceClass.duration)} hr${parseFloat(service.duration) > 1 ? 's' : ''})`,
-          value: `${service._id}:${serviceClass.duration}`,
+          value: `${service._id}:${serviceClass._id}`,
         })
       })
       return result;

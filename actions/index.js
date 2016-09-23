@@ -906,64 +906,45 @@ export function createBooking(params) {
 }
 
 export function createBookingWithOptions({ services, order, user }) {
-  let data;
+  const data = {
+    sessions: order.sessions.map(session => ({
+      service: order && order.service,
+      serviceClass: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
+      address: {
+        description: order && order.location && order.location.description,
+        unit: order && order.location && order.location.unit,
+        postal: order && order.location && order.location.postal,
+        lat: order && order.location && order.location.lat,
+        lng: order && order.location && order.location.lng,
+        region: order && order.location && order.location.region,
+        neighborhood: order && order.location && order.location.neighborhood,
+      },
+      date: moment(session.date).format('YYYY-MM-DD'),
+      timeSlot: session.time,
+      additionalInfo: order && order.booker && order.booker.additionalInfo,
+    })),
+  };
+
   if (user && user._id) {
-    data = {
-      sessions: order.sessions.map(session => ({
-        service: order && order.service,
-        serviceClass: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
-        address: {
-          description: order && order.location && order.location.description,
-          unit: order && order.location && order.location.unit,
-          postal: order && order.location && order.location.postal,
-          lat: order && order.location && order.location.lat,
-          lng: order && order.location && order.location.lng,
-          region: order && order.location && order.location.region,
-          neighborhood: order && order.location && order.location.neighborhood,
-        },
-        patient: order && order.patient,
-        date: moment(session.date).format('YYYY-MM-DD'),
-        timeSlot: session.time,
-        additionalInfo: order && order.booker && order.booker.additionalInfo,
-      })),
-    };
-    if (order && order.promoCode && order.promoCode.code) {
-      data.promoCode = order.promoCode.code;
-    }
+    data.patient = order && order.patient;
   } else {
-    data = {
-      sessions: order.sessions.map(session => ({
-        service: order && order.service,
-        serviceClass: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
-        address: {
-          description: order && order.location && order.location.description,
-          unit: order && order.location && order.location.unit,
-          postal: order && order.location && order.location.postal,
-          lat: order && order.location && order.location.lat,
-          lng: order && order.location && order.location.lng,
-          region: order && order.location && order.location.region,
-          neighborhood: order && order.location && order.location.neighborhood,
-        },
-        date: moment(session.date).format('YYYY-MM-DD'),
-        timeSlot: session.time,
-        additionalInfo: order && order.booker && order.booker.additionalInfo,
-      })),
-      adhocClient: {
-        email: order && order.booker && order.booker.clientEmail,
-        contact: order && order.booker && order.booker.clientContact,
-        name: order && order.booker && order.booker.clientName,
-      },
-      adhocPatient: {
-        name: order && order.booker && order.booker.patientName,
-        contact: order && order.booker && order.booker.patientContact,
-        gender: order && order.booker && order.booker.patientGender,
-        dob: order && order.booker && order.booker.patientDob,
-      },
+    data.adhocClient = {
+      email: order && order.booker && order.booker.clientEmail,
+      contact: order && order.booker && order.booker.clientContact,
+      name: order && order.booker && order.booker.clientName,
     };
-    if (order && order.promoCode && order.promoCode.code) {
-      data.promoCode = order.promoCode.code;
-    }
+    data.adhocPatient = {
+      name: order && order.booker && order.booker.patientName,
+      contact: order && order.booker && order.booker.patientContact,
+      gender: order && order.booker && order.booker.patientGender,
+      dob: order && order.booker && order.booker.patientDob,
+    };
   }
+
+  if (order && order.promoCode && order.promoCode.code) {
+    data.promoCode = order.promoCode.code;
+  }
+  
   return createBooking(data);
 }
 

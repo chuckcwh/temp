@@ -8,10 +8,10 @@ import Popup from '../Popup';
 import { hideDayPickerPopup } from '../../actions';
 
 const currentYear = (new Date()).getFullYear();
-const fromMonth = new Date(currentYear - 100, 0, 1, 0, 0);
-const toMonth = new Date();
+const defaultFromMonth = new Date(currentYear - 100, 0, 1, 0, 0);
+const defaultToMonth = new Date(currentYear + 50, 0, 1, 0, 0);
 
-function YearMonthForm({ date, localeUtils, onChange }) {
+const YearMonthForm = ({ date = new Date(), localeUtils, onChange, fromMonth, toMonth }) => {
   const months = localeUtils.getMonths();
 
   const years = [];
@@ -46,12 +46,14 @@ function YearMonthForm({ date, localeUtils, onChange }) {
       </select>
     </form>
   );
-}
+};
 
 YearMonthForm.propTypes = {
   date: React.PropTypes.object,
   localeUtils: React.PropTypes.object,
   onChange: React.PropTypes.func.isRequired,
+  fromMonth: React.PropTypes.object,
+  toMonth: React.PropTypes.object,
 };
 
 class DayPickerPopup extends Component {
@@ -59,15 +61,28 @@ class DayPickerPopup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initialMonth: toMonth,
+      initialMonth: defaultToMonth,
     };
   }
 
-  onClickDay = (event, day) => {
+  handleClickDay = (event, day, { disabled }) => {
+    if (disabled) {
+      return;
+    }
     if (this.props.onDayClick) {
       this.props.onDayClick(event, DateUtils.clone(day));
     }
     this.props.hideDayPickerPopup(moment(DateUtils.clone(day)).format('YYYY-MM-DD'), this.props.source);
+  };
+
+  isDisabled = (day) => {
+    if (this.props.fromMonth && this.props.toMonth) {
+      return this.props.fromMonth > day || day > this.props.toMonth;
+    } else if (this.props.fromMonth) {
+      return this.props.fromMonth > day;
+    } else if (this.props.toMonth) {
+      return day > this.props.toMonth;
+    }
   };
 
   closePopup = () => {
@@ -87,18 +102,19 @@ class DayPickerPopup extends Component {
           <div className="YearNavigation">
             <DayPicker
               initialMonth={this.state.initialMonth}
-              fromMonth={fromMonth}
-              toMonth={toMonth}
+              fromMonth={this.props.fromMonth || defaultFromMonth}
+              toMonth={this.props.toMonth || defaultToMonth}
               captionElement={
-                <YearMonthForm onChange={initialMonth => this.setState({ initialMonth })} />
+                <YearMonthForm
+                  date={new Date(this.props.value)}
+                  onChange={initialMonth => this.setState({ initialMonth })}
+                  fromMonth={this.props.fromMonth || defaultFromMonth}
+                  toMonth={this.props.toMonth || defaultToMonth}
+                />
               }
-              modifiers={this.props.value && !isNaN(Date.parse(this.props.value)) ? {
-                selected: day => DateUtils.isSameDay(new Date(this.props.value), day),
-                disabled: day => !DateUtils.isPastDay(day),
-              } : {
-                disabled: day => !DateUtils.isPastDay(day),
-              }}
-              onDayClick={this.onClickDay}
+              selectedDays={day => DateUtils.isSameDay(new Date(this.props.value), day)}
+              disabledDays={this.isDisabled}
+              onDayClick={this.handleClickDay}
             />
           </div>
         </Popup>
@@ -111,6 +127,8 @@ class DayPickerPopup extends Component {
 DayPickerPopup.propTypes = {
   onDayClick: React.PropTypes.func,
   title: React.PropTypes.string,
+  fromMonth: React.PropTypes.object,
+  toMonth: React.PropTypes.object,
 
   visible: React.PropTypes.bool,
   value: React.PropTypes.oneOfType([

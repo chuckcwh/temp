@@ -185,7 +185,6 @@ const validate = values => {
   if (!values.patientGender) {
     errors.patientGender = 'Required';
   }
-  console.log(errors);
   return errors;
 };
 

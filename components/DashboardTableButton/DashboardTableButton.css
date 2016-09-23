@@ -15,10 +15,20 @@
     text-decoration: none;
   }
 
+  &.blue {
+    border-color: #21a1de;
+    color: #21a1de;
+  }
+
   &.blue:hover {
     text-decoration: none;
     background-color: #21a1de;
     color: white;
+  }
+
+  &.green {
+    border-color: #00b42e;
+    color: #00b42e;
   }
 
   &.green:hover {
@@ -27,10 +37,20 @@
     color: white;
   }
 
+  &.red {
+    border-color: #e95900;
+    color: #e95900;
+  }
+
   &.red:hover {
     text-decoration: none;
     background-color: #e95900;
     color: white;
+  }
+
+  &.orange {
+    border-color: #fda738;
+    color: #fda738;
   }
 
   &.orange:hover {

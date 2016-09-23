@@ -28,7 +28,7 @@ class AdminPromocodeManage extends Component {
     this.state = {
       page: 1,
       sortDirection: {},
-      filterKwd: undefined,
+      filterKwd: null,
       filterField: filterChoice[0],
     }
   }
@@ -42,7 +42,7 @@ class AdminPromocodeManage extends Component {
 
   isRowLoaded = ({ index }) => {
     return !!Object.values(this.props.promos)[index];
-  };
+  }
 
   loadMoreRows = ({startIndex, stopIndex}) => {
     this.setState({page: this.state.page + 1});
@@ -74,11 +74,9 @@ class AdminPromocodeManage extends Component {
     }
 
     if (Object.keys(sortDirection).length !== 0) {
-      console.log('keys', Object.keys(sortDirection));
       data['sorting'] = sortDirection;
     }
 
-    console.log('filter', data);
     this.props.getPromos(data);
   }
 

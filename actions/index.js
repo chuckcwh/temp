@@ -1181,8 +1181,8 @@ export function deletePatient(params) {
   return fetch('deletePatient', params);
 }
 
-export function getSessions(params) {
-  return fetch('getSessions', params);
+export function getSessions(params, extend) {
+  return fetch('getSessions', params, extend);
 }
 
 export function getSuggestedSessions(params) {

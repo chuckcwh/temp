@@ -9,7 +9,7 @@ import s from './AdminCaseManageForm.css';
 import { reduxForm, change } from 'redux-form';
 import Header from '../../Header';
 import history from '../../../core/history';
-import { showDayPickerPopup, fetchServices, getUsers, getPatients, createSession } from '../../../actions';
+import { showDayPickerPopup, fetchServices, getUsers, getPatients, createBooking } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import MultiSelect from '../../MultiSelect';
@@ -85,9 +85,9 @@ class AdminCaseManageForm extends Component {
       this.props.changeFieldValue('patientNameOrId', patient._id);
       this.props.changeFieldValue('patientGender', patient.gender);
       this.props.changeFieldValue('patientDOB', moment(patient.dob).format('YYYY-MM-DD'));
-      this.props.changeFieldValue('patientPostal', patient.address && patient.address.postal);
-      this.props.changeFieldValue('patientUnit', patient.address && patient.address.unit);
-      this.props.changeFieldValue('patientAddr', patient.address && patient.address.description);
+      this.props.changeFieldValue('postal', patient.address && patient.address.postal);
+      this.props.changeFieldValue('unit', patient.address && patient.address.unit);
+      this.props.changeFieldValue('addr', patient.address && patient.address.description);
     }
   }
 
@@ -114,37 +114,25 @@ class AdminCaseManageForm extends Component {
 
   onSubmit = (values) => {
     console.log('values', values);
-    const a = {
-      service: values.service && values.services.split(':')[0],
-      serviceClassId: values.service && values.services.split(':')[1],
+    const data = {
+      service: values.service && values.service.split(':')[0],
+      serviceClassId: values.service && values.service.split(':')[1],
       timeSlot: values.time,
       date: this.state.selectedDates[0],   // backend only accept 1 date now
       additionalInfo: this.state.caseNote,
 
     }
-    console.log('a', a)
-    return new Promise((resolve, reject) => {
-      this.props.createSession(a)
-    })
-    // return new Promise((resolve, reject) => [
-    //   this.props.createPromo({
-    //     code: values.code,
-    //     service: values.service,
-    //     name: values.name,
-    //     description: values.description,
-    //     date: {
-    //       dateTimeStart: moment(values.startDate).format('YYYY-MM-DD'),
-    //       dateTimeEnd: moment(values.endDate).format('YYYY-MM-DD'),
-    //       voidDates: this.state.selectedDates
-    //     },
-    //
-    //     regions: values.regions,
-    //     discountRate: values.discountRate,
-    //     discountType: values.discountType,
-    //   }).then((res) => {
-    //     console.log('response', res);
-    //   })
-    // ])
+
+    if (values.userClass === 'Ad-hoc') {
+      data['adhocClient'] = {
+        name: values.clientNameOrId,
+        email: values.clientEmail,
+        contact: values.clientMobile
+      }
+    }
+    console.log('data', data)
+
+    this.props.createBooking(data);
   };
 
   render() {
@@ -160,10 +148,10 @@ class AdminCaseManageForm extends Component {
         patientGender,
         patientDOB,
         patientNote,
-        patientPostal,
-        patientUnit,
-        patientAddr,
         // case
+        postal,
+        unit,
+        addr,
         service,
         time,
         caseNote,
@@ -301,6 +289,9 @@ class AdminCaseManageForm extends Component {
                   </div>
                 </div>
 
+              </Col>
+
+              <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
                   <p>Patient DOB*</p>
                   <div className={s.inputField}>
@@ -313,37 +304,10 @@ class AdminCaseManageForm extends Component {
                   </div>
                 </div>
 
-              </Col>
-
-              <Col xs={12} md={6} className={s.mainCatCol}>
-                <div className={s.mainCatContainer}>
-                  <p>Patient postal Code*</p>
-                  <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...patientPostal} />
-                    {patientPostal.touched && patientPostal.error && <div className={s.formError}>{patientPostal.error}</div>}
-                  </div>
-                </div>
-
-                <div className={s.mainCatContainer}>
-                  <p>Patient unit Number*</p>
-                  <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...patientUnit} />
-                    {patientUnit.touched && patientUnit.error && <div className={s.formError}>{patientUnit.error}</div>}
-                  </div>
-                </div>
-
-                <div className={s.mainCatContainer}>
-                  <p>Patient address*</p>
-                  <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" placeholder="Enter patient address" {...patientAddr} />
-                    {patientAddr.touched && patientAddr.error && <div className={s.formError}>{patientAddr.error}</div>}
-                  </div>
-                </div>
-
                 <div className={s.mainCatContainer}>
                   <p>Patient Note</p>
                   <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" {...patientNote} />
+                    <textarea className={s.fullWidthInput} id="addr" name="addr" {...patientNote} />
                     {patientNote.touched && patientNote.error && <div className={s.formError}>{patientNote.error}</div>}
                   </div>
                 </div>
@@ -352,6 +316,40 @@ class AdminCaseManageForm extends Component {
 
             {/* case detail */}
             <Row className={s.mainCat}>
+              <Col xs={12} md={6} className={s.mainCatCol}>
+                <div className={s.mainCatContainer}>
+                  <p>Postal Code*</p>
+                  <div className={s.inputField}>
+                    <input type="text" className={s.textInput} {...postal} />
+                    {postal.touched && postal.error && <div className={s.formError}>{postal.error}</div>}
+                  </div>
+                </div>
+
+                <div className={s.mainCatContainer}>
+                  <p>Unit Number*</p>
+                  <div className={s.inputField}>
+                    <input type="text" className={s.textInput} {...unit} />
+                    {unit.touched && unit.error && <div className={s.formError}>{unit.error}</div>}
+                  </div>
+                </div>
+
+                <div className={s.mainCatContainer}>
+                  <p>Address*</p>
+                  <div className={s.inputField}>
+                    <textarea className={s.fullWidthInput} id="addr" name="addr" placeholder="Enter patient address" {...addr} />
+                    {addr.touched && addr.error && <div className={s.formError}>{addr.error}</div>}
+                  </div>
+                </div>
+
+                <div className={s.mainCatContainer}>
+                  <p>Case Note</p>
+                  <div className={s.inputField}>
+                    <textarea className={s.fullWidthInput} id="caseNote" name="caseNote" {...caseNote} />
+                    {caseNote.touched && caseNote.error && <div className={s.formError}>{caseNote.error}</div>}
+                  </div>
+                </div>
+              </Col>
+
               <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
                   <p>Service Required*</p>
@@ -369,28 +367,6 @@ class AdminCaseManageForm extends Component {
                   </div>
                 </div>
 
-                <div className={s.mainCatContainer}>
-                  <p>Time Required*</p>
-                  <div className={s.inlineField}>
-                    {timeChoice.map(item => (
-                      <div>
-                        <input type="radio" name='time' id={`time_${item.value}`} {...time} value={item.value} checked={time.value === `${item.value}`} />
-                        <label htmlFor={`time_${item.value}`}><span><span></span></span><span>{item.label}</span></label>
-                      </div>
-                    ))}
-                    {time.touched && time.error && <div className={s.formError}>{time.error}</div>}
-                  </div>
-                </div>
-
-                <div className={s.mainCatContainer}>
-                  <p>Case Note</p>
-                  <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" {...caseNote} />
-                    {caseNote.touched && caseNote.error && <div className={s.formError}>{caseNote.error}</div>}
-                  </div>
-                </div>
-              </Col>
-              <Col xs={12} md={6} className={s.mainCatCol}>
                 <div className={s.mainCatContainer}>
                   <p>Date Required*</p>
                   <div className="text-center">
@@ -411,6 +387,19 @@ class AdminCaseManageForm extends Component {
                         <div key={day.getTime()}>{moment(day).format('DD MMM YYYY, dddd')}</div>
                       ))
                     }
+                  </div>
+                </div>
+
+                <div className={s.mainCatContainer}>
+                  <p>Time Required*</p>
+                  <div className={s.inlineField}>
+                    {timeChoice.map(item => (
+                      <div>
+                        <input type="radio" name='time' id={`time_${item.value}`} {...time} value={item.value} checked={time.value === `${item.value}`} />
+                        <label htmlFor={`time_${item.value}`}><span><span></span></span><span>{item.label}</span></label>
+                      </div>
+                    ))}
+                    {time.touched && time.error && <div className={s.formError}>{time.error}</div>}
                   </div>
                 </div>
               </Col>
@@ -455,18 +444,18 @@ const validate = values => {
     errors.patientDOB = 'Required';
   }
 
-  if (!values.patientPostal) {
-    errors.patientPostal = 'Required';
-  } else if (!/^[0-9]{6}$/i.test(values.patientPostal)) {
-    errors.patientPostal = 'Invalid postal code (e.g. 123456)';
+  if (!values.postal) {
+    errors.postal = 'Required';
+  } else if (!/^[0-9]{6}$/i.test(values.postal)) {
+    errors.postal = 'Invalid postal code (e.g. 123456)';
   }
 
-  if (!values.patientUnit) {
-    errors.patientUnit = 'Required';
+  if (!values.unit) {
+    errors.unit = 'Required';
   }
 
-  if (!values.patientAddr) {
-    errors.patientAddr = 'Required';
+  if (!values.addr) {
+    errors.addr = 'Required';
   }
 
   if (!values.service) {
@@ -498,10 +487,10 @@ const reduxFormConfig = {
     'patientGender',
     'patientDOB',
     'patientNote',
-    'patientPostal',
-    'patientUnit',
-    'patientAddr',
     // case
+    'postal',
+    'unit',
+    'addr',
     'service',
     'time',
     'caseNote',
@@ -531,9 +520,9 @@ const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   getUsers: () => dispatch(getUsers()),
   getPatients: (params) => dispatch(getPatients(params)),
-  createSession: (params) => dispatch(createSession(params)),
-  resetForm: () => dispatch(reset('caseManageAddForm')),
-  changeFieldValue: (field, value) => dispatch(change('caseManageAddForm', field, value)),
+  createBooking: (params) => dispatch(createBooking(params)),
+  resetForm: () => dispatch(reset('adminCaseManageForm')),
+  changeFieldValue: (field, value) => dispatch(change('adminCaseManageForm', field, value)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminCaseManageForm);

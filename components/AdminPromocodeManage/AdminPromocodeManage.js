@@ -12,7 +12,13 @@ import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
 // Sub Component
 import AdminPromocodeManageForm from './AdminPromocodeManageForm/AdminPromocodeManageForm';
+// react-icons
+import FaCaretDown from 'react-icons/lib/fa/caret-down';
+import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
+import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
 
+
+const filterChoice = ['code', 'name'];
 
 class AdminPromocodeManage extends Component {
 
@@ -22,12 +28,14 @@ class AdminPromocodeManage extends Component {
     this.state = {
       page: 1,
       sortDirection: {},
+      filterKwd: undefined,
+      filterField: filterChoice[0],
     }
   }
 
   componentDidMount() {
     this.props.getPromos({
-      count: 7,
+      count: 10,
       page: this.state.page,
     }, true);
   }
@@ -40,15 +48,44 @@ class AdminPromocodeManage extends Component {
     this.setState({page: this.state.page + 1});
 
     return this.props.getPromos({
-      count: 7,
+      count: 10,
       page: this.state.page,
     }, true);
+  }
+
+  setHeaderLabel = ({dataKey, label}) => {
+    const {sortDirection} = this.state;
+    const arrow = sortDirection[dataKey] === 1 ? <FaCaretSquareODown /> : sortDirection[dataKey] === -1 ? <FaCaretSquareOUp />  : <FaCaretDown />;
+    return (
+      <div>{label}  {arrow}</div>
+  )}
+
+  onFilterData = (e) => {
+    e.preventDefault();
+
+    const { sortDirection, filterField } = this.state;
+    const { value } = e.target;
+    this.setState({page: 1, filterKwd: value});
+
+    const data = {
+      count: 10,
+      page: 1,
+      filter: {[filterField]: value},
+    }
+
+    if (Object.keys(sortDirection).length !== 0) {
+      console.log('keys', Object.keys(sortDirection));
+      data['sorting'] = sortDirection;
+    }
+
+    console.log('filter', data);
+    this.props.getPromos(data);
   }
 
   render() {
     const { add, edit, promoId } = this.props.params;
     const { user, promos } = this.props;
-    const { sortDirection } = this.state;
+    const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
       <div className={s.adminPromocodeManage}>
@@ -69,6 +106,21 @@ class AdminPromocodeManage extends Component {
                 </Link>
               </div>
 
+              <div className={s.filter}>
+                <div className={s.inlineField}>
+                  <div className={cx("select", s.filterInput)}>
+                    <span></span>
+                    <select className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
+                      {filterChoice && filterChoice.map(item => (
+                        <option key={filterChoice.indexOf(item)} value={item}>{item}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className={s.inlineField}>
+                  <input type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+                </div>
+              </div>
 
               <InfiniteLoader
                 isRowLoaded={this.isRowLoaded}
@@ -89,7 +141,7 @@ class AdminPromocodeManage extends Component {
                         headerHeight={30}
                         sort={({sortBy}) => {
                           this.props.getPromos({
-                            count: 7,
+                            count: 10,
                             page: 1,
                             sorting: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1},
                           });
@@ -105,56 +157,65 @@ class AdminPromocodeManage extends Component {
                       >
                         <Column
                           label="#code"
+                          headerRenderer={this.setHeaderLabel}
                           dataKey="code"
                           width={150}
                         />
                         <Column
                           label="name"
+                          headerRenderer={this.setHeaderLabel}
                           dataKey="name"
                           width={150}
                         />
                         <Column
                           label="label"
+                          headerRenderer={this.setHeaderLabel}
                           dataKey="isActive"
                           cellRenderer={({cellData}) => cellData ? (
                             <div className={s.tableListRadio}>
                               Active
                             </div>
                           ) : null}
-                          width={80}
+                          width={100}
                         />
                         <Column
                           label="start"
+                          headerRenderer={this.setHeaderLabel}
                           dataKey="dateTimeStart"
                           cellRenderer={({rowData}) => moment(rowData.dateTimeStart).format('YYYY-MM-DD')}
                           width={130}
                         />
                         <Column
                           label="end"
+                          headerRenderer={this.setHeaderLabel}
                           dataKey="dateTimeEnd"
                           cellRenderer={({rowData}) => moment(rowData.dateTimeEnd).format('YYYY-MM-DD')}
                           width={130}
                         />
                         <Column
                           label="discount"
+                          headerRenderer={this.setHeaderLabel}
                           dataKey="discountRate"
                           cellRenderer={({rowData}) => `${rowData.discountRate} ${rowData.discountType}`}
-                          width={120}
+                          width={150}
                         />
                         <Column
                           label="view"
+                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="_id"
-                          cellRenderer={({cellData}) => {
-                            return (
+                          cellRenderer={({cellData}) => (
                               <Link className={cx('btn', s.tableListToEdit)} to={`/promocode-manage/edit/${cellData}`}>
                                 Edit
                               </Link>
-                          )}}
+                          )}
+                          disableSort={true}
                           width={100}
                         />
                         <Column
                           label="description"
+                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="description"
+                          disableSort={true}
                           width={500}
                         />
                       </Table>

@@ -3,7 +3,21 @@
 
 .adminPromocodeManage {
   & .addLink {
-    text-align: right;
+    float: right;
+  }
+
+  & .filter {
+    & .inlineField {
+      display: inline-block;
+
+      & .filterInput {
+        margin: 0 -1px 0 0;
+
+        & .filterInputInner {
+          width: 150px;
+        }
+      }
+    }
   }
 
   & .tableList {

@@ -238,8 +238,18 @@ const sessions = (state = {
       return {
         ...state,
         isFetching: false,
-        data: normalize(action.response && action.response.data),
-        dataByPatient: normalizeMultiple(action.response && action.response.data, 'patient'),
+        data: action.extend
+          ? {
+            ...state.data,
+            ...normalize(action.response && action.response.data),
+          }
+          : normalize(action.response && action.response.data),
+        dataByPatient: action.extend
+          ? {
+            ...state.data,
+            ...normalizeMultiple(action.response && action.response.data, 'patient'),
+          }
+          : normalizeMultiple(action.response && action.response.data, 'patient'),
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.SESSIONS_SUGGESTED_SUCCESS:

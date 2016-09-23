@@ -910,8 +910,8 @@ export function createBookingWithOptions({ services, order, user }) {
   if (user && user._id) {
     data = {
       sessions: order.sessions.map(session => ({
-        serviceId: order && order.service,
-        classId: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
+        service: order && order.service,
+        serviceClass: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
         address: {
           description: order && order.location && order.location.description,
           unit: order && order.location && order.location.unit,
@@ -920,9 +920,6 @@ export function createBookingWithOptions({ services, order, user }) {
           lng: order && order.location && order.location.lng,
           region: order && order.location && order.location.region,
           neighborhood: order && order.location && order.location.neighborhood,
-        },
-        loc: {
-          coordinates: [order && order.location && order.location.lng, order && order.location && order.location.lat]
         },
         patient: order && order.patient,
         date: moment(session.date).format('YYYY-MM-DD'),
@@ -936,8 +933,8 @@ export function createBookingWithOptions({ services, order, user }) {
   } else {
     data = {
       sessions: order.sessions.map(session => ({
-        serviceId: order && order.service,
-        classId: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
+        service: order && order.service,
+        serviceClass: order && order.service && order.serviceClass && services[order.service].classes[order.serviceClass]._id,
         address: {
           description: order && order.location && order.location.description,
           unit: order && order.location && order.location.unit,
@@ -946,9 +943,6 @@ export function createBookingWithOptions({ services, order, user }) {
           lng: order && order.location && order.location.lng,
           region: order && order.location && order.location.region,
           neighborhood: order && order.location && order.location.neighborhood,
-        },
-        loc: {
-          coordinates: [order && order.location && order.location.lng, order && order.location && order.location.lat]
         },
         date: moment(session.date).format('YYYY-MM-DD'),
         timeSlot: session.time,

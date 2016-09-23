@@ -85,9 +85,9 @@ class AdminCaseManageForm extends Component {
       this.props.changeFieldValue('patientNameOrId', patient._id);
       this.props.changeFieldValue('patientGender', patient.gender);
       this.props.changeFieldValue('patientDOB', moment(patient.dob).format('YYYY-MM-DD'));
-      this.props.changeFieldValue('patientPostal', patient.address && patient.address.postal);
-      this.props.changeFieldValue('patientUnit', patient.address && patient.address.unit);
-      this.props.changeFieldValue('patientAddr', patient.address && patient.address.description);
+      this.props.changeFieldValue('postal', patient.address && patient.address.postal);
+      this.props.changeFieldValue('unit', patient.address && patient.address.unit);
+      this.props.changeFieldValue('addr', patient.address && patient.address.description);
     }
   }
 
@@ -148,10 +148,10 @@ class AdminCaseManageForm extends Component {
         patientGender,
         patientDOB,
         patientNote,
-        patientPostal,
-        patientUnit,
-        patientAddr,
         // case
+        postal,
+        unit,
+        addr,
         service,
         time,
         caseNote,
@@ -307,7 +307,7 @@ class AdminCaseManageForm extends Component {
                 <div className={s.mainCatContainer}>
                   <p>Patient Note</p>
                   <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" {...patientNote} />
+                    <textarea className={s.fullWidthInput} id="addr" name="addr" {...patientNote} />
                     {patientNote.touched && patientNote.error && <div className={s.formError}>{patientNote.error}</div>}
                   </div>
                 </div>
@@ -320,31 +320,31 @@ class AdminCaseManageForm extends Component {
                 <div className={s.mainCatContainer}>
                   <p>Postal Code*</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...patientPostal} />
-                    {patientPostal.touched && patientPostal.error && <div className={s.formError}>{patientPostal.error}</div>}
+                    <input type="text" className={s.textInput} {...postal} />
+                    {postal.touched && postal.error && <div className={s.formError}>{postal.error}</div>}
                   </div>
                 </div>
 
                 <div className={s.mainCatContainer}>
                   <p>Unit Number*</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...patientUnit} />
-                    {patientUnit.touched && patientUnit.error && <div className={s.formError}>{patientUnit.error}</div>}
+                    <input type="text" className={s.textInput} {...unit} />
+                    {unit.touched && unit.error && <div className={s.formError}>{unit.error}</div>}
                   </div>
                 </div>
 
                 <div className={s.mainCatContainer}>
                   <p>Address*</p>
                   <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" placeholder="Enter patient address" {...patientAddr} />
-                    {patientAddr.touched && patientAddr.error && <div className={s.formError}>{patientAddr.error}</div>}
+                    <textarea className={s.fullWidthInput} id="addr" name="addr" placeholder="Enter patient address" {...addr} />
+                    {addr.touched && addr.error && <div className={s.formError}>{addr.error}</div>}
                   </div>
                 </div>
 
                 <div className={s.mainCatContainer}>
                   <p>Case Note</p>
                   <div className={s.inputField}>
-                    <textarea className={s.fullWidthInput} id="patientAddr" name="patientAddr" {...caseNote} />
+                    <textarea className={s.fullWidthInput} id="caseNote" name="caseNote" {...caseNote} />
                     {caseNote.touched && caseNote.error && <div className={s.formError}>{caseNote.error}</div>}
                   </div>
                 </div>
@@ -444,18 +444,18 @@ const validate = values => {
     errors.patientDOB = 'Required';
   }
 
-  if (!values.patientPostal) {
-    errors.patientPostal = 'Required';
-  } else if (!/^[0-9]{6}$/i.test(values.patientPostal)) {
-    errors.patientPostal = 'Invalid postal code (e.g. 123456)';
+  if (!values.postal) {
+    errors.postal = 'Required';
+  } else if (!/^[0-9]{6}$/i.test(values.postal)) {
+    errors.postal = 'Invalid postal code (e.g. 123456)';
   }
 
-  if (!values.patientUnit) {
-    errors.patientUnit = 'Required';
+  if (!values.unit) {
+    errors.unit = 'Required';
   }
 
-  if (!values.patientAddr) {
-    errors.patientAddr = 'Required';
+  if (!values.addr) {
+    errors.addr = 'Required';
   }
 
   if (!values.service) {
@@ -487,10 +487,10 @@ const reduxFormConfig = {
     'patientGender',
     'patientDOB',
     'patientNote',
-    'patientPostal',
-    'patientUnit',
-    'patientAddr',
     // case
+    'postal',
+    'unit',
+    'addr',
     'service',
     'time',
     'caseNote',

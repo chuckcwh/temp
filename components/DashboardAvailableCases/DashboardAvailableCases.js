@@ -7,8 +7,8 @@ import s from './DashboardAvailableCases.css';
 import Container from '../Container';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
-import { APPLICATION_CREATE_SUCCESS, fetchServices, getSuggestedSessions, createApplication, showAlertPopup } from '../../actions';
-import { isActivatedProvider, configToName, formatSessionAlias } from '../../core/util';
+import { APPLICATION_CREATE_SUCCESS, fetchServices, getSuggestedSessions, createApplication, showConfirmPopup, showAlertPopup } from '../../actions';
+import { isProvider, configToName, formatSessionAlias } from '../../core/util';
 
 class DashboardAvailableCases extends Component {
 
@@ -16,7 +16,7 @@ class DashboardAvailableCases extends Component {
     this.props.fetchServices();
     this.props.user
       && this.props.user._id
-      && isActivatedProvider(this.props.user)
+      && isProvider(this.props.user)
       && this.props.getSuggestedSessions({ providerId: this.props.user._id });
   }
 
@@ -24,21 +24,30 @@ class DashboardAvailableCases extends Component {
     newProps.user
       && newProps.user._id
       && this.props.user !== newProps.user
-      && isActivatedProvider(newProps.user)
+      && isProvider(newProps.user)
       && newProps.getSuggestedSessions({ providerId: newProps.user._id });
   }
 
   handleAccept = (sessionId) => () => {
-    if (this.props.user && this.props.user._id && isActivatedProvider(this.props.user)) {
-      this.props.createApplication({
-        provider: this.props.user._id,
-        session: sessionId,
-      }).then(res => {
-        if (res && res.type === APPLICATION_CREATE_SUCCESS) {
-          this.props.showAlertPopup('You have successfully accepted case #'
-            + `${formatSessionAlias(this.props.suggestedSessions[sessionId].alias)}.`);
+    if (this.props.user && this.props.user._id && isProvider(this.props.user)) {
+      this.props.showConfirmPopup('Are you sure you want to accept case #'
+        + `${formatSessionAlias(this.props.suggestedSessions[sessionId].alias)}?`,
+        () => {
+          this.props.createApplication({
+            provider: this.props.user._id,
+            session: sessionId,
+          }).then(res => {
+            if (res && res.type === APPLICATION_CREATE_SUCCESS) {
+              this.props.showAlertPopup('You have successfully accepted case #'
+                + `${formatSessionAlias(this.props.suggestedSessions[sessionId].alias)}.`);
+              this.props.user
+                && this.props.user._id
+                && isProvider(this.props.user)
+                && this.props.getSuggestedSessions({ providerId: this.props.user._id });
+            }
+          });
         }
-      });
+      );
     }
   };
 
@@ -121,6 +130,7 @@ DashboardAvailableCases.propTypes = {
   fetchServices: React.PropTypes.func.isRequired,
   getSuggestedSessions: React.PropTypes.func.isRequired,
   createApplication: React.PropTypes.func.isRequired,
+  showConfirmPopup: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
 };
 
@@ -137,6 +147,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getSuggestedSessions: (params) => dispatch(getSuggestedSessions(params)),
   createApplication: (params) => dispatch(createApplication(params)),
+  showConfirmPopup: (params, accept) => dispatch(showConfirmPopup(params, accept)),
   showAlertPopup: (params) => dispatch(showAlertPopup(params)),
 });
 

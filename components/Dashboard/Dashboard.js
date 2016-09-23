@@ -57,35 +57,36 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { user, patients, sessions } = this.props;
+    const { user, patients, sessions, applications } = this.props;
+    const { panelChoice } = this.state;
     let dashboardStats,
-      dashboardBody;
-
-    const stats = {
-      nextAppt: 0,
-      pendingConf: 0,
-      pendingPayment: 0,
-      others: 0,
-    };
-    sessions && Object.values(sessions).map(session => {
-      switch (session.phase) {
-        case 'awaiting-caregiver':
-          stats.pendingConf++;
-          break;
-        case 'pending-payment':
-          stats.pendingPayment += session.price;
-          break;
-        case 'pending-visit':
-          stats.nextAppt++;
-          break;
-        default:
-          stats.others++;
-          break;
-      }
-    });
+      dashboardBody,
+      stats;
 
     if (user) {
       if (isClient(user)) {
+        stats = {
+          nextAppt: 0,
+          pendingConf: 0,
+          pendingPayment: 0,
+          others: 0,
+        };
+        sessions && Object.values(sessions).map(session => {
+          switch (session.phase) {
+            case 'awaiting-caregiver':
+              stats.pendingConf++;
+              break;
+            case 'pending-payment':
+              stats.pendingPayment += session.price;
+              break;
+            case 'pending-visit':
+              stats.nextAppt++;
+              break;
+            default:
+              stats.others++;
+              break;
+          }
+        });
         dashboardStats = (
           <div className={s.dashboardStatsWrapper}>
             <DashboardStatButton
@@ -127,7 +128,6 @@ class Dashboard extends Component {
             />
           </div>
         );
-        const {panelChoice} = this.state;
         if (panelChoice === 'Pending Confirmation') {
           dashboardBody = (
             <div className={s.dashboardBody}>
@@ -154,13 +154,35 @@ class Dashboard extends Component {
           )
         }
       } else if (isProvider(user)) {
+        stats = {
+          available: 0,
+          ongoing: 0,
+          completed: 0,
+          others: 0,
+        };
+        if (sessions && Object.values(sessions).length) {
+          stats.available = Object.values(sessions).length;
+        }
+        applications && Object.values(applications).map(application => {
+          switch (application.status) {
+            case 'accepted':
+              stats.ongoing++;
+              break;
+            case 'completed':
+              stats.completed += application.price;
+              break;
+            default:
+              stats.others++;
+              break;
+          }
+        });
         dashboardStats = (
           <div className={s.dashboardStatsWrapper}>
             <DashboardStatButton
               color="blue"
               icon="bell"
               text="Available Cases"
-              stat={'0'}
+              stat={stats.available}
               onClick={() => this.setState({
                 panelChoice: 'Available Cases'
               })}
@@ -169,7 +191,7 @@ class Dashboard extends Component {
               color="orange"
               icon="hourglass"
               text="Ongoing Cases"
-              stat={'0'}
+              stat={stats.ongoing}
               onClick={() => this.setState({
                 panelChoice: 'Ongoing Cases'
               })}
@@ -178,7 +200,7 @@ class Dashboard extends Component {
               color="green"
               icon="coin"
               text="Completed Cases"
-              stat={'0'}
+              stat={`$ ${stats.completed}`}
               onClick={() => this.setState({
                 panelChoice: 'Completed Cases'
               })}
@@ -187,14 +209,13 @@ class Dashboard extends Component {
               color="red"
               icon="checklist"
               text="Other Cases"
-              stat={`$ ${0}`}
+              stat={stats.others}
               onClick={() => this.setState({
                 panelChoice: 'Other Cases'
               })}
             />
           </div>
         );
-        const {panelChoice} = this.state;
         if (panelChoice === 'Ongoing Cases') {
           dashboardBody = (
             <div className={s.dashboardBody}>
@@ -224,7 +245,7 @@ class Dashboard extends Component {
     }
     return (
       <div className={s.dashboard}>
-        <Header title="Dashboard" />
+        <Header title={`Dashboard${panelChoice ? `: ${panelChoice}` : ''}`} />
         <Container>
           <div>
             {dashboardStats}

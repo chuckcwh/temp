@@ -22,7 +22,7 @@ class BookingPatientForm extends Component {
         patientName,
         patientDob,
         patientContact,
-        patientpatientIdNum,
+        patientIdNum,
         patientGender,
         additionalInfo,
         isPatient,
@@ -87,13 +87,13 @@ class BookingPatientForm extends Component {
                 <div className={s.bookingPatientFormError}>{patientContact.error}</div>}
             </div>
             <div className={s.bookingPatientFormGroup}>
-              <input type="text" placeholder="IC*" {...patientpatientIdNum} />
-              {patientpatientIdNum.touched && patientpatientIdNum.error && <div className={s.bookingPatientFormError}>{patientpatientIdNum.error}</div>}
+              <input type="text" placeholder="IC*" {...patientIdNum} />
+              {patientIdNum.touched && patientIdNum.error && <div className={s.bookingPatientFormError}>{patientIdNum.error}</div>}
             </div>
             <div className={s.bookingPatientFormGroup}>
               <div className="DateInput">
                 <input type="text" placeholder="Birth Date* (YYYY-MM-DD)" {...patientDob} />
-                <span onClick={() => this.props.showDayPickerPopup(patientDob.value, 'bookingLocationForm')}></span>
+                <span onClick={() => this.props.showDayPickerPopup(patientDob.value, 'bookingPatientForm')}></span>
               </div>
               {patientDob.touched && patientDob.error && <div className={s.bookingPatientFormError}>{patientDob.error}</div>}
             </div>
@@ -185,6 +185,7 @@ const validate = values => {
   if (!values.patientGender) {
     errors.patientGender = 'Required';
   }
+  console.log(errors);
   return errors;
 };
 
@@ -202,7 +203,7 @@ BookingPatientForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'bookingLocationForm',
+  form: 'bookingPatientForm',
   fields: [
     'clientName',
     'clientEmail',
@@ -210,12 +211,9 @@ const reduxFormConfig = {
     'patientName',
     'patientDob',
     'patientContact',
-    'patientpatientIdNum',
+    'patientIdNum',
     'patientGender',
     'additionalInfo',
-    'postalCode',
-    'unitNumber',
-    'address',
     'isPatient',
   ],
   validate,
@@ -232,12 +230,10 @@ const mapStateToProps = (state) => {
       patientName: order && order.booker && order.booker.patientName || undefined,
       patientDob: order && order.booker && order.booker.patientDob || undefined,
       patientContact: order && order.booker && order.booker.patientContact || undefined,
+      patientIdNum: order && order.booker && order.booker.patientIdNum || undefined,
       patientGender: order && order.booker && order.booker.patientGender || undefined,
       additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
       isPatient: order && order.booker && order.booker.isPatient || undefined,
-      postalCode: order && order.location && order.location.postalCode || undefined,
-      address: order && order.location && order.location.address || undefined,
-      unitNumber: order && order.location && order.location.unitNumber || undefined,
     },
   };
 };

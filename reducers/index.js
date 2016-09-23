@@ -687,6 +687,18 @@ const bookingApp = combineReducers({
           return allValues.userContact;
         } else return value;
       }
+    },
+    bookingPatientForm: {
+      patientName: (value, previousValue, allValues) => {
+        if (allValues.isPatient) {
+          return allValues.clientName;
+        } else return value;
+      },
+      patientContact: (value, previousValue, allValues) => {
+        if (allValues.isPatient) {
+          return allValues.clientContact;
+        } else return value;
+      }
     }
   }).plugin({
     bookingLocationForm: (state, action) => {
@@ -769,6 +781,23 @@ const bookingApp = combineReducers({
               neighborhood: {
                 ...state.neighborhood,
                 value: action.neighborhood
+              }
+            }
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
+    bookingPatientForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'bookingPatientForm') {
+            return {
+              ...state,
+              patientDob: {
+                ...state.patientDob,
+                value: action.value
               }
             }
           }

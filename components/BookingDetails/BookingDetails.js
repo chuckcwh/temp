@@ -9,7 +9,7 @@ import Container from '../Container';
 import InlineForm from '../InlineForm';
 import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
-import { SESSION_CANCEL_SUCCESS, fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelBookingSession,
+import { SESSION_CANCEL_SUCCESS, fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showInlineForm } from '../../actions';
 import { configToName } from '../../core/util';
 import history from '../../core/history';
@@ -636,7 +636,7 @@ BookingDetails.propTypes = {
   editBooking: React.PropTypes.func.isRequired,
   clearBooking: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
-  cancelBookingSession: React.PropTypes.func.isRequired,
+  cancelSession: React.PropTypes.func.isRequired,
   showConfirmPopup: React.PropTypes.func.isRequired,
   showInlineForm: React.PropTypes.func.isRequired,
 };
@@ -656,7 +656,7 @@ const mapDispatchToProps = (dispatch) => ({
   editBooking: (booking) => dispatch(editBooking(booking)),
   clearBooking: () => dispatch(clearBooking()),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
-  cancelBookingSession: (params) => dispatch(cancelBookingSession(params)),
+  cancelSession: (params) => dispatch(cancelSession(params)),
   showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
   showInlineForm: (params) => dispatch(showInlineForm(params)),
 });

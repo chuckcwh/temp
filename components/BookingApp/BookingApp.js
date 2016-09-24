@@ -41,14 +41,14 @@ class BookingApp extends Component {
   componentDidMount() {
     const location = history.getCurrentLocation();
     // if "bid" query parameter exists, must be booking manage/confirmation
-    if (location && location.query && location.query.bid && location.query.contact) {
+    if (location && location.query && location.query.bid && location.query.btoken) {
       if (location.query.token) {
         this.props.setPostStatus('payment-paypal');
       }
 
       this.props.getBooking({
         bookingId: location.query.bid,
-        contact: location.query.contact,
+        bookingToken: location.query.btoken,
       }).then((res) => {
         if (res.response && res.response.status >= 1) {
           const { data } = res.response;
@@ -57,7 +57,7 @@ class BookingApp extends Component {
             this.props.setPostStatus('success');
           } else if (data && data.case && data.case.status === 'Accepting Quotes') {
             // if booking is still pending service providers
-            history.replace({ pathname: '/booking-manage', query: { bid: location.query.bid, contact: location.query.contact } });
+            history.replace({ pathname: '/booking-manage', query: { bid: location.query.bid, btoken: location.query.btoken } });
           }
         } else {
           // console.error('Failed to obtain booking data.');

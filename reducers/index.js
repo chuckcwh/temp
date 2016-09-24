@@ -84,7 +84,7 @@ const services = (state = {
     case ActionTypes.SERVICES_SUCCESS:
       let servicesHash = {}, ids = [], rankedServices = [], servicesUnderCategory = {}, servicesUnderSlug = {}
       action.response && action.response.data.forEach((service) => {
-        service.classesHash = service.classes.reduce((result, serviceClass) => {
+        service.classes = service.classes.reduce((result, serviceClass) => {
           result[serviceClass._id] = serviceClass;
           return result;
         }, {})

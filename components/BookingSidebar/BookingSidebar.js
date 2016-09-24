@@ -16,7 +16,7 @@ const BookingSidebar = (props) => {
     timeslots,
     sessions,
     sum;
-  if (services && order && order.service && services[order.service] && !isNaN(order.serviceClass) && services[order.service].classes[order.serviceClass]) {
+  if (services && order && order.service && services[order.service] && order.serviceClass && services[order.service].classes[order.serviceClass]) {
     service = `${services[order.service].name} ` +
       `(${parseFloat(services[order.service].classes[order.serviceClass].duration)} hr${parseFloat(services[order.service].classes[order.serviceClass].duration) > 1 ? 's' : ''})`;
   }

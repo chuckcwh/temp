@@ -54,9 +54,9 @@ class DashboardCompletedCases extends Component {
                       <Col xs={4}>Service</Col>
                       <Col xs={8} md={2}>
                         {`${services && services[session.service] && services[session.service].name} `
-                          + `(${services && services[session.service] && services[session.service].classesHash
-                              && services[session.service].classesHash[session.serviceClassId]
-                              && services[session.service].classesHash[session.serviceClassId].duration}hrs)`}
+                          + `(${services && services[session.service] && services[session.service].classes
+                              && services[session.service].classes[session.serviceClassId]
+                              && services[session.service].classes[session.serviceClassId].duration}hrs)`}
                       </Col>
                       <Col xs={4}>Price</Col>
                       <Col xs={8} md={1}>{`$${parseFloat(application.price).toFixed(2)}`}</Col>

@@ -130,11 +130,11 @@ class BookingServices extends Component {
                     const parentCategory = categories[parentCategoryId];
                     const services = servicesGroupedByParent[parentCategoryId];
                     const flattenedServices = services && services.reduce((result, service) => {
-                      service.classes.forEach((serviceClass, index) => {
+                      Object.values(service.classes).forEach((serviceClass) => {
                         result.push(Object.assign({}, service, {
                           price: serviceClass.price,
                           duration: serviceClass.duration,
-                          key: `${service._id}:${index}`,
+                          key: `${service._id}:${serviceClass._id}`,
                         }));
                       });
                       return result;

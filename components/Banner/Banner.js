@@ -61,11 +61,11 @@ class Banner extends Component {
     const { rankedServices, servicesFetching } = this.props;
 
     const selectOptions = rankedServices && rankedServices.reduce((result, service) => {
-      service.classes.forEach((serviceClass, index) => {
+      Object.values(service.classes).forEach((serviceClass) => {
         result.push({
           label: `${service.name} (${parseFloat(serviceClass.duration)} ` +
             `hr${parseFloat(serviceClass.duration) > 1 ? 's' : ''})`,
-          value: `${service._id}:${index}`,
+          value: `${service._id}:${serviceClass._id}`,
         });
       });
       return result;

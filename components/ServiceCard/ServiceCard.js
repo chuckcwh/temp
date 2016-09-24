@@ -9,8 +9,9 @@ class ServiceCard extends Component {
 
   constructor(props) {
     super(props);
+    const { service } = props;
     this.state = {
-      selected: 0,
+      selected: service && service.classes && Object.values(service.classes)[0]._id || undefined,
     };
   }
 
@@ -26,10 +27,10 @@ class ServiceCard extends Component {
             <div className={s.serviceCardBodyDuration}>
               <span>Duration: </span>
               {
-                service && service.classes && service.classes.map((serviceClass, index) => (
+                service && service.classes && Object.values(service.classes).map((serviceClass) => (
                   <LabelButton
-                    selected={this.state.selected === index}
-                    onClick={() => { this.setState({ selected: index }); }}
+                    selected={this.state.selected === serviceClass._id}
+                    onClick={() => { this.setState({ selected: serviceClass._id }); }}
                     key={serviceClass._id}
                   >
                     {`${parseFloat(serviceClass.duration)} hr${serviceClass.duration > 1 ? 's' : ''}`}

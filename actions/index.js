@@ -1429,8 +1429,8 @@ export const setOrderSum = (sum) => {
 
 export const ORDER_SET_PROMO = 'ORDER_SET_PROMO'
 
-export const setOrderPromoCode = (promoCode) => {
-  return { type: ORDER_SET_PROMO, promoCode }
+export const setOrderPromo = (promo) => {
+  return { type: ORDER_SET_PROMO, promo }
 }
 
 export const ORDER_SET_BOOKER = 'ORDER_SET_BOOKER'

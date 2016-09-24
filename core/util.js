@@ -124,24 +124,21 @@ export function appendAllServices(tree) {
   return tree;
 }
 
-export function calcRate(session, promo, sid) {
-  if (promo && promo.discountedRate) {
+export function calcRate(session, promo, sid, scid) {
+  if (promo && promo.discountRate && promo.discountType) {
     // verify promo is applicable to session
+    const sessionDateMoment = moment(session.date);
     const isPromoApplicable =
-      promo.services.some(elem => elem === sid) &&
-      promo.dates.some(elem =>
-        elem.type === 'Scheduled' &&
-        elem.status === 'Active' &&
-        moment(session.date) >= moment(elem.dateTimeStart.substr(0, 10)) &&
-        moment(session.date) <= moment(elem.dateTimeEnd.substr(0, 10))
-      ) &&
-      !promo.dates.some(elem =>
-        elem.type === 'Void' &&
-        elem.status === 'Active' &&
-        moment(session.date).isSame(moment(elem.dateTimeStart.substr(0, 10)))
-      );
+      ((promo.services && promo.services.length) ? promo.services.some(elem => elem.id === sid && elem.classId === scid) : true) &&
+      (promo.dateTimeStart ? sessionDateMoment >= moment(promo.dateTimeStart) : true) &&
+      (promo.dateTimeEnd ? sessionDateMoment <= moment(promo.dateTimeEnd) : true) &&
+      ((promo.voidDates && promo.voidDates.length) ? !promo.voidDates.some(date => sessionDateMoment.isSame(moment(date), 'day')) : true);
     if (isPromoApplicable) {
-      return parseFloat(session.price) * (100 - parseFloat(promo.discountedRate)) / 100;
+      if (promo.discountType === '%') {
+        return parseFloat(session.price) * (100 - parseFloat(promo.discountRate)) / 100;
+      } else {
+        return parseFloat(session.price) - parseFloat(promo.discountRate);
+      }
     }
     return parseFloat(session.price);
   }

@@ -5,7 +5,7 @@ import linkState from 'react-link-state';
 import Loader from 'react-loader';
 import s from './BookingResults.css';
 import ConfirmPopup from '../ConfirmPopup';
-import { getAvailableSchedules, getPromo, setOrderSum, setOrderPromoCode, setOrderSessions, setLastPage,
+import { PROMO_SUCCESS, getAvailableSchedules, getPromo, setOrderSum, setOrderPromo, setOrderSessions, setLastPage,
   createBookingWithOptions, showAlertPopup, showConfirmPopup } from '../../actions';
 import history from '../../core/history';
 import { isNextLastPage, calcRate, configToName } from '../../core/util';
@@ -18,9 +18,9 @@ class BookingResults extends Component {
     this.state = {
       schedules: undefined,
       slots: undefined,
-      promoCode: order && order.promoCode && order.promoCode.code,
-      showPromoButton: (order && order.promoCode && order.promoCode.code && order.promoCode.code.length),
-      disablePromo: (order && order.promoCode),
+      promoCode: order && order.promo && order.promo.code,
+      showPromoButton: (order && order.promo && order.promo.code && order.promo.code.length),
+      disablePromo: (order && order.promo),
       agree: false,
     };
   }
@@ -67,7 +67,7 @@ class BookingResults extends Component {
         schedules[i] = Object.assign(session, { date: timeslot.date });
         if (session.time) {
           checkedData[`session${i}`] = true;
-          sum += calcRate(schedules[i], this.props.order.promoCode, this.props.order.service);
+          sum += calcRate(schedules[i], this.props.promosByCode && this.props.order.promo && this.props.promosByCode[this.props.order.promo], this.props.order.service, this.props.order.serviceClass);
         } else {
           session.disabled = true;
         }
@@ -77,7 +77,7 @@ class BookingResults extends Component {
       }, checkedData));
       this.props.setOrderSum(sum);
     }
-    if (this.props.order.promoCode !== nextProps.order.promoCode) {
+    if (this.props.order.promo !== nextProps.order.promo) {
       this.updateSum(nextProps);
     }
     if (this.props.order.sessions !== nextProps.order.sessions) {
@@ -91,10 +91,10 @@ class BookingResults extends Component {
     }
   }
 
-  onKeyPromo = (event) => {
+  handleKeyPromo = (event) => {
     if (event.target.value && event.target.value.length) {
       this.setState({
-        promoCode: event.target.value,
+        promoCode: event.target.value.toUpperCase(),
         showPromoButton: true,
       });
     } else {
@@ -105,21 +105,22 @@ class BookingResults extends Component {
     }
   };
 
-  onApplyPromo = (event) => {
+  handleApplyPromo = (event) => {
     if (this.promoForm.checkValidity()) {
       event.preventDefault();
 
       this.props.getPromo({
-        code: this.state.promoCode,
+        promoId: this.state.promoCode,
       }).then((res) => {
-        if (res.response && res.response.promoCode && res.response.promoCode.status === 'Active') {
+        if (res && res.type === PROMO_SUCCESS && this.props.promosByCode && this.state.promoCode && this.props.promosByCode[this.state.promoCode] && this.props.promosByCode[this.state.promoCode].isActive) {
+          const promo = this.props.promosByCode[this.state.promoCode];
           this.setState({
-            promoCode: res.response.promoCode.code,
+            promoCode: promo.code,
             disablePromo: true,
           });
-          this.props.setOrderPromoCode(res.response.promoCode);
+          this.props.setOrderPromo(promo.code);
         } else {
-          this.props.showAlertPopup('Your promotion code is not valid.');
+          this.props.showAlertPopup('Your promo code is not valid.');
           // console.error('Failed to obtain promo code data.');
 
           this.setState({ promoCode: undefined });
@@ -132,13 +133,13 @@ class BookingResults extends Component {
     }
   };
 
-  onRemovePromo = (event) => {
+  handleRemovePromo = (event) => {
     event.preventDefault();
     this.setState({
       promoCode: undefined,
       disablePromo: false,
     });
-    this.props.setOrderPromoCode(null);
+    this.props.setOrderPromo(null);
   };
 
   onCheckedAgree = (event) => {
@@ -205,7 +206,7 @@ class BookingResults extends Component {
     let sum = 0;
     for (let i = 0; i < this.state.schedules.length; i++) {
       if (this.state[`session${i}`]) {
-        sum += calcRate(this.state.schedules[i], props.order.promoCode, props.order.service);
+        sum += calcRate(this.state.schedules[i], props.promosByCode && props.order.promo && props.promosByCode[props.order.promo], props.order.service, props.order.serviceClass);
       }
     }
     props.setOrderSum(sum);
@@ -218,17 +219,17 @@ class BookingResults extends Component {
 
       this.updateSum(this.props);
     };
-    const { config, isLoggedIn, order } = this.props;
-    const orderPromoCode = order && order.promoCode;
+    const { config, isLoggedIn, promosByCode, order } = this.props;
+    const orderPromoCode = order && order.promo;
     let promoButton;
     if (this.state.showPromoButton) {
-      if (order.promoCode) {
+      if (order.promo) {
         promoButton = (
-          <button className="btn btn-primary btn-small" onClick={this.onRemovePromo}>Remove</button>
+          <button className="btn btn-primary btn-small" onClick={this.handleRemovePromo}>Remove</button>
         );
       } else {
         promoButton = (
-          <button className="btn btn-primary btn-small" onClick={this.onApplyPromo}>Apply</button>
+          <button className="btn btn-primary btn-small" onClick={this.handleApplyPromo}>Apply</button>
         );
       }
     }
@@ -242,7 +243,7 @@ class BookingResults extends Component {
                 priceText;
               const rate = session.price;
               if (orderPromoCode) {
-                discountedRate = calcRate(session, order.promoCode, order.service);
+                discountedRate = calcRate(session, promosByCode && order.promo && promosByCode[order.promo], order.service, order.serviceClass);
                 if (discountedRate === rate) {
                   // empty discountedRate if there is actually no discount
                   discountedRate = null;
@@ -294,7 +295,7 @@ class BookingResults extends Component {
                   id="promoCode"
                   name="promoCode"
                   value={this.state.promoCode || ''}
-                  onChange={this.onKeyPromo}
+                  onChange={this.handleKeyPromo}
                   placeholder="Promotion Code (Optional)"
                   maxLength="50"
                   disabled={this.state.disablePromo}
@@ -350,11 +351,12 @@ BookingResults.propTypes = {
   order: React.PropTypes.object,
   schedules: React.PropTypes.array,
   schedulesFetching: React.PropTypes.bool,
+  promosByCode: React.PropTypes.object,
 
   getAvailableSchedules: React.PropTypes.func.isRequired,
   getPromo: React.PropTypes.func.isRequired,
   setOrderSum: React.PropTypes.func.isRequired,
-  setOrderPromoCode: React.PropTypes.func.isRequired,
+  setOrderPromo: React.PropTypes.func.isRequired,
   setOrderSessions: React.PropTypes.func.isRequired,
   setLastPage: React.PropTypes.func.isRequired,
   createBookingWithOptions: React.PropTypes.func.isRequired,
@@ -371,13 +373,14 @@ const mapStateToProps = (state) => ({
   order: state.order,
   schedules: state.availableSchedules.data,
   schedulesFetching: state.availableSchedules.isFetching,
+  promosByCode: state.promos.dataByCode,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getAvailableSchedules: (params) => dispatch(getAvailableSchedules(params)),
   getPromo: (params) => dispatch(getPromo(params)),
   setOrderSum: (sum) => dispatch(setOrderSum(sum)),
-  setOrderPromoCode: (promoCode) => dispatch(setOrderPromoCode(promoCode)),
+  setOrderPromo: (promoCode) => dispatch(setOrderPromo(promoCode)),
   setOrderSessions: (schedules) => dispatch(setOrderSessions(schedules)),
   setLastPage: (page) => dispatch(setLastPage(page)),
   createBookingWithOptions: (params) => dispatch(createBookingWithOptions(params)),

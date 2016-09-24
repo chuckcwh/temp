@@ -73,10 +73,10 @@ const sum = (state = null, action) => {
   }
 }
 
-const promoCode = (state = null, action) => {
+const promo = (state = null, action) => {
   switch (action.type) {
     case ActionTypes.ORDER_SET_PROMO:
-      return action.promoCode;
+      return action.promo;
     default:
       return state;
   }
@@ -100,7 +100,7 @@ const order = combineReducers({
   booker,
   sessions,
   sum,
-  promoCode,
+  promo,
   patient
 })
 

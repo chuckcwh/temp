@@ -134,9 +134,11 @@ const promos = (state = {
   isFetching: false,
   didInvalidate: true,
   data: {},
+  dataByCode: {},
 }, action) => {
   switch (action.type) {
     case ActionTypes.PROMOS_REQUEST:
+    case ActionTypes.PROMO_REQUEST:
       return {
         ...state,
         isFetching: true
@@ -151,6 +153,26 @@ const promos = (state = {
             ...normalize(action.response && action.response.data),
           }
           : normalize(action.response && action.response.data),
+        dataByCode: action.extend
+          ? {
+            ...state.data,
+            ...normalize(action.response && action.response.data),
+          }
+          : normalize(action.response && action.response.data, 'code'),
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.PROMO_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: {
+          ...state.data,
+          [action.response.data._id]: action.response.data,
+        },
+        dataByCode: {
+          ...state.data,
+          [action.response.data.code]: action.response.data,
+        },
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.PROMO_DELETE_SUCCESS:

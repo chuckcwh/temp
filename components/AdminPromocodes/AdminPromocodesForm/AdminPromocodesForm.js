@@ -7,7 +7,7 @@ import cx from 'classnames';
 import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
-import s from './AdminPromocodeManageForm.css';
+import s from './AdminPromocodesForm.css';
 import history from '../../../core/history';
 import { showDayPickerPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
@@ -15,7 +15,7 @@ import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 
-class AdminPromocodeManageForm extends Component {
+class AdminPromocodesForm extends Component {
 
   constructor(props) {
     super(props);
@@ -26,12 +26,13 @@ class AdminPromocodeManageForm extends Component {
 
   componentDidMount() {
     const { fetchServices, edit, promoId, getPromo } = this.props;
+
     fetchServices();
 
     if (edit) {
       getPromo({ promoId }).then(res => {
         if (res.type === 'PROMO_FAILURE') {
-          history.push({ pathname: '/promocode-manage' });
+          history.push({ pathname: '/admin-promocodes' });
         } else if (res.type === 'PROMO_SUCCESS') {
           this.setState({selectedDates: res.response.data.voidDates.map(item => new Date(item))})
         }
@@ -65,7 +66,7 @@ class AdminPromocodeManageForm extends Component {
 
     this.props.deletePromo({promoId: this.props.fields._id.value}, true).then(res => {
       if (res.type === 'PROMO_DELETE_SUCCESS') {
-        history.push({ pathname: '/promocode-manage' });
+        history.push({ pathname: '/admin-promocodes' });
       }
     });
   }
@@ -169,7 +170,7 @@ class AdminPromocodeManageForm extends Component {
       <div>
         <DayPickerPopup title='Date Picker' />
 
-        <form className={s.adminPromocodeManageForm} onSubmit={handleSubmit(this.onSubmit)}>
+        <form className={s.adminPromocodesForm} onSubmit={handleSubmit(this.onSubmit)}>
           <Grid fluid>
             <Row className={s.mainCat}>
 
@@ -218,7 +219,7 @@ class AdminPromocodeManageForm extends Component {
                       <span onClick={() => {
                           this.props.showDayPickerPopup(
                             dateTimeStart.value,
-                            {main: 'adminPromocodeManageForm', name: 'dateTimeStart'}
+                            {main: 'adminPromocodesForm', name: 'dateTimeStart'}
                           )}}>
                         </span>
                       </div>
@@ -232,7 +233,7 @@ class AdminPromocodeManageForm extends Component {
                       <span onClick={() => {
                         this.props.showDayPickerPopup(
                           dateTimeEnd.value,
-                          {main: 'adminPromocodeManageForm', name: 'dateTimeEnd'}
+                          {main: 'adminPromocodesForm', name: 'dateTimeEnd'}
                         )}}>
                       </span>
                     </div>
@@ -375,7 +376,7 @@ const validate = values => {
 }
 
 
-AdminPromocodeManageForm.propTypes = {
+AdminPromocodesForm.propTypes = {
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
@@ -391,7 +392,7 @@ AdminPromocodeManageForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'adminPromocodeManageForm',
+  form: 'adminPromocodesForm',
   fields: [
     '_id',    // for edit use
     'isActive', // for edit
@@ -428,10 +429,10 @@ const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   createPromo: (params) => dispatch(createPromo(params)),
-  resetForm: () => dispatch(reset('adminPromocodeManageForm')),
+  resetForm: () => dispatch(reset('adminPromocodesForm')),
   getPromo: (params) => dispatch(getPromo(params)),
   editPromo: (params) => dispatch(editPromo(params)),
   deletePromo: (params, extend) => dispatch(deletePromo(params, extend)),
 });
 
-export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminPromocodeManageForm);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminPromocodesForm);

@@ -168,21 +168,27 @@ class Navigation extends Component {
             </li>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink, (location.pathname === '/promocode-manage') ? s.navigationLinkActive : '')}
-                to="/promocode-manage"
-              >PROMOCODE MANAGEMENT</Link>
+                className={classNames(s.navigationLink, (location.pathname === '/admin-promocodes') ? s.navigationLinkActive : '')}
+                to="/admin-promocodes"
+              >PROMOCODE</Link>
             </li>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink, (location.pathname === '/case-manage') ? s.navigationLinkActive : '')}
-                to="/case-manage"
-              >CASE MANAGEMENT</Link>
+                className={classNames(s.navigationLink, (location.pathname === '/admin-bookings') ? s.navigationLinkActive : '')}
+                to="/admin-bookings"
+              >BOOKINGS</Link>
             </li>
             <li className={s.navigationItem}>
               <Link
-                className={classNames(s.navigationLink, (location.pathname === '/users-manage') ? s.navigationLinkActive : '')}
-                to="/users-manage"
-              >USERS MANAGEMENT</Link>
+                className={classNames(s.navigationLink, (location.pathname === '/admin-cases') ? s.navigationLinkActive : '')}
+                to="/admin-cases"
+              >CASES</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/admin-users') ? s.navigationLinkActive : '')}
+                to="/admin-users"
+              >USERS</Link>
             </li>
             <li className={s.navigationItem}>
               <a className={s.navigationLink} onClick={this.handleLogout}>LOGOUT</a>
@@ -200,21 +206,27 @@ class Navigation extends Component {
                 </li>
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/promocode-manage') ? s.navigationLinkActive : '')}
-                    to="/promocode-manage"
-                  >PROMOCODE MANAGEMENT</Link>
+                    className={classNames(s.navigationLink, (location.pathname === '/admin-promocodes') ? s.navigationLinkActive : '')}
+                    to="/admin-promocodes"
+                  >PROMOCODE</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/case-manage') ? s.navigationLinkActive : '')}
-                    to="/case-manage"
-                  >CASE MANAGEMENT</Link>
+                    className={classNames(s.navigationLink, (location.pathname === '/admin-bookings') ? s.navigationLinkActive : '')}
+                    to="/admin-bookings"
+                  >BOOKINGS</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <Link
-                    className={classNames(s.navigationLink, (location.pathname === '/users-manage') ? s.navigationLinkActive : '')}
-                    to="/users-manage"
-                  >USERS MANAGEMENT</Link>
+                    className={classNames(s.navigationLink, (location.pathname === '/admin-cases') ? s.navigationLinkActive : '')}
+                    to="/admin-cases"
+                  >CASES</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/admin-users') ? s.navigationLinkActive : '')}
+                    to="/admin-users"
+                  >USERS</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <a className={classNames(s.navigationLink)} onClick={this.handleLogout}>LOGOUT</a>

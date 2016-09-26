@@ -120,32 +120,44 @@
     "page": "./pages/schedule"
   },
   {
-    "path": "/promocode-manage",
-    "page": "./pages/promocode-manage"
+    "path": "/admin-promocodes",
+    "page": "./pages/admin/promocodes"
   },
   {
-    "path": "/promocode-manage/:add",
-    "page": "./pages/promocode-manage"
+    "path": "/admin-promocodes/:add",
+    "page": "./pages/admin/promocodes"
   },
   {
-    "path": "/promocode-manage/:edit/:promoId",
-    "page": "./pages/promocode-manage"
+    "path": "/admin-promocodes/:edit/:promoId",
+    "page": "./pages/admin/promocodes"
   },
   {
-    "path": "/case-manage",
-    "page": "./pages/case-manage"
+    "path": "/admin-bookings",
+    "page": "./pages/admin/bookings"
   },
   {
-    "path": "/case-manage/:add",
-    "page": "./pages/case-manage"
+    "path": "/admin-bookings/:add",
+    "page": "./pages/admin/bookings"
   },
   {
-    "path": "/case-manage/:view/:bookingId",
-    "page": "./pages/case-manage"
+    "path": "/admin-bookings/:view/:bookingId",
+    "page": "./pages/admin/bookings"
   },
   {
-    "path": "/users-manage",
-    "page": "./pages/users-manage"
+    "path": "/admin-cases",
+    "page": "./pages/admin/cases"
+  },
+  {
+    "path": "/admin-cases/:add",
+    "page": "./pages/admin/cases"
+  },
+  {
+    "path": "/admin-cases/:view/:caseId",
+    "page": "./pages/admin/cases"
+  },
+  {
+    "path": "/admin-users",
+    "page": "./pages/admin/users"
   },
   {
     "path": "/sessions/:sessionId",

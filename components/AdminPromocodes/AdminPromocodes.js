@@ -4,14 +4,14 @@ import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
 import 'react-virtualized/styles.css';
-import s from './AdminPromocodeManage.css';
+import s from './AdminPromocodes.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
 // Sub Component
-import AdminPromocodeManageForm from './AdminPromocodeManageForm/AdminPromocodeManageForm';
+import AdminPromocodesForm from './AdminPromocodesForm/AdminPromocodesForm';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -20,7 +20,7 @@ import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
 
 const filterChoice = ['code', 'name'];
 
-class AdminPromocodeManage extends Component {
+class AdminPromocodes extends Component {
 
   constructor(props) {
     super(props);
@@ -96,20 +96,20 @@ class AdminPromocodeManage extends Component {
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
-      <div className={s.adminPromocodeManage}>
+      <div className={s.adminPromocodes}>
         <Header title={add && "Add PromoCode" || edit && "Edit PromoCode" || "PromoCode Management"} />
         <Container>
 
-          {user && add && <AdminPromocodeManageForm />}
+          {user && add && <AdminPromocodesForm />}
 
-          {user && edit && <AdminPromocodeManageForm edit={true} promoId={promoId} />}
+          {user && edit && <AdminPromocodesForm edit={true} promoId={promoId} />}
 
           {user && !add && !edit && (
             <div>
               <div className={s.addLink}>
                 <Link
                   className={cx('btn', 'btn-primary')}
-                  to="/promocode-manage/add">
+                  to="/admin-promocodes/add">
                   New Promo Code
                 </Link>
               </div>
@@ -212,7 +212,7 @@ class AdminPromocodeManage extends Component {
                           headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="_id"
                           cellRenderer={({cellData}) => (
-                              <Link className={cx('btn', s.tableListToEdit)} to={`/promocode-manage/edit/${cellData}`}>
+                              <Link className={cx('btn', s.tableListToEdit)} to={`/admin-promocodes/edit/${cellData}`}>
                                 Edit
                               </Link>
                           )}
@@ -241,7 +241,7 @@ class AdminPromocodeManage extends Component {
   }
 }
 
-AdminPromocodeManage.propTypes = {
+AdminPromocodes.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
@@ -253,4 +253,4 @@ const mapDispatchToProps = (dispatch) => ({
   getPromos: (params, extend) => dispatch(getPromos(params, extend)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminPromocodeManage);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminPromocodes);

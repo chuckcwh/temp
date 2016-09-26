@@ -4,7 +4,7 @@ import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
 import 'react-virtualized/styles.css';
-import s from './AdminCaseManageView.css';
+import s from './AdminCasesView.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
@@ -12,14 +12,14 @@ import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 // import { getSessions } from '../../../actions';
 import { formatSessionAlias, configToName } from '../../../core/util';
 // Sub Component
-import AdminCaseManageForm from '../AdminCaseManageForm/AdminCaseManageForm';
+import AdminCasesForm from '../AdminCasesForm/AdminCasesForm';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
 import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
 
 
-class AdminCaseManageView extends Component {
+class AdminCasesView extends Component {
 
   constructor(props) {
     super(props);
@@ -37,7 +37,7 @@ class AdminCaseManageView extends Component {
     const { user , config } = this.props;
 
     return (
-      <div className={s.adminCaseManageView}>
+      <div className={s.adminCasesView}>
         <Header title="Booking Detail" />
         <Container>
 
@@ -49,7 +49,7 @@ class AdminCaseManageView extends Component {
   }
 }
 
-AdminCaseManageView.propTypes = {
+AdminCasesView.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
@@ -62,4 +62,4 @@ const mapDispatchToProps = (dispatch) => ({
   // getSessions: (params, extend) => dispatch(getSessions(params, extend)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminCaseManageView);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminCasesView);

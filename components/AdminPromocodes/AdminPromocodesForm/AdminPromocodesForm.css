@@ -1,7 +1,7 @@
 @import '../../variables.css';
 
 
-.adminPromocodeManageForm {
+.adminPromocodesForm {
   & .mainCat {
     & .mainCatCol {
       padding: 0 30px;

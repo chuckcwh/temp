@@ -1058,11 +1058,11 @@ const bookingApp = combineReducers({
           return state;
       }
     },
-    adminPromocodeManageForm: (state, action) => {
+    adminPromocodesForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
           const { main, name } = action.source;
-          if (main === 'adminPromocodeManageForm') {
+          if (main === 'adminPromocodesForm') {
             return {
               ...state,
               [name]: {
@@ -1092,10 +1092,10 @@ const bookingApp = combineReducers({
           return state;
       }
     },
-    adminCaseManageForm: (state, action) => {
+    adminCasesForm: (state, action) => {
       switch (action.type) {
         case ActionTypes.HIDE_MODAL_DAYPICKER:
-          if (action.source === 'adminCaseManageForm') {
+          if (action.source === 'adminCasesForm') {
             return {
               ...state,
               patientDOB: {

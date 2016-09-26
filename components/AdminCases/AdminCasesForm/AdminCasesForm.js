@@ -5,7 +5,7 @@ import cx from 'classnames';
 import moment from 'moment';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import s from './AdminCaseManageForm.css';
+import s from './AdminCasesForm.css';
 import { reduxForm, change } from 'redux-form';
 import Header from '../../Header';
 import history from '../../../core/history';
@@ -17,7 +17,7 @@ import some from 'lodash/some';
 import remove from 'lodash/remove';
 
 
-class AdminCaseManageForm extends Component {
+class AdminCasesForm extends Component {
 
   constructor(props) {
     super(props);
@@ -28,8 +28,15 @@ class AdminCaseManageForm extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchServices();
-    this.props.getUsers().then((res) => {
+    const { fetchServices, edit, sessionId, getUsers } = this.props;
+
+    fetchServices();
+
+    if (edit) {
+      //TODO: retrieve case detail
+    }
+
+    getUsers().then((res) => {
       if (res.type === 'USERS_SUCCESS') {
         this.setState({
           userList: res.response.data.length && res.response.data.filter(user => user.role === 'client').sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0) || []
@@ -230,7 +237,7 @@ class AdminCaseManageForm extends Component {
       <div>
         <DayPickerPopup title='Date Picker' />
 
-        <form className={s.adminCaseManageForm} onSubmit={handleSubmit(this.onSubmit)}>
+        <form className={s.adminCasesForm} onSubmit={handleSubmit(this.onSubmit)}>
           <Grid fluid>
 
             {/* user type */}
@@ -344,7 +351,7 @@ class AdminCaseManageForm extends Component {
                   <div className={s.inputField}>
                     <div className={cx("DateInput", s.dateInput)}>
                       <input className={s.dateInput} type="text" id="patientDOB" name="patientDOB" placeholder="YYYY-MM-DD" {...patientDOB} disabled={userClass.value === 'Registered User'}/>
-                      <span onClick={() => this.props.showDayPickerPopup(patientDOB.value, 'adminCaseManageForm')}>
+                      <span onClick={() => this.props.showDayPickerPopup(patientDOB.value, 'adminCasesForm')}>
                         </span>
                       </div>
                       {patientDOB.touched && patientDOB.error && <div className={s.formError}>{patientDOB.error}</div>}
@@ -518,13 +525,13 @@ const validate = values => {
   return errors
 }
 
-AdminCaseManageForm.propTypes = {
+AdminCasesForm.propTypes = {
   serviceChoice: React.PropTypes.object,
   fetchServices: React.PropTypes.func,
 };
 
 const reduxFormConfig = {
-  form: 'adminCaseManageForm',
+  form: 'adminCasesForm',
   fields: [
     'userClass',
     // client
@@ -576,8 +583,8 @@ const mapDispatchToProps = (dispatch) => ({
   getUsers: () => dispatch(getUsers()),
   getPatients: (params) => dispatch(getPatients(params)),
   createBooking: (params) => dispatch(createBooking(params)),
-  resetForm: () => dispatch(reset('adminCaseManageForm')),
-  changeFieldValue: (field, value) => dispatch(change('adminCaseManageForm', field, value)),
+  resetForm: () => dispatch(reset('adminCasesForm')),
+  changeFieldValue: (field, value) => dispatch(change('adminCasesForm', field, value)),
 });
 
-export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminCaseManageForm);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminCasesForm);

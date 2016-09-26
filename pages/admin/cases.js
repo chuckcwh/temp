@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AdminCaseManage from '../components/AdminCaseManage';
-import AdminCaseManageView from '../components/AdminCaseManage/AdminCaseManageView/AdminCaseManageView';
+import AdminCases from '../../components/AdminCases';
+import AdminCasesView from '../../components/AdminCases/AdminCasesView/AdminCasesView';
 
 
 export default class extends Component {
@@ -15,9 +15,9 @@ export default class extends Component {
     let content;
 
     if (view) {
-      content = (<AdminCaseManageView {...this.props} />)
+      content = (<AdminCasesView {...this.props} />)
     } else {
-      content = (<AdminCaseManage {...this.props} />)
+      content = (<AdminCases {...this.props} />)
     }
 
     return (

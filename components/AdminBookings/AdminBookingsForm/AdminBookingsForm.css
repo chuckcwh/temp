@@ -1,0 +1,70 @@
+@import '../../variables.css';
+
+
+.adminBookingsForm {
+  min-height: 400px;
+  position: relative;
+  padding-bottom: 40px;
+
+  & .mainUser {
+    margin-bottom: 25px;
+    text-align: center;
+
+    & .userType {
+      display: inline-block;
+    }
+  }
+
+  & .mainCat {
+    border: 2px solid lightgrey;
+    border-radius: 5px;
+    margin: 15px auto;
+
+    & .mainCatCol {
+      padding: 20px 5%;
+
+      & .mainCatContainer {
+
+        & .inputField {
+          text-align: right;
+
+          & .dateInput, & .textInput, & .selectInput {
+            margin-right: 0;
+          }
+
+          & .multiSelect {
+            text-align: left;
+          }
+
+          & .discountTypeInput {
+            width: 110px;
+          }
+
+          & .fullWidthInput {
+            width: 100%;
+          }
+        }
+
+        & .inlineField {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  & .formSectionSubmit {
+    text-align: center;
+    margin: 40px auto 80px;
+  }
+
+  & .formError {
+    color: red;
+    text-align: right;
+  }
+
+  & .formSuccess {
+    color: green;
+    text-align: right;
+  }
+
+}

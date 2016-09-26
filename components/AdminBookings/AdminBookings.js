@@ -4,7 +4,7 @@ import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
 import 'react-virtualized/styles.css';
-import s from './AdminCaseManage.css';
+import s from './AdminBookings.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
@@ -12,7 +12,7 @@ import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getSessions } from '../../actions';
 import { formatSessionAlias, configToName } from '../../core/util';
 // Sub Component
-import AdminCaseManageForm from './AdminCaseManageForm/AdminCaseManageForm';
+import AdminBookingsForm from './AdminBookingsForm/AdminBookingsForm';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -22,7 +22,7 @@ import FaCheck from 'react-icons/lib/fa/check';
 
 const filterChoice = ['phase', 'alias', 'client', 'patient', 'price', 'status']; //TODO: update fields
 
-class AdminCaseManage extends Component {
+class AdminBookings extends Component {
 
   constructor(props) {
     super(props);
@@ -98,20 +98,20 @@ class AdminCaseManage extends Component {
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
-      <div className={s.adminCaseManage}>
-        <Header title={add && "Add Booking" || edit && "Edit Case" || "Case Management"} />
+      <div className={s.adminBookings}>
+        <Header title={add && "Add Booking" || edit && "Edit Booking" || "Booking Management"} />
         <Container>
 
-          {user && add && <AdminCaseManageForm />}
+          {user && add && <AdminBookingsForm />}
 
-          {user && edit && <AdminCaseManageForm edit={true} sessionId={sessionId} />}
+          {user && edit && <AdminBookingsForm edit={true} sessionId={sessionId} />}
 
           {user && !add && !edit && (
             <div>
               <div className={s.addLink}>
                 <Link
                   className={cx('btn', 'btn-primary', s.addLink)}
-                  to="/case-manage/add">
+                  to="/admin-bookings/add">
                   New Booking
                 </Link>
               </div>
@@ -172,87 +172,6 @@ class AdminCaseManage extends Component {
                           cellRenderer={({cellData}) => configToName(config, 'sessionPhasesByValue', cellData)}
                           width={200}
                         />
-                        <Column
-                          label="alias"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="alias"
-                          cellRenderer={({cellData}) => formatSessionAlias(cellData)}
-                          width={100}
-                        />
-                        <Column
-                          label="adhoc"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="isAdhoc"
-                          cellRenderer={({cellData}) => cellData ? <FaCheck /> : null}
-                          width={100}
-                        />
-                        <Column
-                          label="client"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="client"
-                          cellRenderer={({cellData}) => cellData && cellData.name}
-                          width={150}
-                        />
-                        <Column
-                          label="patient"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="patient"
-                          cellRenderer={({cellData}) => cellData && cellData.name}
-                          width={150}
-                        />
-                        <Column
-                          label="price"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="price"
-                          cellRenderer={({cellData}) => `${cellData} sgd`}
-                          width={100}
-                        />
-                        <Column
-                          label="created at"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="createdAt"
-                          cellRenderer={({cellData}) => moment(cellData).format('YYYY-MM-DD')}
-                          width={150}
-                        />
-                        <Column
-                          label="view"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="_id"
-                          cellRenderer={({cellData}) => (
-                            <Link className={cx('btn', s.tableListToEdit)} to={`/case-manage/edit/${cellData}`}>
-                              Edit
-                            </Link>
-                          )}
-                          disableSort={true}
-                          width={100}
-                        />
-                        <Column
-                          label="status"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="status"
-                          cellRenderer={({cellData}) => {
-                            let statusClass;
-                            switch (cellData) {
-                              case 'open':
-                              case 'engaged':
-                                statusClass = s.tableListStatusOpen;
-                                break;
-                              case 'cancelled':
-                              case 'completed':
-                                statusClass = s.tableListStatusCancelled;
-                                break;
-                              case 'expired':
-                              case 'suspended':
-                                statusClass = s.tableListStatusExpired;
-                                break;
-                              default:
-                                break;
-                            }
-                            return (
-                              <div className={cx('btn', s.tableListStatus, statusClass)}>{cellData}</div>
-                          )}}
-                          width={100}
-                        />
                       </Table>
                     )}
                   </AutoSizer>
@@ -268,7 +187,7 @@ class AdminCaseManage extends Component {
   }
 }
 
-AdminCaseManage.propTypes = {
+AdminBookings.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
@@ -281,4 +200,4 @@ const mapDispatchToProps = (dispatch) => ({
   getSessions: (params, extend) => dispatch(getSessions(params, extend)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminCaseManage);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminBookings);

@@ -170,7 +170,7 @@ class Navigation extends Component {
               <Link
                 className={classNames(s.navigationLink, (location.pathname === '/admin-promocodes') ? s.navigationLinkActive : '')}
                 to="/admin-promocodes"
-              >PROMOCODE</Link>
+              >PROMOCODES</Link>
             </li>
             <li className={s.navigationItem}>
               <Link
@@ -208,7 +208,7 @@ class Navigation extends Component {
                   <Link
                     className={classNames(s.navigationLink, (location.pathname === '/admin-promocodes') ? s.navigationLinkActive : '')}
                     to="/admin-promocodes"
-                  >PROMOCODE</Link>
+                  >PROMOCODES</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <Link

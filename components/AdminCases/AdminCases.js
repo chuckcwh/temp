@@ -124,14 +124,6 @@ class AdminCases extends Component {
 
           {user && !add && !edit && (
             <div>
-              <div className={s.addLink}>
-                <Link
-                  className={cx('btn', 'btn-primary', s.addLink)}
-                  to="/admin-cases/add">
-                  New Case
-                </Link>
-              </div>
-
               <div className={s.filter}>
                 <div className={s.inlineField}>
                   <div className={cx("select", s.filterInput)}>
@@ -191,35 +183,35 @@ class AdminCases extends Component {
                           headerRenderer={this.setHeaderLabel}
                           dataKey="phase"
                           cellRenderer={({cellData}) => configToName(config, 'sessionPhasesByValue', cellData)}
-                          width={200}
+                          width={190}
                         />
                         <Column
                           label="alias"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="alias"
                           cellRenderer={({cellData}) => formatSessionAlias(cellData)}
-                          width={100}
+                          width={90}
                         />
                         <Column
                           label="adhoc"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="isAdhoc"
                           cellRenderer={({cellData}) => cellData ? <FaCheck /> : null}
-                          width={100}
+                          width={80}
                         />
                         <Column
                           label="client"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="client"
                           cellRenderer={({cellData}) => cellData && cellData.name}
-                          width={150}
+                          width={130}
                         />
                         <Column
                           label="patient"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="patient"
                           cellRenderer={({cellData}) => cellData && cellData.name}
-                          width={150}
+                          width={130}
                         />
                         <Column
                           label="price"
@@ -233,7 +225,7 @@ class AdminCases extends Component {
                           headerRenderer={this.setHeaderLabel}
                           dataKey="createdAt"
                           cellRenderer={({cellData}) => moment(cellData).format('YYYY-MM-DD')}
-                          width={150}
+                          width={130}
                         />
                         <Column
                           label="view"
@@ -245,7 +237,7 @@ class AdminCases extends Component {
                             </Link>
                           )}
                           disableSort={true}
-                          width={100}
+                          width={80}
                         />
                         <Column
                           label="status"
@@ -272,7 +264,7 @@ class AdminCases extends Component {
                             return (
                               <div className={cx('btn', s.tableListStatus, statusClass)}>{cellData}</div>
                           )}}
-                          width={100}
+                          width={150}
                         />
                       </Table>
                     )}

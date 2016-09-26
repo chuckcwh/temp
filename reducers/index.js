@@ -220,6 +220,41 @@ const booking = (state = {
   }
 }
 
+const bookings = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: {},
+  dataByPatient: {}
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.BOOKINGS_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.BOOKINGS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: action.extend
+          ? {
+            ...state.data,
+            ...normalize(action.response && action.response.data),
+          }
+          : normalize(action.response && action.response.data),
+        // dataByPatient: action.extend
+        //   ? {
+        //     ...state.data,
+        //     ...normalizeMultiple(action.response && action.response.data, 'patient'),
+        //   }
+        //   : normalizeMultiple(action.response && action.response.data, 'patient'),
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    default:
+      return state
+  }
+}
+
 const session = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -675,6 +710,7 @@ const bookingApp = combineReducers({
   user,
   config,
   services,
+  bookings,
   booking,
   promos,
   session,
@@ -1088,6 +1124,23 @@ const bookingApp = combineReducers({
             services: { ...state.services, value: data.services && data.services.length ? data.services.map(item => `${item.id}:${item.classId}`) : "" },
             description: { ...state.description, value: data.description },
           };
+        default:
+          return state;
+      }
+    },
+    adminBookingsForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.HIDE_MODAL_DAYPICKER:
+          if (action.source === 'adminBookingsForm') {
+            return {
+              ...state,
+              patientDOB: {
+                ...state.patientDOB,
+                value: action.value
+              }
+            }
+          }
+          return state;
         default:
           return state;
       }

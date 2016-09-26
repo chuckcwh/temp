@@ -28,6 +28,7 @@
   & .tableListHeader {
     color: lightgrey;
     border-bottom: 1px solid lightgrey;
+    font-size: 14px;
   }
 
   & .tableListEvenRow {
@@ -67,6 +68,11 @@
   & .tableListStatusCancelled {
     color: red;
     border: 1px solid red;
+  }
+
+  & .tableListStatusExpired {
+    color: blue;
+    border: 1px solid blue;
   }
 
   & .clearSortFilter {

@@ -17,6 +17,10 @@ export const LANGUAGES_REQUEST = 'LANGUAGES_REQUEST'
 export const LANGUAGES_SUCCESS = 'LANGUAGES_SUCCESS'
 export const LANGUAGES_FAILURE = 'LANGUAGES_FAILURE'
 
+export const BOOKINGS_REQUEST = 'BOOKINGS_REQUEST'
+export const BOOKINGS_SUCCESS = 'BOOKINGS_SUCCESS'
+export const BOOKINGS_FAILURE = 'BOOKINGS_FAILURE'
+
 export const BOOKING_REQUEST = 'BOOKING_REQUEST'
 export const BOOKING_SUCCESS = 'BOOKING_SUCCESS'
 export const BOOKING_FAILURE = 'BOOKING_FAILURE'
@@ -385,6 +389,12 @@ function fetchAction(route) {
       types: [ CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE ],
       endpoint: '/categories',
       method: 'get'
+    },
+    getBookings: {
+      types: [ BOOKINGS_REQUEST, BOOKINGS_SUCCESS, BOOKINGS_FAILURE ],
+      endpoint: '/bookings',
+      method: 'get',
+      auth: 'user',
     },
     getBooking: {
       types: [ BOOKING_REQUEST, BOOKING_SUCCESS, BOOKING_FAILURE ],
@@ -897,6 +907,10 @@ export function fetchServices() {
   }
 }
 
+export function getBookings(params, extend) {
+  return fetch('getBookings', params, extend);
+}
+
 export function getBooking(params) {
   return fetch('getBooking', params);
 }
@@ -944,7 +958,7 @@ export function createBookingWithOptions({ services, order, user }) {
   if (order && order.promo && order.promo) {
     data.promoCode = order.promo;
   }
-  
+
   return createBooking(data);
 }
 

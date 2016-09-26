@@ -28,6 +28,7 @@
   & .tableListHeader {
     color: lightgrey;
     border-bottom: 1px solid lightgrey;
+    font-size: 14px;
   }
 
   & .tableListRow:nth-child(even) {

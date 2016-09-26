@@ -1,0 +1,7 @@
+@import '../variables.css';
+
+.sessionClientDetails {
+  background-color: #f3f3f3;
+  position: relative;
+  min-height: 100px;
+}

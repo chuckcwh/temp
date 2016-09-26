@@ -61,7 +61,7 @@ class DayPickerPopup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initialMonth: defaultToMonth,
+      initialMonth: this.props.value && new Date(this.props.value) || new Date(),
     };
   }
 

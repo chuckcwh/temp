@@ -232,7 +232,10 @@ class PatientsForm extends Component {
             }
           </div>
         </div>
-        <DayPickerPopup title="Date of Birth" />
+        <DayPickerPopup
+          title="Date of Birth"
+          toMonth={new Date()}
+        />
       </div>
     );
   }

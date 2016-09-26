@@ -577,7 +577,10 @@ class BookingLocationUser extends Component {
       patientDetails = (
         <div>
           <InlineForm fetchAddress={this.props.fetchAddress} showDayPickerPopup={this.props.showDayPickerPopup} />
-          <DayPickerPopup title="Date of Birth" />
+          <DayPickerPopup
+            title="Date of Birth"
+            toMonth={new Date()}
+          />
         </div>
       );
     } else if (this.props.patients && this.state.patientId) {
@@ -671,7 +674,11 @@ class BookingLocationUser extends Component {
             user={user}
             onFilled={this.onClickSavePatient}
           />
-          <DayPickerPopup title="Date of Birth" onDayClick={this.onSelectNewDob} />
+          <DayPickerPopup
+            title="Date of Birth"
+            toMonth={new Date()}
+            onDayClick={this.onSelectNewDob}
+          />
         </div>
       );
     }

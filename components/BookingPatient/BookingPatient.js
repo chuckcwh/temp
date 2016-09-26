@@ -91,7 +91,10 @@ class BookingPatient extends Component {
             {this.props.children}
           </div>
         </Container>
-        <DayPickerPopup title="Date of Birth" />
+        <DayPickerPopup
+          title="Date of Birth"
+          toMonth={new Date()}
+        />
         <ConfirmPopup onConfirmed={this.onConfirmed}>
           <div>
             <form ref={(c) => (this.agreeForm = c)}>

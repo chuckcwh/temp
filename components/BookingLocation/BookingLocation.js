@@ -45,7 +45,10 @@ class BookingLocation extends Component {
             {this.props.children}
           </div>
         </Container>
-        <DayPickerPopup title="Date of Birth" />
+        <DayPickerPopup
+          title="Date of Birth"
+          toMonth={new Date()}
+        />
       </div>
     );
   }

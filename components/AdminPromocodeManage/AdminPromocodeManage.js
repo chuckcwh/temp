@@ -45,12 +45,22 @@ class AdminPromocodeManage extends Component {
   }
 
   loadMoreRows = ({startIndex, stopIndex}) => {
+    const { sortDirection } = this.state;
     this.setState({page: this.state.page + 1});
 
-    return this.props.getPromos({
+    const data = {
       count: 10,
       page: this.state.page,
-    }, true);
+    }
+
+    if (Object.keys(sortDirection).length !== 0) {
+      data['sorting'] = sortDirection;
+    }
+    if (filterKwd) {
+      data['filter'] = {[filterField]: filterKwd};
+    }
+
+    return this.props.getPromos(data, true);
   }
 
   setHeaderLabel = ({dataKey, label}) => {

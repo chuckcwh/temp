@@ -52,4 +52,20 @@
     text-align: center;
     width: 65px;
   }
+
+  & .tableListStatus {
+    width: 75px;
+    padding: 5px 3px;
+    text-align: center;
+  }
+
+  & .tableListStatusOpen {
+    color: #18B905;
+    border: 1px solid #18B905;
+  }
+
+  & .tableListStatusCancelled {
+    color: red;
+    border: 1px solid red;
+  }
 }

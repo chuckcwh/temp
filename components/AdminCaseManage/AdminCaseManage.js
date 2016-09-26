@@ -10,6 +10,7 @@ import Link from '../Link';
 import Header from '../Header';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getSessions } from '../../actions';
+import { formatSessionAlias, configToName } from '../../core/util';
 // Sub Component
 import AdminCaseManageForm from './AdminCaseManageForm/AdminCaseManageForm';
 // react-icons
@@ -18,7 +19,7 @@ import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
 import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
 
 
-const filterChoice = ['phase', 'client', 'patient', 'price']; //TODO: update fields
+const filterChoice = ['phase', 'alias', 'client', 'patient', 'price', 'status']; //TODO: update fields
 
 class AdminCaseManage extends Component {
 
@@ -45,12 +46,22 @@ class AdminCaseManage extends Component {
   };
 
   loadMoreRows = ({startIndex, stopIndex}) => {
+    const { sortDirection, filterKwd, filterField } = this.state;
     this.setState({page: this.state.page + 1});
 
-    return this.props.getSessions({
+    const data = {
       count: 10,
       page: this.state.page,
-    }, true);
+    };
+
+    if (Object.keys(sortDirection).length !== 0) {
+      data['sorting'] = sortDirection;
+    }
+    if (filterKwd) {
+      data['filter'] = {[filterField]: filterKwd};
+    }
+
+    return this.props.getSessions(data, true);
   }
 
   setHeaderLabel = ({dataKey, label}) => {
@@ -82,7 +93,7 @@ class AdminCaseManage extends Component {
 
   render() {
     const { add, edit, sessionId } = this.props.params;
-    const { user, sessions } = this.props;
+    const { user, sessions, config } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
@@ -144,6 +155,7 @@ class AdminCaseManage extends Component {
                             sorting: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1},
                           });
                           this.setState({page: 1, sortDirection: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1}});
+                          console.log('sorting', this.state.sortDirection);
                         }}
 
                         onRowsRendered={onRowsRendered}
@@ -157,7 +169,15 @@ class AdminCaseManage extends Component {
                           label="phase"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="phase"
-                          width={150}
+                          cellRenderer={({cellData}) => configToName(config, 'sessionPhasesByValue', cellData)}
+                          width={200}
+                        />
+                        <Column
+                          label="alias"
+                          headerRenderer={this.setHeaderLabel}
+                          dataKey="alias"
+                          cellRenderer={({cellData}) => formatSessionAlias(cellData)}
+                          width={100}
                         />
                         <Column
                           label="client"
@@ -176,23 +196,23 @@ class AdminCaseManage extends Component {
                           headerRenderer={this.setHeaderLabel}
                           dataKey="price"
                           cellRenderer={({cellData}) => `${cellData} sgd`}
-                          width={150}
+                          width={100}
                         />
                         <Column
                           label="created at"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="createdAt"
                           cellRenderer={({cellData}) => moment(cellData).format('YYYY-MM-DD')}
-                          width={180}
+                          width={150}
                         />
                         <Column
                           label="view"
                           headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="_id"
                           cellRenderer={({cellData}) => (
-                              <Link className={cx('btn', s.tableListToEdit)} to={`/case-manage/edit/${cellData}`}>
-                                Edit
-                              </Link>
+                            <Link className={cx('btn', s.tableListToEdit)} to={`/case-manage/edit/${cellData}`}>
+                              Edit
+                            </Link>
                           )}
                           disableSort={true}
                           width={100}
@@ -201,7 +221,28 @@ class AdminCaseManage extends Component {
                           label="status"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="status"
-                          width={500}
+                          cellRenderer={({cellData}) => {
+                            let statusClass;
+                            switch (cellData) {
+                              case 'open':
+                              case 'engaged':
+                                statusClass = s.tableListStatusOpen;
+                                break;
+                              case 'cancelled':
+                              case 'completed':
+                                statusClass = s.tableListStatusCancelled;
+                                break;
+                              case 'expired':
+                              case 'suspended':
+                                statusClass = s.tableListStatusExpired;
+                                break;
+                              default:
+                                break;
+                            }
+                            return (
+                              <div className={cx('btn', s.tableListStatus, statusClass)}>{cellData}</div>
+                          )}}
+                          width={200}
                         />
                       </Table>
                     )}
@@ -224,6 +265,7 @@ AdminCaseManage.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user.data,
   sessions: state.sessions.data,
+  config: state.config.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({

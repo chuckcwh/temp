@@ -17,6 +17,7 @@ import AdminCaseManageForm from './AdminCaseManageForm/AdminCaseManageForm';
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
 import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
+import FaCheck from 'react-icons/lib/fa/check';
 
 
 const filterChoice = ['phase', 'alias', 'client', 'patient', 'price', 'status']; //TODO: update fields
@@ -179,15 +180,24 @@ class AdminCaseManage extends Component {
                           width={100}
                         />
                         <Column
+                          label="adhoc"
+                          headerRenderer={this.setHeaderLabel}
+                          dataKey="isAdhoc"
+                          cellRenderer={({cellData}) => cellData ? <FaCheck /> : null}
+                          width={100}
+                        />
+                        <Column
                           label="client"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="client"
+                          cellRenderer={({cellData}) => cellData && cellData.name}
                           width={150}
                         />
                         <Column
                           label="patient"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="patient"
+                          cellRenderer={({cellData}) => cellData && cellData.name}
                           width={150}
                         />
                         <Column
@@ -241,7 +251,7 @@ class AdminCaseManage extends Component {
                             return (
                               <div className={cx('btn', s.tableListStatus, statusClass)}>{cellData}</div>
                           )}}
-                          width={200}
+                          width={100}
                         />
                       </Table>
                     )}

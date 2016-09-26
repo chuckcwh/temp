@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import AdminCaseManage from '../components/AdminCaseManage';
+import AdminCaseManageView from '../components/AdminCaseManage/AdminCaseManageView/AdminCaseManageView';
+
 
 export default class extends Component {
 
@@ -8,8 +10,18 @@ export default class extends Component {
   }
 
   render() {
+    const { view } = this.props.params;
+
+    let content;
+
+    if (view) {
+      content = (<AdminCaseManageView {...this.props} />)
+    } else {
+      content = (<AdminCaseManage {...this.props} />)
+    }
+
     return (
-      <AdminCaseManage {...this.props} />
+      <div>{content}</div>
     );
   }
 

@@ -31,7 +31,7 @@ class VerifyBookingPopup extends Component {
       this.setState({ pending: true });
 
       this.props.verifyBookingPin({
-        id: this.props.bookingId,
+        bookingId: this.props.bookingId,
         pin: this.state.pin,
       }).then((res) => {
         this.setState({ pending: false });

@@ -149,7 +149,7 @@ class AdminCaseManage extends Component {
                         onRowsRendered={onRowsRendered}
                         noRowsRenderer={() => (<div>No data</div>)}
                         rowHeight={50}
-                        rowClassName={s.tableListRow}
+                        rowClassName={({index}) => index % 2 === 0 ? s.tableListEvenRow : null}
                         rowCount={Object.values(sessions).length}
                         rowGetter={({index}) => Object.values(sessions)[index]}
                       >

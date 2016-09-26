@@ -30,7 +30,7 @@
     border-bottom: 1px solid lightgrey;
   }
 
-  & .tableListRow:nth-child(even) {
+  & .tableListEvenRow {
     background: lightgrey;
   }
 

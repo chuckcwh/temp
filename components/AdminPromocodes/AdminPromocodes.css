@@ -53,4 +53,9 @@
     width: 65px;
   }
 
+  & .clearSortFilter {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #f78d00;
+  }
 }

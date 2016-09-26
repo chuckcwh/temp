@@ -37,7 +37,7 @@ class AdminPromocodes extends Component {
     this.props.getPromos({
       count: 10,
       page: this.state.page,
-    }, true);
+    });
   }
 
   isRowLoaded = ({ index }) => {
@@ -90,6 +90,23 @@ class AdminPromocodes extends Component {
     this.props.getPromos(data);
   }
 
+  onClearSortFilter = () => {
+    this.setState({
+      page: 1,
+      sortDirection: {},
+      filterKwd: null,
+      filterField: filterChoice[0],
+    });
+
+    console.log('filter', this.refs.filterInput);
+    this.refs.filterInput.value = "";
+
+    this.props.getPromos({
+      count: 10,
+      page: 1,
+    });
+  }
+
   render() {
     const { add, edit, promoId } = this.props.params;
     const { user, promos } = this.props;
@@ -126,7 +143,12 @@ class AdminPromocodes extends Component {
                   </div>
                 </div>
                 <div className={s.inlineField}>
-                  <input type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+                  <input ref="filterInput" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+                </div>
+                <div className={s.inlineField}>
+                  <span type="text" className={s.clearSortFilter} onClick={this.onClearSortFilter}>
+                    clear sort & filter
+                  </span>
                 </div>
               </div>
 

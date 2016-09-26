@@ -156,7 +156,7 @@ class AdminPromocodeManageForm extends Component {
 
     const { selectedDates } = this.state;
     const flattenServicesChoice = servicesChoice && Object.values(servicesChoice).reduce((result, service) => {
-      service.classes.map(serviceClass => {
+      Object.values(service.classes).map(serviceClass => {
         result.push({
           label: `${service.name} (${parseFloat(serviceClass.duration)} hr${parseFloat(service.duration) > 1 ? 's' : ''})`,
           value: `${service._id}:${serviceClass._id}`,

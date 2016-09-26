@@ -45,7 +45,7 @@ class AdminPromocodeManage extends Component {
   }
 
   loadMoreRows = ({startIndex, stopIndex}) => {
-    const { sortDirection } = this.state;
+    const { sortDirection, filterKwd, filterField } = this.state;
     this.setState({page: this.state.page + 1});
 
     const data = {

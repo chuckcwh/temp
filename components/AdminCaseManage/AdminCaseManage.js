@@ -155,7 +155,6 @@ class AdminCaseManage extends Component {
                             sorting: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1},
                           });
                           this.setState({page: 1, sortDirection: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1}});
-                          console.log('sorting', this.state.sortDirection);
                         }}
 
                         onRowsRendered={onRowsRendered}

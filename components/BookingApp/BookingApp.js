@@ -206,7 +206,7 @@ class BookingApp extends Component {
         <BookingPostComplete />
       );
     } else if (location && location.pathname === '/booking-manage') {
-      if (this.props.booking && this.props.booking._id && this.props.booking.adhocClient && this.props.booking.adhocClient.isVerified) {
+      if (this.props.booking && this.props.booking._id && this.props.booking.isVerified) {
         component = (
           <BookingDetails />
         );

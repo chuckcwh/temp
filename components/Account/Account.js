@@ -12,7 +12,8 @@ import ForgotPasswordForm from '../ForgotPasswordForm';
 import ResetPasswordForm from '../ResetPasswordForm';
 import VerifyUserPopup from '../VerifyUserPopup';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import { USER_SUCCESS, BOOKING_FAILURE, getUser, getBooking, setLastPage, showAlertPopup, showVerifyUserPopup, showVerifyBookingPopup } from '../../actions';
+import { USER_SUCCESS, BOOKING_FAILURE,
+  getUser, getBooking, setLastPage, showAlertPopup, showVerifyUserPopup, showVerifyBookingPopup } from '../../actions';
 import history from '../../core/history';
 
 class Account extends Component {
@@ -29,7 +30,7 @@ class Account extends Component {
   }
 
   componentDidMount() {
-    if (this.props.booking && this.props.booking._id && this.props.booking.adhocClient && !this.props.booking.adhocClient.isVerified) {
+    if (this.props.booking && this.props.booking._id && !this.props.booking.isVerified) {
       this.props.showVerifyBookingPopup(this.props.booking._id);
     }
   }
@@ -39,7 +40,7 @@ class Account extends Component {
       bid: props.bid || this.state.bid,
       btoken: props.contact || this.state.btoken,
     });
-    if (props.booking && props.booking !== this.props.booking && props.booking._id && props.booking.adhocClient && !props.booking.adhocClient.isVerified) {
+    if (props.booking && props.booking !== this.props.booking && props.booking._id && !props.booking.isVerified) {
       this.props.showVerifyBookingPopup(props.booking._id);
     }
   }

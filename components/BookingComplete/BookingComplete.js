@@ -24,7 +24,7 @@ class BookingComplete extends Component {
     // Destroy order
     this.props.destroyOrder();
 
-    if (booking && booking.adhocClient && !booking.adhocClient.isVerified) {
+    if (booking && booking._id && !booking.isVerified) {
       this.setState({ showedVerifyBookingPopup: true });
       this.props.showVerifyBookingPopup(booking._id);
     }
@@ -36,8 +36,8 @@ class BookingComplete extends Component {
     // Destroy order
     this.props.destroyOrder();
 
-    if (booking && booking.adhocClient && !booking.adhocClient.isVerified
-      && this.state.showedVerifyBookingPopup === false) {
+    if (booking && booking !== this.props.booking && booking._id && !booking.isVerified
+      && !this.state.showedVerifyBookingPopup) {
       this.setState({ showedVerifyBookingPopup: true });
       this.props.showVerifyBookingPopup(booking._id);
     }
@@ -87,7 +87,7 @@ class BookingComplete extends Component {
               <a href="#" className="btn btn-primary" style={{ color: '#fff' }} onClick={this.onClickClose}>Close Window</a>
             </div>
           );
-        } else if (booking.adhocClient.isVerified) {
+        } else if (booking.isVerified) {
           bookingLink = (
             <div>
               <Link

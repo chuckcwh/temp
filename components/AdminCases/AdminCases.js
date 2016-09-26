@@ -92,6 +92,22 @@ class AdminCases extends Component {
     this.props.getSessions(data);
   }
 
+  onClearSortFilter = () => {
+    this.setState({
+      page: 1,
+      sortDirection: {},
+      filterKwd: null,
+      filterField: filterChoice[0],
+    });
+
+    this.refs.filterField.value = filterChoice[0];
+    this.refs.filterKwd.value = "";
+    this.props.getSessions({
+      count: 10,
+      page: 1,
+    });
+  }
+
   render() {
     const { add, edit, sessionId } = this.props.params;
     const { user, sessions, config } = this.props;
@@ -120,7 +136,7 @@ class AdminCases extends Component {
                 <div className={s.inlineField}>
                   <div className={cx("select", s.filterInput)}>
                     <span></span>
-                    <select className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
+                    <select ref="filterField" className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
                       {filterChoice && filterChoice.map(item => (
                         <option key={filterChoice.indexOf(item)} value={item}>{item}</option>
                       ))}
@@ -128,7 +144,12 @@ class AdminCases extends Component {
                   </div>
                 </div>
                 <div className={s.inlineField}>
-                  <input type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+                  <input ref="filterKwd" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+                </div>
+                <div className={s.inlineField}>
+                  <span type="text" className={s.clearSortFilter} onClick={this.onClearSortFilter}>
+                    clear sort & filter
+                  </span>
                 </div>
               </div>
 

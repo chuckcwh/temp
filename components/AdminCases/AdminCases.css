@@ -68,4 +68,10 @@
     color: red;
     border: 1px solid red;
   }
+
+  & .clearSortFilter {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #f78d00;
+  }
 }

@@ -98,9 +98,8 @@ class AdminPromocodes extends Component {
       filterField: filterChoice[0],
     });
 
-    console.log('filter', this.refs.filterInput);
-    this.refs.filterInput.value = "";
-
+    this.refs.filterField.value = filterChoice[0];
+    this.refs.filterKwd.value = "";
     this.props.getPromos({
       count: 10,
       page: 1,
@@ -135,7 +134,7 @@ class AdminPromocodes extends Component {
                 <div className={s.inlineField}>
                   <div className={cx("select", s.filterInput)}>
                     <span></span>
-                    <select className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
+                    <select ref="filterField" className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
                       {filterChoice && filterChoice.map(item => (
                         <option key={filterChoice.indexOf(item)} value={item}>{item}</option>
                       ))}
@@ -143,7 +142,7 @@ class AdminPromocodes extends Component {
                   </div>
                 </div>
                 <div className={s.inlineField}>
-                  <input ref="filterInput" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+                  <input ref="filterKwd" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
                 </div>
                 <div className={s.inlineField}>
                   <span type="text" className={s.clearSortFilter} onClick={this.onClearSortFilter}>

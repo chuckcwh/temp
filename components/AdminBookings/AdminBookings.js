@@ -20,7 +20,7 @@ import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
 import FaCheck from 'react-icons/lib/fa/check';
 
 
-const filterChoice = ['phase', 'alias', 'client', 'patient', 'price', 'status']; //TODO: update fields
+const filterChoice = ['']; //TODO: update fields
 
 class AdminBookings extends Component {
 
@@ -187,17 +187,25 @@ class AdminBookings extends Component {
                         rowGetter={({index}) => Object.values(bookings)[index]}
                       >
                         <Column
-                          label="phase"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="_id"
-                          width={200}
-                        />
-                        <Column
                           label="adhoc"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="isAdhoc"
                           cellRenderer={({cellData}) => cellData ? <FaCheck /> : null}
                           width={80}
+                        />
+                        <Column
+                          label="client"
+                          headerRenderer={this.setHeaderLabel}
+                          dataKey="client"
+                          cellRenderer={({cellData}) => cellData && cellData.name}
+                          width={130}
+                        />
+                        <Column
+                          label="patient"
+                          headerRenderer={this.setHeaderLabel}
+                          dataKey="patient"
+                          cellRenderer={({cellData}) => cellData && cellData.name}
+                          width={130}
                         />
                         <Column
                           label="verified"
@@ -258,7 +266,7 @@ class AdminBookings extends Component {
 
 
                           disableSort={true}
-                          width={210}
+                          width={250}
                         />
                       </Table>
                     )}

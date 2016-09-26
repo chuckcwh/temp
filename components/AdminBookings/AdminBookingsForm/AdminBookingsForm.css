@@ -48,6 +48,10 @@
         & .inlineField {
           display: inline-block;
         }
+
+        & .dateTimeInput {
+          width: 160px;
+        }
       }
     }
   }

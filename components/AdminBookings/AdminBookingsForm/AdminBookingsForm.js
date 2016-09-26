@@ -81,7 +81,7 @@ class AdminBookingsForm extends Component {
 
     if (patientId) {
       const patient = this.state.patientList.find(item => item._id === patientId);
-      console.log('patient', patient);
+
       this.props.changeFieldValue('patientNameOrId', patient._id);
       this.props.changeFieldValue('patientGender', patient.gender);
       this.props.changeFieldValue('patientDOB', moment(patient.dob).format('YYYY-MM-DD'));
@@ -118,11 +118,11 @@ class AdminBookingsForm extends Component {
     if (!this.isDisabled(day)) {
       const days = this.state.selectedDates;
 
-      if (some(days, item => DateUtils.isSameDay(item, day))) {
-        remove(days, item => DateUtils.isSameDay(item, day));
+      if (some(days, item => DateUtils.isSameDay(item.date, day))) {
+        remove(days, item => DateUtils.isSameDay(item.date, day));
       } else {
-        days.push(day);
-        days.sort((a, b) => a.getTime() - b.getTime());
+        days.push({date: day, time: this.props.timeChoice[0].value});
+        days.sort((a, b) => a.date.getTime() - b.date.getTime());
       }
 
       this.setState({ selectedDates: days });
@@ -135,9 +135,15 @@ class AdminBookingsForm extends Component {
     return DateUtils.isPastDay(d);
   };
 
-  onSubmit = (values) => {
-    console.log('values', values);
+  onSetSessionTime = (date, time) => {
+    const { selectedDates } = this.state;
+    const index = selectedDates.map(item => item.date).indexOf(date);
 
+    selectedDates[index].time = time;
+    this.setState({ selectedDates });
+  }
+
+  onSubmit = (values) => {
     const data = {
       sessions: this.state.selectedDates.map(session => ({
         service: values.service.split(':')[0],
@@ -151,8 +157,8 @@ class AdminBookingsForm extends Component {
           region: values.region,
           neighborhood: values.neighborhood,
         },
-        date: moment(session).format('YYYY-MM-DD'),
-        timeSlot: values.time,
+        date: moment(session.date).format('YYYY-MM-DD'),
+        timeSlot: session.time,
         additionalInfo: values.caseNote,
       })),
     }
@@ -179,7 +185,10 @@ class AdminBookingsForm extends Component {
     this.props.createBooking(data);
 
     this.props.resetForm();
-    this.setState({postalHint: ""});
+    this.setState({
+      selectedDates: [],
+      postalHint: "",
+    });
   };
 
   render() {
@@ -200,7 +209,6 @@ class AdminBookingsForm extends Component {
         unit,
         addr,
         service,
-        time,
         caseNote,
       },
       userClassChoice,
@@ -417,13 +425,13 @@ class AdminBookingsForm extends Component {
                 </div>
 
                 <div className={s.mainCatContainer}>
-                  <p>Date Required*</p>
+                  <p>Date / Time Required*</p>
                   <div className="text-center">
                     <DayPicker
                       numberOfMonths={1}
                       modifiers={{
                         selected: day => selectedDates
-                          && some(selectedDates, item => DateUtils.isSameDay(item, day)),
+                          && some(selectedDates, item => DateUtils.isSameDay(item.date, day)),
                         disabled: this.isDisabled,
                       }}
                       onDayClick={this.onSelectDay}
@@ -433,24 +441,22 @@ class AdminBookingsForm extends Component {
                     {selectedDates.length ? <h3>Selected Dates:</h3> : ""}
                     {
                       selectedDates && selectedDates.map((day) => (
-                        <div key={day.getTime()}>{moment(day).format('DD MMM YYYY, dddd')}</div>
+                        <div key={day.date.getTime()}>
+                          {moment(day.date).format('DD MMM YYYY, dddd')}&nbsp;&nbsp;
+                          <div className={cx("select", null)}>
+                            <span></span>
+                            <select className={s.dateTimeInput} onChange={(e) => this.onSetSessionTime(day.date, e.target.value)}>
+                              {timeChoice && timeChoice.map(item => (
+                                <option key={timeChoice.indexOf(item)} value={item.value}>{item.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
                       ))
                     }
                   </div>
                 </div>
 
-                <div className={s.mainCatContainer}>
-                  <p>Time Required*</p>
-                  <div className={s.inlineField}>
-                    {timeChoice.map(item => (
-                      <div>
-                        <input type="radio" name='time' id={`time_${item.value}`} {...time} value={item.value} checked={time.value === `${item.value}`} />
-                        <label htmlFor={`time_${item.value}`}><span><span></span></span><span>{item.label}</span></label>
-                      </div>
-                    ))}
-                    {time.touched && time.error && <div className={s.formError}>{time.error}</div>}
-                  </div>
-                </div>
               </Col>
             </Row>
 
@@ -511,10 +517,6 @@ const validate = values => {
     errors.service = 'Required';
   }
 
-  if (!values.time) {
-    errors.time = 'Required';
-  }
-
   return errors
 }
 
@@ -541,7 +543,6 @@ const reduxFormConfig = {
     'unit',
     'addr',
     'service',
-    'time',
     'caseNote',
     // case (hide)
     'lat',

@@ -941,8 +941,8 @@ export function createBookingWithOptions({ services, order, user }) {
     };
   }
 
-  if (order && order.promoCode && order.promoCode.code) {
-    data.promoCode = order.promoCode.code;
+  if (order && order.promo && order.promo) {
+    data.promoCode = order.promo;
   }
   
   return createBooking(data);

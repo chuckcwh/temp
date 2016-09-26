@@ -80,7 +80,7 @@ class BookingResults extends Component {
     if (this.props.order.promo !== nextProps.order.promo) {
       this.updateSum(nextProps);
     }
-    if (this.props.order.sessions !== nextProps.order.sessions) {
+    if (this.props.isLoggedIn && this.props.order.sessions !== nextProps.order.sessions) {
       this.props.createBookingWithOptions({
         services: nextProps.services,
         order: nextProps.order,

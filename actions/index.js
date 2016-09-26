@@ -800,7 +800,7 @@ function fetchAction(route) {
     },
     verifyBookingPin: {
       types: [ VERIFY_BOOKING_PIN_REQUEST, VERIFY_BOOKING_PIN_SUCCESS, VERIFY_BOOKING_PIN_FAILURE ],
-      endpoint: '/bookings/verifyPin',
+      endpoint: '/bookings/:bookingId/verifyPin',
       method: 'put',
     },
     resendVerifyBookingPin: {

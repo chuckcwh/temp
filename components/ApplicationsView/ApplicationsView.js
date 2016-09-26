@@ -4,20 +4,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Loader from 'react-loader';
-import s from './BookingDetails.css';
+import s from './ApplicationsView.css';
 import Container from '../Container';
-import SessionAddressDetails from '../SessionAddressDetails';
+import Link from '../Link';
 import InlineForm from '../InlineForm';
 import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
-import { SESSION_CANCEL_SUCCESS, fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelSession,
+import SessionPatientDetails from '../SessionPatientDetails';
+import SessionAddressDetails from '../SessionAddressDetails';
+import { SESSION_CANCEL_SUCCESS, fetchServices, getSessions, getPatients, editBooking, clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showInlineForm } from '../../actions';
-import { configToName } from '../../core/util';
+import { configToName, formatSessionAlias, isClient } from '../../core/util';
 import history from '../../core/history';
 
 const imgPencil = require('../pencil.png');
 
-class BookingDetails extends Component {
+class ApplicationsView extends Component {
 
   constructor(props) {
     super(props);
@@ -28,100 +30,26 @@ class BookingDetails extends Component {
 
   componentDidMount() {
     this.props.fetchServices();
+    this.props.user && this.props.user._id && isClient(this.props.user)
+      && this.props.getSessions({
+        client: this.props.user._id,
+      })
+      && this.props.getPatients({
+        userId: this.props.user._id
+      });
   }
 
-  onClickEdit = (entity) => (event) => {
-    event.preventDefault();
-    this.setState({ editing: true });
-
-    switch (entity) {
-      case 'userDetails':
-        this.props.showInlineForm({
-          name: 'userDetails',
-          inputs: {
-            clientName: {
-              label: 'Name',
-              type: 'text',
-              initialValue:
-                this.props.booking &&
-                this.props.booking.adhocClient &&
-                this.props.booking.adhocClient.name,
-            },
-            clientContact: {
-              label: 'Mobile Number',
-              type: 'text',
-              initialValue:
-                this.props.booking &&
-                this.props.booking.adhocClient &&
-                this.props.booking.adhocClient.contact,
-            },
-          },
-          validate: (values) => {
-            const errors = {};
-            if (!values.clientName) {
-              errors.clientName = 'Required';
-            }
-            if (!values.clientContact) {
-              errors.clientContact = 'Required';
-            } else if (!/^[8,9]{1}[0-9]{7}$/i.test(values.clientContact)) {
-              errors.clientContact = 'Invalid mobile phone';
-            }
-            return errors;
-          },
-          ok: this.onClickSave('userDetails'),
-          cancel: () => { this.setState({ editing: false }); },
+  componentWillReceiveProps(newProps) {
+    if (newProps.user !== this.props.user) {
+      newProps.user && newProps.user._id && isClient(newProps.user)
+        && newProps.getSessions({
+          client: newProps.user._id,
+        })
+        && newProps.getPatients({
+          userId: newProps.user._id
         });
-        break;
-      default:
-        break;
     }
-  };
-
-  onClickSave = (entity) => (values) => (
-    new Promise((resolve, reject) => {
-      switch (entity) {
-        case 'userDetails':
-          this.props.editBooking({
-            bid: this.props.booking && this.props.booking.id,
-            token: this.props.booking && this.props.booking.token,
-            booking: {
-              clientName: values.clientName,
-              clientContact: values.clientContact,
-            },
-          }).then((res) => {
-            if (res && res.response && res.response.status === 1) {
-              resolve();
-              this.setState({ editing: false });
-            } else {
-              reject({ _error: res.response.message });
-            }
-          }, (reason) => {
-            reject({ _error: reason });
-          });
-          break;
-        default:
-          break;
-      }
-    })
-  );
-
-  onClickStopEdit = (entity) => (event) => {
-    event.preventDefault();
-
-    switch (entity) {
-      case 'user':
-        this.setState({ editingUser: false });
-        break;
-      case 'patient':
-        this.setState({ editingPatient: false });
-        break;
-      case 'address':
-        this.setState({ editingAddress: false });
-        break;
-      default:
-        break;
-    }
-  };
+  }
 
   onSelectDob = (date) => {
     this.setState({
@@ -192,13 +120,10 @@ class BookingDetails extends Component {
     this.props.showConfirmPopup('Are you sure you want to cancel this session?', () => {
       this.props.cancelSession({
         sessionId: session._id,
-        bookingId: this.props.booking._id,
-        bookingToken: this.props.booking.adhocClient.contact,
       }).then((res) => {
         if (res && res.type === SESSION_CANCEL_SUCCESS) {
-          this.props.getBooking({
-            bookingId: this.props.booking._id,
-            bookingToken: this.props.booking.adhocClient.contact,
+          this.props.getSession({
+            sessionId: session._id,
           });
         }
       });
@@ -206,33 +131,14 @@ class BookingDetails extends Component {
   };
 
   render() {
-    let userDetails,
-      patientDetails,
+    let patientDetails,
       addressDetails,
       sessionDetails,
       caregiverSection,
       paymentButton;
-    const { config, services, booking, bookingFetching } = this.props;
-    if (this.state.editing && this.props.inlineForm && /^(userDetails)$/i.test(this.props.inlineForm.name)) {
-      userDetails = <InlineForm />;
-    } else {
-      userDetails = (
-        <div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Name</div>
-            <div className="TableRowItem3">{booking && booking.adhocClient && booking.adhocClient.name}</div>
-          </div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{booking && booking.adhocClient && booking.adhocClient.email}</div>
-          </div>
-          <div className="TableRow">
-            <div className="TableRowItem1">Mobile Number</div>
-            <div className="TableRowItem3">{booking && booking.adhocClient && booking.adhocClient.contact}</div>
-          </div>
-        </div>
-      );
-    }
+    const { params, config, services, sessions, sessionsFetching, patients, patientsFetching } = this.props;
+    const session = sessions && params && params.sessionId && sessions[params.sessionId];
+    const patient = patients && session && session.patient && patients[session.patient];
     // if (this.state.editingPatient) {
     //   patientDetails = (
     //     <div>
@@ -317,25 +223,56 @@ class BookingDetails extends Component {
       <div>
         <div className="TableRow">
           <div className="TableRowItem1">Name</div>
-          <div className="TableRowItem3">{booking && booking.adhocPatient && booking.adhocPatient.name}</div>
+          <div className="TableRowItem3">{patient && patient.name}</div>
         </div>
         <div className="TableRow">
           <div className="TableRowItem1">Gender</div>
           <div className="TableRowItem3">
-            {configToName(config, 'gendersByValue', booking && booking.adhocPatient && booking.adhocPatient.gender)}
+            {configToName(config, 'gendersByValue', patient && patient.gender)}
           </div>
         </div>
         <div className="TableRow">
           <div className="TableRowItem1">Date of Birth</div>
           <div className="TableRowItem3">
-            {booking && booking.adhocPatient && booking.adhocPatient.dob
-              && moment(booking.adhocPatient.dob).format('ll')}
+            {patient && patient.dob
+              && moment(patient.dob).format('ll')}
           </div>
         </div>
         <div className="TableRow">
-          <div className="TableRowItem1">Mobile Number</div>
-          <div className="TableRowItem3">{booking && booking.adhocPatient && booking.adhocPatient.contact}</div>
+          <div className="TableRowItem1">Age</div>
+          <div className="TableRowItem3">
+            {patient && patient.dob
+              && moment().diff(moment(patient.dob), 'years')}
+          </div>
         </div>
+        <div className="TableRow">
+          <div className="TableRowItem1">Contact</div>
+          <div className="TableRowItem3">{patient && patient.contact}</div>
+        </div>
+        {patient && patient.diagnosis &&
+          <div className="TableRow">
+            <div className="TableRowItem1">Main Diagnosis</div>
+            <div className="TableRowItem3">
+              {patient.diagnosis}
+            </div>
+          </div>
+        }
+        {patient && patient.mobility &&
+          <div className="TableRow">
+            <div className="TableRowItem1">Mobility</div>
+            <div className="TableRowItem3">
+              {patient.mobility}
+            </div>
+          </div>
+        }
+        {patient && patient.specialNotes &&
+          <div className="TableRow">
+            <div className="TableRowItem1">Special Notes</div>
+            <div className="TableRowItem3">
+              {patient.specialNotes}
+            </div>
+          </div>
+        }
       </div>
     );
     // }
@@ -393,83 +330,93 @@ class BookingDetails extends Component {
     // } else {
     addressDetails = (
       <div>
-        <div>
-          {booking && booking.sessions
-            && booking.sessions[0] && booking.sessions[0].address && booking.sessions[0].address.description}
+        <div className="TableRow">
+          <div className="TableRowItem1">Address</div>
+          <div className="TableRowItem3">
+            {session && session.address && session.address.description}
+          </div>
         </div>
-        <div>
-          {booking && booking.sessions
-            && booking.sessions[0] && booking.sessions[0].address && booking.sessions[0].address.unit}
+        {session && session.address && session.address.unit &&
+          <div className="TableRow">
+            <div className="TableRowItem1">Unit</div>
+            <div className="TableRowItem3">
+              {session && session.address && session.address.unit}
+            </div>
+          </div>
+        }
+        <div className="TableRow">
+          <div className="TableRowItem1">Postal Code</div>
+          <div className="TableRowItem3">
+            {session && session.address && session.address.postal}
+          </div>
+        </div>
+        <div className="TableRow">
+          <div className="TableRowItem1">Region</div>
+          <div className="TableRowItem3">
+            {session && session.address && session.address.region}
+          </div>
         </div>
       </div>
     );
     // }
-    sessionDetails = (
-      <div>
-        <div className="TableRow TableRowHeader">
-          <div className="TableRowItem2">Date</div>
-          <div className="TableRowItem2">Session</div>
-          <div className="TableRowItem2">Costs</div>
-          <div className="TableRowItem2">Status</div>
-          <div className="TableRowItem1"></div>
-        </div>
-        {
-          booking && booking.sessions.map(session => (
-              <div className="TableRow" key={session._id}>
-                <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>
-                <div className="TableRowItem2">
-                  {configToName(config, 'timeSlotsByValue', session.timeSlot)}
-                </div>
-                <div className="TableRowItem2">
-                  $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
-                </div>
-                <div className="TableRowItem2">
-                  {configToName(config, 'sessionPhasesByValue', session.phase)}
-                </div>
-                <div className="TableRowItem1">
-                  {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')
-                    && <CloseButton onCloseClicked={this.onCancelSession(session)} />}
-                </div>
-              </div>
-          ))
-        }
-      </div>
-    );
+    // sessionDetails = (
+    //   <div>
+    //     <div className="TableRow TableRowHeader">
+    //       <div className="TableRowItem2">Date</div>
+    //       <div className="TableRowItem2">Session</div>
+    //       <div className="TableRowItem2">Costs</div>
+    //       <div className="TableRowItem2">Status</div>
+    //       <div className="TableRowItem1"></div>
+    //     </div>
+    //     {
+    //       booking && booking.sessions.map(session => (
+    //           <div className="TableRow" key={session._id}>
+    //             <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>
+    //             <div className="TableRowItem2">
+    //               {configToName(config, 'timeSlotsByValue', session.timeSlot)}
+    //             </div>
+    //             <div className="TableRowItem2">
+    //               $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
+    //             </div>
+    //             <div className="TableRowItem2">
+    //               {configToName(config, 'sessionPhasesByValue', session.phase)}
+    //             </div>
+    //             <div className="TableRowItem1">
+    //               {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')
+    //                 && <CloseButton onCloseClicked={this.onCancelSession(session)} />}
+    //             </div>
+    //           </div>
+    //       ))
+    //     }
+    //   </div>
+    // );
     // show caregiver section only if case has been paid
-    if (booking && booking.case && booking.case.isPaid) {
+    if (session && session.isPaid) {
       caregiverSection = (
-        <div className={s.bookingDetailsBodySection}>
-          <div className={s.bookingDetailsBodySectionTitle}>
+        <div className={s.applicationsViewBodySection}>
+          <div className={s.applicationsViewBodySectionTitle}>
             <h3>Caregiver Details</h3>
           </div>
           <div>
             <div className="TableRow">
               <div className="TableRowItem1">Name</div>
               <div className="TableRowItem3">
-                {booking && booking.case
-                  && booking.case.quotes
-                  && booking.case.quotes[0]
-                  && booking.case.quotes[0].fullName}
+                {session && session.provider
+                  && session.provider.name}
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Email</div>
               <div className="TableRowItem3">
-                {booking && booking.case
-                  && booking.case.quotes
-                  && booking.case.quotes[0]
-                  && booking.case.quotes[0].user
-                  && booking.case.quotes[0].user.email}
+                {session && session.provider
+                  && session.provider.email}
               </div>
             </div>
             <div className="TableRow">
               <div className="TableRowItem1">Contact Number</div>
               <div className="TableRowItem3">
-                {booking && booking.case
-                  && booking.case.quotes
-                  && booking.case.quotes[0]
-                  && booking.case.quotes[0].user
-                  && booking.case.quotes[0].user.mobilePhone}
+                {session && session.provider
+                  && session.provider.contact}
               </div>
             </div>
           </div>
@@ -477,9 +424,8 @@ class BookingDetails extends Component {
       );
     }
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
-    if ((booking && booking.case
-      && booking.case.status === 'Closed' && !booking.case.isPaid
-      && booking.case.transactions && !booking.case.transactions.length)
+    if ((session
+      && session.phase === 'pending-payment' && !session.isPaid)
       && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
         <a href="#" className="btn btn-primary" onClick={this.onClickPay}>GO TO PAYMENT</a>
@@ -487,102 +433,115 @@ class BookingDetails extends Component {
     }
 
     return (
-      <div className={s.bookingDetails}>
+      <div className={s.applicationsView}>
         <Container>
-          <Loader className="spinner" loaded={!bookingFetching}>
-            <div className={s.bookingDetailsWrapper}>
-              <div className={s.bookingDetailsBody}>
-                <div className={s.bookingDetailsBodyActions}>
-                  <span className={s.bookingDetailsFooter}>
+          <Loader className="spinner" loaded={!sessionsFetching}>
+            <div className={s.applicationsViewWrapper}>
+              <div className={s.applicationsViewBody}>
+                <div className={s.applicationsViewBodyActions}>
+                  <span>
+                    <Link to="/dashboard" className="btn btn-primary btn-small">BACK</Link>
+                  </span>
+                  <span>
                     {paymentButton}
                   </span>
-                  <span className={s.bookingDetailsFooter}>
-                    <a href="/booking-manage" className="btn btn-primary" onClick={this.onClickManageBooking}>VIEW ANOTHER</a>
-                  </span>
                 </div>
-                <h2>Booking ID: {booking && booking.bookingId}</h2>
+                <h2>{`Session ID: ${session && formatSessionAlias(session.alias)}`}</h2>
                 <div>
                   <div>
                     <div className="TableRow">
+                      <div className="TableRowItem1">Status</div>
+                      <div className="TableRowItem3">
+                        {config && config.sessionPhasesByValue
+                          && session && session.phase
+                          && config.sessionPhasesByValue[session.phase]
+                          && config.sessionPhasesByValue[session.phase].name}
+                      </div>
+                    </div>
+                    <div className="TableRow">
                       <div className="TableRowItem1">Service</div>
                       <div className="TableRowItem3">
-                        {services && booking && booking.sessions
-                          && booking.sessions[0] && booking.sessions[0].service
-                          && services[booking.sessions[0].service]
-                          && services[booking.sessions[0].service].name}
+                        {services && session && session.service
+                          && services[session.service]
+                          && services[session.service].name}
                       </div>
                     </div>
                     <div className="TableRow">
                       <div className="TableRowItem1">Duration</div>
                       <div className="TableRowItem3">
-                        {`${services && booking && booking.sessions
-                          && booking.sessions[0]
-                          && booking.sessions[0].service && booking.sessions[0].serviceClass
-                          && services[booking.sessions[0].service]
-                          && services[booking.sessions[0].service].classes
-                          && services[booking.sessions[0].service].classes[booking.sessions[0].serviceClass]
-                          && services[booking.sessions[0].service].classes[booking.sessions[0].serviceClass].duration} hours`}
+                        {`${services && session && session.service && session.serviceClass
+                          && services[session.service]
+                          && services[session.service].classes
+                          && services[session.service].classes[session.serviceClass]
+                          && services[session.service].classes[session.serviceClass].duration} hours`}
                       </div>
                     </div>
-                    {booking && booking.sessions && booking.sessions[0] && booking.sessions[0].additionalInfo &&
+                    <div className="TableRow">
+                      <div className="TableRowItem1">Date</div>
+                      <div className="TableRowItem3">
+                        {session && session.date
+                          && moment(session.date).format('ll')}
+                      </div>
+                    </div>
+                    <div className="TableRow">
+                      <div className="TableRowItem1">Time</div>
+                      <div className="TableRowItem3">
+                        {session && session.timeSlot
+                          && configToName(config, 'timeSlotsByValue', session.timeSlot)}
+                      </div>
+                    </div>
+                    <div className="TableRow">
+                      <div className="TableRowItem1">Price</div>
+                      <div className="TableRowItem3">
+                        {`$${session && parseFloat(session.price).toFixed(2)}`}
+                      </div>
+                    </div>
+                    {session && session.additionalInfo &&
                       <div className="TableRow">
                         <div className="TableRowItem1">Additional Notes</div>
                         <div className="TableRowItem3">
-                          {booking && booking.sessions && booking.sessions[0] && booking.sessions[0].additionalInfo}
+                          {session.additionalInfo}
                         </div>
                       </div>
                     }
                   </div>
                 </div>
-                <div className={s.bookingDetailsBodyColumnWrapper}>
-                  <div className={s.bookingDetailsBodyColumn}>
-                    <div className={s.bookingDetailsBodySection}>
-                      <div className={s.bookingDetailsBodySectionTitle}>
-                        <h3>Client Details</h3>
-                        <a
-                          href="#"
-                          className={this.state.editingUser ? 'hidden' : ''}
-                          onClick={this.onClickEdit('userDetails')}
-                        ><img src={imgPencil} alt="Edit" /></a>
-                      </div>
-                      <Loader className="spinner" loaded={!this.state.updatingUser}>
-                        {userDetails}
-                      </Loader>
-                    </div>
-                    <div className={s.bookingDetailsBodySection}>
-                      <div className={s.bookingDetailsBodySectionTitle}>
+                <div className={s.applicationsViewBodyColumnWrapper}>
+                  <div className={s.applicationsViewBodyColumn}>
+                    <div className={s.applicationsViewBodySection}>
+                      <div className={s.applicationsViewBodySectionTitle}>
                         <h3>Patient Details</h3>
                         {/* <a href="#" className={this.state.editingPatient ? 'hidden' : ''}
                           onClick={this.onClickEdit('patient')}><img src={require('../pencil.png')} /></a> */}
                       </div>
-                      {patientDetails}
+                      <SessionPatientDetails
+                        config={config}
+                        patient={patient}
+                      />
                     </div>
-                    <div className={s.bookingDetailsBodySection}>
+                    <div className={s.applicationsViewBodySection}>
+                      <div className={s.applicationsViewBodySectionTitle}>
+                        <h3>Patient Location / Address</h3>
+                        {/* <a href="#" className={this.state.editingAddress ? 'hidden' : ''}
+                          onClick={this.onClickEdit('address')}><img src={require('../pencil.png')} /></a> */}
+                      </div>
                       <Loader className="spinner" loaded={!this.state.updatingAddress}>
                         <SessionAddressDetails
-                          address={booking && booking.sessions && booking.sessions[0] && booking.sessions[0].address}
+                          address={session && session.address}
                         />
                       </Loader>
                     </div>
                   </div>
-                  <div className={s.bookingDetailsBodyColumn}>
+                  <div className={s.applicationsViewBodyColumn}>
                     {caregiverSection}
-                    <div className={s.bookingDetailsBodySection}>
-                      <div className={s.bookingDetailsBodySectionTitle}>
-                        <h3>Session Details</h3>
-                        {/* <a href="#" className={this.state.editingPatient ? 'hidden' : ''}
-                          onClick={this.onClickEdit('patient')}><img src={require('../pencil.png')} /></a> */}
-                      </div>
-                      {sessionDetails}
-                    </div>
                   </div>
                 </div>
-                <div className={s.bookingDetailsFooter}>
+                <div className={s.applicationsViewFooter}>
                   <span>
                     {paymentButton}
                   </span>
                   <span>
-                    <a href="/booking-manage" className="btn btn-primary" onClick={this.onClickManageBooking}>VIEW ANOTHER</a>
+                    <Link to="/dashboard" className="btn btn-primary btn-small">BACK</Link>
                   </span>
                 </div>
               </div>
@@ -597,18 +556,23 @@ class BookingDetails extends Component {
 
 }
 
-BookingDetails.propTypes = {
+ApplicationsView.propTypes = {
   children: React.PropTypes.node,
+  params: React.PropTypes.object,
 
   config: React.PropTypes.object,
+  user: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
-  booking: React.PropTypes.object,
-  bookingFetching: React.PropTypes.bool,
-  inlineForm: React.PropTypes.object,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
+  patients: React.PropTypes.object,
+  patientsFetching: React.PropTypes.bool,
+  // inlineForm: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func.isRequired,
-  getBooking: React.PropTypes.func.isRequired,
+  getSessions: React.PropTypes.func.isRequired,
+  getPatients: React.PropTypes.func.isRequired,
   editBooking: React.PropTypes.func.isRequired,
   clearBooking: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
@@ -617,18 +581,30 @@ BookingDetails.propTypes = {
   showInlineForm: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
   config: state.config.data,
+  user: state.user.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  booking: state.booking.data,
-  bookingFetching: state.booking.isFetching,
-  inlineForm: state.inlineForm,
+  sessions: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].data,
+  sessionsFetching: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].isFetching,
+  patients: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].data,
+  patientsFetching: state.user.data && state.user.data._id
+    && state.patientsByClient[state.user.data._id]
+    && state.patientsByClient[state.user.data._id].isFetching,
+  // inlineForm: state.inlineForm,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
-  getBooking: (params) => dispatch(getBooking(params)),
+  getSessions: (params) => dispatch(getSessions(params)),
+  getPatients: (params) => dispatch(getPatients(params)),
   editBooking: (booking) => dispatch(editBooking(booking)),
   clearBooking: () => dispatch(clearBooking()),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
@@ -637,4 +613,4 @@ const mapDispatchToProps = (dispatch) => ({
   showInlineForm: (params) => dispatch(showInlineForm(params)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookingDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(ApplicationsView);

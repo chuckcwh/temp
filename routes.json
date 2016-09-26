@@ -142,5 +142,13 @@
   {
     "path": "/users-manage",
     "page": "./pages/users-manage"
+  },
+  {
+    "path": "/sessions/:sessionId",
+    "page": "./pages/session"
+  },
+  {
+    "path": "/applications/:applicationId",
+    "page": "./pages/application"
   }
 ]

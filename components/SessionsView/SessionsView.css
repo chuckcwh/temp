@@ -1,0 +1,153 @@
+@import '../variables.css';
+
+.sessionsView {
+  background-color: #f3f3f3;
+  position: relative;
+  min-height: 300px;
+
+  & .sessionsViewWrapper {
+    padding-top: 50px;
+    padding-bottom: 100px;
+
+    & .sessionsViewBody {
+      font-size: 21px;
+
+      & .sessionsViewBodyColumnWrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        & .sessionsViewBodyColumn {
+          flex: 1;
+        }
+
+        & .sessionsViewBodyColumn:not(:first-of-type) {
+          margin-left: 20px;
+
+          & :global .TableRowHeader {
+            color: var(--brand-color);
+            font-style: italic;
+          }
+
+          @media (--sm-viewport) {
+            margin-left: 0;
+          }
+        }
+
+        @media (--sm-viewport) {
+          flex-direction: column;
+        }
+      }
+
+      & input[type=radio] {
+        margin-top: 20px;
+      }
+
+      & textarea {
+        width: 100%;
+      }
+
+      & :global .select {
+        display: inline-block;
+      }
+
+      & .sessionsViewBodyActions {
+        float: right;
+
+        & span:not(:first-of-type) {
+          margin-left: 5px;
+        }
+      }
+
+      & .sessionsViewBodySection {
+        position: relative;
+        min-height: 150px;
+        padding: 20px 0;
+
+        /* border-top: 1px solid var(--border-color); */
+
+        &:first-child {
+          border: 0;
+        }
+
+        & h3 {
+          font-weight: normal;
+          font-size: 28px;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        & .sessionsViewBodySectionTitle {
+          position: relative;
+
+          & a {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+          }
+        }
+
+        & :global .datepicker__input {
+          font: inherit;
+          border-radius: 0;
+          box-shadow: none;
+        }
+
+        & form a {
+          margin: 5px 5px 0 0;
+        }
+      }
+
+      & .sessionsViewItem {
+        display: inline-block;
+        color: var(--text-color);
+        width: 100%;
+
+        @media (--sm-xviewport) {
+          width: 50%;
+        }
+
+        @media (min-width: $screen-lg-min) {
+          width: calc(100% / 3);
+        }
+
+        & .sessionsViewRadio {
+          /* margin-right: 5px; */
+        }
+
+        & .sessionsViewRadioLabel {
+          /* cursor: pointer; */
+        }
+      }
+
+      & .patientAddress {
+        display: flex;
+
+        & .patientAddressLeft {
+          flex: 1 0;
+        }
+
+        & .patientAddressRight {
+          flex: 1 0;
+        }
+
+        @media (--sm-viewport) {
+          flex-flow: row wrap;
+        }
+      }
+
+      & .sessionsViewFooter {
+        & a {
+          margin: 5px;
+        }
+
+        @media (--sm-viewport) {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  & .sessionsViewSidebar {
+    flex: 1 1 auto;
+  }
+}

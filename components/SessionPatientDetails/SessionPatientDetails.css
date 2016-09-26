@@ -1,0 +1,17 @@
+@import '../variables.css';
+
+.sessionPatientDetails {
+  background-color: #f3f3f3;
+  position: relative;
+  min-height: 100px;
+
+  & .sessionPatientDetailsTitle {
+    position: relative;
+
+    & a {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+  }
+}

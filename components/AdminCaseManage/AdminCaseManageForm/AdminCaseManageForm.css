@@ -62,4 +62,9 @@
     text-align: right;
   }
 
+  & .formSuccess {
+    color: green;
+    text-align: right;
+  }
+
 }

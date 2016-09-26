@@ -9,7 +9,7 @@ import s from './AdminCaseManageForm.css';
 import { reduxForm, change } from 'redux-form';
 import Header from '../../Header';
 import history from '../../../core/history';
-import { showDayPickerPopup, fetchServices, getUsers, getPatients, createBooking } from '../../../actions';
+import { showDayPickerPopup, fetchServices, getUsers, getPatients, createBooking, fetchAddress } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import MultiSelect from '../../MultiSelect';
@@ -24,7 +24,6 @@ class AdminCaseManageForm extends Component {
 
     this.state = {
       selectedDates: [],
-      geoLocation: {},
     }
   }
 
@@ -89,6 +88,29 @@ class AdminCaseManageForm extends Component {
       this.props.changeFieldValue('postal', patient.address && patient.address.postal);
       this.props.changeFieldValue('unit', patient.address && patient.address.unit);
       this.props.changeFieldValue('addr', patient.address && patient.address.description);
+
+      if (patient.address) {
+        this.onPostalChange(patient.address.postal)
+      }
+    }
+  }
+
+  onPostalChange = (postal) => {
+    if (/^[0-9]{6}$/i.test(postal)) {
+      new Promise((resolve, reject) => {
+        this.props.fetchAddress(postal).then((res) => {
+          if (res.type === 'GEOCODE_SUCCESS') {
+            this.props.changeFieldValue('lat', res.lat);
+            this.props.changeFieldValue('lng', res.lng);
+            this.props.changeFieldValue('region', res.region);
+            this.props.changeFieldValue('neighborhood', res.neighborhood);
+
+            this.setState({postalHint: "success"});
+          } else {
+            this.setState({postalHint: "failure"});
+          }
+        })
+      })
     }
   }
 
@@ -124,10 +146,10 @@ class AdminCaseManageForm extends Component {
           description: values.addr,
           unit: values.unit,
           postal: values.postal,
-          lat: this.state.geoLocation.lat,
-          lng: this.state.geoLocation.lng,
-          region: this.state.geoLocation.region,
-          neighborhood: this.state.geoLocation.neighborhood,
+          lat: values.lat,
+          lng: values.lng,
+          region: values.region,
+          neighborhood: values.neighborhood,
         },
         date: moment(session).format('YYYY-MM-DD'),
         timeSlot: values.time,
@@ -136,64 +158,28 @@ class AdminCaseManageForm extends Component {
     }
 
     if (values.userClass === 'Registered User') {
-      data.patient = values.patientNameOrId;  //TODO: it should take id only!
-      data.client = values.clientNameOrId;  //TODO: it should take id only!
+      data.patient = values.patientNameOrId;  // for reg patient it is always id
+      data.client = values.clientNameOrId;    // for reg client it is always id
     } else {
       data.adhocClient = {
-        name: values.clientNameOrId,
+        name: values.clientNameOrId,          // for ad-hoc client it is always name
         email: values.clientEmail,
         contact: values.clientMobile,
       };
       data.adhocPatient = {
-        name: values.patientNameOrId,
+        name: values.patientNameOrId,         // for ad-hoc patient it is always name
         email: values.patientEmail,
         contact: values.patientMobile,
         dob: values.patientDOB,
+        additionalInfo: values.patientNote,
       };
     }
-    //TODO: add promocode
 
-    // data['services'] = {
-      // service: values.service && values.service.split(':')[0],
-      // serviceClassId: values.service && values.service.split(':')[1],
-      // timeSlot: values.time,
-      // date: this.state.selectedDates[0],
-      // additionalInfo: this.state.caseNote,
-    // }
-
-    // data['order'] = {
-    //   sessions: [],
-    //   service: values.service.split(':')[0],
-    //   serviceClass: values.service.split(':')[1],
-    //   location: {
-    //     description: values.addr,
-    //     unit: values.unit,
-    //     postal: values.postal,
-    //     lat: this.state.geoLocation.lat,
-    //     lng: this.state.geoLocation.lng,
-    //     region: this.state.geoLocation.region,
-    //     neighborhood: this.state.geoLocation.neighborhood,
-    //   },
-    //   patient: values.patientNameOrId, //TODO: check if it is id or object
-    //   booker: {
-    //     additionalInfo: values.patientNote,
-    //   }
-    // }
-    //
-    // if (values.userClass === 'Ad-hoc') {
-    //   data['user'] = {
-    //     name: values.clientNameOrId,
-    //     email: values.clientEmail,
-    //     contact: values.clientMobile
-    //   }
-    // } else {
-    //   data['user'] = {
-    //     //TODO: add "client" object
-    //   }
-    // }
     console.log('data', data)
-
     this.props.createBooking(data);
+
+    this.props.resetForm();
+    this.setState({postalHint: ""});
   };
 
   render() {
@@ -229,9 +215,9 @@ class AdminCaseManageForm extends Component {
       submitting,
     } = this.props;
 
-    const { userList, patientList, patientListErr, selectedDates, geoLocation } = this.state;
+    const { userList, patientList, patientListErr, selectedDates, postalHint } = this.state;
     const flattenServiceChoice = serviceChoice && Object.values(serviceChoice).reduce((result, service) => {
-      service.classes.map(serviceClass => {
+      Object.values(service.classes).map(serviceClass => {
         result.push({
           name: `${service.name} (${parseFloat(serviceClass.duration)} hr${parseFloat(service.duration) > 1 ? 's' : ''})`,
           value: `${service._id}:${serviceClass._id}`,
@@ -381,8 +367,10 @@ class AdminCaseManageForm extends Component {
                 <div className={s.mainCatContainer}>
                   <p>Postal Code*</p>
                   <div className={s.inputField}>
-                    <input type="text" className={s.textInput} {...postal} />
+                    <input type="text" className={s.textInput} {...postal} onBlur={() => this.onPostalChange(postal.value)} />
                     {postal.touched && postal.error && <div className={s.formError}>{postal.error}</div>}
+                    {postalHint === 'success' && <div className={s.formSuccess}>Fetch geocode success.</div> ||
+                      postalHint === 'failure' && <div className={s.formError}>Fetch geocode failure.</div>}
                   </div>
                 </div>
 
@@ -540,11 +528,11 @@ const reduxFormConfig = {
   fields: [
     'userClass',
     // client
-    'clientNameOrId',
+    'clientNameOrId',   // name for ad-hoc, id for registered client
     'clientEmail',
     'clientMobile',
     // patient
-    'patientNameOrId',
+    'patientNameOrId',  // name for ad-hoc, id for registered patient
     'patientGender',
     'patientDOB',
     'patientNote',
@@ -555,6 +543,11 @@ const reduxFormConfig = {
     'service',
     'time',
     'caseNote',
+    // case (hide)
+    'lat',
+    'lng',
+    'region',
+    'neighborhood',
   ],
   validate,
 }
@@ -578,6 +571,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
+  fetchAddress: (postal) => dispatch(fetchAddress(postal)),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   getUsers: () => dispatch(getUsers()),
   getPatients: (params) => dispatch(getPatients(params)),

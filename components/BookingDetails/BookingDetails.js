@@ -6,6 +6,7 @@ import moment from 'moment';
 import Loader from 'react-loader';
 import s from './BookingDetails.css';
 import Container from '../Container';
+import SessionAddressDetails from '../SessionAddressDetails';
 import InlineForm from '../InlineForm';
 import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
@@ -335,12 +336,6 @@ class BookingDetails extends Component {
           <div className="TableRowItem1">Mobile Number</div>
           <div className="TableRowItem3">{booking && booking.adhocPatient && booking.adhocPatient.contact}</div>
         </div>
-        <div className="TableRow">
-          <div className="TableRowItem1">Additional Notes</div>
-          <div className="TableRowItem3">
-            {booking && booking.sessions && booking.sessions[0] && booking.sessions[0].additionalInfo}
-          </div>
-        </div>
       </div>
     );
     // }
@@ -491,30 +486,6 @@ class BookingDetails extends Component {
       );
     }
 
-    // set booking status
-    let bookingStatus = '';
-    if (booking && booking.case && booking.case.status === 'Accepting Quotes') {
-      bookingStatus = 'Awaiting Caregiver';
-    } else if (booking && booking.case
-      && booking.case.status === 'Closed' && booking.case.isPaid) {
-      bookingStatus = 'Paid & Confirmed';
-    } else if (booking && booking.case
-      && booking.case.status === 'Closed' && !booking.case.isPaid) {
-      bookingStatus = 'Awaiting Payment';
-
-      if (booking.case.transactions && booking.case.transactions.length) {
-        Object.values(booking.case.transactions).forEach((transaction) => {
-          if (transaction.type === 'Payment'
-            && transaction.method === 'Bank'
-            && transaction.status === 'Pending') {
-            bookingStatus = 'Processing Payment';
-          }
-        });
-      }
-    } else {
-      bookingStatus = booking && booking.case && booking.case.status;
-    }
-
     return (
       <div className={s.bookingDetails}>
         <Container>
@@ -533,18 +504,6 @@ class BookingDetails extends Component {
                 <div>
                   <div>
                     <div className="TableRow">
-                      <div className="TableRowItem1">Status</div>
-                      <div className="TableRowItem3">
-                        {config && config.bookingStatusesByValue && booking.status
-                          && config.bookingStatusesByValue[booking.status]
-                          && config.bookingStatusesByValue[booking.status].name}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <div className="TableRow">
                       <div className="TableRowItem1">Service</div>
                       <div className="TableRowItem3">
                         {services && booking && booking.sessions
@@ -553,6 +512,26 @@ class BookingDetails extends Component {
                           && services[booking.sessions[0].service].name}
                       </div>
                     </div>
+                    <div className="TableRow">
+                      <div className="TableRowItem1">Duration</div>
+                      <div className="TableRowItem3">
+                        {`${services && booking && booking.sessions
+                          && booking.sessions[0]
+                          && booking.sessions[0].service && booking.sessions[0].serviceClass
+                          && services[booking.sessions[0].service]
+                          && services[booking.sessions[0].service].classes
+                          && services[booking.sessions[0].service].classes[booking.sessions[0].serviceClass]
+                          && services[booking.sessions[0].service].classes[booking.sessions[0].serviceClass].duration} hours`}
+                      </div>
+                    </div>
+                    {booking && booking.sessions && booking.sessions[0] && booking.sessions[0].additionalInfo &&
+                      <div className="TableRow">
+                        <div className="TableRowItem1">Additional Notes</div>
+                        <div className="TableRowItem3">
+                          {booking && booking.sessions && booking.sessions[0] && booking.sessions[0].additionalInfo}
+                        </div>
+                      </div>
+                    }
                   </div>
                 </div>
                 <div className={s.bookingDetailsBodyColumnWrapper}>
@@ -579,13 +558,10 @@ class BookingDetails extends Component {
                       {patientDetails}
                     </div>
                     <div className={s.bookingDetailsBodySection}>
-                      <div className={s.bookingDetailsBodySectionTitle}>
-                        <h3>Patient Location / Address</h3>
-                        {/* <a href="#" className={this.state.editingAddress ? 'hidden' : ''}
-                          onClick={this.onClickEdit('address')}><img src={require('../pencil.png')} /></a> */}
-                      </div>
                       <Loader className="spinner" loaded={!this.state.updatingAddress}>
-                        {addressDetails}
+                        <SessionAddressDetails
+                          address={booking && booking.sessions && booking.sessions[0] && booking.sessions[0].address}
+                        />
                       </Loader>
                     </div>
                   </div>

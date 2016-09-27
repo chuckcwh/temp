@@ -17,6 +17,7 @@ import DashboardAvailableCases from '../DashboardAvailableCases';
 import DashboardOngoingCases from '../DashboardOngoingCases';
 import DashboardCompletedCases from '../DashboardCompletedCases';
 import DashboardOtherCases from '../DashboardOtherCases';
+import ConfirmPopup from '../ConfirmPopup';
 import { fetchServices, getPatients, getSessions, getApplications, setOrderService, setLastPage } from '../../actions';
 import history from '../../core/history';
 import { isClient, isProvider } from '../../core/util';
@@ -252,6 +253,7 @@ class Dashboard extends Component {
             {dashboardBody}
           </div>
         </Container>
+        <ConfirmPopup />
       </div>
     );
   }

@@ -55,8 +55,8 @@ class DashboardCompletedCases extends Component {
                       <Col xs={8} md={2}>
                         {`${services && services[session.service] && services[session.service].name} `
                           + `(${services && services[session.service] && services[session.service].classes
-                              && services[session.service].classes[session.serviceClassId]
-                              && services[session.service].classes[session.serviceClassId].duration}hrs)`}
+                              && services[session.service].classes[session.serviceClass]
+                              && services[session.service].classes[session.serviceClass].duration}hrs)`}
                       </Col>
                       <Col xs={4}>Price</Col>
                       <Col xs={8} md={1}>{`$${parseFloat(application.price).toFixed(2)}`}</Col>
@@ -66,7 +66,7 @@ class DashboardCompletedCases extends Component {
                       </Col>
                       <Col xs={4}>Action(s)</Col>
                       <Col xs={8} md={2}>
-                        <DashboardTableButton to={`/applications/${session._id}`}>View</DashboardTableButton>
+                        <DashboardTableButton to={`/applications/${application._id}`}>View</DashboardTableButton>
                         <DashboardTableButton>Cancel</DashboardTableButton>
                       </Col>
                     </Row>

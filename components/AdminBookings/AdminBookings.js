@@ -9,7 +9,7 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
-import { getBookings } from '../../actions';
+import { getBookings, fetchServices } from '../../actions';
 import { configToName } from '../../core/util';
 // Sub Component
 import AdminBookingsForm from './AdminBookingsForm/AdminBookingsForm';
@@ -36,6 +36,7 @@ class AdminBookings extends Component {
   }
 
   componentDidMount() {
+    this.props.fetchServices();
     this.props.getBookings({
       count: 10,
       page: this.state.page
@@ -110,7 +111,7 @@ class AdminBookings extends Component {
 
   render() {
     const { add, edit, bookingId } = this.props.params;
-    const { user, bookings, config } = this.props;
+    const { user, bookings, config, services } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
@@ -157,7 +158,7 @@ class AdminBookings extends Component {
                 isRowLoaded={this.isRowLoaded}
                 loadMoreRows={this.loadMoreRows}
                 rowCount={10000}
-              >
+                >
                 {({ onRowsRendered, registerChild }) => (
 
                   <AutoSizer disableHeight>
@@ -191,21 +192,31 @@ class AdminBookings extends Component {
                           headerRenderer={this.setHeaderLabel}
                           dataKey="isAdhoc"
                           cellRenderer={({cellData}) => cellData ? <FaCheck /> : null}
-                          width={80}
+                          width={75}
                         />
                         <Column
                           label="client"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="client"
                           cellRenderer={({cellData}) => cellData && cellData.name}
-                          width={130}
+                          width={120}
                         />
                         <Column
                           label="patient"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="patient"
                           cellRenderer={({cellData}) => cellData && cellData.name}
-                          width={130}
+                          width={120}
+                        />
+                        <Column
+                          label="service"
+                          dataKey="sessions"
+                          cellRenderer={({cellData}) => {
+                            const serviceName = cellData && cellData[0].service && Object.keys(services).length > 0 && services[cellData[0].service].name;
+                            const serviceClassName = cellData && cellData[0].serviceClass && Object.keys(services).length > 0 && services[cellData[0].service].classes[cellData[0].serviceClass].duration;
+                            return serviceName && `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})`
+                          }}
+                          width={200}
                         />
                         <Column
                           label="verified"
@@ -254,8 +265,8 @@ class AdminBookings extends Component {
                                 break;
                             }
                             return (
-                              <div className={cx('btn', s.tableListStatus, statusClass)}>{cellData}</div>
-                          )}}
+                              <div className={cx('btn', s.tableListStatus, statusClass)}>{configToName(config, 'bookingStatusesByValue', cellData)}</div>
+                            )}}
                           width={90}
                         />
                         <Column
@@ -263,10 +274,8 @@ class AdminBookings extends Component {
                           headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="sessions"
                           cellRenderer={({cellData}) => cellData && cellData.map(item => moment(item.date).format('YYYY-MM-DD')).join(', ')}
-
-
                           disableSort={true}
-                          width={250}
+                          width={200}
                         />
                       </Table>
                     )}
@@ -290,9 +299,11 @@ const mapStateToProps = (state) => ({
   user: state.user.data,
   bookings: state.bookings.data,
   config: state.config.data,
+  services: state.services.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchServices: () => dispatch(fetchServices()),
   getBookings: (params, extend) => dispatch(getBookings(params, extend)),
 });
 

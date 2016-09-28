@@ -2,5 +2,78 @@
 
 
 .adminUsers {
+  & .filter {
+    & .inlineField {
+      display: inline-block;
 
+      & .filterInput {
+        margin: 0 -1px 0 0;
+
+        & .filterInputInner {
+          width: 150px;
+        }
+      }
+    }
+  }
+
+  & .tableList {
+    margin: 40px auto;
+
+  }
+
+  & .tableListHeader {
+    color: lightgrey;
+    border-bottom: 1px solid lightgrey;
+    font-size: 14px;
+  }
+
+  & .tableListEvenRow {
+    background: lightgrey;
+  }
+
+  & .tableListRadio {
+    background-color: #fdbc1d;
+    color: #FFFFFF;
+    border-radius: 15px;
+    padding: 5px 3px;
+    text-align: center;
+    width: 55px;
+  }
+
+  & .tableListToEdit {
+    display: block;
+    background-color: #f78d00;
+    color: #FFFFFF;
+    border-radius: 15px;
+    padding: 5px 3px;
+    text-align: center;
+    width: 65px;
+  }
+
+  & .tableListStatus {
+    width: 75px;
+    padding: 5px 3px;
+    text-align: center;
+  }
+
+  & .tableListStatusOpen {
+    color: #18B905;
+    border: 1px solid #18B905;
+  }
+
+  & .tableListStatusCancelled {
+    color: red;
+    border: 1px solid red;
+  }
+
+  & .tableListStatusExpired {
+    color: blue;
+    border: 1px solid blue;
+  }
+
+  & .clearSortFilter {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #f78d00;
+  }
 }

@@ -151,7 +151,7 @@ class AdminBookings extends Component {
                 isRowLoaded={this.isRowLoaded}
                 loadMoreRows={this.loadMoreRows}
                 rowCount={10000}
-                >
+              >
                 {({ onRowsRendered, registerChild }) => (
 
                   <AutoSizer disableHeight>

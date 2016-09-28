@@ -514,6 +514,35 @@ const patientsByClient = (state = {}, action) => {
   }
 }
 
+const users = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: {},
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.USERS_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.USERS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: action.extend
+          ? {
+            ...state.data,
+            ...normalize(action.response && action.response.data),
+          }
+          : normalize(action.response && action.response.data),
+        total: action.response.total,
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    default:
+      return state
+  }
+}
+
 const availableSchedules = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -718,6 +747,7 @@ const errorMessage = (state = '', action) => {
 
 const bookingApp = combineReducers({
   user,
+  users,
   config,
   services,
   bookings,

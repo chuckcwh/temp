@@ -1000,8 +1000,8 @@ export function createUser(params) {
   return fetch('createUser', params);
 }
 
-export function getUsers(params) {
-  return fetch('getUsers', params);
+export function getUsers(params, extend) {
+  return fetch('getUsers', params, extend);
 }
 
 export function getUser(params) {

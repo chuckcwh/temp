@@ -33,7 +33,7 @@ class BookingPostNavigation extends Component {
                 onClick={this.onClick}
               >
                 <div className={s.bookingPostNavigationItemIcon}>1</div>
-                <span className={s.bookingPostNavigationItemText}>Booking Confirmation</span>
+                <span className={s.bookingPostNavigationItemText}>Confirmation</span>
               </a>
             </li>
             <li className={s.bookingPostNavigationItem}>
@@ -46,7 +46,7 @@ class BookingPostNavigation extends Component {
                 }
               >
                 <div className={s.bookingPostNavigationItemIcon}>2</div>
-                <span className={s.bookingPostNavigationItemText}>Booking Payment</span>
+                <span className={s.bookingPostNavigationItemText}>Payment</span>
               </span>
             </li>
           </ul>

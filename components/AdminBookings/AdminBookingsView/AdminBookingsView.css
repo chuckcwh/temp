@@ -10,8 +10,41 @@
     float: right;
   }
 
+  & .caseDetail, & .personDetail {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  & ul > li {
+    line-height: 28px;
+
+    & .title {
+      font-weight: bold;
+      width: 125px;
+      display: inline-block;
+    }
+
+    & .inlineBlock {
+      display: inline-block;
+    }
+  }
+
+  & .patientDetailCont {
+    margin-top: 80px;
+
+    & > li .title {
+      width: 150px;
+    }
+  }
+
   & .tableList {
     text-align: center;
+  }
+
+  & .colorRed {
+    color: #f2635f;
   }
 
   & .tableListHeader {
@@ -21,7 +54,7 @@
   }
 
   & .tableListEvenRow {
-    background: lightgrey;
+    background: #f0f0f0;
   }
 
   & .tableListRadio {
@@ -62,7 +95,7 @@
     margin: 3px auto;
   }
 
-  & .tableListSignCancel {
+  & .tableListSignDelete {
     background: #f2635f;
     padding: 5px;
     width: 60px;

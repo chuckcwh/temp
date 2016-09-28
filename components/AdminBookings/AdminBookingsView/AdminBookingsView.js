@@ -21,6 +21,7 @@ import FaCheck from 'react-icons/lib/fa/check';
 
 //TODO: add nurse price
 //TODO: add nurse
+//TODO: is ad-hoc or not
 
 class AdminBookingsView extends Component {
 
@@ -51,10 +52,11 @@ class AdminBookingsView extends Component {
         return `$ ${p} SGD`;
       },
       datePeriod: () => {
-        const dateStart = booking.sessions && booking.sessions.length && moment(booking.sessions[0].date).format('YYYY-MM-DD');
+        const dateStart = booking.sessions && booking.sessions.length > 0 && moment(booking.sessions[0].date).format('YYYY-MM-DD');
         const dateEnd = booking.sessions && booking.sessions.length > 1 && moment(booking.sessions[booking.sessions.length - 1].date).format('YYYY-MM-DD');
         return `${dateStart}${dateEnd ? ' - ' + dateEnd : ""}`;
-      }
+      },
+      location: booking.sessions && booking.sessions.length > 0 && booking.sessions[0].address,
     }
 
     return (
@@ -71,31 +73,73 @@ class AdminBookingsView extends Component {
 
           <h1>
             {detail.title()}
-            <div className={s.bookingStatus}>{booking.status}</div>
+            <div className={s.bookingStatus}></div>
           </h1>
 
           <Grid fluid>
             <Row className={s.caseDetail}>
-              <Col xs={8} md={8} className={s.detailSection}>
+              <Col xs={12} md={4} className={s.detailSection}>
                 <h2>CASE DETAILS</h2>
-                <p><span>Type:</span>Ad-hoc</p>
-                <p><span>Sessions:</span>{booking.sessions && booking.sessions.length}</p>
-                <p><span>Price:</span>{detail.price()}</p>
-                <p><span>BookingId:</span>{booking.bookingId}</p>
-                <p><span>Date period:</span>{detail.datePeriod()}</p>
+                <ul>
+                  <li><span className={s.title}>Type:</span>Ad-hoc</li>
+                  <li><span className={s.title}>Status</span>{booking.status}</li>
+                  <li><span className={s.title}>Sessions:</span>{booking.sessions && booking.sessions.length}</li>
+                  <li><span className={s.title}>Price:</span>{detail.price()}</li>
+                  <li><span className={s.title}>Booking ID:</span>{booking.bookingId}</li>
+                  <li><span className={s.title}>Date period:</span>{detail.datePeriod()}</li>
+                </ul>
               </Col>
 
-              <Col xs={4} md={4} className={s.detailSection}>
+              <Col xs={12} md={4} className={s.detailSection}>
+                <h2>LOCATION</h2>
+                <ul className={s.caseDetailList}>
+                  <li><span className={s.title}>Postal:</span>{detail.location && detail.location.postal}</li>
+                  <li><span className={s.title}>Address:</span><span className={s.inlineBlock}>{detail.location && detail.location.description}</span></li>
+                  <li><span className={s.title}>Unit:</span>{detail.location && detail.location.unit}</li>
+                </ul>
+              </Col>
+
+              <Col xs={12} md={4} className={s.detailSection}>
                 <h2>INSTRUCTIONS</h2>
                 <ul>
-                  <li>Please contact the client to confirm the visit date.</li>
+                  <li className={s.colorRed}>Please contact the client to confirm the visit date.</li>
                   <li>Do clarify further details with the client with regards to the patient&#39;s condition</li>
                   <li>Ensure that you confirm with the client the actual date and time for the visit.</li>
                 </ul>
               </Col>
             </Row>
 
-            <Row className={s.caseDetail}>
+            <Row className={s.personDetail}>
+              <Col xs={12} md={4} className={s.detailSection}>
+                <h2>PATIENT</h2>
+                <ul>
+                  <li><span className={s.title}>Name:</span></li>
+                  <li><span className={s.title}>Age:</span></li>
+                  <li><span className={s.title}>DOB:</span></li>
+                  <li><span className={s.title}>Gender:</span></li>
+
+                </ul>
+              </Col>
+
+              <Col xs={12} md={4} className={s.detailSection}>
+                <ul className={s.patientDetailCont}>
+                  <li><span className={s.title}>Main Diagnosis:</span><span className={s.inlineBlock}></span></li>
+                  <li><span className={s.title}>Mobility:</span><span className={s.inlineBlock}></span></li>
+                  <li><span className={s.title}>Special Note:</span><span className={s.inlineBlock}></span></li>
+                </ul>
+              </Col>
+
+              <Col xs={12} md={4} className={s.detailSection}>
+                <h2>CLIENT</h2>
+                <ul>
+                  <li><span className={s.title}>Full Name:</span></li>
+                  <li><span className={s.title}>Mobile:</span></li>
+                  <li><span className={s.title}>Email:</span></li>
+                </ul>
+              </Col>
+            </Row>
+
+            <Row className={s.sessionDetail}>
               <Col xs={12} md={12} className={s.detailSection}>
                 <h2>SCHEDULED DATES</h2>
 
@@ -200,12 +244,12 @@ class AdminBookingsView extends Component {
                             return (
                               <div>
                                 <div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignDoc)}>Doc</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
                                 </div>
                                 <div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignCancel)}>Cancel</div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Delete</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Cancel</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignDelete)}>Delete</div>
                                 </div>
                               </div>
                           )}}
@@ -219,40 +263,22 @@ class AdminBookingsView extends Component {
             </Row>
 
             <Row className={s.personDetail}>
-              <Col xs={6} md={6} className={s.detailSection}>
-                <h2>PATIENT</h2>
-                <p><span>Age:</span></p>
-                <p><span>DOB:</span></p>
-                <p><span>Gender:</span></p>
-                <p><span>Main Diagnosis:</span></p>
-                <p><span>Mobility:</span></p>
-                <p><span>Special Note:</span></p>
-              </Col>
-
-              <Col xs={6} md={6} className={s.detailSection}>
-                <h2>CLIENT</h2>
-                <p><span>Full Name:</span></p>
-                <p><span>Mobile:</span></p>
-                <p><span>Email:</span></p>
-              </Col>
-            </Row>
-
-            <Row className={s.personDetail}>
-              <Col xs={4} md={4} className={s.detailSection}>
+              <Col xs={12} md={4} className={s.detailSection}>
                 <h2>TRANSACTION HISTORY</h2>
                 <p>There are no transactions.</p>
               </Col>
 
-              <Col xs={4} md={4} className={s.detailSection}>
+              <Col xs={12} md={4} className={s.detailSection}>
                 <h2>NURSE PAYOUT HISTORY</h2>
                 <p>There are no transactions.</p>
               </Col>
 
-              <Col xs={4} md={4} className={s.detailSection}>
+              <Col xs={12} md={4} className={s.detailSection}>
                 <h2>FOLLOW UP CASES</h2>
                 <p>There are no follow-up cases.</p>
               </Col>
             </Row>
+
           </Grid>
 
         </Container>

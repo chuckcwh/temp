@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AdminBookings from '../../components/AdminBookings';
 import AdminBookingsView from '../../components/AdminBookings/AdminBookingsView/AdminBookingsView';
+import AdminBookingsForm from '../../components/AdminBookings/AdminBookingsForm/AdminBookingsForm';
 
 
 export default class extends Component {
@@ -10,14 +11,22 @@ export default class extends Component {
   }
 
   render() {
-    const { pageAction } = this.props.params;
+    const { pageAction, bookingId } = this.props.params;
 
     let content;
 
     if (pageAction === 'view') {
+
       content = (<AdminBookingsView {...this.props} />)
+
+    } else if (pageAction === 'add' || pageAction === 'edit') {
+
+      content = (<AdminBookingsForm {...this.props} />)
+
     } else {
+
       content = (<AdminBookings {...this.props} />)
+
     }
 
     return (

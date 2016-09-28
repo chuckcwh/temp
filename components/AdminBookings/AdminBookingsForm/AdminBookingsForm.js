@@ -6,10 +6,11 @@ import moment from 'moment';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import s from './AdminBookingsForm.css';
+import Container from '../../Container';
 import { reduxForm, change } from 'redux-form';
 import Header from '../../Header';
 import history from '../../../core/history';
-import { showDayPickerPopup, fetchServices, getUsers, getPatients, createBooking, fetchAddress } from '../../../actions';
+import { showDayPickerPopup, fetchServices, getUsers, getPatients, createBooking, fetchAddress, getBooking } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import MultiSelect from '../../MultiSelect';
@@ -28,14 +29,23 @@ class AdminBookingsForm extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchServices();
-    this.props.getUsers().then((res) => {
+    const { pageAction, bookingId } = this.props.params;
+    const { fetchServices, getUsers, getBooking } = this.props;
+
+    fetchServices();
+    getUsers().then((res) => {
       if (res.type === 'USERS_SUCCESS') {
         this.setState({
           userList: res.response.data.length && res.response.data.filter(user => user.role === 'client').sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0) || []
         })
       }
     });
+
+    if (pageAction === 'edit' && bookingId) {
+      getBooking({ bookingId }).then(res => {
+        // if (res.type === '')
+      })
+    }
   }
 
   onSetUserClass = (e) => {
@@ -224,6 +234,7 @@ class AdminBookingsForm extends Component {
       submitting,
     } = this.props;
 
+    const { pageAction } = this.props.params;
     const { userList, patientList, patientListErr, selectedDates, postalHint } = this.state;
     const flattenServiceChoice = serviceChoice && Object.values(serviceChoice).reduce((result, service) => {
       Object.values(service.classes).map(serviceClass => {
@@ -236,10 +247,12 @@ class AdminBookingsForm extends Component {
     }, []) || [];
 
     return (
-      <div>
-        <DayPickerPopup title='Date Picker' />
+      <div className={s.adminBookingsForm}>
+        <Header title={pageAction === "add" && "Add Booking" || "Edit Booking"} />
+        <Container>
+          <DayPickerPopup title='Date Picker' />
 
-        <form className={s.adminBookingsForm} onSubmit={handleSubmit(this.onSubmit)}>
+          <form onSubmit={handleSubmit(this.onSubmit)}>
           <Grid fluid>
 
             {/* user type */}
@@ -468,6 +481,7 @@ class AdminBookingsForm extends Component {
             <button className="btn btn-primary" type="submit" disabled={invalid || submitting || !selectedDates.length}>Save Changes</button>
           </div>
         </form>
+        </Container>
       </div>
     );
   }
@@ -577,6 +591,7 @@ const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   getUsers: () => dispatch(getUsers()),
   getPatients: (params) => dispatch(getPatients(params)),
+  getBooking: (params) => dispatch(getBooking(params)),
   createBooking: (params) => dispatch(createBooking(params)),
   resetForm: () => dispatch(reset('adminBookingsForm')),
   changeFieldValue: (field, value) => dispatch(change('adminBookingsForm', field, value)),

@@ -20,11 +20,11 @@ import AdminBookingsForm from '../AdminBookingsForm/AdminBookingsForm';
 import FaCheck from 'react-icons/lib/fa/check';
 
 
-//TODO: add nurse price
-//TODO: add nurse
-
+//TODO: nurse / nurse price data
 //TODO: nurse assign/de-assign
 //TODO: transaction / nurse payment
+//TODO: link to patient doc
+
 
 class AdminBookingsView extends Component {
 
@@ -110,7 +110,11 @@ class AdminBookingsView extends Component {
           <ConfirmPopup />
           <button onClick={() => history.push({ pathname: '/admin-bookings' })} className={cx('btn', 'btn-primary', s.btnBack)}>back</button>
           <div className={s.buttonPanel}>
-            <button className={cx('btn', 'btn-primary')}>Edit</button>
+            <Link
+              className={cx('btn', 'btn-primary')}
+              to={`/admin-bookings/edit/${booking._id}`}>
+              Edit
+            </Link>
             <button
               className={cx('btn', 'btn-secondary')}
               onClick={() => this.props.showConfirmPopup('Do you really want to delete the booking?', () => this.deleteBooking())}>
@@ -161,7 +165,7 @@ class AdminBookingsView extends Component {
 
             <Row className={s.personDetail}>
               <Col xs={12} md={4} className={s.detailSection}>
-                <h2>PATIENT {booking.isAdhoc && '(Ad-hoc)'}</h2>
+                <h2>PATIENT {booking.isAdhoc && '(Ad-hoc)' || booking.patient && (<Link className={cx('btn', s.tableListSign, s.tableListSignEdit)} to={`/documentation/${booking.patient._id}`}>Doc</Link>)}</h2>
                 <ul>
                   <li><span className={s.title}>Name:</span>{detail.patient.name}</li>
                   <li><span className={s.title}>Age:</span>{detail.patient.age}</li>

@@ -11,8 +11,6 @@ import Header from '../Header';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getBookings, fetchServices } from '../../actions';
 import { configToName } from '../../core/util';
-// Sub Component
-import AdminBookingsForm from './AdminBookingsForm/AdminBookingsForm';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -110,20 +108,15 @@ class AdminBookings extends Component {
   }
 
   render() {
-    const { pageAction, bookingId } = this.props.params;
     const { user, bookings, config, services } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
       <div className={s.adminBookings}>
-        <Header title={pageAction === 'add' && "Add Booking" || pageAction === 'edit' && "Edit Booking" || "Booking Management"} />
+        <Header title="Booking Management" />
         <Container>
 
-          {user && pageAction === 'add' && <AdminBookingsForm />}
-
-          {user && pageAction === 'edit' && <AdminBookingsForm edit={true} bookingId={bookingId} />}
-
-          {user && pageAction !== 'add' && pageAction !== 'edit' && (
+          {user && (
             <div>
               <div className={s.addLink}>
                 <Link

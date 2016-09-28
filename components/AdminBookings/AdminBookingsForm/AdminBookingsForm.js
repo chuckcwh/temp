@@ -177,6 +177,7 @@ class AdminBookingsForm extends Component {
         email: values.patientEmail,
         contact: values.patientMobile,
         dob: values.patientDOB,
+        gender: values.patientGender,
         additionalInfo: values.patientNote,
       };
     }

@@ -8,8 +8,9 @@ import s from './AdminBookingsView.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
+import ConfirmPopup from '../../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
-import { getBooking, fetchServices } from '../../../actions';
+import { getBooking, fetchServices, showConfirmPopup } from '../../../actions';
 import history from '../../../core/history';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -21,7 +22,9 @@ import FaCheck from 'react-icons/lib/fa/check';
 
 //TODO: add nurse price
 //TODO: add nurse
-//TODO: is ad-hoc or not
+
+//TODO: nurse assign/de-assign
+//TODO: transaction / nurse payment
 
 class AdminBookingsView extends Component {
 
@@ -32,10 +35,22 @@ class AdminBookingsView extends Component {
   }
 
   componentDidMount() {
-    const { edit, bookingId, getBooking, fetchServices } = this.props;
+    const { getBooking, fetchServices } = this.props;
+    const { bookingId } = this.props.params;
 
     fetchServices();
-    getBooking({ bookingId });
+    getBooking({ bookingId }).then(res => {
+      if (res.type === 'BOOKING_FAILURE') {
+        history.push({ pathname: '/admin-bookings' });
+        // history.goBack();
+      }
+    });
+  }
+
+  deleteBooking = () => {
+    const { booking, deleteBooking } = this.props;
+
+    console.log('delete');
   }
 
   render() {
@@ -44,8 +59,8 @@ class AdminBookingsView extends Component {
     const detail = {
       title: () => {
         const serviceName = booking.sessions && booking.sessions[0].service && Object.keys(services).length > 0 && services[booking.sessions[0].service].name;
-        const serviceClassName = booking.sessions && booking.sessions[0].serviceClassId && Object.keys(services).length > 0 && services[booking.sessions[0].service].classes[booking.sessions[0].serviceClassId].duration;
-        return serviceName && `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})`;
+        const serviceClassName = booking.sessions && booking.sessions[0].serviceClass && Object.keys(services).length > 0 && services[booking.sessions[0].service].classes[booking.sessions[0].serviceClass].duration;
+        return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})` : 'Unknown';
       },
       price: () => {
         const p = booking.sessions && booking.sessions.length && booking.sessions.reduce((result, session) => result + parseFloat(session.price), 0).toFixed(2);
@@ -54,20 +69,48 @@ class AdminBookingsView extends Component {
       datePeriod: () => {
         const dateStart = booking.sessions && booking.sessions.length > 0 && moment(booking.sessions[0].date).format('YYYY-MM-DD');
         const dateEnd = booking.sessions && booking.sessions.length > 1 && moment(booking.sessions[booking.sessions.length - 1].date).format('YYYY-MM-DD');
-        return `${dateStart}${dateEnd ? ' - ' + dateEnd : ""}`;
+        return `${dateStart}${dateEnd ? ' to ' + dateEnd : ""}`;
       },
       location: booking.sessions && booking.sessions.length > 0 && booking.sessions[0].address,
+      patient: {
+        name: booking.adhocPatient && booking.adhocPatient.name
+          || booking.patient && booking.patient.name,
+        age: booking.adhocPatient && moment().diff(booking.adhocPatient.dob, 'years') ? moment().diff(booking.adhocPatient.dob, 'years') : 0
+          || booking.patient && moment().diff(booking.patient.dob, 'years') ? moment().diff(booking.patient.dob, 'years') : 0,
+        dob: booking.adhocPatient && moment(booking.adhocPatient.dob).format('YYYY-MM-DD')
+          || booking.patient && moment(booking.patient.dob).format('YYYY-MM-DD'),
+        gender: booking.adhocPatient && configToName(config, 'gendersByValue', booking.adhocPatient.gender)
+          || booking.patient && configToName(config, 'gendersByValue', booking.patient.gender),
+        diagnosis: booking.adhocPatient && '-'
+          || booking.patient && '-',
+        mobility: booking.adhocPatient && '-'
+          || booking.patient && '-',
+        note: booking.adhocPatient && '-'
+          || booking.patient && '-',
+      },
+      client: {
+        name: booking.adhocClient && booking.adhocClient.name
+          || booking.client && booking.client.name,
+        mobile: booking.adhocClient && booking.adhocClient.contact
+          || booking.client && booking.client.contact,
+        email: booking.adhocClient && booking.adhocClient.email
+          || booking.client && booking.client.email,
+      }
     }
 
     return (
       <div className={s.adminBookingsView}>
         <Header title="Booking Detail" />
         <Container>
-
-          <button onClick={() => history.goBack()} className={cx('btn', 'btn-primary', s.btnBack)}>back</button>
+          <ConfirmPopup />
+          <button onClick={() => history.push({ pathname: '/admin-bookings' })} className={cx('btn', 'btn-primary', s.btnBack)}>back</button>
           <div className={s.buttonPanel}>
-            <button className={cx('btn', 'btn-secondary')}>Delete</button>
             <button className={cx('btn', 'btn-primary')}>Edit</button>
+            <button
+              className={cx('btn', 'btn-secondary')}
+              onClick={() => this.props.showConfirmPopup('Do you really want to delete the booking?', () => this.deleteBooking())}>
+              Delete
+            </button>
           </div>
 
 
@@ -81,12 +124,12 @@ class AdminBookingsView extends Component {
               <Col xs={12} md={4} className={s.detailSection}>
                 <h2>CASE DETAILS</h2>
                 <ul>
-                  <li><span className={s.title}>Type:</span>Ad-hoc</li>
+                  <li><span className={s.title}>Type:</span>{booking.isAdhoc ? 'Ad-hoc' : 'Registered User'}</li>
                   <li><span className={s.title}>Status</span>{booking.status}</li>
                   <li><span className={s.title}>Sessions:</span>{booking.sessions && booking.sessions.length}</li>
                   <li><span className={s.title}>Price:</span>{detail.price()}</li>
                   <li><span className={s.title}>Booking ID:</span>{booking.bookingId}</li>
-                  <li><span className={s.title}>Date period:</span>{detail.datePeriod()}</li>
+                  <li><span className={s.title}>Date period:</span><span className={s.inlineBlock}>{detail.datePeriod()}</span></li>
                 </ul>
               </Col>
 
@@ -94,6 +137,8 @@ class AdminBookingsView extends Component {
                 <h2>LOCATION</h2>
                 <ul className={s.caseDetailList}>
                   <li><span className={s.title}>Postal:</span>{detail.location && detail.location.postal}</li>
+                  <li><span className={s.title}>Region:</span>{detail.location && detail.location.region || '-'}</li>
+                  <li><span className={s.title}>Neighborhood:</span>{detail.location && detail.location.neighborhood || '-'}</li>
                   <li><span className={s.title}>Address:</span><span className={s.inlineBlock}>{detail.location && detail.location.description}</span></li>
                   <li><span className={s.title}>Unit:</span>{detail.location && detail.location.unit}</li>
                 </ul>
@@ -111,30 +156,29 @@ class AdminBookingsView extends Component {
 
             <Row className={s.personDetail}>
               <Col xs={12} md={4} className={s.detailSection}>
-                <h2>PATIENT</h2>
+                <h2>PATIENT {booking.isAdhoc && '(Ad-hoc)'}</h2>
                 <ul>
-                  <li><span className={s.title}>Name:</span></li>
-                  <li><span className={s.title}>Age:</span></li>
-                  <li><span className={s.title}>DOB:</span></li>
-                  <li><span className={s.title}>Gender:</span></li>
-
+                  <li><span className={s.title}>Name:</span>{detail.patient.name}</li>
+                  <li><span className={s.title}>Age:</span>{detail.patient.age}</li>
+                  <li><span className={s.title}>DOB:</span>{detail.patient.dob}</li>
+                  <li><span className={s.title}>Gender:</span>{detail.patient.gender}</li>
                 </ul>
               </Col>
 
               <Col xs={12} md={4} className={s.detailSection}>
                 <ul className={s.patientDetailCont}>
-                  <li><span className={s.title}>Main Diagnosis:</span><span className={s.inlineBlock}></span></li>
-                  <li><span className={s.title}>Mobility:</span><span className={s.inlineBlock}></span></li>
-                  <li><span className={s.title}>Special Note:</span><span className={s.inlineBlock}></span></li>
+                  <li><span className={s.title}>Main Diagnosis:</span><span className={s.inlineBlock}>{detail.patient.diagnosis}</span></li>
+                  <li><span className={s.title}>Mobility:</span><span className={s.inlineBlock}>{detail.patient.mobility}</span></li>
+                  <li><span className={s.title}>Special Note:</span><span className={s.inlineBlock}>{detail.patient.note}</span></li>
                 </ul>
               </Col>
 
               <Col xs={12} md={4} className={s.detailSection}>
-                <h2>CLIENT</h2>
+                <h2>CLIENT {booking.isAdhoc && '(Ad-hoc)'}</h2>
                 <ul>
-                  <li><span className={s.title}>Full Name:</span></li>
-                  <li><span className={s.title}>Mobile:</span></li>
-                  <li><span className={s.title}>Email:</span></li>
+                  <li><span className={s.title}>Name:</span>{detail.client.name}</li>
+                  <li><span className={s.title}>Mobile:</span>{detail.client.mobile}</li>
+                  <li><span className={s.title}>Email:</span>{detail.client.email}</li>
                 </ul>
               </Col>
             </Row>
@@ -143,12 +187,12 @@ class AdminBookingsView extends Component {
               <Col xs={12} md={12} className={s.detailSection}>
                 <h2>SCHEDULED DATES</h2>
 
-                {booking.sessions && booking.sessions.length > 0 && (
+                {booking.sessions && (
                   <AutoSizer disableHeight>
                     {({width}) => (
                       <Table
                         className={s.tableList}
-                        height={200}
+                        height={360}
                         width={width}
 
                         headerClassName={s.tableListHeader}
@@ -244,6 +288,93 @@ class AdminBookingsView extends Component {
                             return (
                               <div>
                                 <div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
+                                </div>
+                                <div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignCancel)}>Cancel</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignDelete)}>Delete</div>
+                                </div>
+                              </div>
+                          )}}
+                          width={200}
+                        />
+                      </Table>
+                    )}
+                  </AutoSizer>
+                )}
+              </Col>
+            </Row>
+
+            <Row className={s.transactionDetail}>
+              <Col xs={12} md={12} className={s.detailSection}>
+                <h2>TRANSACTION HISTORY</h2>
+
+                {booking.transactions && booking.transactions.length > 0 ? (
+                  <AutoSizer disableHeight>
+                    {({width}) => (
+                      <Table
+                        className={s.tableList}
+                        height={200}
+                        width={width}
+
+                        headerClassName={s.tableListHeader}
+                        headerHeight={30}
+
+                        noRowsRenderer={() => (<div>No transactions.</div>)}
+                        rowHeight={100}
+                        rowClassName={({index}) => index % 2 === 0 ? s.tableListEvenRow : null}
+                        rowCount={booking.transactions.length}
+                        rowGetter={({index}) => booking.transactions[index]}
+                      >
+                        <Column
+                          label="transaction date"
+                          dataKey="date"
+                          cellRenderer={({cellData}) => '-'}
+                          width={130}
+                        />
+                        <Column
+                          label="payment ref"
+                          dataKey="ref"
+                          cellRenderer={({cellData}) => '-'}
+                          width={130}
+                        />
+                        <Column
+                          label="amount"
+                          dataKey="amount"
+                          cellRenderer={({cellData}) => '-'}
+                          width={120}
+                        />
+                        <Column
+                          label="status"
+                          dataKey="status"
+                          cellRenderer={({cellData}) => '-'}
+                          width={100}
+                        />
+                        <Column
+                          label="method"
+                          dataKey="method"
+                          cellRenderer={({cellData}) => '-'}
+                          width={100}
+                        />
+                        <Column
+                          label="nurse"
+                          dataKey="nurse"
+                          cellRenderer={({cellData}) => '-'}
+                          width={100}
+                        />
+                        <Column
+                          label="action"
+                          dataKey="_id"
+                          cellRenderer={({cellData}) => '-'}
+                          width={100}
+                        />
+                        <Column
+                          label="actions"
+                          dataKey="_id"
+                          cellRenderer={({cellData}) => {
+                            return (
+                              <div>
+                                <div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignDoc)}>Doc</div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
                                 </div>
@@ -258,22 +389,99 @@ class AdminBookingsView extends Component {
                       </Table>
                     )}
                   </AutoSizer>
+                ) : (
+                  <div>There are no transactions.</div>
                 )}
-              </Col>
-            </Row>
-
-            <Row className={s.personDetail}>
-              <Col xs={12} md={4} className={s.detailSection}>
-                <h2>TRANSACTION HISTORY</h2>
-                <p>There are no transactions.</p>
               </Col>
 
               <Col xs={12} md={4} className={s.detailSection}>
                 <h2>NURSE PAYOUT HISTORY</h2>
-                <p>There are no transactions.</p>
+                  {booking.nurseTransactions && booking.nurseTransactions.length > 0 ? (
+                    <AutoSizer disableHeight>
+                      {({width}) => (
+                        <Table
+                          className={s.tableList}
+                          height={200}
+                          width={width}
+
+                          headerClassName={s.tableListHeader}
+                          headerHeight={30}
+
+                          noRowsRenderer={() => (<div>No transactions.</div>)}
+                          rowHeight={100}
+                          rowClassName={({index}) => index % 2 === 0 ? s.tableListEvenRow : null}
+                          rowCount={booking.transactions.length}
+                          rowGetter={({index}) => booking.transactions[index]}
+                        >
+                          <Column
+                            label="transaction date"
+                            dataKey="date"
+                            cellRenderer={({cellData}) => '-'}
+                            width={130}
+                          />
+                          <Column
+                            label="payment ref"
+                            dataKey="ref"
+                            cellRenderer={({cellData}) => '-'}
+                            width={130}
+                          />
+                          <Column
+                            label="amount"
+                            dataKey="amount"
+                            cellRenderer={({cellData}) => '-'}
+                            width={120}
+                          />
+                          <Column
+                            label="status"
+                            dataKey="status"
+                            cellRenderer={({cellData}) => '-'}
+                            width={100}
+                          />
+                          <Column
+                            label="method"
+                            dataKey="method"
+                            cellRenderer={({cellData}) => '-'}
+                            width={100}
+                          />
+                          <Column
+                            label="nurse"
+                            dataKey="nurse"
+                            cellRenderer={({cellData}) => '-'}
+                            width={100}
+                          />
+                          <Column
+                            label="action"
+                            dataKey="_id"
+                            cellRenderer={({cellData}) => '-'}
+                            width={100}
+                          />
+                          <Column
+                            label="actions"
+                            dataKey="_id"
+                            cellRenderer={({cellData}) => {
+                              return (
+                                <div>
+                                  <div>
+                                    <div className={cx('btn', s.tableListSign, s.tableListSignDoc)}>Doc</div>
+                                    <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
+                                  </div>
+                                  <div>
+                                    <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Cancel</div>
+                                    <div className={cx('btn', s.tableListSign, s.tableListSignDelete)}>Delete</div>
+                                  </div>
+                                </div>
+                            )}}
+                            width={200}
+                          />
+                        </Table>
+                      )}
+                    </AutoSizer>
+                  ) : (
+                    <div>There are no transactions.</div>
+                  )}
               </Col>
 
-              <Col xs={12} md={4} className={s.detailSection}>
+              <Col xs={12} md={12} className={s.detailSection}>
                 <h2>FOLLOW UP CASES</h2>
                 <p>There are no follow-up cases.</p>
               </Col>
@@ -288,6 +496,7 @@ class AdminBookingsView extends Component {
 }
 
 AdminBookingsView.propTypes = {
+  showConfirmPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -299,6 +508,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getBooking: (params) => dispatch(getBooking(params)),
+  showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminBookingsView);

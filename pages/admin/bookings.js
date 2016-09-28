@@ -10,11 +10,11 @@ export default class extends Component {
   }
 
   render() {
-    const { view } = this.props.params;
+    const { pageAction } = this.props.params;
 
     let content;
 
-    if (view) {
+    if (pageAction === 'view') {
       content = (<AdminBookingsView {...this.props} />)
     } else {
       content = (<AdminBookings {...this.props} />)

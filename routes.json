@@ -136,11 +136,11 @@
     "page": "./pages/admin/bookings"
   },
   {
-    "path": "/admin-bookings/:add",
+    "path": "/admin-bookings/:pageAction",
     "page": "./pages/admin/bookings"
   },
   {
-    "path": "/admin-bookings/:view/:bookingId",
+    "path": "/admin-bookings/:pageAction/:bookingId",
     "page": "./pages/admin/bookings"
   },
   {

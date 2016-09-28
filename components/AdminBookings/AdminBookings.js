@@ -110,20 +110,20 @@ class AdminBookings extends Component {
   }
 
   render() {
-    const { add, edit, bookingId } = this.props.params;
+    const { pageAction, bookingId } = this.props.params;
     const { user, bookings, config, services } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
       <div className={s.adminBookings}>
-        <Header title={add && "Add Booking" || edit && "Edit Booking" || "Booking Management"} />
+        <Header title={pageAction === 'add' && "Add Booking" || pageAction === 'edit' && "Edit Booking" || "Booking Management"} />
         <Container>
 
-          {user && add && <AdminBookingsForm />}
+          {user && pageAction === 'add' && <AdminBookingsForm />}
 
-          {user && edit && <AdminBookingsForm edit={true} bookingId={bookingId} />}
+          {user && pageAction === 'edit' && <AdminBookingsForm edit={true} bookingId={bookingId} />}
 
-          {user && !add && !edit && (
+          {user && pageAction !== 'add' && pageAction !== 'edit' && (
             <div>
               <div className={s.addLink}>
                 <Link
@@ -230,7 +230,7 @@ class AdminBookings extends Component {
                           headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="_id"
                           cellRenderer={({cellData}) => (
-                            <Link className={cx('btn', s.tableListToEdit)} to={`/admin-bookings/edit/${cellData}`}>
+                            <Link className={cx('btn', s.tableListToEdit)} to={`/admin-bookings/view/${cellData}`}>
                               Edit
                             </Link>
                           )}

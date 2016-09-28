@@ -12,9 +12,9 @@ import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
 import SessionPatientDetails from '../SessionPatientDetails';
 import SessionAddressDetails from '../SessionAddressDetails';
-import { SESSION_CANCEL_SUCCESS, fetchServices, getSessions, getPatients, editBooking, clearBooking, setPostStatus, cancelSession,
+import { SESSION_CANCEL_SUCCESS, fetchServices, getApplication, editBooking, clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showInlineForm } from '../../actions';
-import { configToName, formatSessionAlias, isClient } from '../../core/util';
+import { configToName, formatSessionAlias, isClient, isProvider } from '../../core/util';
 import history from '../../core/history';
 
 const imgPencil = require('../pencil.png');
@@ -30,23 +30,27 @@ class ApplicationsView extends Component {
 
   componentDidMount() {
     this.props.fetchServices();
-    this.props.user && this.props.user._id && isClient(this.props.user)
-      && this.props.getSessions({
-        client: this.props.user._id,
-      })
-      && this.props.getPatients({
-        userId: this.props.user._id
+    this.props.user
+      && this.props.user._id
+      && isProvider(this.props.user)
+      && this.props.params
+      && this.props.params.applicationId
+      && this.props.getApplication({
+        applicationId: this.props.params.applicationId,
+        provider: this.props.user._id,
       });
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.user !== this.props.user) {
-      newProps.user && newProps.user._id && isClient(newProps.user)
-        && newProps.getSessions({
-          client: newProps.user._id,
-        })
-        && newProps.getPatients({
-          userId: newProps.user._id
+      newProps.user
+        && newProps.user._id
+        && isProvider(newProps.user)
+        && newProps.params
+        && newProps.params.applicationId
+        && newProps.getApplication({
+          applicationId: newProps.params.applicationId,
+          provider: newProps.user._id,
         });
     }
   }
@@ -136,9 +140,10 @@ class ApplicationsView extends Component {
       sessionDetails,
       caregiverSection,
       paymentButton;
-    const { params, config, services, sessions, sessionsFetching, patients, patientsFetching } = this.props;
-    const session = sessions && params && params.sessionId && sessions[params.sessionId];
-    const patient = patients && session && session.patient && patients[session.patient];
+    const { params, config, services, applications, applicationsFetching } = this.props;
+    const application = applications && params && params.applicationId && applications[params.applicationId];
+    const session = application && application.session;
+    const patient = session && session.patient;
     // if (this.state.editingPatient) {
     //   patientDetails = (
     //     <div>
@@ -219,62 +224,62 @@ class ApplicationsView extends Component {
     //     </div>
     //   );
     // } else {
-    patientDetails = (
-      <div>
-        <div className="TableRow">
-          <div className="TableRowItem1">Name</div>
-          <div className="TableRowItem3">{patient && patient.name}</div>
-        </div>
-        <div className="TableRow">
-          <div className="TableRowItem1">Gender</div>
-          <div className="TableRowItem3">
-            {configToName(config, 'gendersByValue', patient && patient.gender)}
-          </div>
-        </div>
-        <div className="TableRow">
-          <div className="TableRowItem1">Date of Birth</div>
-          <div className="TableRowItem3">
-            {patient && patient.dob
-              && moment(patient.dob).format('ll')}
-          </div>
-        </div>
-        <div className="TableRow">
-          <div className="TableRowItem1">Age</div>
-          <div className="TableRowItem3">
-            {patient && patient.dob
-              && moment().diff(moment(patient.dob), 'years')}
-          </div>
-        </div>
-        <div className="TableRow">
-          <div className="TableRowItem1">Contact</div>
-          <div className="TableRowItem3">{patient && patient.contact}</div>
-        </div>
-        {patient && patient.diagnosis &&
-          <div className="TableRow">
-            <div className="TableRowItem1">Main Diagnosis</div>
-            <div className="TableRowItem3">
-              {patient.diagnosis}
-            </div>
-          </div>
-        }
-        {patient && patient.mobility &&
-          <div className="TableRow">
-            <div className="TableRowItem1">Mobility</div>
-            <div className="TableRowItem3">
-              {patient.mobility}
-            </div>
-          </div>
-        }
-        {patient && patient.specialNotes &&
-          <div className="TableRow">
-            <div className="TableRowItem1">Special Notes</div>
-            <div className="TableRowItem3">
-              {patient.specialNotes}
-            </div>
-          </div>
-        }
-      </div>
-    );
+    // patientDetails = (
+    //   <div>
+    //     <div className="TableRow">
+    //       <div className="TableRowItem1">Name</div>
+    //       <div className="TableRowItem3">{patient && patient.name}</div>
+    //     </div>
+    //     <div className="TableRow">
+    //       <div className="TableRowItem1">Gender</div>
+    //       <div className="TableRowItem3">
+    //         {configToName(config, 'gendersByValue', patient && patient.gender)}
+    //       </div>
+    //     </div>
+    //     <div className="TableRow">
+    //       <div className="TableRowItem1">Date of Birth</div>
+    //       <div className="TableRowItem3">
+    //         {patient && patient.dob
+    //           && moment(patient.dob).format('ll')}
+    //       </div>
+    //     </div>
+    //     <div className="TableRow">
+    //       <div className="TableRowItem1">Age</div>
+    //       <div className="TableRowItem3">
+    //         {patient && patient.dob
+    //           && moment().diff(moment(patient.dob), 'years')}
+    //       </div>
+    //     </div>
+    //     <div className="TableRow">
+    //       <div className="TableRowItem1">Contact</div>
+    //       <div className="TableRowItem3">{patient && patient.contact}</div>
+    //     </div>
+    //     {patient && patient.diagnosis &&
+    //       <div className="TableRow">
+    //         <div className="TableRowItem1">Main Diagnosis</div>
+    //         <div className="TableRowItem3">
+    //           {patient.diagnosis}
+    //         </div>
+    //       </div>
+    //     }
+    //     {patient && patient.mobility &&
+    //       <div className="TableRow">
+    //         <div className="TableRowItem1">Mobility</div>
+    //         <div className="TableRowItem3">
+    //           {patient.mobility}
+    //         </div>
+    //       </div>
+    //     }
+    //     {patient && patient.specialNotes &&
+    //       <div className="TableRow">
+    //         <div className="TableRowItem1">Special Notes</div>
+    //         <div className="TableRowItem3">
+    //           {patient.specialNotes}
+    //         </div>
+    //       </div>
+    //     }
+    //   </div>
+    // );
     // }
     // if (this.state.editingAddress) {
     //   addressDetails = (
@@ -435,7 +440,7 @@ class ApplicationsView extends Component {
     return (
       <div className={s.applicationsView}>
         <Container>
-          <Loader className="spinner" loaded={!sessionsFetching}>
+          <Loader className="spinner" loaded={!applicationsFetching}>
             <div className={s.applicationsViewWrapper}>
               <div className={s.applicationsViewBody}>
                 <div className={s.applicationsViewBodyActions}>
@@ -508,23 +513,16 @@ class ApplicationsView extends Component {
                 </div>
                 <div className={s.applicationsViewBodyColumnWrapper}>
                   <div className={s.applicationsViewBodyColumn}>
-                    <div className={s.applicationsViewBodySection}>
-                      <div className={s.applicationsViewBodySectionTitle}>
-                        <h3>Patient Details</h3>
-                        {/* <a href="#" className={this.state.editingPatient ? 'hidden' : ''}
-                          onClick={this.onClickEdit('patient')}><img src={require('../pencil.png')} /></a> */}
+                    {patient &&
+                      <div className={s.sessionsViewBodySection}>
+                        <SessionPatientDetails
+                          config={config}
+                          patient={patient}
+                          canEdit={isClient(user)}
+                        />
                       </div>
-                      <SessionPatientDetails
-                        config={config}
-                        patient={patient}
-                      />
-                    </div>
+                    }
                     <div className={s.applicationsViewBodySection}>
-                      <div className={s.applicationsViewBodySectionTitle}>
-                        <h3>Patient Location / Address</h3>
-                        {/* <a href="#" className={this.state.editingAddress ? 'hidden' : ''}
-                          onClick={this.onClickEdit('address')}><img src={require('../pencil.png')} /></a> */}
-                      </div>
                       <Loader className="spinner" loaded={!this.state.updatingAddress}>
                         <SessionAddressDetails
                           address={session && session.address}
@@ -566,13 +564,9 @@ ApplicationsView.propTypes = {
   servicesFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
   sessionsFetching: React.PropTypes.bool,
-  patients: React.PropTypes.object,
-  patientsFetching: React.PropTypes.bool,
-  // inlineForm: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func.isRequired,
-  getSessions: React.PropTypes.func.isRequired,
-  getPatients: React.PropTypes.func.isRequired,
+  getApplication: React.PropTypes.func.isRequired,
   editBooking: React.PropTypes.func.isRequired,
   clearBooking: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
@@ -586,25 +580,17 @@ const mapStateToProps = (state, ownProps) => ({
   user: state.user.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  sessions: state.user.data && state.user.data._id
-    && state.sessionsByUser[state.user.data._id]
-    && state.sessionsByUser[state.user.data._id].data,
-  sessionsFetching: state.user.data && state.user.data._id
-    && state.sessionsByUser[state.user.data._id]
-    && state.sessionsByUser[state.user.data._id].isFetching,
-  patients: state.user.data && state.user.data._id
-    && state.patientsByClient[state.user.data._id]
-    && state.patientsByClient[state.user.data._id].data,
-  patientsFetching: state.user.data && state.user.data._id
-    && state.patientsByClient[state.user.data._id]
-    && state.patientsByClient[state.user.data._id].isFetching,
-  // inlineForm: state.inlineForm,
+  applications: state.user.data && state.user.data._id
+    && state.applicationsByProvider[state.user.data._id]
+    && state.applicationsByProvider[state.user.data._id].data,
+  applicationsFetching: state.user.data && state.user.data._id
+    && state.applicationsByProvider[state.user.data._id]
+    && state.applicationsByProvider[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
-  getSessions: (params) => dispatch(getSessions(params)),
-  getPatients: (params) => dispatch(getPatients(params)),
+  getApplication: (params) => dispatch(getApplication(params)),
   editBooking: (booking) => dispatch(editBooking(booking)),
   clearBooking: () => dispatch(clearBooking()),
   setPostStatus: (status) => dispatch(setPostStatus(status)),

@@ -20,7 +20,7 @@ import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
 import FaCheck from 'react-icons/lib/fa/check';
 
 
-const filterChoice = ['role']; //TODO: update fields
+const filterChoice = ['role', 'name', 'email', 'contact'];
 
 class AdminUsers extends Component {
 
@@ -184,17 +184,17 @@ class AdminUsers extends Component {
                           headerRenderer={this.setHeaderLabel}
                           dataKey="name"
                           cellRenderer={({cellData}) => cellData}
-                          width={130}
+                          width={200}
                         />
                         <Column
                           label="email"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="email"
                           cellRenderer={({cellData}) => cellData}
-                          width={200}
+                          width={250}
                         />
                         <Column
-                          label="mobile"
+                          label="contact"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="contact"
                           cellRenderer={({cellData}) => cellData}
@@ -217,6 +217,13 @@ class AdminUsers extends Component {
                           headerRenderer={this.setHeaderLabel}
                           dataKey="pinVerified"
                           cellRenderer={({cellData}) => cellData ? <FaCheck /> : null}
+                          width={110}
+                        />
+                        <Column
+                          label="created at"
+                          headerRenderer={this.setHeaderLabel}
+                          dataKey="createdAt"
+                          cellRenderer={({cellData}) => moment(cellData).format('YYYY-MM-DD')}
                           width={110}
                         />
                       </Table>

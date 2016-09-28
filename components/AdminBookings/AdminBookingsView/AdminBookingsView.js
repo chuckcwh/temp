@@ -10,7 +10,7 @@ import Link from '../../Link';
 import Header from '../../Header';
 import ConfirmPopup from '../../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
-import { getBooking, fetchServices, showConfirmPopup } from '../../../actions';
+import { fetchServices, showConfirmPopup, getBooking, deleteBooking } from '../../../actions';
 import history from '../../../core/history';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -50,7 +50,12 @@ class AdminBookingsView extends Component {
   deleteBooking = () => {
     const { booking, deleteBooking } = this.props;
 
-    console.log('delete');
+    console.log('delete action', booking._id);
+    deleteBooking({ bookingId: booking._id }).then(res => {
+      if (res.type === 'BOOKING_DELETE_SUCCESS') {
+        history.push({ pathname: '/admin-bookings' });
+      }
+    })
   }
 
   render() {
@@ -508,6 +513,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getBooking: (params) => dispatch(getBooking(params)),
+  deleteBooking: (params) => dispatch(deleteBooking(params)),
   showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 

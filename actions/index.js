@@ -34,6 +34,10 @@ export const BOOKING_EDIT_REQUEST = 'BOOKING_EDIT_REQUEST'
 export const BOOKING_EDIT_SUCCESS = 'BOOKING_EDIT_SUCCESS'
 export const BOOKING_EDIT_FAILURE = 'BOOKING_EDIT_FAILURE'
 
+export const BOOKING_DELETE_REQUEST = 'BOOKING_DELETE_REQUEST'
+export const BOOKING_DELETE_SUCCESS = 'BOOKING_DELETE_SUCCESS'
+export const BOOKING_DELETE_FAILURE = 'BOOKING_DELETE_FAILURE'
+
 export const SESSIONS_REQUEST = 'SESSIONS_REQUEST'
 export const SESSIONS_SUCCESS = 'SESSIONS_SUCCESS'
 export const SESSIONS_FAILURE = 'SESSIONS_FAILURE'
@@ -412,6 +416,12 @@ function fetchAction(route) {
       types: [ BOOKING_EDIT_REQUEST, BOOKING_EDIT_SUCCESS, BOOKING_EDIT_FAILURE ],
       endpoint: '/bookings/:_id',
       method: 'post',
+    },
+    deleteBooking: {
+      types: [ BOOKING_DELETE_REQUEST, BOOKING_DELETE_SUCCESS, BOOKING_DELETE_FAILURE ],
+      endpoint: '/bookings/:bookingId',
+      method: 'del',
+      auth: 'user',
     },
     getSessions: {
       types: [ SESSIONS_REQUEST, SESSIONS_SUCCESS, SESSIONS_FAILURE ],
@@ -964,6 +974,10 @@ export function createBookingWithOptions({ services, order, user }) {
 
 export function editBooking(params) {
   return fetch('editBooking', params);
+}
+
+export function deleteBooking(params) {
+  return fetch('deleteBooking', params);
 }
 
 export function getAvailableSchedules(params) {

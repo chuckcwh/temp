@@ -8,7 +8,11 @@ import Loader from 'react-loader';
 import 'react-datepicker/dist/react-datepicker.css';
 import s from './BookingConfirmation.css';
 import Container from '../Container';
-import { editBooking, setPostStatus } from '../../actions';
+import SessionClientDetails from '../SessionClientDetails';
+import SessionPatientDetails from '../SessionPatientDetails';
+import SessionAddressDetails from '../SessionAddressDetails';
+import { getApplications, editBooking, setPostStatus } from '../../actions';
+import history from '../../core/history';
 
 class BookingConfirmation extends Component {
 
@@ -19,6 +23,19 @@ class BookingConfirmation extends Component {
       editingPatient: false,
       editingAddress: false,
     };
+  }
+
+  componentDidMount() {
+    const location = history.getCurrentLocation();
+    location && location.query &&
+      this.props.getApplications({
+        filter: {
+          _id: location.query.applications.split(','),
+        },
+        bookingId: location.query.bid,
+        bookingToken: location.query.btoken,
+        count: 100,
+      });
   }
 
   onClickEdit = (entity) => (event) => {
@@ -194,6 +211,7 @@ class BookingConfirmation extends Component {
   };
 
   render() {
+    const { booking, bookingFetching, sessions } = this.props;
     let userDetails,
       patientDetails,
       addressDetails,
@@ -475,7 +493,7 @@ class BookingConfirmation extends Component {
     return (
       <div className={s.bookingConfirmation}>
         <Container>
-          <Loader className="spinner" loaded={(this.props.booking && this.props.booking.id)}>
+          <Loader className="spinner" loaded={!bookingFetching}>
             <div className={s.bookingConfirmationWrapper}>
               <div className={s.bookingConfirmationBody}>
                 <div className={s.bookingConfirmationBodySection}>
@@ -485,7 +503,9 @@ class BookingConfirmation extends Component {
                       onClick={this.onClickEdit('user')}><img src={require('../pencil.png')} /></a> */}
                   </div>
                   <Loader className="spinner" loaded={!this.state.updatingUser}>
-                    {userDetails}
+                    <SessionClientDetails
+                      client={session.client}
+                    />
                   </Loader>
                 </div>
                 <div className={s.bookingConfirmationBodySection}>
@@ -526,6 +546,7 @@ BookingConfirmation.propTypes = {
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
 
+  getApplications: React.PropTypes.func,
   editBooking: React.PropTypes.func,
   setPostStatus: React.PropTypes.func,
 };
@@ -536,6 +557,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getApplications: (params) => dispatch(getApplications(params)),
   editBooking: (booking) => dispatch(editBooking(booking)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
 });

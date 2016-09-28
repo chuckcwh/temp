@@ -287,6 +287,7 @@ const sessions = (state = {
   switch (action.type) {
     case ActionTypes.SESSIONS_REQUEST:
     case ActionTypes.SESSIONS_SUGGESTED_REQUEST:
+    case ActionTypes.BOOKING_REQUEST:
       return {
         ...state,
         isFetching: true
@@ -324,6 +325,13 @@ const sessions = (state = {
           ...state.data,
           [action.data.sessionId]: action.response && action.response.data
         },
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.BOOKING_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: normalize(action.response && action.response.data && action.response.data.sessions),
         lastUpdated: action.response && action.response.receivedAt
       }
     default:
@@ -394,6 +402,7 @@ const applications = (state = {
         data: normalize(action.response && action.response.data),
         lastUpdated: action.response && action.response.receivedAt
       }
+    case ActionTypes.APPLICATION_SUCCESS:
     case ActionTypes.APPLICATION_CREATE_SUCCESS:
     case ActionTypes.APPLICATION_EDIT_SUCCESS:
       return {
@@ -412,6 +421,7 @@ const applicationsByProvider = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.APPLICATIONS_REQUEST:
     case ActionTypes.APPLICATIONS_SUCCESS:
+    case ActionTypes.APPLICATION_SUCCESS:
     case ActionTypes.APPLICATION_CREATE_SUCCESS:
     case ActionTypes.APPLICATION_EDIT_SUCCESS:
       return {

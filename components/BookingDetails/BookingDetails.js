@@ -12,7 +12,7 @@ import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
 import { SESSION_CANCEL_SUCCESS, fetchServices, getBooking, editBooking, clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showInlineForm } from '../../actions';
-import { configToName } from '../../core/util';
+import { configToName, removeByKey } from '../../core/util';
 import history from '../../core/history';
 
 const imgPencil = require('../pencil.png');
@@ -23,6 +23,7 @@ class BookingDetails extends Component {
     super(props);
     this.state = {
       editing: false,
+      selected: {},
     };
   }
 
@@ -178,14 +179,21 @@ class BookingDetails extends Component {
     history.push('/booking-manage');
   };
 
-  onClickPay = (event) => {
+  handleClickPay = (event) => {
+    const { booking, sessions, setPostStatus } = this.props;
     const location = history.getCurrentLocation();
 
     // Link.handleClick(event);
     event.preventDefault();
-    history.push({ pathname: '/booking-confirmation', query: location.query });
+    history.push({ pathname: '/booking-confirmation', query: {
+      ...location.query,
+      applications: Object.keys(this.state.selected)
+        .map(sessionId => sessions[sessionId].applications[0]).join(),
+      bid: booking._id,
+      btoken: booking.adhocClient.contact,
+    } });
 
-    this.props.setPostStatus('confirmation');
+    setPostStatus('confirmation');
   };
 
   onCancelSession = (session) => () => {
@@ -407,32 +415,63 @@ class BookingDetails extends Component {
     sessionDetails = (
       <div>
         <div className="TableRow TableRowHeader">
+          <div className="TableRowItem1"></div>
           <div className="TableRowItem2">Date</div>
           <div className="TableRowItem2">Session</div>
-          <div className="TableRowItem2">Costs</div>
+          <div className="TableRowItem2">Cost</div>
           <div className="TableRowItem2">Status</div>
           <div className="TableRowItem1"></div>
         </div>
         {
           booking && booking.sessions.map(session => (
-              <div className="TableRow" key={session._id}>
-                <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>
-                <div className="TableRowItem2">
-                  {configToName(config, 'timeSlotsByValue', session.timeSlot)}
-                </div>
-                <div className="TableRowItem2">
-                  $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
-                </div>
-                <div className="TableRowItem2">
-                  {configToName(config, 'sessionPhasesByValue', session.phase)}
-                </div>
-                <div className="TableRowItem1">
-                  {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')
-                    && <CloseButton onCloseClicked={this.onCancelSession(session)} />}
-                </div>
+            <div className="TableRow" key={session._id}>
+              <div className="TableRowItem1">
+                <input
+                  className={s.rememberMeCheckbox}
+                  type="checkbox"
+                  checked={!!this.state.selected[session._id]}
+                  onChange={() => {
+                    if (this.state.selected[session._id]) {
+                      this.setState({
+                        selected: removeByKey(this.state.selected, session._id),
+                      })
+                    } else {
+                      this.setState({
+                        selected: {
+                          ...this.state.selected,
+                          [session._id]: true,
+                        }
+                      })
+                    }
+                  }}
+                />
+                <label><span></span></label>
               </div>
+              <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>
+              <div className="TableRowItem2">
+                {configToName(config, 'timeSlotsByValue', session.timeSlot)}
+              </div>
+              <div className="TableRowItem2">
+                $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
+              </div>
+              <div className="TableRowItem2">
+                {configToName(config, 'sessionPhasesByValue', session.phase)}
+              </div>
+              <div className="TableRowItem1">
+                {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')
+                  && <CloseButton onCloseClicked={this.onCancelSession(session)} />}
+              </div>
+            </div>
           ))
         }
+        <div className={s.bookingDetailsBodyActions}>
+          <button
+            type="button"
+            className="btn btn-primary btn-small"
+            onClick={this.handleClickPay}
+            disabled={Object.values(this.state.selected).length === 0}
+          >Pay</button>
+        </div>
       </div>
     );
     // show caregiver section only if case has been paid
@@ -482,7 +521,7 @@ class BookingDetails extends Component {
       && booking.case.transactions && !booking.case.transactions.length)
       && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
-        <a href="#" className="btn btn-primary" onClick={this.onClickPay}>GO TO PAYMENT</a>
+        <a href="#" className="btn btn-primary" onClick={this.handleClickPay}>GO TO PAYMENT</a>
       );
     }
 
@@ -605,6 +644,8 @@ BookingDetails.propTypes = {
   servicesFetching: React.PropTypes.bool,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
   inlineForm: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func.isRequired,
@@ -623,6 +664,8 @@ const mapStateToProps = (state) => ({
   servicesFetching: state.services.isFetching,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
+  sessions: state.sessions.data,
+  sessionsFetching: state.sessions.isFetching,
   inlineForm: state.inlineForm,
 });
 

@@ -22,7 +22,7 @@ import BookingPostSidebar from '../BookingPostSidebar';
 import BookingDetails from '../BookingDetails';
 import Account from '../Account';
 import LoginPopup from '../LoginPopup';
-import { getBooking, getUserWithToken, setPostStatus } from '../../actions';
+import { BOOKING_SUCCESS, getBooking, getUserWithToken, setPostStatus } from '../../actions';
 import history from '../../core/history';
 import { isNavigationAllowed } from '../../core/util';
 
@@ -42,7 +42,7 @@ class BookingApp extends Component {
     const location = history.getCurrentLocation();
     // if "bid" query parameter exists, must be booking manage/confirmation
     if (location && location.query && location.query.bid && location.query.btoken) {
-      if (location.query.token) {
+      if (location.query.action && location.query.action.indexOf('paypal') > -1) {
         this.props.setPostStatus('payment-paypal');
       }
 
@@ -50,8 +50,9 @@ class BookingApp extends Component {
         bookingId: location.query.bid,
         bookingToken: location.query.btoken,
       }).then((res) => {
-        if (res.response && res.response.status >= 1) {
+        if (res && res.type === BOOKING_SUCCESS) {
           const { data } = res.response;
+          console.log(data);
           if (data && data.case && data.case.isPaid) {
             // if booking has already been completed
             this.props.setPostStatus('success');

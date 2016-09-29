@@ -5,28 +5,14 @@ import s from './BookingPostComplete.css';
 import Container from '../Container';
 import Link from '../Link';
 
-const BookingPostComplete = (props) => {
-  const { booking } = props;
+const BookingPostComplete = ({ transaction, transactionFetching }) => {
   let component,
-    message,
-    bookingId,
-    bookingAmt;
+    message;
 
-  if (booking && booking.case && booking.case.transactions && booking.case.transactions.length) {
-    const transaction = booking.case.transactions[0];
-    if (transaction) {
-      message = (
-        <span>Your payment via {transaction.method} is {transaction.status}. Check your booking summary in our email.</span>
-      );
-    }
-  }
-
-  if (booking && booking.id) {
-    bookingId = booking.id;
-  }
-
-  if (booking && booking.case && booking.case.price) {
-    bookingAmt = booking.case.price;
+  if (transaction) {
+    message = (
+      <span>Your payment via {transaction.mode} is {transaction.status}. Check your booking summary in our email.</span>
+    );
   }
 
   // if (this.state.bookingStatus) {
@@ -39,10 +25,10 @@ const BookingPostComplete = (props) => {
         {message}
       </div>
       <div>
-        <b>BOOKING ID : {bookingId}</b>
+        <b>TRANSACTION ID : {transaction && transaction._id}</b>
       </div>
       <div>
-        TOTAL AMOUNT : SGD {bookingAmt}
+        TOTAL AMOUNT : SGD {transaction && parseFloat(transaction.value).toFixed(2)}
       </div>
       <div>
         For further inquiries, please email
@@ -79,7 +65,7 @@ const BookingPostComplete = (props) => {
   return (
     <div className={s.bookingPostComplete}>
       <Container>
-        <Loader className="spinner" loaded={!props.bookingFetching}>
+        <Loader className="spinner" loaded={!transactionFetching}>
           {component}
         </Loader>
       </Container>
@@ -88,13 +74,13 @@ const BookingPostComplete = (props) => {
 };
 
 BookingPostComplete.propTypes = {
-  booking: React.PropTypes.object,
-  bookingFetching: React.PropTypes.bool,
+  transaction: React.PropTypes.object,
+  transactionFetching: React.PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
-  booking: state.booking.data,
-  bookingFetching: state.booking.isFetching,
+  transaction: state.transaction.data,
+  transactionFetching: state.transaction.isFetching,
 });
 
 export default connect(mapStateToProps)(BookingPostComplete);

@@ -12,6 +12,7 @@ import SessionClientDetails from '../SessionClientDetails';
 import SessionPatientDetails from '../SessionPatientDetails';
 import SessionAddressDetails from '../SessionAddressDetails';
 import { getApplications, editBooking, setPostStatus } from '../../actions';
+import { configToName } from '../../core/util';
 import history from '../../core/history';
 
 class BookingConfirmation extends Component {
@@ -27,7 +28,7 @@ class BookingConfirmation extends Component {
 
   componentDidMount() {
     const location = history.getCurrentLocation();
-    location && location.query &&
+    location && location.query && location.query.applications &&
       this.props.getApplications({
         filter: {
           _id: location.query.applications.split(','),
@@ -211,11 +212,43 @@ class BookingConfirmation extends Component {
   };
 
   render() {
-    const { booking, bookingFetching, sessions } = this.props;
-    let userDetails,
+    const { config, booking, bookingFetching, applications, applicationsFetching, sessions, sessionsFetching } = this.props;
+    let sessionsDetails,
+      userDetails,
       patientDetails,
       addressDetails,
       paymentButton;
+    sessionsDetails = (
+      <div>
+        <div className="TableRow TableRowHeader">
+          <div className="TableRowItem2">Date</div>
+          <div className="TableRowItem2">Time</div>
+          <div className="TableRowItem2">Cost</div>
+          <div className="TableRowItem2">Status</div>
+        </div>
+        {
+          applications && Object.values(applications).length > 0 && Object.values(applications).map(application => {
+            const sessionId = (application && application.session && application.session._id) || application.session;
+            const session = sessionId && sessions && sessions[sessionId];
+            if (session) return (
+              <div className="TableRow" key={session._id}>
+                <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>
+                <div className="TableRowItem2">
+                  {configToName(config, 'timeSlotsByValue', session.timeSlot)}
+                </div>
+                <div className="TableRowItem2">
+                  $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
+                </div>
+                <div className="TableRowItem2">
+                  {configToName(config, 'sessionPhasesByValue', session.phase)}
+                </div>
+              </div>
+            );
+            return;
+          })
+        }
+      </div>
+    );
     if (this.state.editingUser) {
       userDetails = (
         <div>
@@ -496,23 +529,39 @@ class BookingConfirmation extends Component {
           <Loader className="spinner" loaded={!bookingFetching}>
             <div className={s.bookingConfirmationWrapper}>
               <div className={s.bookingConfirmationBody}>
+                <div className={s.bookingConfirmationBodyActions}>
+                  <span className={s.bookingConfirmationFooter}>
+                    <button type="button" className="btn btn-primary" onClick={this.onNext}>CONTINUE PAYMENT</button>
+                  </span>
+                </div>
+                <div className={s.bookingConfirmationBodySection}>
+                  <div className={s.bookingConfirmationBodySectionTitle}>
+                    <h3>Appointment Sessions to Pay</h3>
+                  </div>
+                  <Loader className="spinner" loaded={!applicationsFetching}>
+                    {sessionsDetails}
+                  </Loader>
+                </div>
+                { /*
                 <div className={s.bookingConfirmationBodySection}>
                   <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Contact Person Details</h3>
                     {/* <a href="#" className={this.state.editingUser ? 'hidden' : ''}
-                      onClick={this.onClickEdit('user')}><img src={require('../pencil.png')} /></a> */}
+                      onClick={this.onClickEdit('user')}><img src={require('../pencil.png')} /></a> }
                   </div>
                   <Loader className="spinner" loaded={!this.state.updatingUser}>
-                    <SessionClientDetails
-                      client={session.client}
-                    />
+                    { /*
+                      <SessionClientDetails
+                        client={session.client}
+                      />
+                     }
                   </Loader>
                 </div>
                 <div className={s.bookingConfirmationBodySection}>
                   <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Patient Details</h3>
                     {/* <a href="#" className={this.state.editingPatient ? 'hidden' : ''}
-                      onClick={this.onClickEdit('patient')}><img src={require('../pencil.png')} /></a> */}
+                      onClick={this.onClickEdit('patient')}><img src={require('../pencil.png')} /></a> }
                   </div>
                   {patientDetails}
                 </div>
@@ -520,7 +569,7 @@ class BookingConfirmation extends Component {
                   <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Patient Location / Address</h3>
                     {/* <a href="#" className={this.state.editingAddress ? 'hidden' : ''}
-                      onClick={this.onClickEdit('address')}><img src={require('../pencil.png')} /></a> */}
+                      onClick={this.onClickEdit('address')}><img src={require('../pencil.png')} /></a> }
                   </div>
                   <Loader className="spinner" loaded={!this.state.updatingAddress}>
                     {addressDetails}
@@ -529,6 +578,7 @@ class BookingConfirmation extends Component {
                 <div className={s.bookingConfirmationFooter}>
                   {paymentButton}
                 </div>
+                */ }
               </div>
               {this.props.children}
             </div>
@@ -543,8 +593,13 @@ class BookingConfirmation extends Component {
 BookingConfirmation.propTypes = {
   children: React.PropTypes.node,
 
+  config: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
+  applications: React.PropTypes.object,
+  applicationsFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
 
   getApplications: React.PropTypes.func,
   editBooking: React.PropTypes.func,
@@ -552,8 +607,13 @@ BookingConfirmation.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
+  applications: state.applications.data,
+  applicationsFetching: state.applications.isFetching,
+  sessions: state.sessions.data,
+  sessionsFetching: state.sessions.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({

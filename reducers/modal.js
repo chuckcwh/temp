@@ -44,6 +44,23 @@ const confirm = (state = {
   }
 }
 
+const generic = (state = {
+  visible: false,
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.SHOW_MODAL_GENERIC:
+      return {
+        visible: true,
+      };
+    case ActionTypes.HIDE_MODAL_GENERIC:
+      return {
+        visible: false,
+      }
+    default:
+      return state;
+  }
+}
+
 const login = (state = false, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_LOGIN:
@@ -179,6 +196,7 @@ const resendVerifyBooking = (state = {
 const modal = combineReducers({
   alert,
   confirm,
+  generic,
   login,
   daypicker,
   verifyUser,

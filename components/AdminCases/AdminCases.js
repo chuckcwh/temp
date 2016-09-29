@@ -217,7 +217,7 @@ class AdminCases extends Component {
                           label="price"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="price"
-                          cellRenderer={({cellData}) => `${cellData} sgd`}
+                          cellRenderer={({cellData}) => `$ ${parseFloat(cellData).toFixed(2)}`}
                           width={100}
                         />
                         <Column

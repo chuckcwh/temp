@@ -90,8 +90,8 @@ class AdminBookingsView extends Component {
           || booking.patient && '-',
         mobility: booking.adhocPatient && '-'
           || booking.patient && '-',
-        note: booking.adhocPatient && '-'
-          || booking.patient && '-',
+        note: booking.adhocPatient && booking.adhocPatient.specialNotes && '-'
+          || booking.patient && booking.patient.specialNotes || '-',
       },
       client: {
         name: booking.adhocClient && booking.adhocClient.name

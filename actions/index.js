@@ -70,6 +70,10 @@ export const APPLICATIONS_REQUEST = 'APPLICATIONS_REQUEST'
 export const APPLICATIONS_SUCCESS = 'APPLICATIONS_SUCCESS'
 export const APPLICATIONS_FAILURE = 'APPLICATIONS_FAILURE'
 
+export const APPLICATIONS_PAY_PAYPAL_CREATE_REQUEST = 'APPLICATIONS_PAY_PAYPAL_CREATE_REQUEST'
+export const APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS = 'APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS'
+export const APPLICATIONS_PAY_PAYPAL_CREATE_FAILURE = 'APPLICATIONS_PAY_PAYPAL_CREATE_FAILURE'
+
 export const APPLICATION_REQUEST = 'APPLICATION_REQUEST'
 export const APPLICATION_SUCCESS = 'APPLICATION_SUCCESS'
 export const APPLICATION_FAILURE = 'APPLICATION_FAILURE'
@@ -314,6 +318,7 @@ export const TRANSACTIONS_FAILURE = 'TRANSACTIONS_FAILURE'
 export const TRANSACTION_REQUEST = 'TRANSACTION_REQUEST'
 export const TRANSACTION_SUCCESS = 'TRANSACTION_SUCCESS'
 export const TRANSACTION_FAILURE = 'TRANSACTION_FAILURE'
+export const TRANSACTION_DESTROY = 'TRANSACTION_DESTROY'
 
 export const TRANSACTION_CREATE_REQUEST = 'TRANSACTION_CREATE_REQUEST'
 export const TRANSACTION_CREATE_SUCCESS = 'TRANSACTION_CREATE_SUCCESS'
@@ -467,6 +472,16 @@ function fetchAction(route) {
       endpoint: '/applications',
       method: 'get',
       entity: 'applications'
+    },
+    payApplicationsPaypalCreate: {
+      types: [ APPLICATIONS_PAY_PAYPAL_CREATE_REQUEST, APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS, APPLICATIONS_PAY_PAYPAL_CREATE_FAILURE ],
+      endpoint: '/applications/pay',
+      method: 'put'
+    },
+    payApplicationsPaypalExecute: {
+      types: [ APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST, APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS, APPLICATIONS_PAY_PAYPAL_EXECUTE_FAILURE ],
+      endpoint: '/applications/pay',
+      method: 'put'
     },
     getApplication: {
       types: [ APPLICATION_REQUEST, APPLICATION_SUCCESS, APPLICATION_FAILURE ],
@@ -1218,6 +1233,14 @@ export function getApplications(params) {
   return fetch('getApplications', params);
 }
 
+export function payApplicationsPaypalCreate(params) {
+  return fetch('payApplicationsPaypalCreate', params);
+}
+
+export function payApplicationsPaypalExecute(params) {
+  return fetch('payApplicationsPaypalExecute', params);
+}
+
 export function getApplication(params) {
   return fetch('getApplication', params);
 }
@@ -1268,6 +1291,10 @@ export function editTransaction(params) {
 
 export function deleteTransaction(params) {
   return fetch('deleteTransaction', params);
+}
+
+export function destroyTransaction() {
+  return { type: TRANSACTION_DESTROY }
 }
 
 export function createPaypalTransaction(params) {

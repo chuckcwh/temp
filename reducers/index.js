@@ -623,6 +623,46 @@ const transactions = (state = {
           : normalize(action.response && action.response.data),
         lastUpdated: action.response && action.response.receivedAt
       }
+    case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS:
+      return {
+
+      }
+    default:
+      return state
+  }
+}
+
+const transaction = (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: {}
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.TRANSACTION_REQUEST:
+    case ActionTypes.TRANSACTION_CREATE_REQUEST:
+    case ActionTypes.TRANSACTION_EDIT_REQUEST:
+    case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.TRANSACTION_SUCCESS:
+    case ActionTypes.TRANSACTION_CREATE_SUCCESS:
+    case ActionTypes.TRANSACTION_EDIT_SUCCESS:
+    case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: action.response && action.response.data,
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.TRANSACTION_DESTROY:
+      return {
+        ...state,
+        isFetching: false,
+        data: {},
+        lastUpdated: undefined
+      }
     default:
       return state
   }
@@ -756,12 +796,14 @@ const bookingApp = combineReducers({
   session,
   sessions,
   sessionsByUser,
+  applications,
   applicationsByProvider,
   patientsByClient,
   suggestedSessions,
   availableSchedules,
   // paypal,
   transactions,
+  transaction,
   totalSessionsCount,
   rankedServices,
   rankedSubcategories,

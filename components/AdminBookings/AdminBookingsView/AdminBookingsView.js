@@ -8,9 +8,10 @@ import s from './AdminBookingsView.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
+import Popup from '../../Popup';
 import ConfirmPopup from '../../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
-import { fetchServices, showConfirmPopup, getBooking, deleteBooking } from '../../../actions';
+import { fetchServices, showConfirmPopup, getBooking, deleteBooking, createApplication } from '../../../actions';
 import history from '../../../core/history';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -45,6 +46,20 @@ class AdminBookingsView extends Component {
         // history.goBack();
       }
     });
+  }
+
+  onAssignNurse = (sessionId) => {
+    console.log('assign nurse', sessionId);
+    this.props.createApplication({
+      provider: '57be829a69811c4544bf5eaf', // TODO: need real userid
+      session: sessionId,
+    }).then(res => {
+
+    })
+  }
+
+  onDeAssignNurse = (bookingId) => {
+    console.log('deassign nurse', bookingId);
   }
 
   deleteBooking = () => {
@@ -108,6 +123,7 @@ class AdminBookingsView extends Component {
         <Header title="Booking Detail" />
         <Container>
           <ConfirmPopup />
+
           <button onClick={() => history.push({ pathname: '/admin-bookings' })} className={cx('btn', 'btn-primary', s.btnBack)}>back</button>
           <div className={s.buttonPanel}>
             <Link
@@ -252,13 +268,13 @@ class AdminBookingsView extends Component {
                         <Column
                           label="nurse"
                           dataKey="nurse"
-                          cellRenderer={({cellData}) => {
+                          cellRenderer={({rowData, cellData}) => {
                             return (
                               <div>
                                 {'-'}
                                 <div>
-                                  <div className={cx(s.tableListSign, s.tableListSignPlus)}>+</div>
-                                  <div className={cx(s.tableListSign, s.tableListSignMinus)}>-</div>
+                                  <div className={cx(s.tableListSign, s.tableListSignPlus)} onClick={() => this.onAssignNurse(rowData._id)}>+</div>
+                                  <div className={cx(s.tableListSign, s.tableListSignMinus)} onClick={() => this.onDeAssignNurse(rowData._id)}>-</div>
                                 </div>
                               </div>
                           )}}
@@ -518,6 +534,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getBooking: (params) => dispatch(getBooking(params)),
   deleteBooking: (params) => dispatch(deleteBooking(params)),
+  createApplication: (params) => dispatch(createApplication(params)),
   showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 

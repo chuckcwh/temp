@@ -170,13 +170,12 @@ class AdminBookingsForm extends Component {
         date: moment(session.date).format('YYYY-MM-DD'),
         timeSlot: session.time,
         additionalInfo: values.caseNote,
+        patient: values.userClass === 'Registered User' ? values.patientNameOrId : undefined,
+        client: values.userClass === 'Registered User' ? values.clientNameOrId : undefined,
       })),
     }
 
-    if (values.userClass === 'Registered User') {
-      data.patient = values.patientNameOrId;  // for reg patient it is always id
-      data.client = values.clientNameOrId;    // for reg client it is always id
-    } else {
+    if (values.userClass === 'Ad-hoc') {
       data.adhocClient = {
         name: values.clientNameOrId,          // for ad-hoc client it is always name
         email: values.clientEmail,

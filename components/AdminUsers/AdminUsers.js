@@ -11,8 +11,9 @@ import Header from '../Header';
 import history from '../../core/history';
 import { getUserName } from '../../core/util';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
-import { getUsers } from '../../actions';
+import { getUsers, showConfirmPopup } from '../../actions';
 import { configToName } from '../../core/util';
+import ConfirmPopup from '../ConfirmPopup';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -108,37 +109,44 @@ class AdminUsers extends Component {
     });
   }
 
+  spoofUser = (userId) => {
+    console.log("I'm the user!!!!!", userId);
+  }
+
   render() {
-    const { users, usersTotal } = this.props;
+    const { users } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
-    console.log('total', usersTotal);
+
     return (
       <div className={s.adminUsers}>
         <Header title="User Management" />
         <Container>
-          {users && usersTotal && (
-            <div>
-              <div className={s.filter}>
-                <div className={s.inlineField}>
-                  <div className={cx("select", s.filterInput)}>
-                    <span></span>
-                    <select ref="filterField" className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
-                      {filterChoice && filterChoice.map(item => (
-                        <option key={filterChoice.indexOf(item)} value={item}>{item}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className={s.inlineField}>
-                  <input ref="filterKwd" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
-                </div>
-                <div className={s.inlineField}>
-                  <span type="text" className={s.clearSortFilter} onClick={this.onClearSortFilter}>
-                    clear sort & filter
-                  </span>
+          <ConfirmPopup />
+
+
+          <div>
+            <div className={s.filter}>
+              <div className={s.inlineField}>
+                <div className={cx("select", s.filterInput)}>
+                  <span></span>
+                  <select ref="filterField" className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
+                    {filterChoice && filterChoice.map(item => (
+                      <option key={filterChoice.indexOf(item)} value={item}>{item}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
+              <div className={s.inlineField}>
+                <input ref="filterKwd" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+              </div>
+              <div className={s.inlineField}>
+                <span type="text" className={s.clearSortFilter} onClick={this.onClearSortFilter}>
+                  clear sort & filter
+                </span>
+              </div>
+            </div>
 
+            {users && (
               <InfiniteLoader
                 isRowLoaded={this.isRowLoaded}
                 loadMoreRows={this.loadMoreRows}
@@ -205,9 +213,9 @@ class AdminUsers extends Component {
                           headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="_id"
                           cellRenderer={({cellData}) => (
-                            <Link className={cx('btn', s.tableListToEdit)} to={`/profile/${cellData}`}>
+                            <button className={cx('btn', s.tableListToEdit)} onClick={() => this.props.showConfirmPopup('You are going to spoof this user. Are you sure?', () => this.spoofUser(cellData))}>
                               View
-                            </Link>
+                            </button>
                           )}
                           disableSort={true}
                           width={90}
@@ -231,9 +239,9 @@ class AdminUsers extends Component {
                   </AutoSizer>
                 )}
               </InfiniteLoader>
+            )}
+          </div>
 
-            </div>
-          )}
         </Container>
       </div>
     );
@@ -245,11 +253,12 @@ AdminUsers.propTypes = {
 
 const mapStateToProps = (state) => ({
   users: state.users.data,
-  usersTotal: state.users.total,
+  // usersTotal: state.users.total,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getUsers: (params, extend) => dispatch(getUsers(params, extend)),
+  showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminUsers);

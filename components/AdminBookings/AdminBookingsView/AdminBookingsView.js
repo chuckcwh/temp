@@ -8,7 +8,7 @@ import s from './AdminBookingsView.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
-import Popup from '../../Popup';
+// import GenericPopup from '../../GenericPopup';
 import ConfirmPopup from '../../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
 import { fetchServices, showConfirmPopup, getBooking, deleteBooking, createApplication } from '../../../actions';
@@ -93,28 +93,18 @@ class AdminBookingsView extends Component {
       },
       location: booking.sessions && booking.sessions.length > 0 && booking.sessions[0].address,
       patient: {
-        name: booking.adhocPatient && booking.adhocPatient.name
-          || booking.patient && booking.patient.name,
-        age: booking.adhocPatient && moment().diff(booking.adhocPatient.dob, 'years') ? moment().diff(booking.adhocPatient.dob, 'years') : 0
-          || booking.patient && moment().diff(booking.patient.dob, 'years') ? moment().diff(booking.patient.dob, 'years') : 0,
-        dob: booking.adhocPatient && moment(booking.adhocPatient.dob).format('YYYY-MM-DD')
-          || booking.patient && moment(booking.patient.dob).format('YYYY-MM-DD'),
-        gender: booking.adhocPatient && configToName(config, 'gendersByValue', booking.adhocPatient.gender)
-          || booking.patient && configToName(config, 'gendersByValue', booking.patient.gender),
-        diagnosis: booking.adhocPatient && '-'
-          || booking.patient && '-',
-        mobility: booking.adhocPatient && '-'
-          || booking.patient && '-',
-        note: booking.adhocPatient && booking.adhocPatient.specialNotes && '-'
-          || booking.patient && booking.patient.specialNotes || '-',
+        name: booking.patient && booking.patient.name || '-',
+        age: booking.patient && moment().diff(booking.patient.dob, 'years') ? moment().diff(booking.patient.dob, 'years') : 0,
+        dob: booking.patient && moment(booking.patient.dob).format('YYYY-MM-DD') || '-',
+        gender: booking.patient && configToName(config, 'gendersByValue', booking.patient.gender) || '-',
+        diagnosis: booking.patient && booking.patient.diagnosis || '-',
+        mobility: booking.patient && booking.patient.mobility || '-',
+        note: booking.patient && booking.patient.specialNotes || '-',
       },
       client: {
-        name: booking.adhocClient && booking.adhocClient.name
-          || booking.client && booking.client.name,
-        mobile: booking.adhocClient && booking.adhocClient.contact
-          || booking.client && booking.client.contact,
-        email: booking.adhocClient && booking.adhocClient.email
-          || booking.client && booking.client.email,
+        name: booking.client && booking.client.name || '-',
+        mobile: booking.client && booking.client.contact || '-',
+        email: booking.client && booking.client.email || '-',
       }
     }
 

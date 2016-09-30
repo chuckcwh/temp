@@ -20,6 +20,16 @@
     <script src="https://www.google-analytics.com/analytics.js" async defer></script>
     <%_ } _%>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkUQpAve5whKluoO3evi9GZfGeH0Sa2D0" async defer></script>
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <%_ if (debug) { _%>
+    <script>
+      Stripe.setPublishableKey('pk_test_RDH776hhDWBr0uW8sfHKYBqd');
+    </script>
+    <%_ } else { _%>
+    <script>
+      Stripe.setPublishableKey('pk_live_kV9nrfhjhYm3KPoxvcKu89xt');
+    </script>
+    <%_ } _%>
     <%_ if (!debug) { _%>
     <script>
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();

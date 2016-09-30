@@ -13,8 +13,9 @@ import BookingComplete from '../BookingComplete';
 import BookingPostNavigation from '../BookingPostNavigation';
 import BookingConfirmation from '../BookingConfirmation';
 import BookingPayment from '../BookingPayment';
-import BookingPaypal from '../BookingPaypal';
-import BookingBankTransfer from '../BookingBankTransfer';
+import BookingPaymentPaypal from '../BookingPaymentPaypal';
+import BookingPaymentCard from '../BookingPaymentCard';
+import BookingPaymentBankTransfer from '../BookingPaymentBankTransfer';
 import BookingCredits from '../BookingCredits';
 import BookingPostComplete from '../BookingPostComplete';
 import BookingSidebar from '../BookingSidebar';
@@ -176,7 +177,17 @@ class BookingApp extends Component {
         <div>
           <BookingPostNavigation />
           <BookingPayment>
-            <BookingPaypal />
+            <BookingPaymentPaypal />
+            <BookingPostSidebar />
+          </BookingPayment>
+        </div>
+      );
+    } else if (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-card') {
+      component = (
+        <div>
+          <BookingPostNavigation />
+          <BookingPayment>
+            <BookingPaymentCard />
             <BookingPostSidebar />
           </BookingPayment>
         </div>
@@ -186,7 +197,7 @@ class BookingApp extends Component {
         <div>
           <BookingPostNavigation />
           <BookingPayment>
-            <BookingBankTransfer />
+            <BookingPaymentBankTransfer />
             <BookingPostSidebar />
           </BookingPayment>
         </div>

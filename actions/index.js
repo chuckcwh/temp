@@ -78,6 +78,14 @@ export const APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST = 'APPLICATIONS_PAY_PAYPAL_
 export const APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS = 'APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS'
 export const APPLICATIONS_PAY_PAYPAL_EXECUTE_FAILURE = 'APPLICATIONS_PAY_PAYPAL_EXECUTE_FAILURE'
 
+export const APPLICATIONS_PAY_BANK_REQUEST = 'APPLICATIONS_PAY_BANK_REQUEST'
+export const APPLICATIONS_PAY_BANK_SUCCESS = 'APPLICATIONS_PAY_BANK_SUCCESS'
+export const APPLICATIONS_PAY_BANK_FAILURE = 'APPLICATIONS_PAY_BANK_FAILURE'
+
+export const APPLICATIONS_PAY_CARD_REQUEST = 'APPLICATIONS_PAY_CARD_REQUEST'
+export const APPLICATIONS_PAY_CARD_SUCCESS = 'APPLICATIONS_PAY_CARD_SUCCESS'
+export const APPLICATIONS_PAY_CARD_FAILURE = 'APPLICATIONS_PAY_CARD_FAILURE'
+
 export const APPLICATION_REQUEST = 'APPLICATION_REQUEST'
 export const APPLICATION_SUCCESS = 'APPLICATION_SUCCESS'
 export const APPLICATION_FAILURE = 'APPLICATION_FAILURE'
@@ -484,6 +492,16 @@ function fetchAction(route) {
     },
     payApplicationsPaypalExecute: {
       types: [ APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST, APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS, APPLICATIONS_PAY_PAYPAL_EXECUTE_FAILURE ],
+      endpoint: '/applications/pay',
+      method: 'put'
+    },
+    payApplicationsBankTransfer: {
+      types: [ APPLICATIONS_PAY_BANK_REQUEST, APPLICATIONS_PAY_BANK_SUCCESS, APPLICATIONS_PAY_BANK_FAILURE ],
+      endpoint: '/applications/pay',
+      method: 'put'
+    },
+    payApplicationsCard: {
+      types: [ APPLICATIONS_PAY_CARD_REQUEST, APPLICATIONS_PAY_CARD_SUCCESS, APPLICATIONS_PAY_CARD_FAILURE ],
       endpoint: '/applications/pay',
       method: 'put'
     },
@@ -1243,6 +1261,14 @@ export function payApplicationsPaypalCreate(params) {
 
 export function payApplicationsPaypalExecute(params) {
   return fetch('payApplicationsPaypalExecute', params);
+}
+
+export function payApplicationsBankTransfer(params) {
+  return fetch('payApplicationsBankTransfer', params);
+}
+
+export function payApplicationsCard(params) {
+  return fetch('payApplicationsCard', params);
 }
 
 export function getApplication(params) {

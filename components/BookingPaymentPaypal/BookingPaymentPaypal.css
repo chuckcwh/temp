@@ -1,13 +1,13 @@
 @import '../variables.css';
 
-.bookingPaypal {
+.bookingPaymentPaypal {
   flex: 10;
   font-size: 21px;
   justify-content: center;
   position: relative;
   min-height: 300px;
 
-  & .bookingPaypalLogo {
+  & .bookingPaymentPaypalLogo {
     margin: 0 10px;
 
     @media (--sm-viewport) {
@@ -16,7 +16,7 @@
     }
   }
 
-  & .bookingPaypalFooter {
+  & .bookingPaymentPaypalFooter {
     @media (--sm-viewport) {
       text-align: center;
     }

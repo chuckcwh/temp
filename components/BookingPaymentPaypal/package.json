@@ -1,0 +1,4 @@
+{
+  "name": "BookingPaymentPaypal",
+  "main": "./BookingPaymentPaypal.js"
+}

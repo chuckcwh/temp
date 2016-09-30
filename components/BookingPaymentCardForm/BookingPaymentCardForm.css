@@ -1,0 +1,33 @@
+@import '../variables.css';
+
+.bookingPaymentCardForm {
+  font-size: 21px;
+
+  & input {
+    margin: 0;
+  }
+
+  & .bookingPaymentCardFormSection {
+    padding: 0 0 20px;
+
+    & .bookingPaymentCardFormGroup {
+      display: inline-block;
+      vertical-align: top;
+      width: 100%;
+
+      & .bookingPaymentCardFormError {
+        padding: 5px 15px;
+        font-size: 85%;
+      }
+    }
+
+    & .bookingPaymentCardFormError {
+      padding: 5px 0;
+      color: var(--secondary-color);
+    }
+
+    @media (--sm-viewport) {
+      text-align: center;
+    }
+  }
+}

@@ -208,7 +208,7 @@ class BookingConfirmation extends Component {
     // Link.handleClick(event);
     event.preventDefault();
 
-    this.props.setPostStatus('payment-paypal');
+    this.props.setPostStatus('payment-card');
   };
 
   render() {
@@ -529,11 +529,6 @@ class BookingConfirmation extends Component {
           <Loader className="spinner" loaded={!bookingFetching}>
             <div className={s.bookingConfirmationWrapper}>
               <div className={s.bookingConfirmationBody}>
-                <div className={s.bookingConfirmationBodyActions}>
-                  <span className={s.bookingConfirmationFooter}>
-                    <button type="button" className="btn btn-primary" onClick={this.onNext}>CONTINUE PAYMENT</button>
-                  </span>
-                </div>
                 <div className={s.bookingConfirmationBodySection}>
                   <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Appointment Sessions to Pay</h3>
@@ -541,6 +536,11 @@ class BookingConfirmation extends Component {
                   <Loader className="spinner" loaded={!applicationsFetching}>
                     {sessionsDetails}
                   </Loader>
+                </div>
+                <div className={s.bookingConfirmationBodyActions}>
+                  <span className={s.bookingConfirmationFooter}>
+                    <button type="button" className="btn btn-primary" onClick={this.onNext}>CONTINUE PAYMENT</button>
+                  </span>
                 </div>
                 { /*
                 <div className={s.bookingConfirmationBodySection}>

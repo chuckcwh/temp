@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
-import s from './BookingPaypal.css';
-import { APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS, APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS, getBooking, payApplicationsPaypalCreate, payApplicationsPaypalExecute, setPostStatus } from '../../actions';
+import s from './BookingPaymentCard.css';
+import BookingPaymentCardForm from '../BookingPaymentCardForm';
+import { APPLICATIONS_PAY_CARD_SUCCESS,
+  getBooking, payApplicationsCard, setPostStatus, showAlertPopup } from '../../actions';
 import history from '../../core/history';
 
 const imgPaypal = require('../paypal.png');
 const imgVisaMaster = require('../visamaster.png');
 
-class BookingPaypal extends Component {
+class BookingPaymentCard extends Component {
 
   constructor(props) {
     super(props);
@@ -101,19 +103,58 @@ class BookingPaypal extends Component {
     }
   };
 
+  handleSubmit = (values) => {
+    return new Promise((resolve, reject) => {
+      if (typeof window !== 'undefined' && window.Stripe) {
+        window.Stripe.card.createToken(values, (status, response) => {
+          if (response.error) {
+            this.showAlertPopup('An error has occurred with the payment gateway. Please contact us to rectify the issue.');
+            reject();
+          } else {
+            const token = response.id;
+            const location = history.getCurrentLocation();
+            this.props.payApplicationsCard({
+              mode: 'stripe',
+              applications: Object.keys(this.props.applications),
+              payment: {
+                stripeToken: token,
+              },
+              bookingId: this.props.booking._id,
+              bookingToken: this.props.booking.adhocClient.contact,
+            }).then((res) => {
+              if (res && res.type === APPLICATIONS_PAY_CARD_SUCCESS) {
+                resolve();
+                
+                this.props.getBooking({
+                  bookingId: location && location.query && location.query.bid,
+                  bookingToken: location && location.query && location.query.btoken,
+                });
+
+                this.props.setPostStatus('success');
+              } else {
+                reject();
+                // console.error('Failed to create paypal payment.');
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
   render() {
     const location = history.getCurrentLocation();
-    const { applications } = this.props;
+    const { config, applications } = this.props;
     let sum = 0;
     if (location && location.query && location.query.paymentId) {
       return (
-        <div className={s.bookingPaypal}>
+        <div className={s.bookingPaymentCard}>
           <Loader className="spinner" loaded={!this.state.pending} />
         </div>
       );
     } else if (this.state.redirecting) {
       return (
-        <div className={s.bookingPaypal}>
+        <div className={s.bookingPaymentCard}>
           <div className="text-center">
             <p><b><i>Redirecting to Paypal in a few seconds ...</i></b></p>
           </div>
@@ -126,21 +167,16 @@ class BookingPaypal extends Component {
         sum += parseFloat(application.price);
       });
     }
-    const total = ((sum + 0.5) / (1 - 0.039));
+    const total = ((sum + config.stripe.fixed) / (1 - config.stripe.percentage));
     return (
-      <div className={s.bookingPaypal}>
+      <div className={s.bookingPaymentCard}>
         <Loader className="spinner" loaded={!this.state.pending}>
           <div>
-            <img className={s.bookingPaypalLogo} src={imgPaypal} alt="Paypal" />
-            <img className={s.bookingPaypalLogo} src={imgVisaMaster} alt="Visa/Master" />
+            <img className={s.bookingPaymentCardLogo} src={imgVisaMaster} alt="Visa/Master" />
           </div>
           <p><b>Your Total Amount is SGD {parseFloat(total).toFixed(2)}</b></p>
-          <p>There will be an additional 3% service fee.</p>
-          <p>Please initiate your payment by clicking the "Pay Now" button below.<br />You will be redirected to Paypal to complete your payment.</p>
-          <p></p>
-          <div className={s.bookingPaypalFooter}>
-            <a href="#" className="btn btn-primary" onClick={this.onConfirm}>PAY NOW</a>
-          </div>
+          <p>There will be an additional service fee of SGD {parseFloat(config.stripe.fixed).toFixed(2)} + {(parseFloat(config.stripe.percentage) * 100).toFixed(1)}%.</p>
+          <BookingPaymentCardForm onSubmit={this.handleSubmit} />
         </Loader>
       </div>
     );
@@ -148,19 +184,20 @@ class BookingPaypal extends Component {
 
 }
 
-BookingPaypal.propTypes = {
+BookingPaymentCard.propTypes = {
+  config: React.PropTypes.object,
   booking: React.PropTypes.object,
   applications: React.PropTypes.object,
   applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
 
   getBooking: React.PropTypes.func.isRequired,
-  payApplicationsPaypalCreate: React.PropTypes.func.isRequired,
-  payApplicationsPaypalExecute: React.PropTypes.func.isRequired,
+  payApplicationsCard: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   booking: state.booking.data,
   applications: state.applications.data,
   applicationsFetching: state.applications.isFetching,
@@ -169,9 +206,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
-  payApplicationsPaypalCreate: (params) => dispatch(payApplicationsPaypalCreate(params)),
-  payApplicationsPaypalExecute: (params) => dispatch(payApplicationsPaypalExecute(params)),
+  payApplicationsCard: (params) => dispatch(payApplicationsCard(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
+  showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookingPaypal);
+export default connect(mapStateToProps, mapDispatchToProps)(BookingPaymentCard);

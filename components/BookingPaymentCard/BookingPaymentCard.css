@@ -1,0 +1,24 @@
+@import '../variables.css';
+
+.bookingPaymentCard {
+  flex: 10;
+  font-size: 21px;
+  justify-content: center;
+  position: relative;
+  min-height: 300px;
+
+  & .bookingPaymentCardLogo {
+    margin: 0 10px;
+
+    @media (--sm-viewport) {
+      height: 25%;
+      width: 25%;
+    }
+  }
+
+  & .bookingPaymentCardFooter {
+    @media (--sm-viewport) {
+      text-align: center;
+    }
+  }
+}

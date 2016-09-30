@@ -15,22 +15,22 @@ class BookingPayment extends Component {
   };
 
   render() {
-    const { booking, postStatus } = this.props;
+    const { booking, applications, sessions, postStatus } = this.props;
     const location = history.getCurrentLocation();
     let bankTransferItem;
     const dates = booking && booking.case && booking.case.dates;
-    if (dates) {
-      let earliestDate;
-      for (let i = 0; i < dates.length; i++) {
-        if (earliestDate) {
-          const d = new Date(dates[i].dateTimeStart);
-          if (earliestDate > d) {
-            earliestDate = d;
+    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
+      const earliestDate = Object.values(applications).reduce((result, application) => {
+        const sessionId = (application && application.session && application.session._id) || application.session;
+        const session = sessionId && sessions && sessions[sessionId];
+        if (session) {
+          if (!result) return new Date(session.date);
+          if (new Date(result) > new Date(session.date)) {
+            result = new Date(session.date);
           }
-        } else {
-          earliestDate = new Date(dates[i].dateTimeStart);
         }
-      }
+        return result;
+      }, new Date(8640000000000000));
       earliestDate.setDate(earliestDate.getDate() - 3);
       if (earliestDate > new Date()) {
         bankTransferItem = (
@@ -56,12 +56,23 @@ class BookingPayment extends Component {
               <li className={s.bookingPaymentNavItem}>
                 <a
                   className={classNames(s.bookingPaymentNavLink,
+                    (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-card')
+                    ? s.bookingPaymentNavLinkActive : '')}
+                  href="#"
+                  onClick={this.onClick('card')}
+                >
+                  Credit Card<span className={s.bookingPaymentNavArrow}><div className="nav-caret"></div></span>
+                </a>
+              </li>
+              <li className={s.bookingPaymentNavItem}>
+                <a
+                  className={classNames(s.bookingPaymentNavLink,
                     (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-paypal')
                     ? s.bookingPaymentNavLinkActive : '')}
                   href="#"
                   onClick={this.onClick('paypal')}
                 >
-                  Paypal (Credit/Debit)<span className={s.bookingPaymentNavArrow}><div className="nav-caret"></div></span>
+                  Paypal<span className={s.bookingPaymentNavArrow}><div className="nav-caret"></div></span>
                 </a>
               </li>
               {bankTransferItem}
@@ -98,6 +109,10 @@ BookingPayment.propTypes = {
   children: React.PropTypes.node.isRequired,
 
   booking: React.PropTypes.object,
+  applications: React.PropTypes.object,
+  applicationsFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
   postStatus: React.PropTypes.string,
 
   setPostStatus: React.PropTypes.func.isRequired,
@@ -105,6 +120,10 @@ BookingPayment.propTypes = {
 
 const mapStateToProps = (state) => ({
   booking: state.booking.data,
+  applications: state.applications.data,
+  applicationsFetching: state.applications.isFetching,
+  sessions: state.sessions.data,
+  sessionsFetching: state.sessions.isFetching,
   postStatus: state.postStatus,
 });
 

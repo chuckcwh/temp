@@ -4,10 +4,10 @@ import classNames from 'classnames';
 import Loader from 'react-loader';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
-import s from './BookingBankTransfer.css';
-import { getBooking, createBankTransferTransaction, setPostStatus, showAlertPopup } from '../../actions';
+import s from './BookingPaymentBankTransfer.css';
+import { APPLICATIONS_PAY_BANK_SUCCESS, getBooking, payApplicationsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
 
-class BookingBankTransfer extends Component {
+class BookingPaymentBankTransfer extends Component {
 
   constructor(props) {
     super(props);
@@ -15,7 +15,7 @@ class BookingBankTransfer extends Component {
       pending: false,
       error: false,
       transferTime: undefined,
-      ref: undefined,
+      transferRef: undefined,
     };
   }
 
@@ -24,22 +24,24 @@ class BookingBankTransfer extends Component {
   };
 
   onConfirm = (event) => {
-    if (this.bookingBankTransferForm.checkValidity()) {
+    if (this.bookingPaymentBankTransferForm.checkValidity()) {
       event.preventDefault();
 
       this.setState({ pending: true });
 
-      this.props.createBankTransferTransaction({
-        amount: this.props.booking.case.price,
-        type: 'Payment',
-        ref: this.state.ref,
-        sku: `ebc-case-${this.props.booking.case.id}`,
-        transactionDate: this.state.transferTime.format('YYYY-MM-DD HH:mm:ss'),
+      const location = history.getCurrentLocation();
+      this.props.payApplicationsBankTransfer({
+        mode: 'bank',
+        applications: location && location.query && location.query.applications && location.query.applications.split(','),
+        transferTime: this.state.transferTime,
+        transferRef: this.state.transferRef,
+        bookingId: location && location.query && location.query.bid,
+        bookingToken: location && location.query && location.query.btoken,
       }).then((res) => {
-        if (res.response && res.response.status === 1) {
+        if (res && res.type === APPLICATIONS_PAY_BANK_SUCCESS) {
           this.props.getBooking({
-            bookingId: this.props.booking.id,
-            contact: this.props.booking.adhocClient.contact,
+            bookingId: this.props.booking._id,
+            bookingToken: this.props.booking.adhocClient.contact,
           });
 
           this.props.setPostStatus('success');
@@ -47,7 +49,8 @@ class BookingBankTransfer extends Component {
           this.setState({
             pending: false,
             error: true,
-            ref: undefined,
+            transferTime: undefined,
+            transferRef: undefined,
           });
           // console.error('Failed to verify bank transfer payment.');
         }
@@ -59,14 +62,21 @@ class BookingBankTransfer extends Component {
   };
 
   render() {
+    const { applications, applicationsFetching, sessions } = this.props;
+    let sum = 0;
+    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
+      Object.values(applications).map(application => {
+        sum += parseFloat(application.price);
+      });
+    }
     return (
-      <div className={s.bookingBankTransfer}>
+      <div className={s.bookingPaymentBankTransfer}>
         <Loader className="spinner" loaded={!this.state.pending}>
-          <form ref={(c) => (this.bookingBankTransferForm = c)}>
+          <form ref={(c) => (this.bookingPaymentBankTransferForm = c)}>
             <p className={classNames('error', this.state.error ? '' : 'hidden')}>Your bank transfer reference number was not accepted.</p>
-            <p><b>Your Total Amount is SGD {this.props.booking.case.price}</b></p>
+            <p><b>Your Total Amount is SGD {parseFloat(sum).toFixed(2)}</b></p>
             <p>
-              Please transfer the total amount to<br />
+              Please transfer the total amount to :-<br />
               Bank: <b>UOB</b><br />
               Type: <b>Current</b><br />
               Account Number: <b>341-306-307-6</b><br />
@@ -74,19 +84,17 @@ class BookingBankTransfer extends Component {
             <ol>
               <li>
                 Transfer the total amount via bank transfer (ATM / iBanking).
-                If you are using internet banking, please set your booking ID
-                <b>{this.props.booking.id}</b> as transaction reference for faster verification.
               </li>
               <li>
                 Take note of the <b>reference number</b> of the bank transfer.
               </li>
               <li>
-                Fill in the input boxes below with the
+                Fill in the input boxes below with the&nbsp;
                 <b>estimated time of transfer</b> and <b>reference number</b>.
               </li>
               <li>
                 It will take around 1 working day to verify your payment.
-                We will notify you via email.
+                We will notify you of any update via email.
               </li>
             </ol>
             <Datetime
@@ -98,10 +106,8 @@ class BookingBankTransfer extends Component {
             />
             <input
               type="text"
-              id="ref"
-              name="ref"
-              value={this.state.ref}
-              onChange={(e) => this.setState({ ref: e.target.value })}
+              value={this.state.transferRef}
+              onChange={(e) => this.setState({ transferRef: e.target.value })}
               placeholder="Reference Number*"
               required
             />
@@ -117,24 +123,30 @@ class BookingBankTransfer extends Component {
 
 }
 
-BookingBankTransfer.propTypes = {
+BookingPaymentBankTransfer.propTypes = {
   booking: React.PropTypes.object,
+  applications: React.PropTypes.object,
+  applicationsFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
 
   getBooking: React.PropTypes.func.isRequired,
-  createBankTransferTransaction: React.PropTypes.func.isRequired,
+  payApplicationsBankTransfer: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   booking: state.booking.data,
+  applications: state.applications.data,
+  applicationsFetching: state.applications.isFetching,
+  sessions: state.sessions.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
-  createBankTransferTransaction: (params) => dispatch(createBankTransferTransaction(params)),
+  payApplicationsBankTransfer: (params) => dispatch(payApplicationsBankTransfer(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookingBankTransfer);
+export default connect(mapStateToProps, mapDispatchToProps)(BookingPaymentBankTransfer);

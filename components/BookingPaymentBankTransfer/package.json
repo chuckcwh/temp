@@ -1,0 +1,4 @@
+{
+  "name": "BookingPaymentBankTransfer",
+  "main": "./BookingPaymentBankTransfer.js"
+}

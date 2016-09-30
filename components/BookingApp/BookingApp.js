@@ -52,7 +52,6 @@ class BookingApp extends Component {
       }).then((res) => {
         if (res && res.type === BOOKING_SUCCESS) {
           const { data } = res.response;
-          console.log(data);
           if (data && data.case && data.case.isPaid) {
             // if booking has already been completed
             this.props.setPostStatus('success');

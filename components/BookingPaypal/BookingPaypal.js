@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import s from './BookingPaypal.css';
-import { getBooking, createPaypalTransaction, executePaypalTransaction, setPostStatus } from '../../actions';
+import { APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS, APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS, getBooking, payApplicationsPaypalCreate, payApplicationsPaypalExecute, setPostStatus } from '../../actions';
 import history from '../../core/history';
 
 const imgPaypal = require('../paypal.png');
@@ -14,25 +14,30 @@ class BookingPaypal extends Component {
     super(props);
     const location = history.getCurrentLocation();
     this.state = {
-      paymentId: location && location.query && location.query.paymentId,
-      bid: location && location.query && location.query.bid,
-      contact: location && location.query && location.query.contact,
       pending: location && location.query && location.query.paymentId && true,
       redirecting: false,
     };
   }
 
   componentDidMount() {
-    if (this.state.paymentId) {
+    const location = history.getCurrentLocation();
+    if (location && location.query && location.query.action === 'paypal-return') {
       // Execute paypal payment since this is returned from Paypal
-      this.props.executePaypalTransaction({
-        ppid: this.state.paymentId,
+      this.props.payApplicationsPaypalExecute({
+        mode: 'paypal',
+        applications: location && location.query && location.query.applications && location.query.applications.split(','),
+        payment: {
+          paymentId: location && location.query && location.query.paymentId,
+          payerId: location && location.query && location.query.PayerID,
+        },
+        bookingId: location && location.query && location.query.bid,
+        bookingToken: location && location.query && location.query.btoken,
       }).then((res) => {
-        if (res.response && res.response.status === 1) {
+        if (res && res.type === APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS) {
           // console.log(res.response.items);
           this.props.getBooking({
-            bookingId: this.state.bid,
-            contact: this.state.contact,
+            bookingId: location && location.query && location.query.bid,
+            bookingToken: location && location.query && location.query.btoken,
           });
 
           this.props.setPostStatus('success');
@@ -44,43 +49,63 @@ class BookingPaypal extends Component {
   }
 
   onConfirm = (event) => {
-    let url;
+    const location = history.getCurrentLocation();
+    let returnUrl,
+      cancelUrl;
 
     event.preventDefault();
 
     this.setState({ pending: true });
 
     if (typeof window !== 'undefined') {
-      url = `${(window.location.href.indexOf('?') > -1
+      returnUrl = `${(window.location.href.indexOf('?') > -1
         ? window.location.href.slice(0, window.location.href.indexOf('?'))
         : window.location.href)}`
-      + `?bid=${this.props.booking.id}&contact=${this.props.booking.adhocClient.contact}`;
-      url = url.replace('#', '');
-    }
+        + `?action=${encodeURIComponent('paypal-return')}`
+        + `&bid=${encodeURIComponent(this.props.booking._id)}`
+        + `&btoken=${encodeURIComponent(this.props.booking.adhocClient.contact)}`
+        + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
+      returnUrl = returnUrl.replace('#', '');
+      cancelUrl = `${(window.location.href.indexOf('?') > -1
+        ? window.location.href.slice(0, window.location.href.indexOf('?'))
+        : window.location.href)}`
+        + `?action=${encodeURIComponent('paypal-cancel')}`
+        + `&bid=${encodeURIComponent(this.props.booking._id)}`
+        + `&btoken=${encodeURIComponent(this.props.booking.adhocClient.contact)}`
+        + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
+      cancelUrl = cancelUrl.replace('#', '');
 
-    this.props.createPaypalTransaction({
-      amount: this.props.booking && this.props.booking.case && this.props.booking.case.price,
-      type: 'case',
-      cid: this.props.booking && this.props.booking.case && this.props.booking.case.id,
-      returnUrl: url,
-      cancelUrl: url,
-    }).then((res) => {
-      if (res.response && res.response.status === 1) {
-        // console.log(res.response.url);
-        // console.log(res.response.payment_id);
-        this.setState({ redirecting: true });
-        // console.log('Redirecting to ' + res.response.url);
-        if (typeof window !== 'undefined') {
-          window.location = res.response.url;
+      this.props.payApplicationsPaypalCreate({
+        mode: 'paypal',
+        applications: Object.keys(this.props.applications),
+        payment: {
+          return_url: returnUrl,
+          cancel_url: cancelUrl,
+        },
+        bookingId: this.props.booking._id,
+        bookingToken: this.props.booking.adhocClient.contact,
+      }).then((res) => {
+        if (res && res.type === APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS) {
+          // console.log(res);
+          // console.log(res.response.url.href);
+          // console.log(res.response.payment_id);
+          this.setState({ redirecting: true });
+          console.log('Redirecting to ' + res.response.url.href);
+          if (typeof window !== 'undefined') {
+            window.location = res.response.url.href;
+          }
+        } else {
+          // console.error('Failed to create paypal payment.');
         }
-      } else {
-        // console.error('Failed to create paypal payment.');
-      }
-    });
+      });
+    }
   };
 
   render() {
-    if (this.state.paymentId) {
+    const location = history.getCurrentLocation();
+    const { applications } = this.props;
+    let sum = 0;
+    if (location && location.query && location.query.paymentId) {
       return (
         <div className={s.bookingPaypal}>
           <Loader className="spinner" loaded={!this.state.pending} />
@@ -96,6 +121,12 @@ class BookingPaypal extends Component {
         </div>
       );
     }
+    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
+      Object.values(applications).map(application => {
+        sum += parseFloat(application.price);
+      });
+    }
+    const total = ((sum + 0.5) / (1 - 0.039));
     return (
       <div className={s.bookingPaypal}>
         <Loader className="spinner" loaded={!this.state.pending}>
@@ -103,8 +134,8 @@ class BookingPaypal extends Component {
             <img className={s.bookingPaypalLogo} src={imgPaypal} alt="Paypal" />
             <img className={s.bookingPaypalLogo} src={imgVisaMaster} alt="Visa/Master" />
           </div>
-          <p><b>Your Total Amount is SGD {this.props.booking && this.props.booking.case && this.props.booking.case.price}</b></p>
-          <p>There will be an additional 3% transaction charge.</p>
+          <p><b>Your Total Amount is SGD {parseFloat(total).toFixed(2)}</b></p>
+          <p>There will be an additional 3% service fee.</p>
           <p>Please initiate your payment by clicking the "Pay Now" button below.<br />You will be redirected to Paypal to complete your payment.</p>
           <p></p>
           <div className={s.bookingPaypalFooter}>
@@ -119,21 +150,27 @@ class BookingPaypal extends Component {
 
 BookingPaypal.propTypes = {
   booking: React.PropTypes.object,
+  applications: React.PropTypes.object,
+  applicationsFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
 
   getBooking: React.PropTypes.func.isRequired,
-  createPaypalTransaction: React.PropTypes.func.isRequired,
-  executePaypalTransaction: React.PropTypes.func.isRequired,
+  payApplicationsPaypalCreate: React.PropTypes.func.isRequired,
+  payApplicationsPaypalExecute: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   booking: state.booking.data,
+  applications: state.applications.data,
+  applicationsFetching: state.applications.isFetching,
+  sessions: state.sessions.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
-  createPaypalTransaction: (params) => dispatch(createPaypalTransaction(params)),
-  executePaypalTransaction: (params) => dispatch(executePaypalTransaction(params)),
+  payApplicationsPaypalCreate: (params) => dispatch(payApplicationsPaypalCreate(params)),
+  payApplicationsPaypalExecute: (params) => dispatch(payApplicationsPaypalExecute(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
 });
 

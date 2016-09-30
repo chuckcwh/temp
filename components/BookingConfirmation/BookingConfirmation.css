@@ -59,6 +59,11 @@
         }
       }
 
+      & :global .TableRowHeader {
+        color: var(--brand-color);
+        font-style: italic;
+      }
+
       & :global .datepicker__input {
         font: inherit;
         border-radius: 0;
@@ -89,6 +94,13 @@
 
       & .bookingConfirmationRadioLabel {
         /* cursor: pointer; */
+      }
+    }
+
+    & .bookingConfirmationBodyActions {
+      text-align: right;
+      
+      & .bookingConfirmationFooter {
       }
     }
 

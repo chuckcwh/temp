@@ -12,6 +12,11 @@ import { getUserName, configToName } from '../../core/util';
 import { getSession, showConfirmPopup, fetchServices } from '../../actions';
 import ConfirmPopup from '../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+// sub-component
+import DocumentationMedicalHistoryForm from './DocumentationMedicalHistoryForm/DocumentationMedicalHistoryForm';
+import DocumentationOverall from './DocumentationOverall/DocumentationOverall';
+import DocumentationVitalSigns from './DocumentationVitalSigns/DocumentationVitalSigns';
+// import { formList } from './variables.js';
 
 
 class Documentation extends Component {
@@ -19,7 +24,10 @@ class Documentation extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      step: 1,
+      currentForm: 'Med History',
+    }
   }
 
   componentDidMount() {
@@ -32,7 +40,9 @@ class Documentation extends Component {
 
 
   render() {
+    const { sessionId } = this.props.params;
     const { session, services } = this.props;
+    const { step, currentForm } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
@@ -51,7 +61,7 @@ class Documentation extends Component {
             <div className={s.patientSection}>
 
               <Grid fluid>
-                <Row>
+                <Row className={s.basicInfo}>
                   <Col xs={12} md={6}>
                     <h3>Case</h3>
                     <ul>
@@ -73,6 +83,37 @@ class Documentation extends Component {
             </div>
           </div>
 
+          <div>
+            <div>Provider Documentation - Step {step} of 4</div>
+            <div className={s.stepSection}>
+              <div className={s.stepSectionUnit}>
+                <div>1</div>
+                <p>Patient Assessment</p>
+              </div>
+              <div className={s.stepSectionUnit}>
+                <div>2</div>
+                <p>Procedural Assessment</p>
+              </div>
+              <div className={s.stepSectionUnit}>
+                <div>3</div>
+                <p>Summary of Findings</p>
+              </div>
+              <div className={s.stepSectionUnit}>
+                <div>4</div>
+                <p>Confirmation</p>
+              </div>
+            </div>
+
+            <div>
+              <div className={s.formLink} onClick={() => this.setState({currentForm: 'Med History'})}>Med History</div>
+              <div className={s.formLink} onClick={() => this.setState({currentForm: 'Overall'})}>Overall</div>
+              <div className={s.formLink} onClick={() => this.setState({currentForm: 'Vital Signs'})}>Vital Signs</div>
+              {currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm />)
+                : currentForm === 'Overall' ? (<DocumentationOverall />)
+                : currentForm === 'Vital Signs' ? (<DocumentationVitalSigns />)
+                : null}
+            </div>
+          </div>
         </Container>
       </div>
     );
@@ -86,7 +127,7 @@ Documentation.propTypes = {
 
 const mapStateToProps = (state) => ({
   session: state.session.data,
-  services: state.services.data
+  services: state.services.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({

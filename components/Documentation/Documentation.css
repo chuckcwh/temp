@@ -2,5 +2,23 @@
 
 
 .documentation {
+  & .basicInfo {
+    background: #f0f0f0;
+    border-radius: 5px;
+  }
 
+  & .stepSection {
+    display: flex;
+
+    & .stepSectionUnit {
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  & .formLink {
+    color: green;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }

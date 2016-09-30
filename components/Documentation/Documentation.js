@@ -17,6 +17,8 @@ import DocumentationMedicalHistoryForm from './DocumentationMedicalHistoryForm/D
 import DocumentationOverall from './DocumentationOverall/DocumentationOverall';
 import DocumentationVitalSigns from './DocumentationVitalSigns/DocumentationVitalSigns';
 // import { formList } from './variables.js';
+// react-icons
+import FaPlus from 'react-icons/lib/fa/plus';
 
 
 class Documentation extends Component {
@@ -25,7 +27,7 @@ class Documentation extends Component {
     super(props);
 
     this.state = {
-      step: 1,
+      step: "1",
       currentForm: 'Med History',
     }
   }
@@ -49,6 +51,41 @@ class Documentation extends Component {
       const serviceClassName = session.serviceClass && Object.keys(services).length > 0 && services[session.service].classes[session.serviceClass].duration;
       return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''}) - ${moment(session.date).format('YYYY-MM-DD')}` : '';
     }
+
+    const stepSections = {
+      "1": {
+        icon: "1",
+        text: 'Patient Assessment',
+        forms: [
+          { name: 'Med History', isDefault: true },
+          { name: 'Overall', isDefault: true },
+          { name: 'Vital Signs', isDefault: true },
+          { name: 'FRAT', isDefault: false },
+          { name: 'MSE', isDefault: false },
+        ]},
+      "2": {
+        icon: "2",
+        text: 'Procedural Assessment',
+        forms: [
+          { name: 'Bate', isDefault: false },
+          { name: 'NGT', isDefault: false },
+          { name: 'Urinary Catheter', isDefault: false },
+        ]},
+      "3": {
+        icon: "3",
+        text: 'Summary of Findings',
+        forms: [
+          { name: 'Nursing Notes', isDefault: true }
+        ]},
+      "4": {
+        icon: 4,
+        text: 'Confirmation',
+        forms: [
+          { name: 'Confirmation', isDefault: true }
+        ]}
+    };
+
+    console.log('currentform', currentForm);
 
     return (
       <div className={s.documentation}>
@@ -83,32 +120,46 @@ class Documentation extends Component {
             </div>
           </div>
 
-          <div>
-            <div>Provider Documentation - Step {step} of 4</div>
+          <div className={s.docBasic}>
+            <div className={s.docBasicTitle}>
+              Provider Documentation - Step {step} of 4
+            </div>
+
             <div className={s.stepSection}>
-              <div className={s.stepSectionUnit}>
-                <div>1</div>
-                <p>Patient Assessment</p>
-              </div>
-              <div className={s.stepSectionUnit}>
-                <div>2</div>
-                <p>Procedural Assessment</p>
-              </div>
-              <div className={s.stepSectionUnit}>
-                <div>3</div>
-                <p>Summary of Findings</p>
-              </div>
-              <div className={s.stepSectionUnit}>
-                <div>4</div>
-                <p>Confirmation</p>
+              {Object.values(stepSections).map(item => (
+                <div
+                  className={cx(s.stepSectionUnit, step === item.icon && s.stepSectionUnitActive)}
+                  onClick={() => this.setState({step: item.icon})}
+                  key={Object.values(stepSections).indexOf(item)}
+                >
+                  <div>{item.icon}</div>
+                  <span>{item.text}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className={s.stepSectionCategory}>
+              <div className={s.stepSectionCategoryContainer}>
+                {stepSections[step].forms.filter(item => item.isDefault).map(form => (
+                  <div
+                    key={stepSections[step].forms.indexOf(form)}
+                    className={cx(s.stepSectionCategoryUnit, currentForm === form.name && s.stepSectionCategoryUnitActive)}
+                    onClick={() => this.setState({currentForm: form.name})}>
+                    {form.name}
+                  </div>
+                ))}
+                {stepSections[step].forms.filter(item => !item.isDefault).length > 0 && (
+                  <div
+                    className={s.stepSectionCategoryUnit}
+                    onClick={() => this.setState({currentForm: 'more'})}>
+                    <FaPlus />Add More..
+                    </div>
+                  )}
               </div>
             </div>
 
-            <div>
-              <div className={s.formLink} onClick={() => this.setState({currentForm: 'Med History'})}>Med History</div>
-              <div className={s.formLink} onClick={() => this.setState({currentForm: 'Overall'})}>Overall</div>
-              <div className={s.formLink} onClick={() => this.setState({currentForm: 'Vital Signs'})}>Vital Signs</div>
-              {currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm />)
+            <div className={s.formContent}>
+              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm />)
                 : currentForm === 'Overall' ? (<DocumentationOverall />)
                 : currentForm === 'Vital Signs' ? (<DocumentationVitalSigns />)
                 : null}

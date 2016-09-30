@@ -7,18 +7,97 @@
     border-radius: 5px;
   }
 
-  & .stepSection {
-    display: flex;
+  & .docBasic {
+    border: 1px solid #fdbc1d;
+    margin: 15px auto 60px;
 
-    & .stepSectionUnit {
-      flex: 1;
-      text-align: center;
+    & .docBasicTitle {
+      color: #fdbc1d;
+      padding: 8px 16px;
+      height: 36px;
+      line-height: 36px;
+      font-size: 20px;
     }
+
+    & .stepSection {
+      display: flex;
+      height: 79px;
+      background: #fdbc1d;
+
+      & .stepSectionUnit {
+        flex: 1;
+        text-align: center;
+        cursor: pointer;
+        margin: auto;
+
+        & > div {
+          display: inline-block;
+          width: 45px;
+          height: 51px;
+          vertical-align: middle;
+          text-align: center;
+          line-height: 51px;
+          color: #fff;
+          background: url(../polygon-white.png) no-repeat center;
+        }
+
+        & > span {
+          vertical-align: middle;
+          margin-left: 15px;
+          color: #fff;
+          font-size: 18px;
+          font-weight: 600;
+        }
+      }
+
+      & .stepSectionUnitActive, & .stepSectionUnit:hover {
+        & > div {
+          color: #f78d00;
+          background: url(../polygon-orange.png) no-repeat center;
+        }
+
+        & > span {
+          color: #f78d00;
+        }
+      }
+    }
+
+    & .stepSectionCategory {
+      border-bottom: 1px solid #fdbc1d;
+
+      & .stepSectionCategoryContainer {
+        margin: 6px 35px;
+
+        & .stepSectionCategoryUnit {
+          display: inline-block;
+          padding: 8px 20px;
+          cursor: pointer;
+          border-left: 1px solid #fdbc1d;
+        }
+
+        & .stepSectionCategoryUnit:first-of-type {
+          border-left: none;
+        }
+
+        & .stepSectionCategoryUnit:hover {
+          color: #f78d00;
+        }
+
+        & .stepSectionCategoryUnitActive {
+
+        }
+
+        & .stepSectionCategoryUnitActive, & .stepSectionCategoryUnitActive:hover {
+          color: #fdbc1d;
+        }
+      }
+
+    }
+
+    & .formContent {
+      margin: 0 55px;
+    }
+
   }
 
-  & .formLink {
-    color: green;
-    text-decoration: underline;
-    cursor: pointer;
-  }
 }

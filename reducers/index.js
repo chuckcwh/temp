@@ -329,6 +329,27 @@ const sessions = (state = {
         },
         lastUpdated: action.response && action.response.receivedAt
       }
+    case ActionTypes.APPLICATIONS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: {
+          ...state.data,
+          ...normalize(action.response && action.response.data && action.response.data.map(application => application.session)),
+        },
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.APPLICATION_CREATE_SUCCESS:
+    case ActionTypes.APPLICATION_EDIT_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: {
+          ...state.data,
+          [action.data.session]: action.response && action.response.data && action.response.data.session,
+        },
+        lastUpdated: action.response && action.response.receivedAt
+      }
     case ActionTypes.BOOKING_SUCCESS:
       return {
         ...state,
@@ -350,36 +371,27 @@ const sessionsByUser = (state = {}, action) => {
         [action.data.client]:
           sessions(state[action.data.client], action)
       }
-    case ActionTypes.SESSIONS_SUGGESTED_REQUEST:
-    case ActionTypes.SESSIONS_SUGGESTED_SUCCESS:
-    case ActionTypes.SESSION_SUGGESTED_SUCCESS:
+    case ActionTypes.APPLICATIONS_SUCCESS:
+    case ActionTypes.APPLICATION_CREATE_SUCCESS:
+    case ActionTypes.APPLICATION_EDIT_SUCCESS:
       return {
         ...state,
-        [action.data.providerId]:
-          sessions(state[action.data.providerId], action)
+        [action.data.provider]:
+          sessions(state[action.data.provider], action)
       }
     default:
       return state
   }
 }
 
-const suggestedSessions = (state = {
-  isFetching: false,
-  didInvalidate: true,
-  data: {},
-}, action) => {
+const sessionsSuggestedToProvider = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.SESSIONS_SUGGESTED_REQUEST:
-      return {
-        ...state,
-        isFetching: true
-      }
     case ActionTypes.SESSIONS_SUGGESTED_SUCCESS:
       return {
         ...state,
-        isFetching: false,
-        data: normalize(action.response && action.response.data),
-        lastUpdated: action.response && action.response.receivedAt
+        [action.data.providerId]:
+          sessions(state[action.data.providerId], action)
       }
     default:
       return state
@@ -798,10 +810,10 @@ const bookingApp = combineReducers({
   session,
   sessions,
   sessionsByUser,
+  sessionsSuggestedToProvider,
   applications,
   applicationsByProvider,
   patientsByClient,
-  suggestedSessions,
   availableSchedules,
   // paypal,
   transactions,

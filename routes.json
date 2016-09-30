@@ -166,5 +166,9 @@
   {
     "path": "/applications/:applicationId",
     "page": "./pages/application"
+  },
+  {
+    "path": "/documentation/:sessionId",
+    "page": "./pages/documentation"
   }
 ]

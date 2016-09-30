@@ -159,7 +159,7 @@ class Documentation extends Component {
             </div>
 
             <div className={s.formContent}>
-              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm />)
+              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm onFormSubmit={(e) => console.log('medical history submit', e.value)}/>)
                 : currentForm === 'Overall' ? (<DocumentationOverall />)
                 : currentForm === 'Vital Signs' ? (<DocumentationVitalSigns />)
                 : null}

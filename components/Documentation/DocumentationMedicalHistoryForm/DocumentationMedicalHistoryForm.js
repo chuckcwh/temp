@@ -12,7 +12,7 @@ import { getUserName, configToName } from '../../../core/util';
 import { getSession, showConfirmPopup, fetchServices } from '../../../actions';
 import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import { reduxForm, reset } from 'redux-form';
+import { reduxForm, addArrayValue, reset } from 'redux-form';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
 
@@ -23,14 +23,12 @@ class DocumentationMedicalHistoryForm extends Component {
     super(props);
 
     this.state = {
-      secondaryDiagnosisNum: 1,
-      secondaryDiagnosis: [],
       medications: []
     }
   }
 
   componentDidMount() {
-
+    this.props.fields.secondaryDiagnosis.addField();
   }
 
   onFormSubmit = (values) => {
@@ -41,6 +39,7 @@ class DocumentationMedicalHistoryForm extends Component {
     const {
       fields: {
         mainDiagnosis,
+        secondaryDiagnosis,
         vision,
         hearing,
         mobility,
@@ -53,7 +52,7 @@ class DocumentationMedicalHistoryForm extends Component {
       submitting,
     } = this.props;
 
-    const { secondaryDiagnosis, medications } = this.state;
+    const { medications } = this.state;
     const mobilityChoice = [{name: 'Walking (Without Aid)', value: 'Walking (Without Aid)'}, {name: 'Walking (Require Aid)', value: 'Walking (Require Aid)'}, {name: 'Wheelchair', value: 'Wheelchair'}, {name: 'Bed Bound', value: 'Bed Bound'}];
 
     const medicationChoice = {
@@ -64,11 +63,11 @@ class DocumentationMedicalHistoryForm extends Component {
     }
 
     return (
-      <div className={s.documentationMedicalHistoryForm}>
+      <form className={s.documentationMedicalHistoryForm} onSubmit={this.props.onFormSubmit}>
         <h2>medical history form</h2>
 
         <div>
-          <div className={s.fieldTitle}>Main Diagnosis*</div>
+          <label className={s.fieldTitle}>Main Diagnosis*</label>
           <div className={s.fieldContent}>
             <input className={s.textInput} type='text' {...mainDiagnosis}/>
             {mainDiagnosis.touched && mainDiagnosis.error && (<div className={s.formError}>{mainDiagnosis.error}</div>)}
@@ -76,11 +75,17 @@ class DocumentationMedicalHistoryForm extends Component {
         </div>
 
         <div>
-          <div className={s.fieldTitle}>Secondary Diagnosis</div>
+          <label className={s.fieldTitle}>Secondary Diagnosis</label>
           <div className={s.fieldContent}>
-            <input className={s.textInput} type='text' {...secondaryDiagnosis}/>
-            <button><FaPlus /></button>
-            {secondaryDiagnosis.touched && secondaryDiagnosis.error && (<div className={s.formError}>{secondaryDiagnosis.error}</div>)}
+            {secondaryDiagnosis.map((item, index) => (
+              <input key={index} className={s.textInput} type='text' {...item}/>
+            ))}
+            <button onClick={e => {
+              e.preventDefault();
+              secondaryDiagnosis.addField();
+            }}>
+              <FaPlus />
+            </button>
           </div>
         </div>
 
@@ -204,7 +209,7 @@ class DocumentationMedicalHistoryForm extends Component {
           </tbody>
         </table>
 
-      </div>
+      </form>
     );
   }
 }
@@ -227,6 +232,7 @@ const reduxFormConfig = {
   form: 'documentationMedicalHistoryForm',
   fields: [
     'mainDiagnosis',
+    'secondaryDiagnosis[]',
     'vision',
     'hearing',
     'mobility',
@@ -241,6 +247,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   resetForm: () => dispatch(reset('documentationMedicalHistoryForm')),
+  addValue: addArrayValue,
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationMedicalHistoryForm);

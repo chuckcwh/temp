@@ -3,4 +3,13 @@
 
 .documentationMedicalHistoryForm {
 
+  & .fieldTitle {
+    display: inline-block;
+    width: 200px;
+  }
+
+  & .fieldContent {
+    display: inline-block;
+  }
+
 }

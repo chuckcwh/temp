@@ -426,25 +426,28 @@ class BookingDetails extends Component {
           booking && booking.sessions.map(session => (
             <div className="TableRow" key={session._id}>
               <div className="TableRowItem1">
-                <input
-                  className={s.rememberMeCheckbox}
-                  type="checkbox"
-                  checked={!!this.state.selected[session._id]}
-                  onChange={() => {
-                    if (this.state.selected[session._id]) {
-                      this.setState({
-                        selected: removeByKey(this.state.selected, session._id),
-                      })
-                    } else {
-                      this.setState({
-                        selected: {
-                          ...this.state.selected,
-                          [session._id]: true,
+                {
+                  session.phase === 'pending-payment' &&
+                    <input
+                      className={s.rememberMeCheckbox}
+                      type="checkbox"
+                      checked={!!this.state.selected[session._id]}
+                      onChange={() => {
+                        if (this.state.selected[session._id]) {
+                          this.setState({
+                            selected: removeByKey(this.state.selected, session._id),
+                          })
+                        } else {
+                          this.setState({
+                            selected: {
+                              ...this.state.selected,
+                              [session._id]: true,
+                            }
+                          })
                         }
-                      })
-                    }
-                  }}
-                />
+                      }}
+                    />
+                }
                 <label><span></span></label>
               </div>
               <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>

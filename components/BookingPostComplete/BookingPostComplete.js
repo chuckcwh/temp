@@ -25,15 +25,15 @@ const BookingPostComplete = ({ transaction, transactionFetching }) => {
         {message}
       </div>
       <div>
-        <b>TRANSACTION ID : {transaction && transaction._id}</b>
+        <b>TRANSACTION ID : {transaction && transaction._id && transaction._id.toUpperCase()}</b>
       </div>
       <div>
         TOTAL AMOUNT : SGD {transaction && parseFloat(transaction.value).toFixed(2)}
       </div>
       <div>
-        For further inquiries, please email
-        <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a>
-        or call us at 9733 6938, Mon-Fri (9.00am - 6.00pm).
+        For further inquiries, please email&nbsp;
+        <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a>&nbsp;
+        or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
       </div>
       <div className={s.bookingPostCompleteFooter}>
         <Link to="/booking-manage" className="btn btn-primary">Manage Booking</Link>

@@ -24,7 +24,7 @@ class DashboardOtherCases extends Component {
   }
 
   render() {
-    const { config, services, applications, applicationsFetching } = this.props;
+    const { config, services, applications, applicationsFetching, sessions } = this.props;
     const filteredApplications = applications && Object.values(applications).filter(application => {
       switch (this.state.selectedFilter) {
         case 'pending':
@@ -73,7 +73,9 @@ class DashboardOtherCases extends Component {
                   </Row>
                   {
                     filteredApplications && filteredApplications.map(application => {
-                      const session = application.session;
+                      const sessionId = (application && application.session && application.session._id)
+                        || (application && application.session);
+                      const session = sessions && sessionId && sessions[sessionId];
                       return (
                         <Row className={s.sessionDetails} key={application._id}>
                           <Col xs={4}>ID</Col>
@@ -125,6 +127,7 @@ DashboardOtherCases.propTypes = {
   servicesFetching: React.PropTypes.bool,
   applications: React.PropTypes.object,
   applicationsFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func,
 };
@@ -139,6 +142,9 @@ const mapStateToProps = (state) => ({
   applicationsFetching: state.user.data && state.user.data._id
     && state.applicationsByProvider[state.user.data._id]
     && state.applicationsByProvider[state.user.data._id].isFetching,
+  sessions: state.user.data && state.user.data._id
+    && state.sessionsByUser[state.user.data._id]
+    && state.sessionsByUser[state.user.data._id].data,
 });
 
 const mapDispatchToProps = (dispatch) => ({

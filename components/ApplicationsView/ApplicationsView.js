@@ -12,6 +12,7 @@ import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
 import SessionPatientDetails from '../SessionPatientDetails';
 import SessionAddressDetails from '../SessionAddressDetails';
+import SessionProviderDetails from '../SessionProviderDetails';
 import { SESSION_CANCEL_SUCCESS, fetchServices, getApplication, editBooking, clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showInlineForm } from '../../actions';
 import { configToName, formatSessionAlias, isClient, isProvider } from '../../core/util';
@@ -138,9 +139,8 @@ class ApplicationsView extends Component {
     let patientDetails,
       addressDetails,
       sessionDetails,
-      caregiverSection,
-      paymentButton;
-    const { params, config, services, applications, applicationsFetching } = this.props;
+      caregiverSection;
+    const { params, config, services, user, applications, applicationsFetching } = this.props;
     const application = applications && params && params.applicationId && applications[params.applicationId];
     const session = application && application.session;
     const patient = session && session.patient;
@@ -428,14 +428,6 @@ class ApplicationsView extends Component {
         </div>
       );
     }
-    // show payment button only if booking is "Closed" and not yet paid, and if not editing
-    if ((session
-      && session.phase === 'pending-payment' && !session.isPaid)
-      && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
-      paymentButton = (
-        <a href="#" className="btn btn-primary" onClick={this.onClickPay}>GO TO PAYMENT</a>
-      );
-    }
 
     return (
       <div className={s.applicationsView}>
@@ -446,9 +438,6 @@ class ApplicationsView extends Component {
                 <div className={s.applicationsViewBodyActions}>
                   <span>
                     <Link to="/dashboard" className="btn btn-primary btn-small">BACK</Link>
-                  </span>
-                  <span>
-                    {paymentButton}
                   </span>
                 </div>
                 <h2>{`Session ID: ${session && formatSessionAlias(session.alias)}`}</h2>
@@ -531,13 +520,15 @@ class ApplicationsView extends Component {
                     </div>
                   </div>
                   <div className={s.applicationsViewBodyColumn}>
-                    {caregiverSection}
+                    {
+                      !isProvider(user) &&
+                        <SessionProviderDetails
+                          provider={session && session.provider}
+                        />
+                    }
                   </div>
                 </div>
                 <div className={s.applicationsViewFooter}>
-                  <span>
-                    {paymentButton}
-                  </span>
                   <span>
                     <Link to="/dashboard" className="btn btn-primary btn-small">BACK</Link>
                   </span>

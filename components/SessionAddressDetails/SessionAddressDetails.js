@@ -45,7 +45,7 @@ const SessionAddressDetails = ({ address }) => {
 };
 
 SessionAddressDetails.propTypes = {
-  address: React.PropTypes.object.isRequired,
+  address: React.PropTypes.object,
 };
 
 export default SessionAddressDetails;

@@ -58,7 +58,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { user, patients, sessions, applications } = this.props;
+    const { user, patients, sessions, suggestedSessions, applications } = this.props;
     const { panelChoice } = this.state;
     let dashboardStats,
       dashboardBody,
@@ -161,8 +161,8 @@ class Dashboard extends Component {
           completed: 0,
           others: 0,
         };
-        if (sessions && Object.values(sessions).length) {
-          stats.available = Object.values(sessions).length;
+        if (suggestedSessions && Object.values(suggestedSessions).length) {
+          stats.available = Object.values(suggestedSessions).length;
         }
         applications && Object.values(applications).map(application => {
           switch (application.status) {
@@ -274,6 +274,8 @@ Dashboard.propTypes = {
   patientsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
   sessionsFetching: React.PropTypes.bool,
+  suggestedSessions: React.PropTypes.object,
+  suggestedSessionsFetching: React.PropTypes.bool,
 
   fetchServices: React.PropTypes.func,
   setOrderService: React.PropTypes.func,
@@ -300,6 +302,12 @@ const mapStateToProps = (state) => ({
   sessionsFetching: state.user.data && state.user.data._id
     && state.sessionsByUser[state.user.data._id]
     && state.sessionsByUser[state.user.data._id].isFetching,
+  suggestedSessions: state.user.data && state.user.data._id
+    && state.sessionsSuggestedToProvider[state.user.data._id]
+    && state.sessionsSuggestedToProvider[state.user.data._id].data,
+  suggestedSessionsFetching: state.user.data && state.user.data._id
+    && state.sessionsSuggestedToProvider[state.user.data._id]
+    && state.sessionsSuggestedToProvider[state.user.data._id].isFetching,
   applications: state.user.data && state.user.data._id
     && state.applicationsByProvider[state.user.data._id]
     && state.applicationsByProvider[state.user.data._id].data,

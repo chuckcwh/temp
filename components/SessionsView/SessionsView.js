@@ -12,7 +12,10 @@ import CloseButton from '../CloseButton';
 import ConfirmPopup from '../ConfirmPopup';
 import SessionPatientDetails from '../SessionPatientDetails';
 import SessionAddressDetails from '../SessionAddressDetails';
-import { SESSION_CANCEL_SUCCESS, fetchServices, getSessions, getPatients, getSuggestedSession, editBooking, clearBooking, setPostStatus, cancelSession,
+import SessionProviderDetails from '../SessionProviderDetails';
+import { SESSION_CANCEL_SUCCESS,
+    fetchServices, getSessions, getPatients, getSuggestedSession, editBooking,
+    clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import { configToName, formatSessionAlias, isClient, isProvider } from '../../core/util';
 import history from '../../core/history';
@@ -573,7 +576,12 @@ class SessionsView extends Component {
                     </div>
                   </div>
                   <div className={s.sessionsViewBodyColumn}>
-                    {caregiverSection}
+                    {
+                      !isProvider(user) &&
+                        <SessionProviderDetails
+                          provider={session && session.provider}
+                        />
+                    }
                   </div>
                 </div>
                 <div className={s.sessionsViewFooter}>
@@ -627,12 +635,22 @@ const mapStateToProps = (state, ownProps) => ({
   user: state.user.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  sessions: state.user.data && state.user.data._id
-    && state.sessionsByUser[state.user.data._id]
-    && state.sessionsByUser[state.user.data._id].data,
-  sessionsFetching: state.user.data && state.user.data._id
-    && state.sessionsByUser[state.user.data._id]
-    && state.sessionsByUser[state.user.data._id].isFetching,
+  sessions: state.user.data && state.user.data._id &&
+    isProvider(state.user.data)
+      ?
+      (state.sessionsSuggestedToProvider[state.user.data._id]
+      && state.sessionsSuggestedToProvider[state.user.data._id].data)
+      :
+      (state.sessionsByUser[state.user.data._id]
+      && state.sessionsByUser[state.user.data._id].data),
+  sessionsFetching: state.user.data && state.user.data._id &&
+    isProvider(state.user.data)
+      ?
+      (state.sessionsSuggestedToProvider[state.user.data._id]
+      && state.sessionsSuggestedToProvider[state.user.data._id].isFetching)
+      :
+      (state.sessionsByUser[state.user.data._id]
+      && state.sessionsByUser[state.user.data._id].isFetching),
   patients: state.user.data && state.user.data._id
     && state.patientsByClient[state.user.data._id]
     && state.patientsByClient[state.user.data._id].data,

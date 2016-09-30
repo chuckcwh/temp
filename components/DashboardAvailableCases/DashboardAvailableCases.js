@@ -7,7 +7,8 @@ import s from './DashboardAvailableCases.css';
 import Container from '../Container';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
-import { APPLICATION_CREATE_SUCCESS, fetchServices, getSuggestedSessions, createApplication, showConfirmPopup, showAlertPopup } from '../../actions';
+import { APPLICATION_CREATE_SUCCESS,
+  fetchServices, getSuggestedSessions, createApplication, showConfirmPopup, showAlertPopup } from '../../actions';
 import { isProvider, configToName, formatSessionAlias } from '../../core/util';
 
 class DashboardAvailableCases extends Component {
@@ -31,7 +32,7 @@ class DashboardAvailableCases extends Component {
   handleAccept = (sessionId) => () => {
     if (this.props.user && this.props.user._id && isProvider(this.props.user)) {
       this.props.showConfirmPopup('Are you sure you want to accept case #'
-        + `${formatSessionAlias(this.props.suggestedSessions[sessionId].alias)}?`,
+        + `${formatSessionAlias(this.props.sessions[sessionId].alias)}?`,
         () => {
           this.props.createApplication({
             provider: this.props.user._id,
@@ -39,7 +40,7 @@ class DashboardAvailableCases extends Component {
           }).then(res => {
             if (res && res.type === APPLICATION_CREATE_SUCCESS) {
               this.props.showAlertPopup('You have successfully accepted case #'
-                + `${formatSessionAlias(this.props.suggestedSessions[sessionId].alias)}.`);
+                + `${formatSessionAlias(this.props.sessions[sessionId].alias)}.`);
               this.props.user
                 && this.props.user._id
                 && isProvider(this.props.user)
@@ -52,13 +53,13 @@ class DashboardAvailableCases extends Component {
   };
 
   render() {
-    const { config, services, suggestedSessions, suggestedSessionsFetching } = this.props;
+    const { config, services, sessions, sessionsFetching } = this.props;
     return (
       <div className={s.dashboardAvailableCases}>
         <Container>
-          <Loader className="spinner" loaded={!suggestedSessionsFetching}>
+          <Loader className="spinner" loaded={!sessionsFetching}>
             <div className={s.cases}>
-              {suggestedSessions && Object.values(suggestedSessions).length > 0 &&
+              {sessions && Object.values(sessions).length > 0 &&
                 <DashboardDataTable css={s}>
                   <Grid fluid className={s.dashboardDataTable}>
                     <Row className={s.lgHeader}>
@@ -72,7 +73,7 @@ class DashboardAvailableCases extends Component {
                       <Col md={2}>Action(s)</Col>
                     </Row>
                     {
-                      suggestedSessions && Object.values(suggestedSessions).map(session => (
+                      sessions && Object.values(sessions).map(session => (
                         <Row className={s.sessionDetails} key={session._id}>
                           <Col xs={4}>ID</Col>
                           <Col xs={8} md={1}>{formatSessionAlias(session.alias)}</Col>
@@ -108,7 +109,7 @@ class DashboardAvailableCases extends Component {
                   </Grid>
                 </DashboardDataTable>
               }
-              {!(suggestedSessions && Object.values(suggestedSessions).length) &&
+              {!(sessions && Object.values(sessions).length) &&
                 <p>No available cases found.</p>
               }
             </div>
@@ -124,8 +125,8 @@ DashboardAvailableCases.propTypes = {
   user: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
-  suggestedSessions: React.PropTypes.object,
-  suggestedSessionsFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
 
   fetchServices: React.PropTypes.func.isRequired,
   getSuggestedSessions: React.PropTypes.func.isRequired,
@@ -139,8 +140,12 @@ const mapStateToProps = (state) => ({
   user: state.user.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  suggestedSessions: state.suggestedSessions.data,
-  suggestedSessionsFetching: state.suggestedSessions.isFetching,
+  sessions: state.user.data && state.user.data._id
+    && state.sessionsSuggestedToProvider[state.user.data._id]
+    && state.sessionsSuggestedToProvider[state.user.data._id].data,
+  sessionsFetching: state.user.data && state.user.data._id
+    && state.sessionsSuggestedToProvider[state.user.data._id]
+    && state.sessionsSuggestedToProvider[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -103,7 +103,7 @@
     margin-bottom: 1.5px;
   }
 
-  & .tableListSignCancel {
+  & .tableListSignEdit {
     background: #f78d00;
     padding: 5px;
     width: 60px;
@@ -111,7 +111,7 @@
     margin-bottom: 1.5px;
   }
 
-  & .tableListSignEdit {
+  & .tableListSignDoc {
     background: green;
     padding: 5px;
     width: 60px;

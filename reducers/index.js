@@ -261,11 +261,13 @@ const session = (state = {
   data: {}
 }, action) => {
   switch (action.type) {
+    case ActionTypes.SESSION_REQUEST:
     case ActionTypes.SESSION_CREATE_REQUEST:
       return {
         ...state,
         isFetching: true
       }
+    case ActionTypes.SESSION_SUCCESS:
     case ActionTypes.SESSION_CREATE_SUCCESS:
       return {
         ...state,

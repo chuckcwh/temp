@@ -8,10 +8,10 @@ import s from './AdminBookingsView.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
-// import GenericPopup from '../../GenericPopup';
+import GenericPopup from '../../GenericPopup';
 import ConfirmPopup from '../../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
-import { fetchServices, showConfirmPopup, getBooking, deleteBooking, createApplication } from '../../../actions';
+import { fetchServices, showGenericPopup, showConfirmPopup, getBooking, deleteBooking, createApplication, getUsers } from '../../../actions';
 import history from '../../../core/history';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -25,7 +25,6 @@ import FaCheck from 'react-icons/lib/fa/check';
 //TODO: nurse assign/de-assign
 //TODO: transaction / nurse payment
 //TODO: link to patient doc
-
 
 class AdminBookingsView extends Component {
 
@@ -113,6 +112,10 @@ class AdminBookingsView extends Component {
         <Header title="Booking Detail" />
         <Container>
           <ConfirmPopup />
+          <GenericPopup>
+            Holy Shit
+
+          </GenericPopup>
 
           <button onClick={() => history.push({ pathname: '/admin-bookings' })} className={cx('btn', 'btn-primary', s.btnBack)}>back</button>
           <div className={s.buttonPanel}>
@@ -171,7 +174,7 @@ class AdminBookingsView extends Component {
 
             <Row className={s.personDetail}>
               <Col xs={12} md={4} className={s.detailSection}>
-                <h2>PATIENT {booking.isAdhoc && '(Ad-hoc)' || booking.patient && (<Link className={cx('btn', s.tableListSign, s.tableListSignEdit)} to={`/documentation/${booking.patient._id}`}>Doc</Link>)}</h2>
+                <h2>PATIENT {booking.isAdhoc && '(Ad-hoc)'}</h2>
                 <ul>
                   <li><span className={s.title}>Name:</span>{detail.patient.name}</li>
                   <li><span className={s.title}>Age:</span>{detail.patient.age}</li>
@@ -241,19 +244,19 @@ class AdminBookingsView extends Component {
                           label="price"
                           dataKey="price"
                           cellRenderer={({cellData}) => `$${parseFloat(cellData).toFixed(2)}`}
-                          width={120}
+                          width={110}
                         />
                         <Column
-                          label="nurse price"
-                          dataKey="price"
+                          label="provider price"
+                          dataKey="providerPrice"
                           cellRenderer={({cellData}) => {
                             return (
                               <div>
-                                {'-'}
+                                {`$${parseFloat(cellData).toFixed(2)}`}
                                 <div className={cx(s.tableListSign, s.tableListSignPay)}>Pay</div>
                               </div>
                           )}}
-                          width={120}
+                          width={130}
                         />
                         <Column
                           label="nurse"
@@ -263,7 +266,18 @@ class AdminBookingsView extends Component {
                               <div>
                                 {'-'}
                                 <div>
-                                  <div className={cx(s.tableListSign, s.tableListSignPlus)} onClick={() => this.onAssignNurse(rowData._id)}>+</div>
+                                  <div
+                                    className={cx(s.tableListSign, s.tableListSignPlus)}
+                                    onClick={() => {
+                                      this.props.showGenericPopup();
+                                      this.props.getUsers({
+                                        page: 1,
+                                        count: 10,
+                                        filter: {role: 'provider'}
+                                      })
+                                    }}>
+                                    +
+                                  </div>
                                   <div className={cx(s.tableListSign, s.tableListSignMinus)} onClick={() => this.onDeAssignNurse(rowData._id)}>-</div>
                                 </div>
                               </div>
@@ -303,10 +317,11 @@ class AdminBookingsView extends Component {
                             return (
                               <div>
                                 <div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignDoc)}  onClick={() => history.push({ pathname: `/documentation/${cellData}` })}>Doc</div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
                                 </div>
                                 <div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignCancel)}>Cancel</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Cancel</div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignDelete)}>Delete</div>
                                 </div>
                               </div>
@@ -512,6 +527,7 @@ class AdminBookingsView extends Component {
 
 AdminBookingsView.propTypes = {
   showConfirmPopup: React.PropTypes.func.isRequired,
+  fetchServices: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -526,6 +542,8 @@ const mapDispatchToProps = (dispatch) => ({
   deleteBooking: (params) => dispatch(deleteBooking(params)),
   createApplication: (params) => dispatch(createApplication(params)),
   showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
+  showGenericPopup: (body) => dispatch(showGenericPopup(body)),
+  getUsers: (params) => dispatch(getUsers(params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminBookingsView);

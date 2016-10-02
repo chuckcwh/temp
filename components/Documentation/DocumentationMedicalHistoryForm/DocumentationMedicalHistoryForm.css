@@ -6,10 +6,38 @@
   & .fieldTitle {
     display: inline-block;
     width: 200px;
+    vertical-align: top;
+    padding-top: 35px;
   }
 
   & .fieldContent {
     display: inline-block;
+  }
+
+  & .multiTextField {
+    width: 330px;
+
+    & .multiTextFieldBtn {
+      padding: 3px 7px;
+      width: auto;
+    }
+  }
+
+  & .textareaField {
+    width: 100%;
+
+    & .textareaInput {
+      width: 100%;
+    }
+  }
+
+  & .medicationTitle {
+    margin: 20px 0;
+  }
+
+  & .handleForm {
+    text-align: center;
+    margin: 0 auto 40px;
   }
 
 }

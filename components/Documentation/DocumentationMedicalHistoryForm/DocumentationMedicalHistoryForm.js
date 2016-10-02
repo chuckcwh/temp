@@ -13,6 +13,8 @@ import { getSession, showConfirmPopup, fetchServices } from '../../../actions';
 import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, addArrayValue, reset } from 'redux-form';
+// sub component
+import DocumentationMedicalHistoryFormMedication from '../DocumentationMedicalHistoryFormMedication/DocumentationMedicalHistoryFormMedication';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
 
@@ -22,13 +24,13 @@ class DocumentationMedicalHistoryForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      medications: []
-    }
+    this.state = {}
   }
 
   componentDidMount() {
     this.props.fields.secondaryDiagnosis.addField();
+    this.props.fields.allergy.addField();
+    this.props.fields.medications.addField();
   }
 
   onFormSubmit = (values) => {
@@ -44,23 +46,18 @@ class DocumentationMedicalHistoryForm extends Component {
         hearing,
         mobility,
         healthHistory,
+        allergy,
+        medications,
       },
 
+      resetForm,
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
     } = this.props;
 
-    const { medications } = this.state;
     const mobilityChoice = [{name: 'Walking (Without Aid)', value: 'Walking (Without Aid)'}, {name: 'Walking (Require Aid)', value: 'Walking (Require Aid)'}, {name: 'Wheelchair', value: 'Wheelchair'}, {name: 'Bed Bound', value: 'Bed Bound'}];
-
-    const medicationChoice = {
-      route: [{name: 'ORAL', value: 'ORAL'}, {name: '(IV) INTRAVENOUSLY', value: '(IV) INTRAVENOUSLY'}],
-      doseUnit: [{name: 'EA', value: 'EA'}, {name: 'VIAL', value: 'VIAL'}],
-      cycle: [{name: 'H, HOURLY', value: 'H, HOURLY'}, {name: '2H, 2 HOURLY', value: '2H, 2 HOURLY'}],
-      durationUnit: [{name: 'DAY', value: 'DAY'}, {name: 'WEEK', value: 'WEEK'}, {name: 'MONTH', value: 'MONTH'}],
-    }
 
     return (
       <form className={s.documentationMedicalHistoryForm} onSubmit={this.props.onFormSubmit}>
@@ -76,13 +73,15 @@ class DocumentationMedicalHistoryForm extends Component {
 
         <div>
           <label className={s.fieldTitle}>Secondary Diagnosis</label>
-          <div className={s.fieldContent}>
+          <div className={cx(s.fieldContent, s.multiTextField)}>
             {secondaryDiagnosis.map((item, index) => (
               <input key={index} className={s.textInput} type='text' {...item}/>
             ))}
-            <button onClick={e => {
-              e.preventDefault();
-              secondaryDiagnosis.addField();
+            <button
+              className={cx('btn btn-primary', s.multiTextFieldBtn)}
+              onClick={e => {
+                e.preventDefault();
+                secondaryDiagnosis.addField();
             }}>
               <FaPlus />
             </button>
@@ -122,7 +121,7 @@ class DocumentationMedicalHistoryForm extends Component {
 
         <div>
           <div className={s.fieldTitle}>Health History</div>
-          <div className={s.fieldContent}>
+          <div className={cx(s.fieldContent, s.textareaField)}>
             <textarea className={s.textareaInput} id="healthHistory" name="healthHistory" {...healthHistory} />
             {healthHistory.touched && healthHistory.error && (<div className={s.formError}>{healthHistory.error}</div>)}
           </div>
@@ -130,85 +129,31 @@ class DocumentationMedicalHistoryForm extends Component {
 
         <div>
           <div className={s.fieldTitle}>Allergy</div>
-          <div className={s.fieldContent}>
-            <input className={s.textInput} type='text' />
-            <button><FaPlus /></button>
+          <div className={cx(s.fieldContent, s.multiTextField)}>
+            {allergy.map((item, index) => (
+              <input key={index} className={s.textInput} type='text' {...item}/>
+            ))}
+            <button
+              className={cx('btn btn-primary', s.multiTextFieldBtn)}
+              onClick={e => {
+                e.preventDefault();
+                allergy.addField();
+            }}>
+              <FaPlus />
+            </button>
           </div>
         </div>
 
-        <h3>Medications</h3>
+        <DocumentationMedicalHistoryFormMedication medications={medications} />
 
-        <table>
-          <thead>
-            <tr>
-              <td>Route</td>
-              <td>Medication</td>
-              <td>Dose</td>
-              <td>Unit</td>
-              <td>Cycle</td>
-              <td>Duration</td>
-              <td>Unit</td>
-              <td>Instructions (e.g. timing)</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div className={cx("select", s.selectInput)}>
-                  <span></span>
-                  <select id="medicationRoute" name="medicationRoute" >
-                    {medicationChoice.route && medicationChoice.route.map(item => (
-                      <option value={item.value}>{item.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </td>
-              <td>
-                <input className={s.textInput} type="text" />
-              </td>
-              <td>
-                <input className={s.textInput} type="text" />
-              </td>
-              <td>
-                <div className={cx("select", s.selectInput)}>
-                  <span></span>
-                  <select id={"medicationDoseUnit"} name={"medicationDoseUnit"} >
-                    {medicationChoice.doseUnit && medicationChoice.doseUnit.map(item => (
-                      <option value={item.value}>{item.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </td>
-              <td>
-                <div className={cx("select", s.selectInput)}>
-                  <span></span>
-                  <select id={"medicationCycle"} name={"medicationCycle"} >
-                    {medicationChoice.cycle && medicationChoice.cycle.map(item => (
-                      <option value={item.value}>{item.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </td>
-              <td>
-                <input className={s.textInput} type="text"  />
-              </td>
-              <td>
-                <div className={cx("select", s.selectInput)}>
-                  <span></span>
-                  <select id={"medicationDurationUnit"} name={"medicationDurationUnit"} >
-                    {medicationChoice.durationUnit && medicationChoice.durationUnit.map(item => (
-                      <option value={item.value}>{item.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </td>
-              <td>
-                <textarea className={s.textareaInput} id="medicationInstruction" name="medicationInstruction" placeholder="(e.g. timing)" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
+        <div className={s.handleForm}>
+          <button className='btn btn-primary' disabled={submitting || invalid}>
+            Submit
+          </button>
+          <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
+            Clear Values
+          </button>
+        </div>
       </form>
     );
   }
@@ -237,6 +182,15 @@ const reduxFormConfig = {
     'hearing',
     'mobility',
     'healthHistory',
+    'allergy[]',
+    'medications[].route',
+    'medications[].medication',
+    'medications[].dose',
+    'medications[].doseUnit',
+    'medications[].cycle',
+    'medications[].duration',
+    'medications[].durationUnit',
+    'medications[].instruction',
   ],
   validate,
 }

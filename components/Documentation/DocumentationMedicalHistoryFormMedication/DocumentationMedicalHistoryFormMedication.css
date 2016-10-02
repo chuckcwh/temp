@@ -1,0 +1,77 @@
+@import '../../variables.css';
+
+
+.documentationMedicalHistoryFormMedication {
+
+  & input:focus {
+    outline: none;
+  }
+
+  & .medicationTitle {
+    margin: 20px 0;
+  }
+
+  & .headerRow > td {
+    text-decoration: underline;
+  }
+
+  & .selectInputColumn {
+    width: 10%;
+  }
+
+  & .selectInputField {
+    margin: 0;
+    width: 100%;
+
+    & .selectInput {
+      width: 100%;
+    }
+  }
+
+  & .indexColumn {
+    width: 3%;
+  }
+
+  & .textInputColumn {
+    width: 10%;
+  }
+
+  & .medicationColumn {
+    width: 15%;
+  }
+
+  & .textInput {
+    margin: 0;
+    width: 100%;
+  }
+
+  & .textareaColumn {
+    width: 17%;
+  }
+
+  & .textareaInput {
+    width: 100%;
+    margin-top: 21px;
+  }
+
+  & .minusBtnColumn {
+    width: 5%;
+    text-align: right;
+
+    & .multiTextFieldBtn {
+      padding: 3px 7px;
+      width: auto;
+    }
+  }
+
+  & .addRow {
+    text-align: right;
+
+    & .multiTextFieldBtn {
+      padding: 3px 10px;
+      width: auto;
+      margin: 10px auto 40px;
+    }
+  }
+
+}

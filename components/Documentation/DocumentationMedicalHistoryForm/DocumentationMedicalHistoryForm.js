@@ -21,12 +21,6 @@ import FaPlus from 'react-icons/lib/fa/plus';
 
 class DocumentationMedicalHistoryForm extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {}
-  }
-
   componentDidMount() {
     this.props.fields.secondaryDiagnosis.addField();
     this.props.fields.allergy.addField();

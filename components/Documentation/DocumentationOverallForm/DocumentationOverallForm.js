@@ -16,19 +16,43 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 
 class DocumentationOverallForm extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-    }
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
   }
-
-  componentDidMount() {
-
-  }
-
 
   render() {
+    const {
+      fields: {
+        sleep,
+        sleepEvidence,
+        sleepIntervention,
+        eat,
+        eatEvidence,
+        eatIntervention,
+        incontinence,
+        incontinenceEvidence,
+        incontinenceIntervention,
+        breathing,
+        breathingEvidence,
+        breathingIntervention,
+        cognitive,
+        cognitiveEvidence,
+        cognitiveIntervention,
+        fallRisk,
+        fallRiskEvidence,
+        fallRiskIntervention,
+        skinBreak,
+        skinBreakEvidence,
+        skinBreakIntervention,
+      },
+
+      resetForm,
+      invalid,
+      handleSubmit,
+      submitFailed,
+      submitting,
+    } = this.props;
+
     return (
       <form className={s.documentationOverallForm} onSubmit={this.props.onFormSubmit}>
         <h2>Overall</h2>
@@ -42,7 +66,31 @@ class DocumentationOverallForm extends Component {
 }
 
 DocumentationOverallForm.propTypes = {
-
+  form: 'documentationOverallForm',
+  fields: [
+    'sleep',
+    'sleepEvidence',
+    'sleepIntervention',
+    'eat',
+    'eatEvidence',
+    'eatIntervention',
+    'incontinence',
+    'incontinenceEvidence',
+    'incontinenceIntervention',
+    'breathing',
+    'breathingEvidence',
+    'breathingIntervention',
+    'cognitive',
+    'cognitiveEvidence',
+    'cognitiveIntervention',
+    'fallRisk',
+    'fallRiskEvidence',
+    'fallRiskIntervention',
+    'skinBreak',
+    'skinBreakEvidence',
+    'skinBreakIntervention',
+  ],
+  validate,
 };
 
 const mapStateToProps = (state) => ({
@@ -50,7 +98,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
+  resetForm: () => dispatch(reset('documentationMedicalHistoryForm')),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentationOverallForm);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationOverallForm);

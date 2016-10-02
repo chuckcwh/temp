@@ -61,7 +61,7 @@ class DocumentationMedicalHistoryForm extends Component {
 
     return (
       <form className={s.documentationMedicalHistoryForm} onSubmit={this.props.onFormSubmit}>
-        <h2>medical history form</h2>
+        <h2>Medical History</h2>
 
         <div>
           <label className={s.fieldTitle}>Main Diagnosis*</label>

@@ -14,7 +14,7 @@ import ConfirmPopup from '../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 // sub-component
 import DocumentationMedicalHistoryForm from './DocumentationMedicalHistoryForm/DocumentationMedicalHistoryForm';
-import DocumentationOverall from './DocumentationOverall/DocumentationOverall';
+import DocumentationOverallForm from './DocumentationOverallForm/DocumentationOverallForm';
 import DocumentationVitalSigns from './DocumentationVitalSigns/DocumentationVitalSigns';
 // import { formList } from './variables.js';
 // react-icons
@@ -160,7 +160,7 @@ class Documentation extends Component {
 
             <div className={s.formContent}>
               {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm onFormSubmit={(e) => console.log('medical history submit', e.value)}/>)
-                : currentForm === 'Overall' ? (<DocumentationOverall />)
+                : currentForm === 'Overall' ? (<DocumentationOverallForm />)
                 : currentForm === 'Vital Signs' ? (<DocumentationVitalSigns />)
                 : null}
             </div>

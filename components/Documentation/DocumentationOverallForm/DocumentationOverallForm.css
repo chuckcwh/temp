@@ -1,0 +1,9 @@
+@import '../../variables.css';
+
+
+.documentationOverallForm {
+
+  & .red {
+    color: #f2635f;
+  }
+}

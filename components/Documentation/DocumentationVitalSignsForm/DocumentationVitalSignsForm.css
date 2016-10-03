@@ -3,4 +3,47 @@
 
 .documentationVitalSignsForm {
 
+  & .fieldTitle {
+    display: inline-block;
+    width: 200px;
+    vertical-align: top;
+    padding-top: 35px;
+  }
+
+  & .fieldSection {
+    padding: 20px 0;
+    margin: 20px 0;
+    border-top: 1px solid black;
+
+    & .fieldContent {
+      display: inline-block;
+
+      & .textInputShort {
+        width: 80px;
+      }
+
+      & .checkBoxInput {
+        margin-top: 20px;
+      }
+
+      & .textareaField {
+        width: 350px;
+
+        & .textareaInput {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  & .fieldSection:first-of-type {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  & .handleForm {
+    text-align: center;
+    margin: 0 auto 40px;
+  }
 }

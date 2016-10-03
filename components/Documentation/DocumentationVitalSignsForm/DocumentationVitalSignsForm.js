@@ -13,6 +13,8 @@ import { getSession, showConfirmPopup, fetchServices } from '../../../actions';
 import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, change, reset } from 'redux-form';
+// react icons
+import FaArrowsH from 'react-icons/lib/fa/arrows-h';
 
 
 class DocumentationVitalSignsForm extends Component {
@@ -57,7 +59,184 @@ class DocumentationVitalSignsForm extends Component {
       <form className={s.documentationVitalSignsForm} onSubmit={this.onFormSubmit}>
         <h2>Vital Signs</h2>
 
+        <div className={s.fieldSection}>
+          <label className={s.fieldTitle}>Blood Pressure</label>
+          <div className={s.fieldContent}>
+            <div>
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...BPlow} disabled={BPaccess.value} />/&nbsp;&nbsp;&nbsp;&nbsp;
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...BPhigh} disabled={BPaccess.value} />(mmHG)
+            </div>
+            <div className={s.checkBoxInput}>
+              <input
+                type="checkbox"
+                id="BPaccess"
+                name="BPaccess"
+                {...BPaccess}
+                required
+              />
+              <label htmlFor="agree">
+                <span></span>
+                <span>
+                  Unable to assess
+                </span>
+              </label>
+            </div>
+            <div className={s.textareaField}>
+              <textarea className={s.textareaInput} id="BPcomment" name="BPcomment" {...BPcomment} />
+              {BPcomment.touched && BPcomment.error && (<div className={s.formError}>{BPcomment.error}</div>)}
+            </div>
+          </div>
+        </div>
 
+        <div className={s.fieldSection}>
+          <label className={s.fieldTitle}>Blood Glucose Level</label>
+          <div className={s.fieldContent}>
+            <div>
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...BGmmol} disabled={BGaccess.value} />(mmol/L) &nbsp;&nbsp;<FaArrowsH />&nbsp;&nbsp;&nbsp;&nbsp;
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...BGmg} disabled={BGaccess.value} />(mg/dl)
+            </div>
+            <div className={s.checkBoxInput}>
+              <input
+                type="checkbox"
+                id="BGaccess"
+                name="BGaccess"
+                {...BGaccess}
+                required
+              />
+              <label htmlFor="agree">
+                <span></span>
+                <span>
+                  Unable to assess
+                </span>
+              </label>
+            </div>
+            <div className={s.textareaField}>
+              <textarea className={s.textareaInput} id="BGcomment" name="BGcomment" {...BGcomment} />
+              {BGcomment.touched && BGcomment.error && (<div className={s.formError}>{BGcomment.error}</div>)}
+            </div>
+          </div>
+        </div>
+
+        <div className={s.fieldSection}>
+          <label className={s.fieldTitle}>Temperature</label>
+          <div className={s.fieldContent}>
+            <div>
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...temp} disabled={tempAccess.value} />(&deg;C)
+            </div>
+            <div className={s.checkBoxInput}>
+              <input
+                type="checkbox"
+                id="tempAccess"
+                name="tempAccess"
+                {...tempAccess}
+                required
+              />
+              <label htmlFor="agree">
+                <span></span>
+                <span>
+                  Unable to assess
+                </span>
+              </label>
+            </div>
+            <div className={s.textareaField}>
+              <textarea className={s.textareaInput} id="tempComment" name="tempComment" {...tempComment} />
+              {tempComment.touched && tempComment.error && (<div className={s.formError}>{tempComment.error}</div>)}
+            </div>
+          </div>
+        </div>
+
+        <div className={s.fieldSection}>
+          <label className={s.fieldTitle}>Heart Rate</label>
+          <div className={s.fieldContent}>
+            <div>
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...heartRate} disabled={heartRateAccess.value} />per minute
+            </div>
+            <div className={s.checkBoxInput}>
+              <input
+                type="checkbox"
+                id="heartRateAccess"
+                name="heartRateAccess"
+                {...heartRateAccess}
+                required
+              />
+              <label htmlFor="agree">
+                <span></span>
+                <span>
+                  Unable to assess
+                </span>
+              </label>
+            </div>
+            <div className={s.textareaField}>
+              <textarea className={s.textareaInput} id="heartRateComment" name="heartRateComment" {...heartRateComment} />
+              {heartRateComment.touched && heartRateComment.error && (<div className={s.formError}>{heartRateComment.error}</div>)}
+            </div>
+          </div>
+        </div>
+
+        <div className={s.fieldSection}>
+          <label className={s.fieldTitle}>Oxygen Saturation</label>
+          <div className={s.fieldContent}>
+            <div>
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...oxygen} disabled={oxygenAccess.value} />
+            </div>
+            <div className={s.checkBoxInput}>
+              <input
+                type="checkbox"
+                id="oxygenAccess"
+                name="oxygenAccess"
+                {...oxygenAccess}
+                required
+              />
+              <label htmlFor="agree">
+                <span></span>
+                <span>
+                  Unable to assess
+                </span>
+              </label>
+            </div>
+            <div className={s.textareaField}>
+              <textarea className={s.textareaInput} id="oxygenComment" name="oxygenComment" {...oxygenComment} />
+              {oxygenComment.touched && oxygenComment.error && (<div className={s.formError}>{oxygenComment.error}</div>)}
+            </div>
+          </div>
+        </div>
+
+        <div className={s.fieldSection}>
+          <label className={s.fieldTitle}>Pain Score</label>
+          <div className={s.fieldContent}>
+            <div>
+              <input className={cx(s.textInput, s.textInputShort)} type='text' {...pain} disabled={painAccess.value} />
+            </div>
+            <div className={s.checkBoxInput}>
+              <input
+                type="checkbox"
+                id="painAccess"
+                name="painAccess"
+                {...painAccess}
+                required
+              />
+              <label htmlFor="agree">
+                <span></span>
+                <span>
+                  Unable to assess
+                </span>
+              </label>
+            </div>
+            <div className={s.textareaField}>
+              <textarea className={s.textareaInput} id="painComment" name="painComment" {...painComment} />
+              {painComment.touched && painComment.error && (<div className={s.formError}>{painComment.error}</div>)}
+            </div>
+          </div>
+        </div>
+
+        <div className={s.handleForm}>
+          <button className='btn btn-primary' disabled={submitting || invalid}>
+            Submit
+          </button>
+          <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
+            Clear Values
+          </button>
+        </div>
       </form>
     );
   }
@@ -78,7 +257,7 @@ DocumentationVitalSignsForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'documentationOverallForm',
+  form: 'documentationVitalSignsForm',
   fields: [
     'BPlow',
     'BPhigh',
@@ -105,11 +284,18 @@ const reduxFormConfig = {
 };
 
 const mapStateToProps = (state) => ({
-
+  initialValues: {
+    BPaccess: true,
+    BGaccess: true,
+    tempAccess: true,
+    heartRateAccess: true,
+    oxygenAccess: true,
+    painAccess: true,
+  },
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  resetForm: () => dispatch(reset('documentationOverallForm')),
+  resetForm: () => dispatch(reset('documentationVitalSignsForm')),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationVitalSignsForm);

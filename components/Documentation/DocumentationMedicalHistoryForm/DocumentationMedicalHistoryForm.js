@@ -54,7 +54,7 @@ class DocumentationMedicalHistoryForm extends Component {
     const mobilityChoice = [{name: 'Walking (Without Aid)', value: 'Walking (Without Aid)'}, {name: 'Walking (Require Aid)', value: 'Walking (Require Aid)'}, {name: 'Wheelchair', value: 'Wheelchair'}, {name: 'Bed Bound', value: 'Bed Bound'}];
 
     return (
-      <form className={s.documentationMedicalHistoryForm} onSubmit={this.props.onFormSubmit}>
+      <form className={s.documentationMedicalHistoryForm} onSubmit={this.onFormSubmit}>
         <h2>Medical History</h2>
 
         <div>

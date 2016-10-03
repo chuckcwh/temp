@@ -6,4 +6,54 @@
   & .red {
     color: #f2635f;
   }
+
+  & input:focus {
+    outline: none;
+  }
+
+  & .headerRow > td {
+    text-decoration: underline;
+  }
+
+  & .handleForm {
+    text-align: center;
+    margin: 0 auto 40px;
+  }
+
+  & .yesNoColumn {
+    width: 20%;
+
+    & .yesNoInput {
+      width: auto;
+      padding: 0.3em 7px;
+      display: inline-block;
+      text-decoration: none;
+      font-size: 25px;
+      cursor: pointer;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      width: 60px;
+      color: #fff;
+      outline: none;
+    }
+
+    & .yesChoice {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    & .noChoice {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+    & .yesCheck {
+      background: #f2635f;
+    }
+
+    & .noCheck {
+      background: #18B905;
+    }
+  }
+
 }

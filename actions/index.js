@@ -987,7 +987,10 @@ export function createBookingWithOptions({ services, order, user }) {
   };
 
   if (user && user._id) {
-    data.patient = order && order.patient;
+    data.sessions.forEach(session => {
+      session.client = user && user._id;
+      session.patient = order && order.patient;
+    })
   } else {
     data.adhocClient = {
       email: order && order.booker && order.booker.clientEmail,

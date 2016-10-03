@@ -8,7 +8,7 @@ const SessionProviderDetails = ({ provider }) => {
   return (
     <div className={s.sessionProviderDetails}>
       <div className={s.sessionProviderDetailsTitle}>
-        <h3>Patient Details</h3>
+        <h3>Service Provider Details</h3>
       </div>
       <Loader className="spinner" loaded={!!(provider)}>
         <div className="TableRow">

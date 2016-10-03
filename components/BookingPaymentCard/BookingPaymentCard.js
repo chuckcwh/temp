@@ -50,59 +50,6 @@ class BookingPaymentCard extends Component {
     }
   }
 
-  onConfirm = (event) => {
-    const location = history.getCurrentLocation();
-    let returnUrl,
-      cancelUrl;
-
-    event.preventDefault();
-
-    this.setState({ pending: true });
-
-    if (typeof window !== 'undefined') {
-      returnUrl = `${(window.location.href.indexOf('?') > -1
-        ? window.location.href.slice(0, window.location.href.indexOf('?'))
-        : window.location.href)}`
-        + `?action=${encodeURIComponent('paypal-return')}`
-        + `&bid=${encodeURIComponent(this.props.booking._id)}`
-        + `&btoken=${encodeURIComponent(this.props.booking.adhocClient.contact)}`
-        + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
-      returnUrl = returnUrl.replace('#', '');
-      cancelUrl = `${(window.location.href.indexOf('?') > -1
-        ? window.location.href.slice(0, window.location.href.indexOf('?'))
-        : window.location.href)}`
-        + `?action=${encodeURIComponent('paypal-cancel')}`
-        + `&bid=${encodeURIComponent(this.props.booking._id)}`
-        + `&btoken=${encodeURIComponent(this.props.booking.adhocClient.contact)}`
-        + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
-      cancelUrl = cancelUrl.replace('#', '');
-
-      this.props.payApplicationsPaypalCreate({
-        mode: 'paypal',
-        applications: Object.keys(this.props.applications),
-        payment: {
-          return_url: returnUrl,
-          cancel_url: cancelUrl,
-        },
-        bookingId: this.props.booking._id,
-        bookingToken: this.props.booking.adhocClient.contact,
-      }).then((res) => {
-        if (res && res.type === APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS) {
-          // console.log(res);
-          // console.log(res.response.url.href);
-          // console.log(res.response.payment_id);
-          this.setState({ redirecting: true });
-          console.log('Redirecting to ' + res.response.url.href);
-          if (typeof window !== 'undefined') {
-            window.location = res.response.url.href;
-          }
-        } else {
-          // console.error('Failed to create paypal payment.');
-        }
-      });
-    }
-  };
-
   handleSubmit = (values) => {
     return new Promise((resolve, reject) => {
       if (typeof window !== 'undefined' && window.Stripe) {
@@ -119,8 +66,8 @@ class BookingPaymentCard extends Component {
               payment: {
                 stripeToken: token,
               },
-              bookingId: this.props.booking._id,
-              bookingToken: this.props.booking.adhocClient.contact,
+              bookingId: this.props.booking && this.props.booking._id,
+              bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
             }).then((res) => {
               if (res && res.type === APPLICATIONS_PAY_CARD_SUCCESS) {
                 resolve();

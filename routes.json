@@ -168,6 +168,10 @@
     "page": "./pages/application"
   },
   {
+    "path": "/bookings/:bookingId",
+    "page": "./pages/booking"
+  },
+  {
     "path": "/documentation/:sessionId",
     "page": "./pages/documentation"
   }

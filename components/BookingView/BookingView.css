@@ -1,27 +1,27 @@
 @import '../variables.css';
 
-.bookingDetails {
+.bookingView {
   background-color: #f3f3f3;
   position: relative;
   min-height: 300px;
 
-  & .bookingDetailsWrapper {
+  & .bookingViewWrapper {
     padding-top: 50px;
     padding-bottom: 100px;
 
-    & .bookingDetailsBody {
+    & .bookingViewBody {
       font-size: 21px;
 
-      & .bookingDetailsBodyColumnWrapper {
+      & .bookingViewBodyColumnWrapper {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
 
-        & .bookingDetailsBodyColumn {
+        & .bookingViewBodyColumn {
           flex: 1;
         }
 
-        & .bookingDetailsBodyColumn:not(:first-of-type) {
+        & .bookingViewBodyColumn:not(:first-of-type) {
           margin-left: 20px;
 
           & :global .TableRowHeader {
@@ -51,7 +51,7 @@
         display: inline-block;
       }
 
-      & .bookingDetailsBodyActions {
+      & .bookingViewBodyActions {
         float: right;
 
         & span:not(:first-of-type) {
@@ -59,7 +59,7 @@
         }
       }
 
-      & .bookingDetailsBodySection {
+      & .bookingViewBodySection {
         position: relative;
         min-height: 150px;
         padding: 20px 0;
@@ -76,7 +76,7 @@
           border-bottom: 1px solid var(--border-color);
         }
 
-        & .bookingDetailsBodySectionTitle {
+        & .bookingViewBodySectionTitle {
           position: relative;
 
           & a {
@@ -97,7 +97,7 @@
         }
       }
 
-      & .bookingDetailsItem {
+      & .bookingViewItem {
         display: inline-block;
         color: var(--text-color);
         width: 100%;
@@ -110,11 +110,11 @@
           width: calc(100% / 3);
         }
 
-        & .bookingDetailsRadio {
+        & .bookingViewRadio {
           /* margin-right: 5px; */
         }
 
-        & .bookingDetailsRadioLabel {
+        & .bookingViewRadioLabel {
           /* cursor: pointer; */
         }
       }
@@ -135,7 +135,7 @@
         }
       }
 
-      & .bookingDetailsFooter {
+      & .bookingViewFooter {
         & a {
           margin: 5px;
         }
@@ -147,7 +147,7 @@
     }
   }
 
-  & .bookingDetailsSidebar {
+  & .bookingViewSidebar {
     flex: 1 1 auto;
   }
 }

@@ -11,7 +11,7 @@ import Container from '../Container';
 import SessionClientDetails from '../SessionClientDetails';
 import SessionPatientDetails from '../SessionPatientDetails';
 import SessionAddressDetails from '../SessionAddressDetails';
-import { getApplications, editBooking, setPostStatus } from '../../actions';
+import { fetchServices, getApplications, editBooking, setPostStatus } from '../../actions';
 import { configToName } from '../../core/util';
 import history from '../../core/history';
 
@@ -30,12 +30,9 @@ class BookingConfirmation extends Component {
     const location = history.getCurrentLocation();
     location && location.query && location.query.applications &&
       this.props.getApplications({
-        filter: {
-          _id: location.query.applications.split(','),
-        },
+        ids: location.query.applications.split(','),
         bookingId: location.query.bid,
         bookingToken: location.query.btoken,
-        count: 100,
       });
   }
 
@@ -212,7 +209,7 @@ class BookingConfirmation extends Component {
   };
 
   render() {
-    const { config, booking, bookingFetching, applications, applicationsFetching, sessions, sessionsFetching } = this.props;
+    const { config, services, booking, bookingFetching, applications, applicationsFetching, sessions, sessionsFetching } = this.props;
     let sessionsDetails,
       userDetails,
       patientDetails,
@@ -223,8 +220,8 @@ class BookingConfirmation extends Component {
         <div className="TableRow TableRowHeader">
           <div className="TableRowItem2">Date</div>
           <div className="TableRowItem2">Time</div>
+          <div className="TableRowItem2">Service</div>
           <div className="TableRowItem2">Cost</div>
-          <div className="TableRowItem2">Status</div>
         </div>
         {
           applications && Object.values(applications).length > 0 && Object.values(applications).map(application => {
@@ -236,11 +233,9 @@ class BookingConfirmation extends Component {
                 <div className="TableRowItem2">
                   {configToName(config, 'timeSlotsByValue', session.timeSlot)}
                 </div>
+                <div className="TableRowItem2">{services && services[session.service] && services[session.service].name}</div>
                 <div className="TableRowItem2">
                   $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
-                </div>
-                <div className="TableRowItem2">
-                  {configToName(config, 'sessionPhasesByValue', session.phase)}
                 </div>
               </div>
             );
@@ -594,6 +589,7 @@ BookingConfirmation.propTypes = {
   children: React.PropTypes.node,
 
   config: React.PropTypes.object,
+  services: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
   applications: React.PropTypes.object,
@@ -601,6 +597,7 @@ BookingConfirmation.propTypes = {
   sessions: React.PropTypes.object,
   sessionsFetching: React.PropTypes.bool,
 
+  fetchServices: React.PropTypes.func,
   getApplications: React.PropTypes.func,
   editBooking: React.PropTypes.func,
   setPostStatus: React.PropTypes.func,
@@ -608,6 +605,7 @@ BookingConfirmation.propTypes = {
 
 const mapStateToProps = (state) => ({
   config: state.config.data,
+  services: state.services.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
   applications: state.applications.data,
@@ -617,6 +615,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchServices: () => dispatch(fetchServices()),
   getApplications: (params) => dispatch(getApplications(params)),
   editBooking: (booking) => dispatch(editBooking(booking)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),

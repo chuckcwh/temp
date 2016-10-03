@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Loader from 'react-loader';
-import s from './BookingDetails.css';
+import s from './BookingView.css';
 import Container from '../Container';
 import SessionAddressDetails from '../SessionAddressDetails';
 import InlineForm from '../InlineForm';
@@ -17,7 +17,7 @@ import history from '../../core/history';
 
 const imgPencil = require('../pencil.png');
 
-class BookingDetails extends Component {
+class BookingView extends Component {
 
   constructor(props) {
     super(props);
@@ -467,7 +467,7 @@ class BookingDetails extends Component {
             </div>
           ))
         }
-        <div className={s.bookingDetailsBodyActions}>
+        <div className={s.bookingViewBodyActions}>
           <button
             type="button"
             className="btn btn-primary btn-small"
@@ -480,8 +480,8 @@ class BookingDetails extends Component {
     // show caregiver section only if case has been paid
     if (booking && booking.case && booking.case.isPaid) {
       caregiverSection = (
-        <div className={s.bookingDetailsBodySection}>
-          <div className={s.bookingDetailsBodySectionTitle}>
+        <div className={s.bookingViewBodySection}>
+          <div className={s.bookingViewBodySectionTitle}>
             <h3>Caregiver Details</h3>
           </div>
           <div>
@@ -529,16 +529,16 @@ class BookingDetails extends Component {
     }
 
     return (
-      <div className={s.bookingDetails}>
+      <div className={s.bookingView}>
         <Container>
           <Loader className="spinner" loaded={!bookingFetching}>
-            <div className={s.bookingDetailsWrapper}>
-              <div className={s.bookingDetailsBody}>
-                <div className={s.bookingDetailsBodyActions}>
-                  <span className={s.bookingDetailsFooter}>
+            <div className={s.bookingViewWrapper}>
+              <div className={s.bookingViewBody}>
+                <div className={s.bookingViewBodyActions}>
+                  <span className={s.bookingViewFooter}>
                     {paymentButton}
                   </span>
-                  <span className={s.bookingDetailsFooter}>
+                  <span className={s.bookingViewFooter}>
                     <a href="/booking-manage" className="btn btn-primary" onClick={this.onClickManageBooking}>VIEW ANOTHER</a>
                   </span>
                 </div>
@@ -576,10 +576,10 @@ class BookingDetails extends Component {
                     }
                   </div>
                 </div>
-                <div className={s.bookingDetailsBodyColumnWrapper}>
-                  <div className={s.bookingDetailsBodyColumn}>
-                    <div className={s.bookingDetailsBodySection}>
-                      <div className={s.bookingDetailsBodySectionTitle}>
+                <div className={s.bookingViewBodyColumnWrapper}>
+                  <div className={s.bookingViewBodyColumn}>
+                    <div className={s.bookingViewBodySection}>
+                      <div className={s.bookingViewBodySectionTitle}>
                         <h3>Client Details</h3>
                         <a
                           href="#"
@@ -591,15 +591,15 @@ class BookingDetails extends Component {
                         {userDetails}
                       </Loader>
                     </div>
-                    <div className={s.bookingDetailsBodySection}>
-                      <div className={s.bookingDetailsBodySectionTitle}>
+                    <div className={s.bookingViewBodySection}>
+                      <div className={s.bookingViewBodySectionTitle}>
                         <h3>Patient Details</h3>
                         {/* <a href="#" className={this.state.editingPatient ? 'hidden' : ''}
                           onClick={this.onClickEdit('patient')}><img src={require('../pencil.png')} /></a> */}
                       </div>
                       {patientDetails}
                     </div>
-                    <div className={s.bookingDetailsBodySection}>
+                    <div className={s.bookingViewBodySection}>
                       <Loader className="spinner" loaded={!this.state.updatingAddress}>
                         <SessionAddressDetails
                           address={booking && booking.sessions && booking.sessions[0] && booking.sessions[0].address}
@@ -607,10 +607,10 @@ class BookingDetails extends Component {
                       </Loader>
                     </div>
                   </div>
-                  <div className={s.bookingDetailsBodyColumn}>
+                  <div className={s.bookingViewBodyColumn}>
                     {caregiverSection}
-                    <div className={s.bookingDetailsBodySection}>
-                      <div className={s.bookingDetailsBodySectionTitle}>
+                    <div className={s.bookingViewBodySection}>
+                      <div className={s.bookingViewBodySectionTitle}>
                         <h3>Session Details</h3>
                         {/* <a href="#" className={this.state.editingPatient ? 'hidden' : ''}
                           onClick={this.onClickEdit('patient')}><img src={require('../pencil.png')} /></a> */}
@@ -619,7 +619,7 @@ class BookingDetails extends Component {
                     </div>
                   </div>
                 </div>
-                <div className={s.bookingDetailsFooter}>
+                <div className={s.bookingViewFooter}>
                   <span>
                     {paymentButton}
                   </span>
@@ -639,7 +639,7 @@ class BookingDetails extends Component {
 
 }
 
-BookingDetails.propTypes = {
+BookingView.propTypes = {
   children: React.PropTypes.node,
 
   config: React.PropTypes.object,
@@ -683,4 +683,4 @@ const mapDispatchToProps = (dispatch) => ({
   showInlineForm: (params) => dispatch(showInlineForm(params)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookingDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(BookingView);

@@ -503,7 +503,7 @@ class ApplicationsView extends Component {
                 <div className={s.applicationsViewBodyColumnWrapper}>
                   <div className={s.applicationsViewBodyColumn}>
                     {patient &&
-                      <div className={s.sessionsViewBodySection}>
+                      <div className={s.applicationsViewBodySection}>
                         <SessionPatientDetails
                           config={config}
                           patient={patient}
@@ -520,11 +520,12 @@ class ApplicationsView extends Component {
                     </div>
                   </div>
                   <div className={s.applicationsViewBodyColumn}>
-                    {
-                      !isProvider(user) &&
+                    {!isProvider(user) && session && session.provider &&
+                      <div className={s.applicationsViewBodySection}>
                         <SessionProviderDetails
                           provider={session && session.provider}
                         />
+                      </div>
                     }
                   </div>
                 </div>

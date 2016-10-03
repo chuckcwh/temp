@@ -178,17 +178,13 @@ class SessionsView extends Component {
   render() {
     const { params, config, services, user, sessions, sessionsFetching, patients, patientsFetching } = this.props;
     const session = sessions && params && params.sessionId && sessions[params.sessionId];
+    const patient = (patients && session && session.patient && patients[session.patient])
+      || (patients && session && session.patient);
     let patientDetails,
       addressDetails,
       sessionDetails,
       caregiverSection,
-      paymentButton,
-      patient;
-    if (isClient(user)) {
-      patient = patients && session && session.patient && patients[session.patient];
-    } else if (isProvider(user)) {
-      patient = patients && session && session.patient;
-    }
+      paymentButton;
     // if (this.state.editingPatient) {
     //   patientDetails = (
     //     <div>
@@ -576,11 +572,12 @@ class SessionsView extends Component {
                     </div>
                   </div>
                   <div className={s.sessionsViewBodyColumn}>
-                    {
-                      !isProvider(user) &&
+                    {!isProvider(user) && session && session.provider &&
+                      <div className={s.sessionsViewBodySection}>
                         <SessionProviderDetails
                           provider={session && session.provider}
                         />
+                      </div>
                     }
                   </div>
                 </div>

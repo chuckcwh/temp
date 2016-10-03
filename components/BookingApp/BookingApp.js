@@ -20,7 +20,7 @@ import BookingCredits from '../BookingCredits';
 import BookingPostComplete from '../BookingPostComplete';
 import BookingSidebar from '../BookingSidebar';
 import BookingPostSidebar from '../BookingPostSidebar';
-import BookingDetails from '../BookingDetails';
+import BookingView from '../BookingView';
 import Account from '../Account';
 import LoginPopup from '../LoginPopup';
 import { BOOKING_SUCCESS, getBooking, getUserWithToken, setPostStatus } from '../../actions';
@@ -219,7 +219,7 @@ class BookingApp extends Component {
     } else if (location && location.pathname === '/booking-manage') {
       if (this.props.booking && this.props.booking._id && this.props.booking.isVerified) {
         component = (
-          <BookingDetails />
+          <BookingView params={this.props.params} />
         );
       } else {
         component = (

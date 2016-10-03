@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
-import s from './DocumentationMedicalHistory.css';
+import s from './DocumentationFRATForm.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
@@ -14,7 +14,7 @@ import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 
-class DocumentationMedicalHistory extends Component {
+class DocumentationFRATForm extends Component {
 
   constructor(props) {
     super(props);
@@ -30,14 +30,14 @@ class DocumentationMedicalHistory extends Component {
 
   render() {
     return (
-      <div className={s.documentationMedicalHistory}>
-        medical history form
+      <div className={s.documentationFRATForm}>
+        FRAT form
       </div>
     );
   }
 }
 
-DocumentationMedicalHistory.propTypes = {
+DocumentationFRATForm.propTypes = {
 
 };
 
@@ -49,4 +49,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentationMedicalHistory);
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentationFRATForm);

@@ -16,10 +16,45 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import DocumentationMedicalHistoryForm from './DocumentationMedicalHistoryForm/DocumentationMedicalHistoryForm';
 import DocumentationOverallForm from './DocumentationOverallForm/DocumentationOverallForm';
 import DocumentationVitalSignsForm from './DocumentationVitalSignsForm/DocumentationVitalSignsForm';
+import DocumentationFRATForm from './DocumentationFRATForm/DocumentationFRATForm';
+import DocumentationMSEForm from './DocumentationMSEForm/DocumentationMSEForm';
 // import { formList } from './variables.js';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
 
+
+const stepSections = {
+  "1": {
+    icon: "1",
+    text: 'Patient Assessment',
+    forms: {
+      'Med History': { name: 'Med History', isDefault: true },
+      'Overall': { name: 'Overall', isDefault: true },
+      'Vital Signs': { name: 'Vital Signs', isDefault: true },
+      'FRAT': { name: 'FRAT', isDefault: true },
+      'MSE': { name: 'MSE', isDefault: true },
+    }},
+  "2": {
+    icon: "2",
+    text: 'Procedural Assessment',
+    forms: {
+      'Bate': { name: 'Bate', isDefault: false },
+      'NGT': { name: 'NGT', isDefault: false },
+      'Urinary Catheter': { name: 'Urinary Catheter', isDefault: false },
+    }},
+  "3": {
+    icon: "3",
+    text: 'Summary of Findings',
+    forms: {
+      'Nursing Notes': { name: 'Nursing Notes', isDefault: true }
+    }},
+  "4": {
+    icon: "4",
+    text: 'Confirmation',
+    forms: {
+      'Confirmation': { name: 'Confirmation', isDefault: true }
+    }}
+};
 
 class Documentation extends Component {
 
@@ -51,41 +86,6 @@ class Documentation extends Component {
       const serviceClassName = session.serviceClass && Object.keys(services).length > 0 && services[session.service].classes[session.serviceClass].duration;
       return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''}) - ${moment(session.date).format('YYYY-MM-DD')}` : '';
     }
-
-    const stepSections = {
-      "1": {
-        icon: "1",
-        text: 'Patient Assessment',
-        forms: [
-          { name: 'Med History', isDefault: true },
-          { name: 'Overall', isDefault: true },
-          { name: 'Vital Signs', isDefault: true },
-          { name: 'FRAT', isDefault: false },
-          { name: 'MSE', isDefault: false },
-        ]},
-      "2": {
-        icon: "2",
-        text: 'Procedural Assessment',
-        forms: [
-          { name: 'Bate', isDefault: false },
-          { name: 'NGT', isDefault: false },
-          { name: 'Urinary Catheter', isDefault: false },
-        ]},
-      "3": {
-        icon: "3",
-        text: 'Summary of Findings',
-        forms: [
-          { name: 'Nursing Notes', isDefault: true }
-        ]},
-      "4": {
-        icon: 4,
-        text: 'Confirmation',
-        forms: [
-          { name: 'Confirmation', isDefault: true }
-        ]}
-    };
-
-    console.log('currentform', currentForm);
 
     return (
       <div className={s.documentation}>
@@ -140,17 +140,17 @@ class Documentation extends Component {
 
             <div className={s.stepSectionCategory}>
               <div className={s.stepSectionCategoryContainer}>
-                {stepSections[step].forms.filter(item => item.isDefault).map(form => (
+                {Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state[item.name]).map(form => (
                   <div
-                    key={stepSections[step].forms.indexOf(form)}
+                    key={Object.values(stepSections[step].forms).indexOf(form)}
                     className={cx(s.stepSectionCategoryUnit, currentForm === form.name && s.stepSectionCategoryUnitActive)}
                     onClick={() => this.setState({currentForm: form.name})}>
                     {form.name}
                   </div>
                 ))}
-                {stepSections[step].forms.filter(item => !item.isDefault).length > 0 && (
+                {Object.values(stepSections[step].forms).filter(item => !item.isDefault).length > 0 && (
                   <div
-                    className={s.stepSectionCategoryUnit}
+                    className={cx(s.stepSectionCategoryUnit, currentForm === 'more' && s.stepSectionCategoryUnitActive)}
                     onClick={() => this.setState({currentForm: 'more'})}>
                     <FaPlus />Add More..
                     </div>
@@ -165,8 +165,37 @@ class Documentation extends Component {
                 : step === "1" && currentForm === 'more' ? (
                   <div>
                     <h2>Add More</h2>
+                    <div>
+                      <h3>Fall Risk Assessment Tool (FRAT)</h3>
+                      <p>The Fall Risk Assessment Tool (FRAT) is a 4-item falls-risk screening tool for sub-acute and residential care: The first step in falls prevention. The FRAT has three sections: Part 1 - falls risk status; Part 2 – risk factor checklist; and Part 3 – action plan. The complete tool (including instructions for use) is a complete falls risk assessment tool. However, Part 1 can be used as a falls risk screen.</p>
+                      <button
+                        className="btn btn-primary"
+                        onClick={e => {
+                          e.preventDefault();
+                          this.setState({FRAT: true});
+                        }}
+                        disabled={stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT}>
+                        {stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                      </button>
+                    </div>
+
+                    <div>
+                      <h3>Mental State Examination (MSE)</h3>
+                      <p>The mental state examination (MSE) is a brief 30-point questionnaire test that is used to screen for cognitive impairment. It is commonly used to screen for dementia. It is also used to estimate the severity of cognitive impairment and to follow the course of cognitive changes in an individual over time. </p>
+                      <button
+                        className="btn btn-primary"
+                        onClick={e => {
+                          e.preventDefault();
+                          this.setState({MSE: true});
+                        }}
+                        disabled={stepSections["1"].forms['MSE'].isDefault || this.state.MSE}>
+                        {stepSections["1"].forms['MSE'].isDefault || this.state.MSE ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                      </button>
+                    </div>
                   </div>
                 )
+                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm />)
+                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm />)
                 : null}
             </div>
           </div>

@@ -55,7 +55,7 @@ class DocumentationOverallForm extends Component {
     } = this.props;
 
     return (
-      <form className={s.documentationOverallForm} onSubmit={this.props.onFormSubmit}>
+      <form className={s.documentationOverallForm} onSubmit={this.onFormSubmit}>
         <h2>Overall</h2>
 
         <p>Overall Assessment is an efficient and effective instrument for obtaining the information necessary to prevent health alterations in the older adult patient. Familiarity with these commonly-occurring disorders helps the nurse prevent unnecessary iatrogenesis and promote optimal function of the aging patient. Flagging conditions for further assessment allows the nurse to implement preventative and therapeutic interventions.</p>

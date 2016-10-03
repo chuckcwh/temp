@@ -15,7 +15,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 // sub-component
 import DocumentationMedicalHistoryForm from './DocumentationMedicalHistoryForm/DocumentationMedicalHistoryForm';
 import DocumentationOverallForm from './DocumentationOverallForm/DocumentationOverallForm';
-import DocumentationVitalSigns from './DocumentationVitalSigns/DocumentationVitalSigns';
+import DocumentationVitalSignsForm from './DocumentationVitalSignsForm/DocumentationVitalSignsForm';
 // import { formList } from './variables.js';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
@@ -160,8 +160,8 @@ class Documentation extends Component {
 
             <div className={s.formContent}>
               {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm onFormSubmit={(e) => console.log('medical history submit', e.value)}/>)
-                : currentForm === 'Overall' ? (<DocumentationOverallForm />)
-                : currentForm === 'Vital Signs' ? (<DocumentationVitalSigns />)
+                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm />)
+                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm />)
                 : null}
             </div>
           </div>

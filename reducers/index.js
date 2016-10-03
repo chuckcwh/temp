@@ -656,6 +656,8 @@ const transaction = (state = {
     case ActionTypes.TRANSACTION_CREATE_REQUEST:
     case ActionTypes.TRANSACTION_EDIT_REQUEST:
     case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST:
+    case ActionTypes.APPLICATIONS_PAY_BANK_REQUEST:
+    case ActionTypes.APPLICATIONS_PAY_CARD_REQUEST:
       return {
         ...state,
         isFetching: true
@@ -664,6 +666,8 @@ const transaction = (state = {
     case ActionTypes.TRANSACTION_CREATE_SUCCESS:
     case ActionTypes.TRANSACTION_EDIT_SUCCESS:
     case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS:
+    case ActionTypes.APPLICATIONS_PAY_BANK_SUCCESS:
+    case ActionTypes.APPLICATIONS_PAY_CARD_SUCCESS:
       return {
         ...state,
         isFetching: false,

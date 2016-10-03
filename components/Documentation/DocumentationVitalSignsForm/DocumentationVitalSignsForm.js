@@ -92,8 +92,31 @@ class DocumentationVitalSignsForm extends Component {
           <label className={s.fieldTitle}>Blood Glucose Level</label>
           <div className={s.fieldContent}>
             <div>
-              <input className={cx(s.textInput, s.textInputShort)} type='text' {...BGmmol} disabled={BGaccess.value} />(mmol/L) &nbsp;&nbsp;<FaArrowsH />&nbsp;&nbsp;&nbsp;&nbsp;
-              <input className={cx(s.textInput, s.textInputShort)} type='text' {...BGmg} disabled={BGaccess.value} />(mg/dl)
+              <input
+                className={cx(s.numberInput, s.textInputShort)}
+                type='number'
+                {...BGmmol}
+                disabled={BGaccess.value}
+                onChange={e => {
+                  e.preventDefault();
+                  const newValue = +e.target.value;
+                  this.props.changeFieldValue('BGmmol', newValue);
+                  this.props.changeFieldValue('BGmg', (newValue * 18).toFixed(1));
+                }}
+              />
+                (mmol/L) &nbsp;&nbsp;<FaArrowsH />&nbsp;&nbsp;&nbsp;&nbsp;
+              <input
+                className={cx(s.numberInput, s.textInputShort)}
+                type='text'
+                {...BGmg}
+                disabled={BGaccess.value}
+                onChange={e => {
+                  e.preventDefault();
+                  const newValue = +e.target.value;
+                  this.props.changeFieldValue('BGmg', newValue);
+                  this.props.changeFieldValue('BGmmol', (newValue / 18).toFixed(1));
+                }}
+              />(mg/dl)
             </div>
             <div className={s.checkBoxInput}>
               <input
@@ -296,6 +319,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   resetForm: () => dispatch(reset('documentationVitalSignsForm')),
+  changeFieldValue: (field, value) => dispatch(change('documentationVitalSignsForm', field, value)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationVitalSignsForm);

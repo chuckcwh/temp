@@ -18,6 +18,12 @@
     & .fieldContent {
       display: inline-block;
 
+      & .numberInput {
+        margin: 20px 20px 0 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+      }
+
       & .textInputShort {
         width: 80px;
       }

@@ -7,6 +7,10 @@
     color: #f2635f;
   }
 
+  & .overallTable {
+    width: 100%;
+  }
+
   & input:focus {
     outline: none;
   }
@@ -20,8 +24,20 @@
     margin: 0 auto 40px;
   }
 
+  & .bodyRow > td {
+    padding-bottom: 20px;
+  }
+
+  & .questionColumn {
+    width: 35%;
+    vertical-align: top;
+    padding-top: 10px;
+  }
+
   & .yesNoColumn {
-    width: 20%;
+    width: 15%;
+    vertical-align: top;
+    padding-top: 20px;
 
     & .yesNoInput {
       width: auto;
@@ -54,6 +70,24 @@
     & .noCheck {
       background: #18B905;
     }
+  }
+
+  & .textareaColumn {
+    width: 25%;
+    vertical-align: top;
+
+    & .textareaInput {
+      padding: 5px 15px;
+      font-size: 16px;
+      width: 90%;
+      margin-top: 10px;
+      height: 94px;
+    }
+  }
+
+  & .handleForm {
+    text-align: center;
+    margin: 40px auto;
   }
 
 }

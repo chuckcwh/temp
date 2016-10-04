@@ -41,9 +41,9 @@ const stepSections = {
     icon: "2",
     text: 'Procedural Assessment',
     forms: {
-      'Bate': { name: 'Bate', isDefault: false },
-      'NGT': { name: 'NGT', isDefault: false },
-      'Catheter': { name: 'Catheter', isDefault: false },
+      'Bate': { name: 'Bate', isDefault: true },
+      'NGT': { name: 'NGT', isDefault: true },
+      'Catheter': { name: 'Catheter', isDefault: true },
     }},
   "3": {
     icon: "3",

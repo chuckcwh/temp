@@ -13,6 +13,9 @@ import { getSession, showConfirmPopup, fetchServices } from '../../../actions';
 import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, addArrayValue, reset } from 'redux-form';
+import MultiSelect from '../../MultiSelect';
+// image
+import wound_status from '../../../assets/images/wound_status.png';
 
 
 class DocumentationBateForm extends Component {
@@ -84,6 +87,8 @@ class DocumentationBateForm extends Component {
     } = this.props;
 
     const { totalScore, interpretation } = this.state;
+    const solutionTypeChoice = [{label: 'Protecting granulation/ephithelialisation', value: 'Protecting granulation/ephithelialisation'}, {label: 'Manage bacterial burden', value: 'Manage bacterial burden'}];
+    const treatmentObjChoice = [{label: 'Normal Saline', value: 'Normal Saline'}, {label: 'Chlorhexidine', value: 'Chlorhexidine'}];
 
     const firstChoices = {
       woundSite: {
@@ -260,6 +265,36 @@ class DocumentationBateForm extends Component {
       ]},
     };
 
+    const questions = [{
+        title: "Treatment Objectives",
+        content: (
+          <MultiSelect
+            className={s.multiSelect}
+            options={treatmentObjChoice}
+            {...treatmentObj}
+          />
+        )
+      }, {
+        title: "Type of solution used",
+        content: (
+          <MultiSelect
+            className={s.multiSelect}
+            options={solutionTypeChoice}
+            {...solutionType}
+          />
+        )
+      }, {
+        title: "Type of dressing used",
+        content: (
+          <input className={s.textInput} type="text" {...dressingType} />
+        )
+      }, {
+        title: "Outcome and Evaluation",
+        content: (
+          <textarea className={s.textareaInput} id="outcome" name="outcome" {...outcome} />
+      )}
+    ]
+
     return (
       <form className={s.documentationBateForm} onFormSubmit={this.onFormSubmit}>
         <h2>Bate Jensen Wound Assessment & Intervention</h2>
@@ -302,6 +337,29 @@ class DocumentationBateForm extends Component {
             </div>
           </div>
         </div>
+
+        <img className={s.woundStatus} src={wound_status} />
+
+        <div className={s.fieldSection}>
+          {questions.map(question => (
+            <div key={questions.indexOf(question)}>
+              <label className={s.fieldTitle}>{question.title}</label>
+              <div className={s.fieldContent}>
+                {question.content}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className={s.handleForm}>
+          <button className='btn btn-primary' disabled={submitting || invalid}>
+            Submit
+          </button>
+          <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
+            Clear Values
+          </button>
+        </div>
+
       </form>
     );
   }

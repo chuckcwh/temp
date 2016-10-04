@@ -95,7 +95,11 @@
     }
 
     & .formContent {
-      margin: 35px 55px 0;
+      margin: 35px 55px;
+
+      & .rightAligned {
+        text-align: right;
+      }
     }
 
   }

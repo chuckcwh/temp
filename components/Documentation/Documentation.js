@@ -31,8 +31,8 @@ const stepSections = {
       'Med History': { name: 'Med History', isDefault: true },
       'Overall': { name: 'Overall', isDefault: true },
       'Vital Signs': { name: 'Vital Signs', isDefault: true },
-      'FRAT': { name: 'FRAT', isDefault: true },
-      'MSE': { name: 'MSE', isDefault: true },
+      'FRAT': { name: 'FRAT', isDefault: false },
+      'MSE': { name: 'MSE', isDefault: false },
     }},
   "2": {
     icon: "2",
@@ -168,29 +168,33 @@ class Documentation extends Component {
                     <div>
                       <h3>Fall Risk Assessment Tool (FRAT)</h3>
                       <p>The Fall Risk Assessment Tool (FRAT) is a 4-item falls-risk screening tool for sub-acute and residential care: The first step in falls prevention. The FRAT has three sections: Part 1 - falls risk status; Part 2 – risk factor checklist; and Part 3 – action plan. The complete tool (including instructions for use) is a complete falls risk assessment tool. However, Part 1 can be used as a falls risk screen.</p>
-                      <button
-                        className="btn btn-primary"
-                        onClick={e => {
-                          e.preventDefault();
-                          this.setState({FRAT: true});
-                        }}
-                        disabled={stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT}>
-                        {stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
-                      </button>
+                      <div className={s.rightAligned}>
+                        <button
+                          className="btn btn-primary"
+                          onClick={e => {
+                            e.preventDefault();
+                            this.setState({FRAT: true});
+                          }}
+                          disabled={stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT}>
+                          {stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                        </button>
+                      </div>
                     </div>
 
                     <div>
                       <h3>Mental State Examination (MSE)</h3>
                       <p>The mental state examination (MSE) is a brief 30-point questionnaire test that is used to screen for cognitive impairment. It is commonly used to screen for dementia. It is also used to estimate the severity of cognitive impairment and to follow the course of cognitive changes in an individual over time. </p>
-                      <button
-                        className="btn btn-primary"
-                        onClick={e => {
-                          e.preventDefault();
-                          this.setState({MSE: true});
-                        }}
-                        disabled={stepSections["1"].forms['MSE'].isDefault || this.state.MSE}>
-                        {stepSections["1"].forms['MSE'].isDefault || this.state.MSE ? "Form Added" : (<div><FaPlus />Add Form</div>)}
-                      </button>
+                      <div className={s.rightAligned}>
+                        <button
+                          className="btn btn-primary"
+                          onClick={e => {
+                            e.preventDefault();
+                            this.setState({MSE: true});
+                          }}
+                          disabled={stepSections["1"].forms['MSE'].isDefault || this.state.MSE}>
+                          {stepSections["1"].forms['MSE'].isDefault || this.state.MSE ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )

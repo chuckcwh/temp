@@ -69,22 +69,22 @@ class DocumentationFRATForm extends Component {
               </td>
               <td>
                 <div className={s.isActiveInput}>
-                  <input type="radio" name='recentFall_1' id='recentFall_1' {...recentFall} value={"1"} checked={recentFall.value === "1"} />
+                  <input type="radio" name='recentFall_1' id='recentFall_1' {...recentFall} value={"2"} checked={recentFall.value === "2"} />
                   <label htmlFor='recentFall_1'><span><span></span></span><span>None in last months</span></label>
                 </div>
 
                 <div className={s.isActiveInput}>
-                  <input type="radio" name='recentFall_2' id='recentFall_2' {...recentFall} value={"2"} checked={recentFall.value === "2"} />
+                  <input type="radio" name='recentFall_2' id='recentFall_2' {...recentFall} value={"4"} checked={recentFall.value === "4"} />
                   <label htmlFor='recentFall_2'><span><span></span></span><span>One or more between 3 & 12 months ago</span></label>
                 </div>
 
                 <div className={s.isActiveInput}>
-                  <input type="radio" name='recentFall_3' id='recentFall_3' {...recentFall} value={"3"} checked={recentFall.value === "3"} />
+                  <input type="radio" name='recentFall_3' id='recentFall_3' {...recentFall} value={"6"} checked={recentFall.value === "6"} />
                   <label htmlFor='recentFall_3'><span><span></span></span><span>One or more in last 3 months</span></label>
                 </div>
 
                 <div className={s.isActiveInput}>
-                  <input type="radio" name='recentFall_4' id='recentFall_4' {...recentFall} value={"4"} checked={recentFall.value === "4"} />
+                  <input type="radio" name='recentFall_4' id='recentFall_4' {...recentFall} value={"8"} checked={recentFall.value === "8"} />
                   <label htmlFor='recentFall_4'><span><span></span></span><span>One or more in last 3 months whilst resident</span></label>
                 </div>
               </td>
@@ -226,14 +226,18 @@ class DocumentationFRATForm extends Component {
             <div className={s.statusField}>
               <div>
                 Risk Score
-                <div className={s.statusFieldTitle}>{riskScore || 'N/A'}</div>
+                <div className={s.statusFieldTitle}>
+                  {riskScore || 'N/A'}
+                </div>
               </div>
             </div>
 
             <div className={s.statusField}>
               <div>
                 Fall Risk Status
-                <div className={s.statusFieldTitle}>{fallRiskStatus || 'N/A'}</div>
+                <div className={s.statusFieldTitle}>
+                  {fallRiskStatus || 'N/A'}
+                </div>
               </div>
             </div>
           </div>

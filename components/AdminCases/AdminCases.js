@@ -20,7 +20,7 @@ import FaCaretSquareOUp from 'react-icons/lib/fa/caret-square-o-up';
 import FaCheck from 'react-icons/lib/fa/check';
 
 
-const filterChoice = ['phase', 'alias', 'client', 'patient', 'price', 'status']; //TODO: update fields
+const filterChoice = ['alias', 'client', 'patient', 'price', 'status']; //TODO: update fields
 
 class AdminCases extends Component {
 
@@ -178,13 +178,6 @@ class AdminCases extends Component {
                         rowCount={Object.values(sessions).length}
                         rowGetter={({index}) => Object.values(sessions)[index]}
                       >
-                        <Column
-                          label="phase"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="phase"
-                          cellRenderer={({cellData}) => configToName(config, 'sessionPhasesByValue', cellData)}
-                          width={190}
-                        />
                         <Column
                           label="alias"
                           headerRenderer={this.setHeaderLabel}

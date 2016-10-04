@@ -425,7 +425,7 @@ class SessionsView extends Component {
     //               $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
     //             </div>
     //             <div className="TableRowItem2">
-    //               {configToName(config, 'sessionPhasesByValue', session.phase)}
+    //               {configToName(config, 'sessionStatusesByValue', session.status)}
     //             </div>
     //             <div className="TableRowItem1">
     //               {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')
@@ -471,7 +471,7 @@ class SessionsView extends Component {
     }
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
     if ((session
-      && session.phase === 'pending-payment' && !session.isPaid)
+      && session.status === 'pending-payment' && !session.isPaid)
       && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
         <a href="#" className="btn btn-primary btn-small" onClick={this.onClickPay}>GO TO PAYMENT</a>
@@ -498,10 +498,10 @@ class SessionsView extends Component {
                     <div className="TableRow">
                       <div className="TableRowItem1">Status</div>
                       <div className="TableRowItem3">
-                        {config && config.sessionPhasesByValue
-                          && session && session.phase
-                          && config.sessionPhasesByValue[session.phase]
-                          && config.sessionPhasesByValue[session.phase].name}
+                        {config && config.sessionStatusesByValue
+                          && session && session.status
+                          && config.sessionStatusesByValue[session.status]
+                          && config.sessionStatusesByValue[session.status].name}
                       </div>
                     </div>
                     <div className="TableRow">

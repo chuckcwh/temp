@@ -427,7 +427,7 @@ class BookingView extends Component {
             <div className="TableRow" key={session._id}>
               <div className="TableRowItem1">
                 {
-                  session.phase === 'pending-payment' &&
+                  session.status === 'pending-payment' &&
                     <input
                       className={s.rememberMeCheckbox}
                       type="checkbox"
@@ -455,10 +455,12 @@ class BookingView extends Component {
                 {configToName(config, 'timeSlotsByValue', session.timeSlot)}
               </div>
               <div className="TableRowItem2">
-                $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
+                {`$ ${session.pdiscount
+                  ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2)
+                  : parseFloat(session.price).toFixed(2)}`}
               </div>
               <div className="TableRowItem2">
-                {configToName(config, 'sessionPhasesByValue', session.phase)}
+                {configToName(config, 'sessionStatusesByValue', session.status)}
               </div>
               <div className="TableRowItem1">
                 {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')

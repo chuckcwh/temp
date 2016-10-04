@@ -384,7 +384,7 @@ class ApplicationsView extends Component {
     //               $ {session.pdiscount ? ((100 - parseFloat(session.pdiscount)) * parseFloat(session.price) / 100).toFixed(2) : parseFloat(session.price).toFixed(2)}
     //             </div>
     //             <div className="TableRowItem2">
-    //               {configToName(config, 'sessionPhasesByValue', session.phase)}
+    //               {configToName(config, 'sessionStatusesByValue', session.status)}
     //             </div>
     //             <div className="TableRowItem1">
     //               {session.status === 'open' && moment(session.date).isAfter(moment(), 'day')
@@ -446,10 +446,10 @@ class ApplicationsView extends Component {
                     <div className="TableRow">
                       <div className="TableRowItem1">Status</div>
                       <div className="TableRowItem3">
-                        {config && config.sessionPhasesByValue
-                          && session && session.phase
-                          && config.sessionPhasesByValue[session.phase]
-                          && config.sessionPhasesByValue[session.phase].name}
+                        {config && config.sessionStatusesByValue
+                          && session && session.status
+                          && config.sessionStatusesByValue[session.status]
+                          && config.sessionStatusesByValue[session.status].name}
                       </div>
                     </div>
                     <div className="TableRow">

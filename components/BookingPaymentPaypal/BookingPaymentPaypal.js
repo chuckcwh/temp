@@ -36,10 +36,12 @@ class BookingPaymentPaypal extends Component {
       }).then((res) => {
         if (res && res.type === APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS) {
           // console.log(res.response.items);
-          this.props.getBooking({
-            bookingId: location && location.query && location.query.bid,
-            bookingToken: location && location.query && location.query.btoken,
-          });
+          if (location && location.query && location.query.bid && location.query.bid !== 'undefined') {
+            this.props.getBooking({
+              bookingId: location && location.query && location.query.bid,
+              bookingToken: location && location.query && location.query.btoken,
+            });
+          }
 
           this.props.setPostStatus('success');
         } else {
@@ -63,16 +65,16 @@ class BookingPaymentPaypal extends Component {
         ? window.location.href.slice(0, window.location.href.indexOf('?'))
         : window.location.href)}`
         + `?action=${encodeURIComponent('paypal-return')}`
-        + `&bid=${encodeURIComponent(this.props.booking._id)}`
-        + `&btoken=${encodeURIComponent(this.props.booking.adhocClient.contact)}`
+        + `&bid=${encodeURIComponent(this.props.booking && this.props.booking._id)}`
+        + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact)}`
         + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
       returnUrl = returnUrl.replace('#', '');
       cancelUrl = `${(window.location.href.indexOf('?') > -1
         ? window.location.href.slice(0, window.location.href.indexOf('?'))
         : window.location.href)}`
         + `?action=${encodeURIComponent('paypal-cancel')}`
-        + `&bid=${encodeURIComponent(this.props.booking._id)}`
-        + `&btoken=${encodeURIComponent(this.props.booking.adhocClient.contact)}`
+        + `&bid=${encodeURIComponent(this.props.booking && this.props.booking._id)}`
+        + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact)}`
         + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
       cancelUrl = cancelUrl.replace('#', '');
 
@@ -83,8 +85,8 @@ class BookingPaymentPaypal extends Component {
           return_url: returnUrl,
           cancel_url: cancelUrl,
         },
-        bookingId: this.props.booking._id,
-        bookingToken: this.props.booking.adhocClient.contact,
+        bookingId: this.props.booking && this.props.booking._id,
+        bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
       }).then((res) => {
         if (res && res.type === APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS) {
           // console.log(res);

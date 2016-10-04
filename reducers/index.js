@@ -35,10 +35,10 @@ const config = (state = {
           countriesByValue: normalize(action.response.data.countries, 'value'),
           gendersByValue: normalize(action.response.data.genders, 'value'),
           languagesByValue: normalize(action.response.data.languages, 'value'),
+          neighborhoodsByValue: normalize(action.response.data.neighborhoods, 'value'),
           racesByValue: normalize(action.response.data.races, 'value'),
           religionsByValue: normalize(action.response.data.religions, 'value'),
           timeSlotsByValue: normalize(action.response.data.timeSlots, 'value'),
-          sessionPhasesByValue: normalize(action.response.data.sessionPhases, 'value'),
           sessionStatusesByValue: normalize(action.response.data.sessionStatuses, 'value'),
         },
         lastUpdated: action.response && action.response.receivedAt

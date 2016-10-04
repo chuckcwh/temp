@@ -5,7 +5,7 @@ import s from './BookingPostComplete.css';
 import Container from '../Container';
 import Link from '../Link';
 
-const BookingPostComplete = ({ transaction, transactionFetching }) => {
+const BookingPostComplete = ({ transaction, transactionFetching, booking }) => {
   let component,
     message;
 
@@ -36,7 +36,12 @@ const BookingPostComplete = ({ transaction, transactionFetching }) => {
         or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
       </div>
       <div className={s.bookingPostCompleteFooter}>
-        <Link to="/booking-manage" className="btn btn-primary">Manage Booking</Link>
+        {!!booking &&
+          <Link to="/booking-manage" className="btn btn-primary">Manage Booking</Link>
+        }
+        {!booking &&
+          <Link to="/dashboard" className="btn btn-primary">Back to Dashboard</Link>
+        }
         <Link to="/" className="btn btn-primary">Back To Homepage</Link>
       </div>
     </div>
@@ -74,11 +79,13 @@ const BookingPostComplete = ({ transaction, transactionFetching }) => {
 };
 
 BookingPostComplete.propTypes = {
+  booking: React.PropTypes.object,
   transaction: React.PropTypes.object,
   transactionFetching: React.PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
+  booking: state.booking.data,
   transaction: state.transaction.data,
   transactionFetching: state.transaction.isFetching,
 });

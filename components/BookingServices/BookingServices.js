@@ -13,10 +13,13 @@ class BookingServices extends Component {
 
   constructor(props) {
     super(props);
-    const { services, order } = this.props;
+    const { services, order, categories } = this.props;
     const location = history.getCurrentLocation();
+    const headCategories = categories && Object.values(categories)
+      .filter(category => category.cType === 'category')
+      .sort((a, b) => b.order - a.order);
     this.state = {
-      filter: ALL_SERVICES,
+      filter: headCategories && headCategories[0] && headCategories[0]._id,
       selectedService: undefined,
       selectedServiceClass: undefined,
     };
@@ -36,8 +39,14 @@ class BookingServices extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { services, order } = props;
+    const { services, order, categories } = props;
     const location = history.getCurrentLocation();
+    const headCategories = categories && Object.values(categories)
+      .filter(category => category.cType === 'category')
+      .sort((a, b) => b.order - a.order);
+    this.setState({
+      filter: headCategories && headCategories[0] && headCategories[0]._id,
+    });
     if (order && order.service) {
       this.setState({
         selectedService: order.service,

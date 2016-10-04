@@ -12,6 +12,7 @@ import { getUserName, configToName } from '../../../core/util';
 import { getSession, showConfirmPopup, fetchServices } from '../../../actions';
 import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { reduxForm, addArrayValue, reset } from 'redux-form';
 
 
 class DocumentationMSEForm extends Component {
@@ -23,30 +24,91 @@ class DocumentationMSEForm extends Component {
     }
   }
 
-  componentDidMount() {
-
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
   }
 
 
   render() {
+    const {
+      fields: {
+        appearance,
+        psychomotor,
+        attitudeTwdNurse,
+        suicide,
+        thoughtHarming,
+        speech,
+        thoughtClarity,
+        thoughtRelevance,
+        thoughtContent,
+        thoughtFlow,
+        cognitionOrientated,
+        cognitionFollowup,
+        cognitionFamilyCare,
+        outcome,
+      },
+
+      resetForm,
+      invalid,
+      handleSubmit,
+      submitFailed,
+      submitting,
+    } = this.props;
+
     return (
-      <div className={s.documentationMSEForm}>
-        MSE form
-      </div>
+      <form className={s.documentationMSEForm}>
+        <h2>Mental State Examination (MSE)</h2>
+
+        <h3>Instructions</h3>
+        <p>Before you begin, get the patient’s permission to ask some questions. This will help to avoid catastrophic reactions. Provide any hearing or visual aids that the patient needs. You will also need a watch, pencil and some paper.</p>
+
+
+      </form>
     );
   }
 }
 
-DocumentationMSEForm.propTypes = {
+const validate = values => {
+  const errors = {};
 
+  return errors
+}
+
+DocumentationMSEForm.propTypes = {
+  fields: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  invalid: PropTypes.bool.isRequired,
+  submitFailed: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
 };
+
+const reduxFormConfig = {
+  form: 'documentationFRATForm',
+  fields: [
+    'appearance',
+    'psychomotor',
+    'attitudeTwdNurse',
+    'suicide',
+    'thoughtHarming',
+    'speech',
+    'thoughtClarity',
+    'thoughtRelevance',
+    'thoughtContent',
+    'thoughtFlow',
+    'cognitionOrientated',
+    'cognitionFollowup',
+    'cognitionFamilyCare',
+    'outcome',
+  ],
+  validate,
+}
 
 const mapStateToProps = (state) => ({
 
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
+resetForm: () => dispatch(reset('documentationFRATForm')),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentationMSEForm);
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationMSEForm);

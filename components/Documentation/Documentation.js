@@ -12,13 +12,16 @@ import { getUserName, configToName } from '../../core/util';
 import { getSession, showConfirmPopup, fetchServices } from '../../actions';
 import ConfirmPopup from '../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-// sub-component
+// sub-component - step 1
 import DocumentationMedicalHistoryForm from './DocumentationMedicalHistoryForm/DocumentationMedicalHistoryForm';
 import DocumentationOverallForm from './DocumentationOverallForm/DocumentationOverallForm';
 import DocumentationVitalSignsForm from './DocumentationVitalSignsForm/DocumentationVitalSignsForm';
 import DocumentationFRATForm from './DocumentationFRATForm/DocumentationFRATForm';
 import DocumentationMSEForm from './DocumentationMSEForm/DocumentationMSEForm';
-// import { formList } from './variables.js';
+// sub-component - step 2
+import DocumentationBateForm from './DocumentationBateForm/DocumentationBateForm';
+import DocumentationNGTForm from './DocumentationNGTForm/DocumentationNGTForm';
+import DocumentationCatheterForm from './DocumentationCatheterForm/DocumentationCatheterForm';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
 
@@ -40,7 +43,7 @@ const stepSections = {
     forms: {
       'Bate': { name: 'Bate', isDefault: false },
       'NGT': { name: 'NGT', isDefault: false },
-      'Urinary Catheter': { name: 'Urinary Catheter', isDefault: false },
+      'Catheter': { name: 'Catheter', isDefault: false },
     }},
   "3": {
     icon: "3",
@@ -75,6 +78,20 @@ class Documentation extends Component {
     getSession({ sessionId });
   }
 
+  getSubMenu = () => {
+    const { step, currentForm } = this.state;
+
+    const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state[item.name]);
+
+    return subMenu && subMenu.map(form => (
+      <div
+        key={Object.values(stepSections[step].forms).indexOf(form)}
+        className={cx(s.stepSectionCategoryUnit, currentForm === form.name && s.stepSectionCategoryUnitActive)}
+        onClick={() => this.setState({currentForm: form.name})}>
+        {form.name}
+      </div>
+    ))
+  }
 
   render() {
     const { sessionId } = this.props.params;
@@ -140,21 +157,15 @@ class Documentation extends Component {
 
             <div className={s.stepSectionCategory}>
               <div className={s.stepSectionCategoryContainer}>
-                {Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state[item.name]).map(form => (
-                  <div
-                    key={Object.values(stepSections[step].forms).indexOf(form)}
-                    className={cx(s.stepSectionCategoryUnit, currentForm === form.name && s.stepSectionCategoryUnitActive)}
-                    onClick={() => this.setState({currentForm: form.name})}>
-                    {form.name}
-                  </div>
-                ))}
+                {this.getSubMenu()}
+
                 {Object.values(stepSections[step].forms).filter(item => !item.isDefault).length > 0 && (
                   <div
-                    className={cx(s.stepSectionCategoryUnit, currentForm === 'more' && s.stepSectionCategoryUnitActive)}
+                    className={cx(s.stepSectionCategoryUnit, (currentForm === 'more' || stepSections[step].forms[currentForm] === undefined) && s.stepSectionCategoryUnitActive)}
                     onClick={() => this.setState({currentForm: 'more'})}>
                     <FaPlus />Add More..
-                    </div>
-                  )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -162,7 +173,9 @@ class Documentation extends Component {
               {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm />)
                 : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm />)
                 : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm />)
-                : step === "1" && currentForm === 'more' ? (
+                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm />)
+                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm />)
+                : step === "1" ? (
                   <div>
                     <h2>Add More</h2>
                     <div>
@@ -198,8 +211,62 @@ class Documentation extends Component {
                     </div>
                   </div>
                 )
-                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm />)
-                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm />)
+
+                : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm />)
+                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm />)
+                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm />)
+                : step === "2" ? (
+                  <div>
+                    <h2>Add More</h2>
+                    <div>
+                      <h3>Bate Jensen Wound Form (Bate)</h3>
+                      <p>Bate Jensen documentation form is a tool used to assess a wound’s status. The HIGHER the total score, the more severe the wound status. It is used to monitor the status of the wound.</p>
+                      <div className={s.rightAligned}>
+                        <button
+                          className="btn btn-primary"
+                          onClick={e => {
+                            e.preventDefault();
+                            this.setState({Bate: true});
+                          }}
+                          disabled={stepSections["2"].forms['Bate'].isDefault || this.state.Bate}>
+                          {stepSections["2"].forms['Bate'].isDefault || this.state.Bate ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3>Nasogastric Tube (NGT)</h3>
+                      <p>Nasogastric tube documentation form is a tool used to assess and evaluate the outcome of the procedure done in accordance to international best practices guidelines.</p>
+                      <div className={s.rightAligned}>
+                        <button
+                          className="btn btn-primary"
+                          onClick={e => {
+                            e.preventDefault();
+                            this.setState({NGT: true});
+                          }}
+                          disabled={stepSections["2"].forms['NGT'].isDefault || this.state.NGT}>
+                          {stepSections["2"].forms['NGT'].isDefault || this.state.NGT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3>Urinary Catheter</h3>
+                      <p>Urinary Catheter documentation form is a tool used to assess and evaluate the outcome of the procedure done in accordance to international best practices guidelines.</p>
+                      <div className={s.rightAligned}>
+                        <button
+                          className="btn btn-primary"
+                          onClick={e => {
+                            e.preventDefault();
+                            this.setState({Catheter: true});
+                          }}
+                          disabled={stepSections["2"].forms['Catheter'].isDefault || this.state.Catheter}>
+                          {stepSections["2"].forms['Catheter'].isDefault || this.state.Catheter ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )
                 : null}
             </div>
           </div>

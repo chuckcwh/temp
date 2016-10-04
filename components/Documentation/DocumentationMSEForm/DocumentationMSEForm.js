@@ -443,7 +443,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-resetForm: () => dispatch(reset('documentationFRATForm')),
+  resetForm: () => dispatch(reset('documentationFRATForm')),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationMSEForm);

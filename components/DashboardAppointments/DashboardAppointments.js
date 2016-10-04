@@ -36,8 +36,9 @@ class DashboardAppointments extends Component {
                 <span></span>
                 <select onChange={(e) => this.setState({ selectedFilter: e.target.value })} value={this.state.selectedFilter || ''}>
                   <option value="">Show All</option>
-                  <option value="pending-visit">Pending Visit</option>
                   <option value="completed">Completed</option>
+                  <option value="pending-payment-approval">Pending Payment Approval</option>
+                  <option value="cancelled">Cancelled</option>
                   <option value="expired">Expired</option>
                 </select>
               </div>
@@ -47,15 +48,18 @@ class DashboardAppointments extends Component {
               const patientName = patients && patients[patientId] && patients[patientId].name;
               const filteredSessions = sessionsByPatient[patientId].filter(session => {
                 switch (this.state.selectedFilter) {
-                  case 'pending-visit':
-                    return session.status === 'pending-visit';
                   case 'completed':
                     return session.status === 'completed';
+                  case 'pending-payment-approval':
+                    return session.status === 'pending-payment-approval';
+                  case 'cancelled':
+                    return session.status === 'cancelled';
                   case 'expired':
                     return session.status === 'expired';
                   default:
-                    return (session.status === 'pending-visit'
-                      || session.status === 'completed'
+                    return (session.status === 'completed'
+                      || session.status === 'pending-payment-approval'
+                      || session.status === 'cancelled'
                       || session.status === 'expired');
                 }
               });
@@ -102,7 +106,6 @@ class DashboardAppointments extends Component {
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
-                            <DashboardTableButton>Cancel</DashboardTableButton>
                           </Col>
                         </Row>
                       ))

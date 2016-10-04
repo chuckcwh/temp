@@ -94,7 +94,31 @@
               font-size: 20px;
               color: #999;
 
+              & :global .DayPicker-Day-Wrapper {
+                position: relative;
+
+                & :global .event {
+                  position: absolute;
+                  margin: auto;
+                  left: 0;
+                  right: 0;
+                  height: 8px;
+                  width: 8px;
+                  border-radius: 50%;
+                  background-color: #999;
+
+                  @media (--sm-viewport) {
+                    height: 6px;
+                    width: 6px;
+                  }
+                }
+              }
+
               &:global(.DayPicker-Day--today) {
+                color: var(--secondary-color);
+              }
+
+              &:global(.DayPicker-Day--selected) {
                 background-color: #f8e4ac;
               }
 
@@ -135,6 +159,19 @@
       & .dashboardNextApptInfoDescHighlight {
         color: var(--secondary-color);
         font-weight: 700;
+      }
+    }
+
+    & .dashboardNextApptInfoTable {
+      display: table;
+      width: 100%;
+
+      & .dashboardNextApptInfoTableRow {
+        display: table-row;
+
+        & .dashboardNextApptInfoTableCol {
+          display: table-cell;
+        }
       }
     }
   }

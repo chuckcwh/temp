@@ -18,7 +18,7 @@ import DashboardOngoingCases from '../DashboardOngoingCases';
 import DashboardCompletedCases from '../DashboardCompletedCases';
 import DashboardOtherCases from '../DashboardOtherCases';
 import ConfirmPopup from '../ConfirmPopup';
-import { fetchServices, getPatients, getSessions, getApplications, setOrderService, setLastPage } from '../../actions';
+import { SESSION_CANCEL_SUCCESS, fetchServices, getPatients, getSessions, getSession, cancelSession, getApplications, setOrderService, setLastPage, showConfirmPopup } from '../../actions';
 import history from '../../core/history';
 import { isClient, isProvider } from '../../core/util';
 import shuffle from 'lodash/shuffle';
@@ -57,6 +57,20 @@ class Dashboard extends Component {
     }
   }
 
+  handleCancelSession = (session) => () => {
+    this.props.showConfirmPopup('Are you sure you want to cancel this session?', () => {
+      this.props.cancelSession({
+        sessionId: session._id,
+      }).then((res) => {
+        if (res && res.type === SESSION_CANCEL_SUCCESS) {
+          this.props.getSession({
+            sessionId: session._id,
+          });
+        }
+      });
+    });
+  };
+
   render() {
     const { user, patients, sessions, suggestedSessions, applications } = this.props;
     const { panelChoice } = this.state;
@@ -73,7 +87,7 @@ class Dashboard extends Component {
           others: 0,
         };
         sessions && Object.values(sessions).map(session => {
-          switch (session.phase) {
+          switch (session.status) {
             case 'awaiting-caregiver':
               stats.pendingConf++;
               break;
@@ -81,6 +95,7 @@ class Dashboard extends Component {
               stats.pendingPayment += session.price;
               break;
             case 'pending-visit':
+            case 'pending-documentation':
               stats.nextAppt++;
               break;
             default:
@@ -132,13 +147,17 @@ class Dashboard extends Component {
         if (panelChoice === 'Pending Confirmation') {
           dashboardBody = (
             <div className={s.dashboardBody}>
-              <DashboardPendingConf />
+              <DashboardPendingConf
+                onCancelSession={this.handleCancelSession}
+              />
             </div>
           )
         } else if (panelChoice === 'Pending Payment') {
           dashboardBody = (
             <div className={s.dashboardBody}>
-              <DashboardPendingPayment />
+              <DashboardPendingPayment
+                onCancelSession={this.handleCancelSession}
+              />
             </div>
           )
         } else if (panelChoice === 'Appointments') {
@@ -278,6 +297,11 @@ Dashboard.propTypes = {
   suggestedSessionsFetching: React.PropTypes.bool,
 
   fetchServices: React.PropTypes.func,
+  getPatients: React.PropTypes.func,
+  getSessions: React.PropTypes.func,
+  getSession: React.PropTypes.func,
+  cancelSession: React.PropTypes.func,
+  getApplications: React.PropTypes.func,
   setOrderService: React.PropTypes.func,
   setLastPage: React.PropTypes.func,
 };
@@ -320,6 +344,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getPatients: (params) => dispatch(getPatients(params)),
   getSessions: (params) => dispatch(getSessions(params)),
+  getSession: (params) => dispatch(getSession(params)),
+  cancelSession: (params) => dispatch(cancelSession(params)),
   getApplications: (params) => dispatch(getApplications(params)),
   setOrderService: (service) => dispatch(setOrderService(service)),
   setLastPage: (page) => dispatch(setLastPage(page)),

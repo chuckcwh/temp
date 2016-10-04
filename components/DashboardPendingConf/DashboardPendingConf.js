@@ -25,15 +25,15 @@ class DashboardPendingConf extends Component {
     const { config, services, patients, sessions, sessionsFetching, sessionsByPatient } = this.props;
     return (
       <div className={s.dashboardPendingConf}>
-        <Loader className="spinner" loaded={!this.props.sessionsFetching}>
+        <Loader className="spinner" loaded={!sessionsFetching}>
           <Link className={s.dashboardInfoBtn} to="/booking1">Book Appointment</Link>
           <div className={s.cases}>
           {
             sessionsByPatient && Object.keys(sessionsByPatient).map(patientId => {
               const patientName = patients && patients[patientId] && patients[patientId].name;
-              const filteredSessions = sessionsByPatient[patientId].filter(session => session.phase === 'awaiting-caregiver');
+              const filteredSessions = sessionsByPatient[patientId].filter(session => session.status === 'awaiting-caregiver');
               if (filteredSessions.length === 0) {
-                return;
+                return <p>No appointments found.</p>;
               }
               return (
                 <DashboardDataTable css={s} key={patientId}>
@@ -63,19 +63,19 @@ class DashboardPendingConf extends Component {
                           <Col xs={8} md={2}>
                             {`${services && services[session.service] && services[session.service].name} `
                               + `(${services && services[session.service] && services[session.service].classes
-                                  && services[session.service].classes[session.serviceClassId]
-                                  && services[session.service].classes[session.serviceClassId].duration}hrs)`}
+                                  && services[session.service].classes[session.serviceClass]
+                                  && services[session.service].classes[session.serviceClass].duration}hrs)`}
                           </Col>
                           <Col xs={4}>Price</Col>
                           <Col xs={8} md={1}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
                           <Col xs={4}>Status</Col>
                           <Col xs={8} md={1}>
-                            {configToName(config, 'sessionPhasesByValue', session.phase)}
+                            {configToName(config, 'sessionStatusesByValue', session.status)}
                           </Col>
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
-                            <DashboardTableButton>Cancel</DashboardTableButton>
+                            <DashboardTableButton onClick={this.props.onCancelSession(session._id)}>Cancel</DashboardTableButton>
                           </Col>
                         </Row>
                       ))
@@ -94,6 +94,8 @@ class DashboardPendingConf extends Component {
 }
 
 DashboardPendingConf.propTypes = {
+  onCancelSession: React.PropTypes.func,
+
   config: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
@@ -104,8 +106,6 @@ DashboardPendingConf.propTypes = {
   sessionsByPatient: React.PropTypes.object,
 
   fetchServices: React.PropTypes.func,
-  getPatients: React.PropTypes.func,
-  getSessions: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

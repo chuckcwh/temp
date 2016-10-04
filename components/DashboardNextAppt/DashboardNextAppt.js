@@ -13,6 +13,7 @@ import ServiceCard from '../ServiceCard';
 import DashboardStatButton from '../DashboardStatButton';
 import { fetchServices, getPatients } from '../../actions';
 import history from '../../core/history';
+import { configToName, formatSessionAlias } from '../../core/util';
 import shuffle from 'lodash/shuffle';
 
 class DashboardNextAppt extends Component {
@@ -20,7 +21,7 @@ class DashboardNextAppt extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDay: null,
+      selectedDay: new Date(),
     };
   }
 
@@ -28,9 +29,24 @@ class DashboardNextAppt extends Component {
     this.props.fetchServices();
   }
 
-  handleDayClick = (event, day, { selected }) => {
+  hasEvent = (sessions, day) => (sessions.length > 0
+      && sessions.filter(session => DateUtils.isSameDay(new Date(session.date), day)).length > 0);
+
+  renderDay = (sessions) => (day) => {
+    if (this.hasEvent(sessions, day)) {
+      return (
+        <div className="DayPicker-Day-Wrapper">
+          <span>{day.getDate()}</span>
+          <div className="event"></div>
+        </div>
+      );
+    }
+    return (<span>{day.getDate()}</span>);
+  }
+
+  handleDayClick = (event, day) => {
     this.setState({
-      selectedDay: selected ? null : day,
+      selectedDay: day,
     });
   };
 
@@ -39,12 +55,12 @@ class DashboardNextAppt extends Component {
   };
 
   render() {
-    const { user, sessions, sessionsFetching } = this.props;
+    const { config, services, user, sessions, sessionsFetching } = this.props;
     const { selectedDay } = this.state;
 
     const confirmedSessions = sessions && Object.values(sessions).filter((session) => {
       return moment(session.date).isSameOrAfter(moment(), 'day')
-        && session.status === 'engaged'
+        && (session.status === 'pending-visit' || session.status === 'pending-documentation')
         && session.isPaid;
     }) || [];
 
@@ -61,11 +77,89 @@ class DashboardNextAppt extends Component {
         }
       }).date;
 
-      if (moment(earliestSessionDate).isSame(moment(), 'day')) {
+      if (this.hasEvent(confirmedSessions, selectedDay)) {
         // Default multiple or single appointment today
         // earliestNewAppt.forEach((event) => {
           // $('.dashboard-next-appointment-info').append(createAppointmentTable(event.caseId, event.price, event.service, event.date, event.time, event.estTime, event.caseNotes, event.patientFullName, event.engagedId, event.location, event.sessionId, event.isPaid, event.nurseId));
         // });
+        const filteredSessions = confirmedSessions.filter(session => DateUtils.isSameDay(new Date(session.date), selectedDay));
+        content = (
+          <div>
+            {filteredSessions.map(session => (
+              <div className={s.dashboardNextApptInfoTable} key={session._id}>
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    ID
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    {formatSessionAlias(session.alias)}
+                  </div>
+                </div>
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    Date
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    {moment(session.date).format('ll')}
+                  </div>
+                </div>
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    Time
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    {configToName(config, 'timeSlotsByValue', session.timeSlot)}
+                  </div>
+                </div>
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    Service
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    {`${services && services[session.service] && services[session.service].name} `
+                      + `(${services && services[session.service] && services[session.service].classes
+                          && services[session.service].classes[session.serviceClass]
+                          && services[session.service].classes[session.serviceClass].duration}hrs)`}
+                  </div>
+                </div>
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    Patient
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    
+                  </div>
+                </div>
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    Location
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    {session.address.neighborhood}
+                  </div>
+                </div>
+                {session.additionalInfo &&
+                  <div className={s.dashboardNextApptInfoTableRow}>
+                    <div className={s.dashboardNextApptInfoTableCol}>
+                      Additional Info
+                    </div>
+                    <div className={s.dashboardNextApptInfoTableCol}>
+                      {session.additionalInfo}
+                    </div>
+                  </div>
+                }
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    Caregiver
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
       } else {
         // Obtains next earliest session
         content = (
@@ -101,6 +195,7 @@ class DashboardNextAppt extends Component {
           <DayPicker
             selectedDays={day => DateUtils.isSameDay(selectedDay, day)}
             onDayClick={this.handleDayClick}
+            renderDay={this.renderDay(confirmedSessions)}
           />
         </div>
         <div className={s.dashboardNextApptInfo}>
@@ -115,6 +210,7 @@ class DashboardNextAppt extends Component {
 }
 
 DashboardNextAppt.propTypes = {
+  config: React.PropTypes.object,
   user: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
@@ -132,6 +228,7 @@ DashboardNextAppt.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   user: state.user.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,

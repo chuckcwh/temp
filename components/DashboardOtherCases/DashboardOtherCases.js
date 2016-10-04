@@ -7,7 +7,7 @@ import s from './DashboardOtherCases.css';
 import Link from '../Link';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
-import { fetchServices } from '../../actions';
+import { } from '../../actions';
 import { configToName, formatSessionAlias } from '../../core/util';
 
 class DashboardOtherCases extends Component {
@@ -17,10 +17,6 @@ class DashboardOtherCases extends Component {
     this.state = {
       selectedFilter: '',
     };
-  }
-
-  componentDidMount() {
-    this.props.fetchServices();
   }
 
   render() {
@@ -128,8 +124,6 @@ DashboardOtherCases.propTypes = {
   applications: React.PropTypes.object,
   applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
-
-  fetchServices: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -148,7 +142,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchServices: () => dispatch(fetchServices()),
+  // fetchServices: () => dispatch(fetchServices()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardOtherCases);

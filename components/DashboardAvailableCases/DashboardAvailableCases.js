@@ -14,7 +14,6 @@ import { isProvider, configToName, formatSessionAlias } from '../../core/util';
 class DashboardAvailableCases extends Component {
 
   componentDidMount() {
-    this.props.fetchServices();
     this.props.user
       && this.props.user._id
       && isProvider(this.props.user)
@@ -96,7 +95,7 @@ class DashboardAvailableCases extends Component {
                           <Col xs={8} md={1}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
                           <Col xs={4}>Status</Col>
                           <Col xs={8} md={1}>
-                            {configToName(config, 'sessionPhasesByValue', session.phase)}
+                            {configToName(config, 'sessionStatusesByValue', session.status)}
                           </Col>
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>

@@ -17,10 +17,6 @@ class DashboardCompletedCases extends Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    this.props.fetchServices();
-  }
-
   render() {
     const { config, services, applications, applicationsFetching, sessions } = this.props;
     const filteredApplications = applications && Object.values(applications).filter(application => application.status === 'completed');

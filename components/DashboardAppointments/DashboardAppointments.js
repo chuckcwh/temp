@@ -27,7 +27,7 @@ class DashboardAppointments extends Component {
     const { config, services, patients, sessions, sessionsFetching, sessionsByPatient } = this.props;
     return (
       <div className={s.dashboardAppointments}>
-        <Loader className="spinner" loaded={!this.props.sessionsFetching}>
+        <Loader className="spinner" loaded={!sessionsFetching}>
           <Link className={s.dashboardInfoBtn} to="/booking1">Book Appointment</Link>
           <div className={s.cases}>
             <div className={s.casesFilter}>
@@ -48,19 +48,19 @@ class DashboardAppointments extends Component {
               const filteredSessions = sessionsByPatient[patientId].filter(session => {
                 switch (this.state.selectedFilter) {
                   case 'pending-visit':
-                    return session.phase === 'pending-visit';
+                    return session.status === 'pending-visit';
                   case 'completed':
                     return session.status === 'completed';
                   case 'expired':
                     return session.status === 'expired';
                   default:
-                    return (session.phase === 'pending-visit'
+                    return (session.status === 'pending-visit'
                       || session.status === 'completed'
                       || session.status === 'expired');
                 }
               });
               if (filteredSessions.length === 0) {
-                return;
+                return <p>No appointments found.</p>;
               }
               return (
                 <DashboardDataTable css={s} key={patientId}>
@@ -90,14 +90,14 @@ class DashboardAppointments extends Component {
                           <Col xs={8} md={2}>
                             {`${services && services[session.service] && services[session.service].name} `
                               + `(${services && services[session.service] && services[session.service].classes
-                                  && services[session.service].classes[session.serviceClassId]
-                                  && services[session.service].classes[session.serviceClassId].duration}hrs)`}
+                                  && services[session.service].classes[session.serviceClass]
+                                  && services[session.service].classes[session.serviceClass].duration}hrs)`}
                           </Col>
                           <Col xs={4}>Price</Col>
                           <Col xs={8} md={1}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
                           <Col xs={4}>Status</Col>
                           <Col xs={8} md={1}>
-                            {configToName(config, 'sessionPhasesByValue', session.phase)}
+                            {configToName(config, 'sessionStatusesByValue', session.status)}
                           </Col>
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>

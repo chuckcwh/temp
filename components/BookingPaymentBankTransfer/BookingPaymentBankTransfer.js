@@ -6,6 +6,7 @@ import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import s from './BookingPaymentBankTransfer.css';
 import { APPLICATIONS_PAY_BANK_SUCCESS, getBooking, payApplicationsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
+import history from '../../core/history';
 
 class BookingPaymentBankTransfer extends Component {
 
@@ -39,10 +40,12 @@ class BookingPaymentBankTransfer extends Component {
         bookingToken: location && location.query && location.query.btoken,
       }).then((res) => {
         if (res && res.type === APPLICATIONS_PAY_BANK_SUCCESS) {
-          this.props.getBooking({
-            bookingId: this.props.booking._id,
-            bookingToken: this.props.booking.adhocClient.contact,
-          });
+          if (this.props.booking && this.props.booking._id && this.props.booking.adhocClient) {
+            this.props.getBooking({
+              bookingId: this.props.booking && this.props.booking._id,
+              bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
+            });
+          }
 
           this.props.setPostStatus('success');
         } else {

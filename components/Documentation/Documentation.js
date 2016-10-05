@@ -69,6 +69,7 @@ class Documentation extends Component {
     this.state = {
       step: "1",
       currentForm: 'Med History',
+      wholeDocData: {}, // use obj because we need to check if the form data has been added by its key as formName
     }
   }
 
@@ -295,7 +296,7 @@ class Documentation extends Component {
                         className='btn btn-secondary'
                         onClick={e => {
                           e.preventDefault();
-                          this.setState({step: 3});
+                          this.setState({step: "3"});
                         }}>
                         Back
                       </button>

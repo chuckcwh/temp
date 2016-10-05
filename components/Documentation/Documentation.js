@@ -22,6 +22,8 @@ import DocumentationMSEForm from './DocumentationMSEForm/DocumentationMSEForm';
 import DocumentationBateForm from './DocumentationBateForm/DocumentationBateForm';
 import DocumentationNGTForm from './DocumentationNGTForm/DocumentationNGTForm';
 import DocumentationCatheterForm from './DocumentationCatheterForm/DocumentationCatheterForm';
+// sub-component - step 3
+import DocumentationSummaryForm from './DocumentationSummaryForm/DocumentationSummaryForm';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
 
@@ -49,7 +51,7 @@ const stepSections = {
     icon: "3",
     text: 'Summary of Findings',
     forms: {
-      'Nursing Notes': { name: 'Nursing Notes', isDefault: true }
+      'Summary of Findings': { name: 'Summary of Findings', isDefault: true }
     }},
   "4": {
     icon: "4",
@@ -267,6 +269,7 @@ class Documentation extends Component {
                     </div>
                   </div>
                 )
+                : step === "3" ? (<DocumentationSummaryForm />)
                 : null}
             </div>
           </div>

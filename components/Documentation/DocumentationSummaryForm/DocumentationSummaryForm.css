@@ -1,0 +1,107 @@
+@import '../../variables.css';
+
+
+.documentationSummaryForm {
+
+  & .fieldTitle {
+    display: inline-block;
+    width: 200px;
+    vertical-align: top;
+    padding-top: 35px;
+  }
+
+  & .overallTable {
+    width: 100%;
+    margin-bottom: 20px;
+    margin-top: 60px;
+  }
+
+  & .overallTable:first-of-type {
+    margin-top: 0;
+  }
+
+  & .headerRow {
+    border-bottom: 1px solid black;
+
+    & .factorColumn {
+      padding-left: 10px;
+    }
+  }
+
+  & .bodyRow {
+    border-top: 1px solid black;
+
+    & > td {
+      padding: 10px 0;
+    }
+
+    & .textInputAfterSwitch {
+      display: inline-block;
+      margin-left: 5px;
+    }
+
+    & .factorColumn {
+      vertical-align: top;
+      width: 30%;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  & .bodyRow:nth-of-type(odd) {
+    background: #f0f0f0;
+  }
+
+  & .bodyRow:first-of-type {
+    border-top: none;
+  }
+
+  & .statusSection {
+    text-align: center;
+
+    & .statusField {
+      display: inline-flex;
+      width: 200px;
+      background: #f0f0f0;
+      margin: 0 10px;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+
+      & .statusFieldTitle {
+        color: #f2635f;
+        font-size: 28px;
+        padding: 10px 0;
+      }
+    }
+  }
+
+  & .fieldSection {
+    margin-bottom: 40px;
+
+    & .fieldTitle {
+      display: inline-block;
+      width: 30%;
+      text-align: center;
+    }
+
+    & .fieldContent {
+      display: inline-block;
+      width: 350px;
+
+      & .textareaInput {
+        width: 100%;
+      }
+    }
+  }
+
+  & .woundStatus {
+    width: 100%;
+    margin: 40px 0;
+  }
+
+  & .handleForm {
+    text-align: center;
+    margin: 0 auto 40px;
+  }
+}

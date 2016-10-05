@@ -43,9 +43,9 @@ const stepSections = {
     icon: "2",
     text: 'Procedural Assessment',
     forms: {
-      'Bate': { name: 'Bate', isDefault: true },
-      'NGT': { name: 'NGT', isDefault: true },
-      'Catheter': { name: 'Catheter', isDefault: true },
+      'Bate': { name: 'Bate', isDefault: false },
+      'NGT': { name: 'NGT', isDefault: false },
+      'Catheter': { name: 'Catheter', isDefault: false },
     }},
   "3": {
     icon: "3",
@@ -101,13 +101,13 @@ class Documentation extends Component {
 
   render() {
     const { sessionId } = this.props.params;
-    const { session, services } = this.props;
+    const { config, session, services } = this.props;
     const { step, currentForm } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
       const serviceClassName = session.serviceClass && Object.keys(services).length > 0 && services[session.service].classes[session.serviceClass].duration;
-      return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''}) - ${moment(session.date).format('YYYY-MM-DD')}` : '';
+      return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})` : '';
     }
 
     return (
@@ -125,17 +125,18 @@ class Documentation extends Component {
                   <Col xs={12} md={6}>
                     <h3>Case</h3>
                     <ul>
-                      <li><span>Date:</span></li>
-                      <li><span>Time:</span></li>
+                      <li><span className={s.basicInfoTitle}>Service:</span>{title()}</li>
+                      <li><span className={s.basicInfoTitle}>Date:</span>{moment(session.date).format('YYYY-MM-DD')}</li>
+                      <li><span className={s.basicInfoTitle}>Time:</span>{configToName(config, 'timeSlotsByValue', session.timeSlot)}</li>
                     </ul>
                   </Col>
                   <Col xs={12} md={6}>
                     <h3>Patient</h3>
                     <ul>
-                      <li><span>Name:</span></li>
-                      <li><span>NRIC:</span></li>
-                      <li><span>Age:</span></li>
-                      <li><span>Allergies:</span></li>
+                      <li><span className={s.basicInfoTitle}>Name:</span></li>
+                      <li><span className={s.basicInfoTitle}>NRIC:</span></li>
+                      <li><span className={s.basicInfoTitle}>Age:</span></li>
+                      <li><span className={s.basicInfoTitle}>Allergies:</span></li>
                     </ul>
                   </Col>
                 </Row>
@@ -320,6 +321,7 @@ Documentation.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   session: state.session.data,
   services: state.services.data,
 });

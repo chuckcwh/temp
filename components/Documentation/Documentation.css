@@ -5,6 +5,12 @@
   & .basicInfo {
     background: #f0f0f0;
     border-radius: 5px;
+
+    & .basicInfoTitle {
+      width: 100px;
+      font-weight: 600;
+      display: inline-block;
+    }
   }
 
   & .docBasic {
@@ -101,7 +107,5 @@
         text-align: right;
       }
     }
-
   }
-
 }

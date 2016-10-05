@@ -49,11 +49,11 @@ class DocumentationCatheterForm extends Component {
     ))
   }
 
-  renderYesNoSwitchWithComment = (fieldName) => (
+  renderYesNoSwitchWithComment = (fieldName, field) => (
     <span>
       <YesNoSwitch
         fieldName={fieldName}
-        fieldInitValue={this.props.fields[fieldName].value}
+        field={field}
         changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
       />
       &nbsp;&nbsp;&nbsp;&nbsp;
@@ -61,11 +61,6 @@ class DocumentationCatheterForm extends Component {
       <textarea className={cx(s.textareaInput, s.textInputAfterSwitch)} type='text' {...this.props.fields[`${fieldName}Text`]} />
     </span>
   )
-
-  onFormSubmit = (values) => {
-    console.log('onFormSubmit', values);
-  }
-
 
   render() {
     const {
@@ -143,31 +138,31 @@ class DocumentationCatheterForm extends Component {
         />
     )}, {
       first: "Patient is having a fever",
-      second: this.renderYesNoSwitchWithComment('patientFever'),
+      second: this.renderYesNoSwitchWithComment('patientFever', patientFever),
     }, {
       first: "Balloon cannot be emptied",
-      second: this.renderYesNoSwitchWithComment('ballon'),
+      second: this.renderYesNoSwitchWithComment('ballon', ballon),
     }, {
       first: "Patient experiences pain",
-      second: this.renderYesNoSwitchWithComment('patientPain'),
+      second: this.renderYesNoSwitchWithComment('patientPain', patientPain),
     }, {
       first: "Traces of blood observed",
-      second: this.renderYesNoSwitchWithComment('bloodTrace'),
+      second: this.renderYesNoSwitchWithComment('bloodTrace', bloodTrace),
     }, {
       first: "Meatus or genital abnormalities observed, including discharge",
-      second: this.renderYesNoSwitchWithComment('meatusAbnormal'),
+      second: this.renderYesNoSwitchWithComment('meatusAbnormal', meatusAbnormal),
     }, {
       first: "Encrustation at catheter tip",
-      second: this.renderYesNoSwitchWithComment('catheterEncrustation'),
+      second: this.renderYesNoSwitchWithComment('catheterEncrustation', catheterEncrustation),
     }, {
       first: "Hematuria/cloudy/tea-looking urine observed",
-      second: this.renderYesNoSwitchWithComment('hematuriaUrine'),
+      second: this.renderYesNoSwitchWithComment('hematuriaUrine', hematuriaUrine),
     }, {
       first: "Bad smelling observed",
-      second: this.renderYesNoSwitchWithComment('badSmelling'),
+      second: this.renderYesNoSwitchWithComment('badSmelling', badSmelling),
     }, {
       first: "Patient has bad sentiments",
-      second: this.renderYesNoSwitchWithComment('patientSentiment'),
+      second: this.renderYesNoSwitchWithComment('patientSentiment', patientSentiment),
     }];
 
     const secondSec = [{
@@ -198,19 +193,19 @@ class DocumentationCatheterForm extends Component {
         />
     )}, {
       first: "Patient complain of localised pain",
-      second: this.renderYesNoSwitchWithComment('insertPatientPain'),
+      second: this.renderYesNoSwitchWithComment('insertPatientPain', insertPatientPain),
     }, {
       first: "Traces of blood observed",
-      second: this.renderYesNoSwitchWithComment('insertBloodTrace'),
+      second: this.renderYesNoSwitchWithComment('insertBloodTrace', insertBloodTrace),
     }, {
       first: "Absence in urine drainage",
-      second: this.renderYesNoSwitchWithComment('insertUrineDrainage'),
+      second: this.renderYesNoSwitchWithComment('insertUrineDrainage', insertUrineDrainage),
     }, {
       first: "Resistance to balloon inflation",
-      second: this.renderYesNoSwitchWithComment('insertBalloonResist'),
+      second: this.renderYesNoSwitchWithComment('insertBalloonResist', insertBalloonResist),
     }, {
       first: "Lack of free movement of catheter once balloon inflated",
-      second: this.renderYesNoSwitchWithComment('insertLackOfMovement'),
+      second: this.renderYesNoSwitchWithComment('insertLackOfMovement', insertLackOfMovement),
     }];
 
     const thirdSec = [{
@@ -218,7 +213,7 @@ class DocumentationCatheterForm extends Component {
       second: (
         <YesNoSwitch
           fieldName='familyEducation'
-          fieldInitValue={familyEducation.value}
+          field={familyEducation}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )
@@ -227,7 +222,7 @@ class DocumentationCatheterForm extends Component {
       second: (
         <YesNoSwitch
           fieldName='reviewAcception'
-          fieldInitValue={reviewAcception.value}
+          field={reviewAcception}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )
@@ -236,7 +231,7 @@ class DocumentationCatheterForm extends Component {
       second: (
         <YesNoSwitch
           fieldName='reviewImpact'
-          fieldInitValue={reviewImpact.value}
+          field={reviewImpact}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )

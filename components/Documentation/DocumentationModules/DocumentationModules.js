@@ -8,18 +8,8 @@ import { getUserName, configToName } from '../../../core/util';
 
 
 export class YesNoSwitch extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      select: this.props.fieldInitValue || false,
-    }
-  }
-
   render() {
     const { fieldName, field } = this.props;
-    const { select } = this.state;
 
     return (
       <div className={s.yesNoContainer}>
@@ -27,7 +17,6 @@ export class YesNoSwitch extends Component {
           className={cx('btn', s.yesNoInput, s.yesChoice, !!field.value === true && s.yesCheck)}
           onClick={e => {
             e.preventDefault();
-
             this.props.changeFieldValue(fieldName, true);
           }}>
           Yes
@@ -36,7 +25,6 @@ export class YesNoSwitch extends Component {
           className={cx('btn', s.yesNoInput, s.noChoice, !!field.value === false && s.noCheck)}
           onClick={e => {
             e.preventDefault();
-
             this.props.changeFieldValue(fieldName, false);
           }}>
           No

@@ -49,7 +49,7 @@ class DocumentationNGTForm extends Component {
     return questions.map(question => (
       <tr className={s.bodyRow}>
         <td className={s.factorColumn}>
-          <strong>{question.title}</strong><br />
+          <strong>{question.title}</strong>
         </td>
         <td className={s.fieldContent}>
           {question.content}

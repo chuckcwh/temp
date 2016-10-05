@@ -1,0 +1,40 @@
+@import '../../variables.css';
+
+
+.yesNoContainer {
+  vertical-align: top;
+  padding-top: 20px;
+  display: inline-block;
+
+  & .yesNoInput {
+    width: auto;
+    padding: 0.3em 7px;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 25px;
+    cursor: pointer;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    width: 60px;
+    color: #fff;
+    outline: none;
+  }
+
+  & .yesChoice {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  & .noChoice {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  & .yesCheck {
+    background: #f2635f;
+  }
+
+  & .noCheck {
+    background: #18B905;
+  }
+}

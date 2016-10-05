@@ -29,10 +29,6 @@ class DocumentationSummaryForm extends Component {
     ))
   }
 
-  onFormSubmit = (values) => {
-    console.log('onFormSubmit', values);
-  }
-
   render() {
     const {
       fields: {
@@ -78,7 +74,7 @@ class DocumentationSummaryForm extends Component {
     }]
 
     return (
-      <form className={s.documentationSummaryForm} onFormSubmit={this.onFormSubmit}>
+      <form className={s.documentationSummaryForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
         <h2>Provider Notes</h2>
 
         <div className={s.issueSetSection}>
@@ -95,7 +91,9 @@ class DocumentationSummaryForm extends Component {
           <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
             Clear Values
           </button>
-          <button className='btn btn-primary' disabled={submitting || invalid}>
+          <button
+            className='btn btn-primary'
+            disabled={submitting || invalid}>
             Submit
           </button>
         </div>

@@ -100,6 +100,10 @@ class Documentation extends Component {
     ))
   }
 
+  saveSingleFormInState = (formName, values) => {
+    console.log(formName, values);
+  }
+
   onSubmitFormAsWhole = () => {
     console.log('submit form!!!!!!!!!!!!!!!!!!!');
   }
@@ -279,7 +283,7 @@ class Documentation extends Component {
                     </div>
                   </div>
                 )
-                : step === "3" ? (<DocumentationSummaryForm />)
+                : step === "3" ? (<DocumentationSummaryForm onFormSubmit={values => this.saveSingleFormInState('summary form', values)}/>)
                 : step === "4" ? (
                   <div>
                     <h2>Confirmation</h2>

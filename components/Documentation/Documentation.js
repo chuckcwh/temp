@@ -95,6 +95,10 @@ class Documentation extends Component {
     ))
   }
 
+  onSubmitFormAsWhole = () => {
+    console.log('submit form!!!!!!!!!!!!!!!!!!!');
+  }
+
   render() {
     const { sessionId } = this.props.params;
     const { session, services } = this.props;
@@ -270,6 +274,37 @@ class Documentation extends Component {
                   </div>
                 )
                 : step === "3" ? (<DocumentationSummaryForm />)
+                : step === "4" ? (
+                  <div>
+                    <h2>Confirmation</h2>
+
+                    <div>
+                      <p>You have reached the end of the documentation.</p>
+                      <p>Are you sure you have filled up all the documents accurately?</p>
+                      <p>Please do another round of checking befor submitting the documents.</p>
+                      <p>Thank you for taking the time out to complete the documentation.</p>
+                    </div>
+
+                    <div className={s.handleForm}>
+                      <button
+                        className='btn btn-secondary'
+                        onClick={e => {
+                          e.preventDefault();
+                          this.setState({step: 3});
+                        }}>
+                        Back
+                      </button>
+                      <button
+                        className='btn btn-primary'
+                        onClick={e => {
+                          e.preventDefault();
+                          this.onSubmitFormAsWhole();
+                        }}>
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                )
                 : null}
             </div>
           </div>

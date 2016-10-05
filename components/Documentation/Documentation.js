@@ -88,7 +88,11 @@ class Documentation extends Component {
     return subMenu && subMenu.map(form => (
       <div
         key={Object.values(stepSections[step].forms).indexOf(form)}
-        className={cx(s.stepSectionCategoryUnit, currentForm === form.name && s.stepSectionCategoryUnitActive)}
+        className={cx(
+          s.stepSectionCategoryUnit,
+          (currentForm === form.name
+            || (stepSections[step].forms[currentForm] === undefined && Object.values(stepSections[step].forms).length === 1))
+            && s.stepSectionCategoryUnitActive)}
         onClick={() => this.setState({currentForm: form.name})}>
         {form.name}
       </div>

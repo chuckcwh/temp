@@ -3,7 +3,6 @@
 
 .yesNoContainer {
   vertical-align: top;
-  padding-top: 20px;
   display: inline-block;
 
   & .yesNoInput {

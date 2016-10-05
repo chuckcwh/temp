@@ -18,25 +18,25 @@ export class YesNoSwitch extends Component {
   }
 
   render() {
-    const { fieldName } = this.props;
+    const { fieldName, field } = this.props;
     const { select } = this.state;
 
     return (
       <div className={s.yesNoContainer}>
         <button
-          className={cx('btn', s.yesNoInput, s.yesChoice, select === true && s.yesCheck)}
+          className={cx('btn', s.yesNoInput, s.yesChoice, !!field.value === true && s.yesCheck)}
           onClick={e => {
             e.preventDefault();
-            this.setState({select: true});
+
             this.props.changeFieldValue(fieldName, true);
           }}>
           Yes
         </button>
         <button
-          className={cx('btn', s.yesNoInput, s.noChoice, select === false && s.noCheck)}
+          className={cx('btn', s.yesNoInput, s.noChoice, !!field.value === false && s.noCheck)}
           onClick={e => {
             e.preventDefault();
-            this.setState({select: false});
+
             this.props.changeFieldValue(fieldName, false);
           }}>
           No

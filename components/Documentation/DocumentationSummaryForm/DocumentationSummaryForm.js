@@ -21,8 +21,8 @@ class DocumentationSummaryForm extends Component {
   renderIssueSet = (issues) => {
     return issues.map(issue => (
       <div key={issues.indexOf(issue)}>
-        <label className={s.fieldTitle}><strong>{issue.first}</strong></label>
-        <div className={s.fieldContent}>
+        <label className={s.issueTitle}><strong>{issue.first}</strong></label>
+        <div className={s.issueContent}>
           {issue.second}
         </div>
       </div>
@@ -32,7 +32,6 @@ class DocumentationSummaryForm extends Component {
   onFormSubmit = (values) => {
     console.log('onFormSubmit', values);
   }
-
 
   render() {
     const {
@@ -61,7 +60,7 @@ class DocumentationSummaryForm extends Component {
       second: (
         <YesNoSwitch
           fieldName='recommendPolyclinic'
-          fieldInitValue={recommendPolyclinic.value}
+          field={recommendPolyclinic}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )
@@ -82,22 +81,22 @@ class DocumentationSummaryForm extends Component {
       <form className={s.documentationSummaryForm} onFormSubmit={this.onFormSubmit}>
         <h2>Provider Notes</h2>
 
-        <div className={s.fieldSection}>
+        <div className={s.issueSetSection}>
           {this.renderIssueSet(firstSec)}
         </div>
 
         <h2>Notes To Stakeholders</h2>
 
-        <div className={s.fieldSection}>
+        <div className={s.issueSetSection}>
           {this.renderIssueSet(secondSec)}
         </div>
 
         <div className={s.handleForm}>
-          <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
-          </button>
           <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
             Clear Values
+          </button>
+          <button className='btn btn-primary' disabled={submitting || invalid}>
+            Submit
           </button>
         </div>
       </form>
@@ -135,7 +134,7 @@ const reduxFormConfig = {
 
 const mapStateToProps = (state) => ({
   // initialValues: {
-  //   patientFever: true,
+  //   recommendPolyclinic: true,
   // },
 });
 

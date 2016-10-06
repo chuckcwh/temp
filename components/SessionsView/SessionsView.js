@@ -489,7 +489,7 @@ class SessionsView extends Component {
                     <Link to="/dashboard" className="btn btn-primary btn-small">BACK</Link>
                   </span>
                   <span>
-                    {paymentButton}
+                    {/*paymentButton*/}
                   </span>
                 </div>
                 <h2>{`Session ID: ${session && formatSessionAlias(session.alias)}`}</h2>
@@ -583,7 +583,7 @@ class SessionsView extends Component {
                 </div>
                 <div className={s.sessionsViewFooter}>
                   <span>
-                    {paymentButton}
+                    {/*paymentButton*/}
                   </span>
                   <span>
                     <Link to="/dashboard" className="btn btn-primary btn-small">BACK</Link>

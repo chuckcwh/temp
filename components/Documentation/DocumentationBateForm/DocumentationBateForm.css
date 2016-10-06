@@ -2,52 +2,80 @@
 
 
 .documentationBateForm {
-  & .fieldTitle {
-    display: inline-block;
-    width: 200px;
-    vertical-align: top;
-    padding-top: 35px;
-  }
 
-  & .overallTable {
-    width: 100%;
-    margin-bottom: 20px;
-    margin-top: 60px;
-  }
+  & .issueSetSection {
+    margin-bottom: 40px;
 
-  & .overallTable:first-of-type {
-    margin-top: 0;
-  }
-
-  & .headerRow {
-    border-bottom: 1px solid black;
-
-    & .factorColumn {
-      padding-left: 10px;
-    }
-  }
-
-  & .bodyRow {
-    border-top: 1px solid black;
-
-    & > td {
-      padding: 10px 0;
-    }
-
-    & .factorColumn {
-      vertical-align: top;
+    & .issueTitle {
+      display: inline-block;
       width: 30%;
-      padding-left: 10px;
-      padding-right: 10px;
+      vertical-align: top;
+      padding-top: 20px;
+    }
+
+    & .issueContent {
+      display: inline-block;
+      width: 450px;
+      padding: 20px 0;
+
+      & .textareaInput {
+        width: 100%;
+        margin-top: 0;
+      }
     }
   }
 
-  & .bodyRow:nth-of-type(odd) {
-    background: #f0f0f0;
-  }
+  & .issueSetTable {
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 30px;
 
-  & .bodyRow:first-of-type {
-    border-top: none;
+    & .headerRow {
+      border-bottom: 1px solid black;
+
+      & .firstCol {
+        padding-left: 10px;
+      }
+    }
+
+    & .bodyRow {
+      border-top: 1px solid black;
+
+      & > td {
+        padding: 10px 0;
+      }
+
+      & .textContainerAfterSwitch {
+        display: inline-block;
+        margin-left: 10px;
+
+        & .title {
+          display: inline-block;
+          vertical-align: top;
+          margin: 13px 10px;
+        }
+
+        & .input {
+          display: inline-block;
+          margin-top: 0;
+        }
+      }
+
+      & .firstCol {
+        vertical-align: top;
+        width: 30%;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    & .bodyRow:nth-of-type(odd) {
+      background: #f0f0f0;
+    }
+
+    & .bodyRow:first-of-type {
+      border-top: none;
+    }
   }
 
   & .statusSection {
@@ -70,32 +98,13 @@
     }
   }
 
-  & .fieldSection {
-    margin-bottom: 40px;
-
-    & .fieldTitle {
-      display: inline-block;
-      width: 30%;
-      text-align: center;
-    }
-
-    & .fieldContent {
-      display: inline-block;
-      width: 350px;
-
-      & .textareaInput {
-        width: 100%;
-      }
-    }
+  & .handleForm {
+    text-align: center;
+    margin: 40px auto 60px;
   }
 
   & .woundStatus {
     width: 100%;
     margin: 40px 0;
-  }
-
-  & .handleForm {
-    text-align: center;
-    margin: 0 auto 40px;
   }
 }

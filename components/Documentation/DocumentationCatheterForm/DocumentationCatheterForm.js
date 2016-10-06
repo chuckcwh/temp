@@ -250,7 +250,7 @@ class DocumentationCatheterForm extends Component {
         <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.firstColumn}>Item</td>
+              <td className={s.firstCol}>Item</td>
               <td>Assessment</td>
             </tr>
           </thead>
@@ -264,7 +264,7 @@ class DocumentationCatheterForm extends Component {
         <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.firstColumn}>Item</td>
+              <td className={s.firstCol}>Item</td>
               <td>Assessment</td>
             </tr>
           </thead>

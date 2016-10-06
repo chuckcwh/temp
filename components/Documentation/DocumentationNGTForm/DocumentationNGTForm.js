@@ -30,7 +30,7 @@ class DocumentationNGTForm extends Component {
   renderRowsWith2Col = (items) => {
     return items.map(item => (
       <tr className={s.bodyRow}>
-        <td className={s.firstColumn}>
+        <td className={s.firstCol}>
           <strong>{item.first}</strong>{item.firstSub && <br />}
           {item.firstSub}
         </td>
@@ -247,7 +247,7 @@ class DocumentationNGTForm extends Component {
         <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.firstColumn}>Item</td>
+              <td className={s.firstCol}>Item</td>
               <td>Assessment</td>
             </tr>
           </thead>
@@ -276,7 +276,7 @@ class DocumentationNGTForm extends Component {
         <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.firstColumn}>pH/Appearance</td>
+              <td className={s.firstCol}>pH/Appearance</td>
               <td>Gastric</td>
               <td>Intestinal</td>
               <td>Respiratory</td>

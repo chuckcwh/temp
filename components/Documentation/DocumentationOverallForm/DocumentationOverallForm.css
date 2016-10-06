@@ -3,91 +3,71 @@
 
 .documentationOverallForm {
 
-  & .red {
-    color: #f2635f;
-  }
-
-  & .overallTable {
-    width: 100%;
-  }
-
   & input:focus {
     outline: none;
   }
 
-  & .headerRow > td {
-    text-decoration: underline;
+  & .red {
+    color: #f2635f;
   }
 
-  & .handleForm {
-    text-align: center;
-    margin: 0 auto 40px;
-  }
+  & .issueSetTable {
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 30px;
 
-  & .bodyRow > td {
-    padding-bottom: 20px;
-  }
-
-  & .questionColumn {
-    width: 35%;
-    vertical-align: top;
-    padding-top: 10px;
-  }
-
-  & .yesNoColumn {
-    width: 15%;
-    vertical-align: top;
-    padding-top: 20px;
-
-    & .yesNoInput {
-      width: auto;
-      padding: 0.3em 7px;
-      display: inline-block;
-      text-decoration: none;
-      font-size: 25px;
-      cursor: pointer;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
-      width: 60px;
-      color: #fff;
-      outline: none;
+    & .headerRow {
+      & > td {
+        padding-left: 10px;
+        text-decoration: underline;
+      }
     }
 
-    & .yesChoice {
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
+    & .bodyRow {
+      border-top: 1px solid #ccc;
+
+      & > td {
+        padding: 20px 0;
+      }
+
+      & .firstCol {
+        vertical-align: top;
+        width: 30%;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      & .secondCol {
+        width: 20%;
+        vertical-align: top;
+        padding-top: 20px;
+      }
+
+      & .thirdCol, & .forthCol {
+        width: 25%;
+        vertical-align: top;
+
+        & .textareaInput {
+          padding: 5px 15px;
+          font-size: 16px;
+          width: 90%;
+          margin-top: 0;
+          height: 94px;
+        }
+      }
     }
 
-    & .noChoice {
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
+    & .bodyRow:nth-of-type(odd) {
+      background: #f0f0f0;
     }
 
-    & .yesCheck {
-      background: #f2635f;
-    }
-
-    & .noCheck {
-      background: #18B905;
-    }
-  }
-
-  & .textareaColumn {
-    width: 25%;
-    vertical-align: top;
-
-    & .textareaInput {
-      padding: 5px 15px;
-      font-size: 16px;
-      width: 90%;
-      margin-top: 10px;
-      height: 94px;
+    & .bodyRow:first-of-type {
+      border-top: none;
     }
   }
 
   & .handleForm {
     text-align: center;
-    margin: 40px auto;
+    margin: 40px auto 60px;
   }
-
 }

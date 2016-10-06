@@ -4,6 +4,7 @@
 .yesNoContainer {
   vertical-align: top;
   display: inline-block;
+  width: 120px;
 
   & .yesNoInput {
     width: auto;

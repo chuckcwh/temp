@@ -40,6 +40,7 @@ const config = (state = {
           religionsByValue: normalize(action.response.data.religions, 'value'),
           timeSlotsByValue: normalize(action.response.data.timeSlots, 'value'),
           sessionStatusesByValue: normalize(action.response.data.sessionStatuses, 'value'),
+          transactionStatusesByValue: normalize(action.response.data.transactionStatuses, 'value'),
         },
         lastUpdated: action.response && action.response.receivedAt
       }

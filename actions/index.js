@@ -889,7 +889,7 @@ function fetchAction(route) {
     },
     getS3Policy: {
       types: [ GET_S3_POLICY_REQUEST, GET_S3_POLICY_SUCCESS, GET_S3_POLICY_FAILURE ],
-      endpoint: '/s3',
+      endpoint: '/s3/putObjectUrl',
       method: 'get',
     }
     // getAvailableSessions:{

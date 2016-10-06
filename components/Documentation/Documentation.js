@@ -36,8 +36,8 @@ const stepSections = {
       'Med History': { name: 'Med History', isDefault: true },
       'Overall': { name: 'Overall', isDefault: true },
       'Vital Signs': { name: 'Vital Signs', isDefault: true },
-      'FRAT': { name: 'FRAT', isDefault: false },
-      'MSE': { name: 'MSE', isDefault: false },
+      'FRAT': { name: 'FRAT', isDefault: true },
+      'MSE': { name: 'MSE', isDefault: true },
     }},
   "2": {
     icon: "2",
@@ -83,7 +83,6 @@ class Documentation extends Component {
 
   getSubMenu = () => {
     const { step, currentForm } = this.state;
-
     const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state[item.name]);
 
     return subMenu && subMenu.map(form => (
@@ -142,10 +141,10 @@ class Documentation extends Component {
                   <Col xs={12} md={6}>
                     <h3>Patient</h3>
                     <ul>
-                      <li><span className={s.basicInfoTitle}>Name:</span></li>
-                      <li><span className={s.basicInfoTitle}>NRIC:</span></li>
-                      <li><span className={s.basicInfoTitle}>Age:</span></li>
-                      <li><span className={s.basicInfoTitle}>Allergies:</span></li>
+                      <li><span className={s.basicInfoTitle}>Name:</span>{session.patient && session.patient.name}</li>
+                      <li><span className={s.basicInfoTitle}>Age:</span>{session.patient && moment().diff(session.patient.dob, 'years') ? moment().diff(session.patient.dob, 'years') : 0}</li>
+                      <li><span className={s.basicInfoTitle}>Gender:</span>{session.patient && configToName(config, 'gendersByValue', session.patient.gender)}</li>
+                      <li><span className={s.basicInfoTitle}>Note:</span>{session.patient && session.patient.specialNotes}</li>
                     </ul>
                   </Col>
                 </Row>

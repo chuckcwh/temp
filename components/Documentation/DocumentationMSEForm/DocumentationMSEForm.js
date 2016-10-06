@@ -81,13 +81,6 @@ class DocumentationMSEForm extends Component {
 
     const { suggestedInterpretation } = this.state;
 
-    const choices = {
-      cognitionFamilyCare: [
-        {value: "1", label: (<span>Yes</span>)},
-        {value: "2", label: (<span>No</span>)},
-      ],
-    };
-
     const firstSec = [{
       first: "General Appearance",
       second: (

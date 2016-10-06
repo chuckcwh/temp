@@ -107,7 +107,7 @@ class DocumentationBateForm extends Component {
             {value: "4", label: (<span>Medial Ankle</span>)},
             {value: "5", label: (<span>Ischial Tuberosity</span>)},
             {value: "6", label: (<span>Heel</span>)},
-            {value: "7", label: (<span>Other site: <input type="text" {...woundSiteText} disabled={woundSite.value !== '7'} /></span>)},
+            {value: "7", label: (<span>Other site: <input className={s.textInputWithSelection} type="text" {...woundSiteText} disabled={woundSite.value !== '7'} /></span>)},
           ]}
         />
     )}, {

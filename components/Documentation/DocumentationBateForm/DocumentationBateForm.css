@@ -45,20 +45,8 @@
         padding: 10px 0;
       }
 
-      & .textContainerAfterSwitch {
-        display: inline-block;
-        margin-left: 10px;
-
-        & .title {
-          display: inline-block;
-          vertical-align: top;
-          margin: 13px 10px;
-        }
-
-        & .input {
-          display: inline-block;
-          margin-top: 0;
-        }
+      & .textInputWithSelection {
+        margin: 0;
       }
 
       & .firstCol {

@@ -41,5 +41,9 @@
 .selectionContainer {
   & .selectionLabel {
     width: 100%;
+
+    & .middle {
+      vertical-align: middle;
+    }
   }
 }

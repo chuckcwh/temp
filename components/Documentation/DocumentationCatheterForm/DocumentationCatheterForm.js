@@ -29,7 +29,7 @@ class DocumentationCatheterForm extends Component {
   renderRowsWith2Col = (items) => {
     return items.map(item => (
       <tr className={s.bodyRow}>
-        <td className={s.factorColumn}>
+        <td className={s.firstColumn}>
           <strong>{item.first}</strong>
         </td>
         <td className={s.fieldContent}>
@@ -41,8 +41,8 @@ class DocumentationCatheterForm extends Component {
   renderIssueSet = (issues) => {
     return issues.map(issue => (
       <div key={issues.indexOf(issue)}>
-        <label className={s.fieldTitle}><strong>{issue.first}</strong></label>
-        <div className={s.fieldContent}>
+        <label className={s.issueTitle}><strong>{issue.first}</strong></label>
+        <div className={s.issueContent}>
           {issue.second}
         </div>
       </div>
@@ -56,9 +56,10 @@ class DocumentationCatheterForm extends Component {
         field={field}
         changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
       />
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      Comments:
-      <textarea className={cx(s.textareaInput, s.textInputAfterSwitch)} type='text' {...this.props.fields[`${fieldName}Text`]} />
+      <div className={s.textContainerAfterSwitch}>
+        <span className={s.title}>Comments:</span>
+        <textarea className={cx(s.textareaInput, s.input)} type='text' {...this.props.fields[`${fieldName}Text`]} />
+      </div>
     </span>
   )
 
@@ -243,13 +244,13 @@ class DocumentationCatheterForm extends Component {
     }];
 
     return (
-      <form className={s.documentationCatheterForm} onFormSubmit={this.onFormSubmit}>
+      <form className={s.documentationCatheterForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
         <h2>Catheter Removal</h2>
 
-        <table className={s.overallTable}>
+        <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.factorColumn}>Item</td>
+              <td className={s.firstColumn}>Item</td>
               <td>Assessment</td>
             </tr>
           </thead>
@@ -260,10 +261,10 @@ class DocumentationCatheterForm extends Component {
 
         <h2>Catheter Insertion</h2>
 
-        <table className={s.overallTable}>
+        <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.factorColumn}>Item</td>
+              <td className={s.firstColumn}>Item</td>
               <td>Assessment</td>
             </tr>
           </thead>
@@ -272,7 +273,7 @@ class DocumentationCatheterForm extends Component {
           </tbody>
         </table>
 
-        <div className={s.fieldSection}>
+        <div className={s.issueSetSection}>
           {this.renderIssueSet(thirdSec)}
         </div>
 
@@ -287,16 +288,16 @@ class DocumentationCatheterForm extends Component {
           </div>
         </div>
 
-        <div className={s.fieldSection}>
+        <div className={s.issueSetSection}>
           {this.renderIssueSet(forthSec)}
         </div>
 
         <div className={s.handleForm}>
-          <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
-          </button>
           <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
             Clear Values
+          </button>
+          <button className='btn btn-primary' disabled={submitting || invalid}>
+            Submit
           </button>
         </div>
       </form>
@@ -367,7 +368,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   resetForm: () => dispatch(reset('documentationCatheterForm')),
-  changeFieldValue: (field, value) => dispatch(change('documentationNGTForm', field, value)),
+  changeFieldValue: (field, value) => dispatch(change('documentationCatheterForm', field, value)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationCatheterForm);

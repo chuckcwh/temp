@@ -43,9 +43,9 @@ const stepSections = {
     icon: "2",
     text: 'Procedural Assessment',
     forms: {
-      'Bate': { name: 'Bate', isDefault: false },
-      'NGT': { name: 'NGT', isDefault: false },
-      'Catheter': { name: 'Catheter', isDefault: false },
+      'Bate': { name: 'Bate', isDefault: true },
+      'NGT': { name: 'NGT', isDefault: true },
+      'Catheter': { name: 'Catheter', isDefault: true },
     }},
   "3": {
     icon: "3",
@@ -230,7 +230,7 @@ class Documentation extends Component {
 
                 : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm />)
                 : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm />)
-                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm />)
+                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm onFormSubmit={values => this.saveSingleFormInState('catheter form', values)} />)
                 : step === "2" ? (
                   <div>
                     <h2>Add More</h2>
@@ -283,7 +283,7 @@ class Documentation extends Component {
                     </div>
                   </div>
                 )
-                : step === "3" ? (<DocumentationSummaryForm onFormSubmit={values => this.saveSingleFormInState('summary form', values)}/>)
+                : step === "3" ? (<DocumentationSummaryForm onFormSubmit={values => this.saveSingleFormInState('summary form', values)} />)
                 : step === "4" ? (
                   <div>
                     <h2>Confirmation</h2>

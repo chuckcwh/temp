@@ -52,8 +52,13 @@
         padding-right: 10px;
       }
 
-      & .textInputWithSelection {
-        margin: 0 0 0 10px;
+      & .selectionWithComment {
+        display: inline;
+        vertical-align: top;
+
+        & input[type="text"] {
+          margin: 0 0 0 10px;
+        }
       }
     }
 

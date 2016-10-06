@@ -54,7 +54,7 @@ export class Selections extends Component {
               value={item.value}
               checked={field.value === item.value}
             />
-          <label className={s.selectionLabel} htmlFor={`${fieldName}_${item.value}`}><span className={s.middle}><span></span></span><span>{item.label}</span></label>
+          <label className={s.selectionLabel} htmlFor={`${fieldName}_${item.value}`}><span className={s.labelIcon}><span></span></span><span className={s.labelBody}>{item.label}</span></label>
           </div>
         ))}
       </span>

@@ -43,8 +43,13 @@
   & .selectionLabel {
     width: 100%;
 
-    & .middle {
-      vertical-align: middle;
+    & .labelIcon {
+      vertical-align: top;
+    }
+
+    & .labelBody {
+      display: inline-block;
+      width: 90%;
     }
   }
 }

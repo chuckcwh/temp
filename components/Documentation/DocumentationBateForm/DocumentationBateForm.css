@@ -45,15 +45,20 @@
         padding: 10px 0;
       }
 
-      & .textInputWithSelection {
-        margin: 0;
-      }
-
       & .firstCol {
         vertical-align: top;
         width: 30%;
         padding-left: 10px;
         padding-right: 10px;
+      }
+
+      & .selectionWithComment {
+        display: inline;
+        vertical-align: top;
+
+        & input[type="text"] {
+          margin: 0 0 0 10px;
+        }
       }
     }
 

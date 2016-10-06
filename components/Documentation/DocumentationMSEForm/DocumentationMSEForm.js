@@ -149,7 +149,7 @@ class DocumentationMSEForm extends Component {
           field={speech}
           items={[
             {value: "1", label: (<span>Clear & Ordinary</span>)},
-            {value: "2", label: (<span>Abnormal, please specify:<input className={s.textInputWithSelection} type="text" {...speechDes} /></span>)},
+            {value: "2", label: (<span className={s.selectionWithComment}>Abnormal, please specify:<input className={s.textInputWithSelection} type="text" {...speechDes} /></span>)},
           ]}
         />
     )}, {

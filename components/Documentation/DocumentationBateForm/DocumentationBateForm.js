@@ -107,7 +107,7 @@ class DocumentationBateForm extends Component {
             {value: "4", label: (<span>Medial Ankle</span>)},
             {value: "5", label: (<span>Ischial Tuberosity</span>)},
             {value: "6", label: (<span>Heel</span>)},
-            {value: "7", label: (<span>Other site: <input className={s.textInputWithSelection} type="text" {...woundSiteText} disabled={woundSite.value !== '7'} /></span>)},
+            {value: "7", label: (<span className={s.selectionWithComment}>Other site: <input type="text" {...woundSiteText} disabled={woundSite.value !== '7'} /></span>)},
           ]}
         />
     )}, {
@@ -126,7 +126,7 @@ class DocumentationBateForm extends Component {
             {value: "7", label: (<span>Burn/Scalds</span>)},
             {value: "8", label: (<span>Pressure Sore</span>)},
             {value: "9", label: (<span>Traumatic Wound</span>)},
-            {value: "10", label: (<span>Others: <input type="text" {...woundTypeText} disabled={woundType.value !== '10'} /></span>)},
+            {value: "10", label: (<span className={s.selectionWithComment}>Others: <input type="text" {...woundTypeText} disabled={woundType.value !== '10'} /></span>)},
           ]}
         />
     )}, {

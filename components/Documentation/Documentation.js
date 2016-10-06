@@ -186,11 +186,11 @@ class Documentation extends Component {
             </div>
 
             <div className={s.formContent}>
-              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm />)
-                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm />)
-                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm />)
-                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm />)
-                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm />)
+              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm onFormSubmit={values => this.saveSingleFormInState('Medical History form', values)} />)
+                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm onFormSubmit={values => this.saveSingleFormInState('Overall form', values)} />)
+                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm onFormSubmit={values => this.saveSingleFormInState('Vital-Signs form', values)} />)
+                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm onFormSubmit={values => this.saveSingleFormInState('FRAT form', values)} />)
+                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm onFormSubmit={values => this.saveSingleFormInState('MSE form', values)} />)
                 : step === "1" ? (
                   <div>
                     <h2>Add More</h2>

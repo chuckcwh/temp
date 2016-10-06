@@ -3,53 +3,56 @@
 
 .documentationVitalSignsForm {
 
-  & .fieldTitle {
-    display: inline-block;
-    width: 200px;
-    vertical-align: top;
-    padding-top: 35px;
-  }
+  & .issueSetSection {
+    margin-bottom: 40px;
 
-  & .fieldSection {
-    padding: 20px 0;
-    margin: 20px 0;
-    border-top: 1px solid black;
+    & .issue {
+      border-top: 1px solid #ccc;
+      padding: 20px 0;
+      margin: 20px 0;
 
-    & .fieldContent {
-      display: inline-block;
-
-      & .numberInput {
-        margin: 20px 20px 0 0;
-        padding: 15px;
-        border: 1px solid #ccc;
+      & .issueTitle {
+        display: inline-block;
+        width: 30%;
+        vertical-align: top;
+        padding-top: 35px;
       }
 
-      & .textInputShort {
-        width: 80px;
-      }
+      & .issueContent {
+        display: inline-block;
+        width: 60%;
+        padding: 20px 0;
 
-      & .checkBoxInput {
-        margin-top: 20px;
-      }
+        & .numberInput {
+          margin: 20px 20px 0 0;
+          padding: 15px;
+          border: 1px solid #ccc;
+          width: 80px;
+        }
 
-      & .textareaField {
-        width: 350px;
+        & .checkBoxInput {
+          margin-top: 20px;
+        }
 
-        & .textareaInput {
-          width: 100%;
+        & .textareaField {
+          width: 350px;
+
+          & .textareaInput {
+            width: 100%;
+          }
         }
       }
     }
-  }
 
-  & .fieldSection:first-of-type {
-    border-top: none;
-    margin-top: 0;
-    padding-top: 0;
+    & .issue:first-of-type {
+      border-top: none;
+      margin-top: 0;
+      padding-top: 0;
+    }
   }
 
   & .handleForm {
     text-align: center;
-    margin: 0 auto 40px;
+    margin: 40px auto 60px;
   }
 }

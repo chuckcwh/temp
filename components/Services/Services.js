@@ -8,7 +8,7 @@ import Link from '../Link';
 import ServiceCard from '../ServiceCard';
 import { fetchServices, setOrderService, setOrderServiceClass, setLastPage } from '../../actions';
 import history from '../../core/history';
-import { ALL_SERVICES, SERVICES_CATEGORY_ORDER, isNextLastPage, isId } from '../../core/util';
+import { isNextLastPage, isId } from '../../core/util';
 import shuffle from 'lodash/shuffle';
 import groupBy from 'lodash/groupBy';
 
@@ -16,8 +16,12 @@ class Services extends Component {
 
   constructor(props) {
     super(props);
+    const { categories } = props;
+    const headCategories = categories && Object.values(categories)
+      .filter(category => category.cType === 'category')
+      .sort((a, b) => b.order - a.order);
     this.state = {
-      filter: ALL_SERVICES,
+      filter: headCategories && headCategories[0] && headCategories[0]._id,
     };
   }
 

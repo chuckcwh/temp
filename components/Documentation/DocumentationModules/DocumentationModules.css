@@ -37,3 +37,9 @@
     background: #18B905;
   }
 }
+
+.selectionContainer {
+  & .selectionLabel {
+    width: 100%;
+  }
+}

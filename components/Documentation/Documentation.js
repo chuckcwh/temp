@@ -229,7 +229,7 @@ class Documentation extends Component {
                 )
 
                 : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm />)
-                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm />)
+                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm onFormSubmit={values => this.saveSingleFormInState('NGT form', values)} />)
                 : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm onFormSubmit={values => this.saveSingleFormInState('catheter form', values)} />)
                 : step === "2" ? (
                   <div>

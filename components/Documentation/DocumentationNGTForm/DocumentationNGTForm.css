@@ -2,89 +2,69 @@
 
 
 .documentationNGTForm {
-  & .fieldTitle {
-    display: inline-block;
-    width: 200px;
-    vertical-align: top;
-    padding-top: 35px;
-  }
 
-  & .overallTable {
-    width: 100%;
-    margin-bottom: 20px;
-    margin-top: 60px;
-  }
+  & .issueSetSection {
+    margin-bottom: 40px;
 
-  & .overallTable:first-of-type {
-    margin-top: 0;
-  }
-
-  & .headerRow {
-    border-bottom: 1px solid black;
-
-    & .factorColumn {
-      padding-left: 10px;
-    }
-  }
-
-  & .bodyRow {
-    border-top: 1px solid black;
-
-    & > td {
-      padding: 10px 0;
-    }
-
-    & .factorColumn {
-      vertical-align: top;
+    & .issueTitle {
+      display: inline-block;
       width: 30%;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-
-    & .yesNoContainer {
       vertical-align: top;
       padding-top: 20px;
+    }
 
-      & .yesNoInput {
-        width: auto;
-        padding: 0.3em 7px;
-        display: inline-block;
-        text-decoration: none;
-        font-size: 25px;
-        cursor: pointer;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        width: 60px;
-        color: #fff;
-        outline: none;
-      }
+    & .issueContent {
+      display: inline-block;
+      width: 450px;
+      padding: 20px 0;
 
-      & .yesChoice {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-      }
-
-      & .noChoice {
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-      }
-
-      & .yesCheck {
-        background: #f2635f;
-      }
-
-      & .noCheck {
-        background: #18B905;
+      & .textareaInput {
+        width: 100%;
+        margin-top: 0;
       }
     }
   }
 
-  & .bodyRow:nth-of-type(odd) {
-    background: #f0f0f0;
-  }
+  & .issueSetTable {
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 30px;
 
-  & .bodyRow:first-of-type {
-    border-top: none;
+    & .headerRow {
+      border-bottom: 1px solid black;
+
+      & .firstCol {
+        padding-left: 10px;
+      }
+    }
+
+    & .bodyRow {
+      border-top: 1px solid black;
+
+      & > td {
+        padding: 10px 0;
+      }
+
+      & .firstColumn {
+        vertical-align: top;
+        width: 30%;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      & .numberInput {
+        padding: 15px;
+        border: 1px solid #ccc;
+      }
+    }
+
+    & .bodyRow:nth-of-type(odd) {
+      background: #f0f0f0;
+    }
+
+    & .bodyRow:first-of-type {
+      border-top: none;
+    }
   }
 
   & .statusSection {
@@ -107,32 +87,8 @@
     }
   }
 
-  & .fieldSection {
-    margin-bottom: 40px;
-
-    & .fieldTitle {
-      display: inline-block;
-      width: 30%;
-      text-align: center;
-    }
-
-    & .fieldContent {
-      display: inline-block;
-      width: 350px;
-
-      & .textareaInput {
-        width: 100%;
-      }
-    }
-  }
-
-  & .woundStatus {
-    width: 100%;
-    margin: 40px 0;
-  }
-
   & .handleForm {
     text-align: center;
-    margin: 0 auto 40px;
+    margin: 40px auto 60px;
   }
 }

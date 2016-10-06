@@ -14,6 +14,7 @@ import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, addArrayValue, reset, change } from 'redux-form';
 import MultiSelect from '../../MultiSelect';
+import { YesNoSwitch, Selections } from '../DocumentationModules/DocumentationModules';
 
 
 class DocumentationNGTForm extends Component {
@@ -26,91 +27,47 @@ class DocumentationNGTForm extends Component {
     }
   }
 
-  renderSelections = (choices) => {
-    return Object.values(choices).map(choice => (
-      <tr className={s.bodyRow} key={Object.values(choices).indexOf(choice)}>
-        <td className={s.factorColumn}>
-          <strong>{choice.title}</strong>{choice.subTitle && <br />}
-          {choice.subTitle}
-        </td>
-        <td>
-          {choice.items.map(item => (
-            <div className={s.isActiveInput} key={choice.items.indexOf(item)}>
-              <input type="radio" name={`${choice.name}_${item.value}`} id={`${choice.name}_${item.value}`} {...this.props.fields[choice.name]} value={item.value} checked={this.props.fields[choice.name].value === item.value} />
-              <label htmlFor={`${choice.name}_${item.value}`}><span><span></span></span><span>{item.label}</span></label>
-            </div>
-          ))}
-        </td>
-      </tr>
-    ))
-  }
-
-  renderRowsWith2Col = (questions) => {
-    return questions.map(question => (
+  renderRowsWith2Col = (items) => {
+    return items.map(item => (
       <tr className={s.bodyRow}>
-        <td className={s.factorColumn}>
-          <strong>{question.title}</strong>
+        <td className={s.firstColumn}>
+          <strong>{item.first}</strong>{item.firstSub && <br />}
+          {item.firstSub}
         </td>
         <td className={s.fieldContent}>
-          {question.content}
+          {item.second}
         </td>
       </tr>
   ))}
 
-  renderRowsWith4Col = (descriptions) => {
-    return descriptions.map(des => (
+  renderRowsWith4Col = (items) => {
+    return items.map(item => (
       <tr className={s.bodyRow}>
-        <td className={s.factorColumn}>
-          <strong>{des.first}</strong><br />
+        <td className={s.firstCol}>
+          <strong>{item.first}</strong>
         </td>
-        <td className={s.fieldContent}>
-          {des.second}
+        <td className={s.secondCol}>
+          {item.second}
         </td>
-        <td className={s.fieldContent}>
-          {des.third}
+        <td className={s.thirdCol}>
+          {item.third}
         </td>
-        <td className={s.fieldContent}>
-          {des.forth}
+        <td className={s.forthCol}>
+          {item.forth}
         </td>
       </tr>
   ))}
 
-  renderYesNoSwitch = (fieldValue) => (
-    <div className={s.yesNoContainer}>
-      <button
-        className={cx('btn', s.yesNoInput, s.yesChoice, !!this.props.fields[fieldValue].value === true && s.yesCheck)}
-        onClick={e => {
-          e.preventDefault();
-          this.props.changeFieldValue(fieldValue, true);
-      }}>
-        Yes
-      </button>
-      <button
-        className={cx('btn', s.yesNoInput, s.noChoice, !!this.props.fields[fieldValue].value === false && s.noCheck)}
-        onClick={e => {
-          e.preventDefault();
-          this.props.changeFieldValue(fieldValue, false);
-      }}>
-        No
-      </button>
-    </div>
-  )
-
-  renderIssues = (issues) => {
+  renderIssueSet = (issues) => {
     return issues.map(issue => (
       <div key={issues.indexOf(issue)}>
-        <label className={s.fieldTitle}><strong>{issue.first}</strong></label>
-        <div className={s.fieldContent}>
+        <label className={s.issueTitle}><strong>{issue.first}</strong></label>
+        <div className={s.issueContent}>
           {issue.second}
         </div>
       </div>
     ))
   }
-
-  onFormSubmit = (values) => {
-    console.log('onFormSubmit', values);
-  }
-
 
   render() {
     const {
@@ -143,93 +100,135 @@ class DocumentationNGTForm extends Component {
     const { pHTestInterpretation } = this.state;
     const tubeDislodgementChoice = [{label: 'Retching', value: 'Retching'}, {label: 'Agitated', value: 'Agitated'}];
 
-    const firstChoices = [{
-      title: 'Type of tube',
-      name: 'tubeType',
-      items: [
-        {value: "1", label: (<span>Polyvinylchloride</span>)},
-        {value: "2", label: (<span>Polyurethane</span>)},
-        {value: "3", label: (<span>Silicon</span>)},
-        {value: "4", label: (<span>Freka Tube</span>)},
-      ]
-    }, {
-      title: 'Size of bore',
-      name: 'boreSize',
-      items: [
-        {value: "1", label: (<span>12F</span>)},
-        {value: "2", label: (<span>14F</span>)},
-        {value: "3", label: (<span>16F</span>)},
-        {value: "4", label: (<span>18F</span>)},
-      ]
-    }, {
-      title: 'Nostril',
-      name: 'nostril',
-      items: [
-        {value: "1", label: (<span>Left</span>)},
-        {value: "2", label: (<span>Right</span>)},
-      ]
-    }];
+    const firstSec = [{
+      first: "Type of tube",
+      second: (
+        <Selections
+          fieldName="tubeType"
+          field={tubeType}
+          items={[
+            {value: "1", label: (<span>Polyvinylchloride</span>)},
+            {value: "2", label: (<span>Polyurethane</span>)},
+            {value: "3", label: (<span>Silicon</span>)},
+            {value: "4", label: (<span>Freka Tube</span>)},
+          ]}
+        />
+    )}, {
+      first: "Size of bore",
+      second: (
+        <Selections
+          fieldName="boreSize"
+          field={boreSize}
+          items={[
+            {value: "1", label: (<span>12F</span>)},
+            {value: "2", label: (<span>14F</span>)},
+            {value: "3", label: (<span>16F</span>)},
+            {value: "4", label: (<span>18F</span>)},
+          ]}
+        />
+    )}, {
+      first: "Nostril",
+      second: (
+        <Selections
+          fieldName="nostril"
+          field={nostril}
+          items={[
+            {value: "1", label: (<span>Left</span>)},
+            {value: "2", label: (<span>Right</span>)},
+          ]}
+        />
+    )}, {
+      first: "Gastric Aspirate Volumes ",
+      firstSub: "Observe for changes in gastric aspirate volumes & look at trends",
+      second: (
+        <input className={s.numberInput} type='number' {...gastricVol} />
+    )}, {
+      first: "pH Testing",
+      firstSub: "***Patient receiving H2 receptor antagonist or with recent alkaline reflux from the intestine may have elevated gastric pH. Proton Pump Inhibitors and Histamine receptor blocking agents, such as Omeprazole and Famotidine, fail to decrease gastric pH to below 6.5 but tends to elevate gastric pH.",
+      second: (
+        <Selections
+          fieldName="pHTesting"
+          field={pHTesting}
+          items={[
+            {value: "1", label: (<span>&#60; 5 (gastric)</span>)},
+            {value: "2", label: (<span>5 - 6 (Check visual characteristics of aspirates)</span>)},
+            {value: "3", label: (<span>&#62; 6 (Intestinal or Respiratory)</span>)},
+          ]}
+        />
+    )}, {
+      first: "Appearance",
+      second: (
+        <Selections
+          fieldName="appearance"
+          field={appearance}
+          items={[
+            {value: "1", label: (<span>Gastric (Colourless (often with shreds of off-white to tan mucus or sediment), light yellow, brown, grassy green, curdled formula)</span>)},
+            {value: "2", label: (<span>Intestinal (light to dark golden yellow)</span>)},
+            {value: "3", label: (<span>Respiratory (pale (may consist of off white to tan sediment), straw coloured, watery)</span>)},
+          ]}
+        />
+    )}];
 
-    const secondChoices = [{
-      title: 'pH Testing',
-      subTitle: '***Patient receiving H2 receptor antagonist or with recent alkaline reflux from the intestine may have elevated gastric pH. Proton Pump Inhibitors and Histamine receptor blocking agents, such as Omeprazole and Famotidine, fail to decrease gastric pH to below 6.5 but tends to elevate gastric pH.',
-      name: 'pHTesting',
-      items: [
-        {value: "1", label: (<span>&#60; 5 (gastric)</span>)},
-        {value: "2", label: (<span>5 - 6 (Check visual characteristics of aspirates)</span>)},
-        {value: "3", label: (<span>&#62; 6 (Intestinal or Respiratory)</span>)},
-      ]
-    }, {
-      title: 'Appearance',
-      name: 'appearance',
-      items: [
-        {value: "1", label: (<span>Gastric (Colourless (often with shreds of off-white to tan mucus or sediment), light yellow, brown, grassy green, curdled formula)</span>)},
-        {value: "2", label: (<span>Intestinal (light to dark golden yellow)</span>)},
-        {value: "3", label: (<span>Respiratory (pale (may consist of off white to tan sediment), straw coloured, watery)</span>)},
-      ]
-    }];
-
-    const questions = [{
-      title: "Gastric Aspirate Volumes",
-      content: (<span>{this.renderYesNoSwitch('coiling')}</span>),
-    }, {
-      title: "Tape secured?",
-      content: (<span>{this.renderYesNoSwitch('tapeSecure')}</span>),
-    }, {
-      title: "Intersection where the NGT enters the nostril marked?",
-      content: (<span>{this.renderYesNoSwitch('intersection')}</span>),
-    }, {
-      title: "High risk of tube dislodgement?",
-      content: (
+    const secondSec = [{
+      first: "Absence of coiling",
+      second: (
+        <YesNoSwitch
+          fieldName='coiling'
+          field={coiling}
+          changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
+        />
+    )}, {
+      first: "Tape secured?",
+      second: (
+        <YesNoSwitch
+          fieldName='tapeSecure'
+          field={tapeSecure}
+          changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
+        />
+    )}, {
+      first: "Intersection where the NGT enters the nostril marked?",
+      second: (
+        <YesNoSwitch
+          fieldName='intersection'
+          field={intersection}
+          changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
+        />
+    )}, {
+      first: "High risk of tube dislodgement?",
+      second: (
         <MultiSelect
           className={s.multiSelect}
           options={tubeDislodgementChoice}
           {...tubeDislodgement}
         />
-      ),
-    }, {
-      title: "Patient/family education given?",
-      content: (<span>{this.renderYesNoSwitch('familyEducation')}</span>),
-    }];
+    )}, {
+      first: "Patient/family education given?",
+      second: (
+        <YesNoSwitch
+          fieldName='familyEducation'
+          field={familyEducation}
+          changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
+        />
+    )}];
 
-    const pHDescriptions = [{
+    const thirdSec = [{
       first: "< 5",
-      second: (<span classname="s.colorGreen">Proceed to Feed</span>),
-      third: (<span classname="s.colorRed">Please re-check</span>),
-      forth: (<span classname="s.colorRed">Please re-check</span>),
+      second: (<span className="s.colorGreen">Proceed to Feed</span>),
+      third: (<span className="s.colorRed">Please re-check</span>),
+      forth: (<span className="s.colorRed">Please re-check</span>),
     }, {
       first: "5 - 6",
-      second: (<span classname="s.colorGreen">Proceed to Feed</span>),
-      third: (<span classname="s.colorRed">Re-adjust tube and re-test</span>),
+      second: (<span className="s.colorGreen">Proceed to Feed</span>),
+      third: (<span className="s.colorRed">Re-adjust tube and re-test</span>),
       forth: (<span>Check X-ray to confirm placement</span>),
     }, {
       first: "> 5",
       second: (<span>Check X-ray to confirm placement</span>),
-      third: (<span classname="s.colorRed">Re-adjust tube and re-test</span>),
-      forth: (<span classname="s.colorRed">Re-adjust tube and re-testRemove and re-insert tube</span>),
+      third: (<span className="s.colorRed">Re-adjust tube and re-test</span>),
+      forth: (<span className="s.colorRed">Re-adjust tube and re-testRemove and re-insert tube</span>),
     }];
 
-    const issues = [{
+    const forthSec = [{
       first: "Were there any significant events when inserting the NGT (If applicable)?",
       second: (
         <textarea className={s.textareaInput} id="eventWhenInsert" name="eventWhenInsert" {...eventWhenInsert} />
@@ -242,40 +241,26 @@ class DocumentationNGTForm extends Component {
     }]
 
     return (
-      <form className={s.documentationNGTForm} onFormSubmit={this.onFormSubmit}>
+      <form className={s.documentationNGTForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
         <h2>Nasogastric Tube (NGT)</h2>
 
-        <table className={s.overallTable}>
+        <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.factorColumn}>Item</td>
+              <td className={s.firstColumn}>Item</td>
               <td>Assessment</td>
             </tr>
           </thead>
           <tbody>
-            {this.renderSelections(firstChoices)}
-
-            <tr className={s.bodyRow}>
-              <td className={s.factorColumn}>
-                <strong>Gastric Aspirate Volumes</strong><br />
-                Observe for changes in gastric aspirate volumes & look at trends
-              </td>
-              <td>
-                <input className={s.numberInput} type='number' {...gastricVol} />
-              </td>
-            </tr>
-
-            {this.renderSelections(secondChoices)}
+            {this.renderRowsWith2Col(firstSec)}
           </tbody>
         </table>
 
         <h2>NGT Checklist</h2>
 
-        <table className={s.overallTable}>
-          <tbody>
-            {this.renderRowsWith2Col(questions)}
-          </tbody>
-        </table>
+        <div className={s.issueSetSection}>
+          {this.renderIssueSet(secondSec)}
+        </div>
 
         <div className={s.statusSection}>
           <div className={s.statusField}>
@@ -288,30 +273,30 @@ class DocumentationNGTForm extends Component {
           </div>
         </div>
 
-        <table className={s.overallTable}>
+        <table className={s.issueSetTable}>
           <thead>
             <tr className={s.headerRow}>
-              <td className={s.factorColumn}>pH/Appearance</td>
+              <td className={s.firstColumn}>pH/Appearance</td>
               <td>Gastric</td>
               <td>Intestinal</td>
               <td>Respiratory</td>
             </tr>
           </thead>
           <tbody>
-            {this.renderRowsWith4Col(pHDescriptions)}
+            {this.renderRowsWith4Col(thirdSec)}
           </tbody>
         </table>
 
-        <div className={s.fieldSection}>
-          {this.renderIssues(issues)}
+        <div className={s.issueSetSection}>
+          {this.renderIssueSet(forthSec)}
         </div>
 
         <div className={s.handleForm}>
-          <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
-          </button>
           <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
             Clear Values
+          </button>
+          <button className='btn btn-primary' disabled={submitting || invalid}>
+            Submit
           </button>
         </div>
       </form>

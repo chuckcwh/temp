@@ -29,10 +29,10 @@ class DocumentationCatheterForm extends Component {
   renderRowsWith2Col = (items) => {
     return items.map(item => (
       <tr className={s.bodyRow}>
-        <td className={s.firstColumn}>
+        <td className={s.firstCol}>
           <strong>{item.first}</strong>
         </td>
-        <td className={s.fieldContent}>
+        <td className={s.secondCol}>
           {item.second}
         </td>
       </tr>

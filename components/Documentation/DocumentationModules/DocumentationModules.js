@@ -39,19 +39,11 @@ YesNoSwitch.propTypes = {
 
 
 export class Selections extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-    }
-  }
-
   render() {
     const { fieldName, field, items } = this.props;
 
     return (
-      <span>
+      <span className={s.selectionContainer}>
         {items.map(item => (
           <div className={s.isActiveInput} key={items.indexOf(item)}>
             <input
@@ -62,7 +54,7 @@ export class Selections extends Component {
               value={item.value}
               checked={field.value === item.value}
             />
-            <label htmlFor={`${fieldName}_${item.value}`}><span><span></span></span><span>{item.label}</span></label>
+            <label className={s.selectionLabel} htmlFor={`${fieldName}_${item.value}`}><span><span></span></span><span>{item.label}</span></label>
           </div>
         ))}
       </span>
@@ -72,13 +64,3 @@ export class Selections extends Component {
 
 Selections.propTypes = {
 };
-// const mapStateToProps = (state) => ({
-//
-// });
-//
-// const mapDispatchToProps = (dispatch) => ({
-//   resetForm: () => dispatch(reset('DocumentationModules')),
-//   changefieldName: (field, value) => dispatch(change('documentationNGTForm', field, value)),
-// });
-//
-// export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(DocumentationModules);

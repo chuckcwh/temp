@@ -33,7 +33,7 @@
     & .headerRow {
       border-bottom: 1px solid black;
 
-      & .firstColumn {
+      & .firstCol {
         padding-left: 10px;
       }
     }
@@ -100,6 +100,6 @@
 
   & .handleForm {
     text-align: center;
-    margin: 0 auto 40px;
+    margin: 40px auto 60px;
   }
 }

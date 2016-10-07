@@ -85,9 +85,9 @@ class Documentation extends Component {
     const { step, currentForm } = this.state;
     const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state[item.name]);
 
-    return subMenu && subMenu.map(form => (
+    return subMenu && subMenu.map((form, index) => (
       <div
-        key={Object.values(stepSections[step].forms).indexOf(form)}
+        key={index}
         className={cx(
           s.stepSectionCategoryUnit,
           (currentForm === form.name
@@ -158,11 +158,11 @@ class Documentation extends Component {
             </div>
 
             <div className={s.stepSection}>
-              {Object.values(stepSections).map(item => (
+              {Object.values(stepSections).map((item, index) => (
                 <div
                   className={cx(s.stepSectionUnit, step === item.icon && s.stepSectionUnitActive)}
                   onClick={() => this.setState({step: item.icon})}
-                  key={Object.values(stepSections).indexOf(item)}
+                  key={index}
                 >
                   <div>{item.icon}</div>
                   <span>{item.text}</span>

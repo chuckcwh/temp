@@ -3,31 +3,47 @@
 
 .documentationMedicalHistoryForm {
 
-  & .fieldTitle {
-    display: inline-block;
-    width: 200px;
-    vertical-align: top;
-    padding-top: 35px;
-  }
+  & .issueSetSection {
+    margin-bottom: 40px;
 
-  & .fieldContent {
-    display: inline-block;
-  }
-
-  & .multiTextField {
-    width: 330px;
-
-    & .multiTextFieldBtn {
-      padding: 3px 7px;
-      width: auto;
+    & .issueTitle {
+      display: inline-block;
+      width: 200px;
+      vertical-align: top;
+      padding-top: 35px;
     }
-  }
 
-  & .textareaField {
-    width: 100%;
+    & .issueContent {
+      display: inline-block;
+      width: 450px;
+      padding: 20px 0;
 
-    & .textareaInput {
-      width: 100%;
+      & .textInput {
+        margin: 0;
+      }
+
+      & .textareaInput {
+        width: 100%;
+        margin: 0;
+      }
+
+      & .multiTextContainer {
+        width: 330px;
+
+        & .textInput {
+          margin-top: 20px;
+        }
+
+        & .textInput:first-of-type {
+          margin-top: 0;
+        }
+
+        & .multiTextFieldBtn {
+          padding: 3px 7px;
+          width: auto;
+          margin-left: 10px;
+        }
+      }
     }
   }
 
@@ -37,7 +53,6 @@
 
   & .handleForm {
     text-align: center;
-    margin: 0 auto 40px;
+    margin: 40px auto 60px;
   }
-
 }

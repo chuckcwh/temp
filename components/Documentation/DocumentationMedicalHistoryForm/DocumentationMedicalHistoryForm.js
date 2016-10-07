@@ -27,8 +27,31 @@ class DocumentationMedicalHistoryForm extends Component {
     this.props.fields.medications.addField();
   }
 
-  onFormSubmit = (values) => {
-    console.log('onFormSubmit', values);
+  renderMultiTextField = (field) => (
+    <div className={s.multiTextContainer}>
+      {field.map((item, index) => (
+        <input key={index} className={s.textInput} type='text' {...item}/>
+      ))}
+      <button
+        className={cx('btn btn-primary', s.multiTextFieldBtn)}
+        onClick={e => {
+          e.preventDefault();
+          field.addField();
+      }}>
+        <FaPlus />
+      </button>
+    </div>
+  )
+
+  renderIssueSet = (issues) => {
+    return issues.map((issue, index) => (
+      <div key={index}>
+        <label className={s.issueTitle}><strong>{issue.first}</strong></label>
+        <div className={s.issueContent}>
+          {issue.second}
+        </div>
+      </div>
+    ))
   }
 
   render() {
@@ -53,99 +76,53 @@ class DocumentationMedicalHistoryForm extends Component {
 
     const mobilityChoice = [{name: 'Walking (Without Aid)', value: 'Walking (Without Aid)'}, {name: 'Walking (Require Aid)', value: 'Walking (Require Aid)'}, {name: 'Wheelchair', value: 'Wheelchair'}, {name: 'Bed Bound', value: 'Bed Bound'}];
 
+    const firstSec = [{
+      first: "Main Diagnosis",
+      second: (<input className={s.textInput} type='text' {...mainDiagnosis}/>),
+    }, {
+      first: "Secondary Diagnosis",
+      second: this.renderMultiTextField(secondaryDiagnosis),
+    }, {
+      first: "Vision",
+      second: (<input className={s.textInput} type='text' {...vision}/>),
+    }, {
+      first: "Hearing",
+      second: (<input className={s.textInput} type='text' {...hearing}/>),
+    }, {
+      first: "Mobility/ADL",
+      second: (
+        <div className={cx("select", s.selectInput)}>
+          <span></span>
+          <select id="mobility" name="mobility" {...mobility}>
+            {mobilityChoice && mobilityChoice.map((item, index) => (
+              <option key={index} value={item.value}>{item.name}</option>
+            ))}
+          </select>
+        </div>
+    )}, {
+      first: "Health History",
+      second: (<textarea className={s.textareaInput} id="healthHistory" name="healthHistory" {...healthHistory} />),
+    }, {
+      first: "Allergy",
+      second: this.renderMultiTextField(allergy),
+    }]
+
     return (
-      <form className={s.documentationMedicalHistoryForm} onSubmit={this.onFormSubmit}>
+      <form className={s.documentationMedicalHistoryForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
         <h2>Medical History</h2>
 
-        <div>
-          <label className={s.fieldTitle}>Main Diagnosis*</label>
-          <div className={s.fieldContent}>
-            <input className={s.textInput} type='text' {...mainDiagnosis}/>
-            {mainDiagnosis.touched && mainDiagnosis.error && (<div className={s.formError}>{mainDiagnosis.error}</div>)}
-          </div>
-        </div>
-
-        <div>
-          <label className={s.fieldTitle}>Secondary Diagnosis</label>
-          <div className={cx(s.fieldContent, s.multiTextField)}>
-            {secondaryDiagnosis.map((item, index) => (
-              <input key={index} className={s.textInput} type='text' {...item}/>
-            ))}
-            <button
-              className={cx('btn btn-primary', s.multiTextFieldBtn)}
-              onClick={e => {
-                e.preventDefault();
-                secondaryDiagnosis.addField();
-            }}>
-              <FaPlus />
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <div className={s.fieldTitle}>Vision</div>
-          <div className={s.fieldContent}>
-            <input className={s.textInput} type='text' {...vision}/>
-            {vision.touched && vision.error && (<div className={s.formError}>{vision.error}</div>)}
-          </div>
-        </div>
-
-        <div>
-          <div className={s.fieldTitle}>Hearing</div>
-          <div className={s.fieldContent}>
-            <input className={s.textInput} type='text' {...hearing}/>
-            {hearing.touched && hearing.error && (<div className={s.formError}>{hearing.error}</div>)}
-          </div>
-        </div>
-
-        <div>
-          <div className={s.fieldTitle}>Mobility/ADL</div>
-          <div className={s.fieldContent}>
-            <div className={cx("select", s.selectInput)}>
-              <span></span>
-              <select id={mobility} name={mobility} {...mobility}>
-                {mobilityChoice && mobilityChoice.map(item => (
-                  <option value={item.value}>{item.name}</option>
-                ))}
-              </select>
-            </div>
-            {mobility.touched && mobility.error && (<div className={s.formError}>{mobility.error}</div>)}
-          </div>
-        </div>
-
-        <div>
-          <div className={s.fieldTitle}>Health History</div>
-          <div className={cx(s.fieldContent, s.textareaField)}>
-            <textarea className={s.textareaInput} id="healthHistory" name="healthHistory" {...healthHistory} />
-            {healthHistory.touched && healthHistory.error && (<div className={s.formError}>{healthHistory.error}</div>)}
-          </div>
-        </div>
-
-        <div>
-          <div className={s.fieldTitle}>Allergy</div>
-          <div className={cx(s.fieldContent, s.multiTextField)}>
-            {allergy.map((item, index) => (
-              <input key={index} className={s.textInput} type='text' {...item}/>
-            ))}
-            <button
-              className={cx('btn btn-primary', s.multiTextFieldBtn)}
-              onClick={e => {
-                e.preventDefault();
-                allergy.addField();
-            }}>
-              <FaPlus />
-            </button>
-          </div>
+        <div className={s.issueSetSection}>
+          {this.renderIssueSet(firstSec)}
         </div>
 
         <DocumentationMedicalHistoryFormMedication medications={medications} />
 
         <div className={s.handleForm}>
-          <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
-          </button>
           <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
             Clear Values
+          </button>
+          <button className='btn btn-primary' disabled={submitting || invalid}>
+            Submit
           </button>
         </div>
       </form>

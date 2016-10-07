@@ -28,86 +28,98 @@ class DocumentationMedicalHistoryFormMedication extends Component {
 
     return (
       <div className={s.documentationMedicalHistoryFormMedication}>
-        <h2 className={s.medicationTitle}>Medications</h2>
+        <h2>Medications</h2>
 
         <table >
-          <thead>
-            <tr className={s.headerRow}>
-              <td></td>
-              <td>Route</td>
-              <td>Medication</td>
-              <td>Dose</td>
-              <td>Unit</td>
-              <td>Cycle</td>
-              <td>Duration</td>
-              <td>Unit</td>
-              <td>Instructions</td>
-              <td></td>
+          <thead className={s.headerRow}>
+            <tr>
+              <th></th>
+              <th>Route</th>
+              <th>Medication</th>
+              <th>Dose</th>
+              <th>Unit</th>
+              <th>Cycle</th>
+              <th>Duration</th>
+              <th>Unit</th>
+              <th>Instructions</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {medications.map((med, index) => (
-              <tr key={index}>
+              <tr key={index} className={s.bodyRow}>
                 <td className={cx(s.indexColumn)}>
                   {`${index + 1}.`}
                 </td>
+
                 <td className={s.selectInputColumn}>
                   <div className={cx("select", s.selectInputField)}>
                     <span></span>
                     <select className={s.selectInput} id={med.route} name={med.route} {...med.route}>
-                      {medicationChoice.route && medicationChoice.route.map(item => (
-                        <option value={item.value}>{item.name}</option>
+                      {medicationChoice.route && medicationChoice.route.map((item, index) => (
+                        <option key={index} value={item.value}>{item.name}</option>
                       ))}
                     </select>
                   </div>
                 </td>
+
                 <td className={cx(s.textInputColumn, s.medicationColumn)}>
                   <input className={s.textInput} type="text" {...med.medication} />
                 </td>
+
                 <td className={s.textInputColumn}>
                   <input className={s.textInput} type="text" {...med.dose}/>
                 </td>
+
                 <td className={s.selectInputColumn}>
                   <div className={cx("select", s.selectInputField)}>
                     <span></span>
                     <select className={s.selectInput}  id={"medicationDoseUnit"} name={"medicationDoseUnit"} {...med.doseUnit}>
-                      {medicationChoice.doseUnit && medicationChoice.doseUnit.map(item => (
-                        <option value={item.value}>{item.name}</option>
+                      {medicationChoice.doseUnit && medicationChoice.doseUnit.map((item, index) => (
+                        <option key={index} value={item.value}>{item.name}</option>
                       ))}
                     </select>
                   </div>
                 </td>
+
                 <td className={s.selectInputColumn}>
                   <div className={cx("select", s.selectInputField)}>
                     <span></span>
                     <select className={s.selectInput} id={"medicationCycle"} name={"medicationCycle"} {...med.cycle}>
-                      {medicationChoice.cycle && medicationChoice.cycle.map(item => (
-                        <option value={item.value}>{item.name}</option>
+                      {medicationChoice.cycle && medicationChoice.cycle.map((item, index) => (
+                        <option key={index} value={item.value}>{item.name}</option>
                       ))}
                     </select>
                   </div>
                 </td>
+
                 <td className={s.textInputColumn}>
                   <input className={s.textInput} type="text" {...med.duration} />
                 </td>
+
                 <td className={s.selectInputColumn}>
                   <div className={cx("select", s.selectInputField)}>
                     <span></span>
                     <select className={s.selectInput} id={med.durationUnit} name={med.durationUnit} {...med.durationUnit}>
-                      {medicationChoice.durationUnit && medicationChoice.durationUnit.map(item => (
-                        <option value={item.value}>{item.name}</option>
+                      {medicationChoice.durationUnit && medicationChoice.durationUnit.map((item, index) => (
+                        <option key={index} value={item.value}>{item.name}</option>
                       ))}
                     </select>
                   </div>
                 </td>
+
                 <td className={s.textareaColumn}>
                   <textarea className={s.textareaInput} id="medicationInstruction" name="medicationInstruction" placeholder="(e.g. timing)" {...med.instruction}/>
                 </td>
+
                 <td className={s.minusBtnColumn}>
                   <button
                     className={cx('btn btn-primary', s.multiTextFieldBtn)}
                     onClick={e => {
                       e.preventDefault();
+                      if (medications.length === 1) {
+                        medications.addField();
+                      }
                       medications.removeField(index);
                     }}>
                     <FaTrash />

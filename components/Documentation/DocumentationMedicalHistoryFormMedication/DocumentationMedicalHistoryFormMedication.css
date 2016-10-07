@@ -3,18 +3,15 @@
 
 .documentationMedicalHistoryFormMedication {
 
-  & input:focus {
+  & input:focus, & textarea:focus, & select:focus {
     outline: none;
   }
 
-  & .medicationTitle {
-    margin: 20px 0;
+  & .bodyRow {
+    & > td {
+      padding: 20px 0;
+    }
   }
-
-  & .headerRow > td {
-    text-decoration: underline;
-  }
-
   & .selectInputColumn {
     width: 10%;
   }
@@ -25,6 +22,7 @@
 
     & .selectInput {
       width: 100%;
+      border-right: none;
     }
   }
 
@@ -51,7 +49,9 @@
 
   & .textareaInput {
     width: 100%;
-    margin-top: 21px;
+    margin-top: 0;
+    padding: 6px 15px;
+    font-size: 16px;
   }
 
   & .minusBtnColumn {

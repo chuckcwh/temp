@@ -19,8 +19,8 @@ import { YesNoSwitch } from '../DocumentationModules/DocumentationModules';
 class DocumentationOverallForm extends Component {
 
   renderRowsWith4Col = (items) => {
-    return items.map(item => (
-      <tr className={s.bodyRow}>
+    return items.map((item, index) => (
+      <tr key={index} className={s.bodyRow}>
         <td className={s.firstCol}>
           <strong>{item.first}</strong>{item.firstSub && <br />}
           {item.firstSub}

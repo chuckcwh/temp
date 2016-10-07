@@ -44,8 +44,8 @@ export class Selections extends Component {
 
     return (
       <span className={s.selectionContainer}>
-        {items.map(item => (
-          <div className={s.isActiveInput} key={items.indexOf(item)}>
+        {items.map((item, index) => (
+          <div className={s.isActiveInput} key={index}>
             <input
               type="radio"
               name={`${fieldName}_${item.value}`}

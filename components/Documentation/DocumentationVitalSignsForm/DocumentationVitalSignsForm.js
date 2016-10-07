@@ -20,8 +20,8 @@ import FaArrowsH from 'react-icons/lib/fa/arrows-h';
 class DocumentationVitalSignsForm extends Component {
 
   renderIssueSet = (issues) => {
-    return issues.map(issue => (
-      <div key={issues.indexOf(issue)} className={s.issue}>
+    return issues.map((issue, index) => (
+      <div key={index} className={s.issue}>
         <label className={s.issueTitle}><strong>{issue.first}</strong></label>
         <div className={s.issueContent}>
           {issue.second}

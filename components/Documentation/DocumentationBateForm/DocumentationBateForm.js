@@ -31,8 +31,8 @@ class DocumentationBateForm extends Component {
   }
 
   renderRowsWith2Col = (items) => {
-    return items.map(item => (
-      <tr className={s.bodyRow}>
+    return items.map((item, index) => (
+      <tr key={index} className={s.bodyRow}>
         <td className={s.firstCol}>
           <strong>{item.first}</strong>
         </td>
@@ -43,8 +43,8 @@ class DocumentationBateForm extends Component {
   ))}
 
   renderIssueSet = (issues) => {
-    return issues.map(issue => (
-      <div key={issues.indexOf(issue)}>
+    return issues.map((issue, index) => (
+      <div key={index}>
         <label className={s.issueTitle}><strong>{issue.first}</strong></label>
         <div className={s.issueContent}>
           {issue.second}

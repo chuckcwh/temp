@@ -19,8 +19,8 @@ import { YesNoSwitch } from '../DocumentationModules/DocumentationModules';
 class DocumentationSummaryForm extends Component {
 
   renderIssueSet = (issues) => {
-    return issues.map(issue => (
-      <div key={issues.indexOf(issue)}>
+    return issues.map((issue, index) => (
+      <div key={index}>
         <label className={s.issueTitle}><strong>{issue.first}</strong></label>
         <div className={s.issueContent}>
           {issue.second}

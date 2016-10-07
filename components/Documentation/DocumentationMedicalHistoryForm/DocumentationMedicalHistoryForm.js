@@ -22,9 +22,10 @@ import FaPlus from 'react-icons/lib/fa/plus';
 class DocumentationMedicalHistoryForm extends Component {
 
   componentDidMount() {
+    const { medications } =this.props.fields;
     this.props.fields.secondaryDiagnosis.addField();
     this.props.fields.allergy.addField();
-    this.props.fields.medications.addField();
+    medications.addField();
   }
 
   renderMultiTextField = (field) => (
@@ -115,7 +116,52 @@ class DocumentationMedicalHistoryForm extends Component {
           {this.renderIssueSet(firstSec)}
         </div>
 
-        <DocumentationMedicalHistoryFormMedication medications={medications} />
+        <h2>Medications</h2>
+
+        <table >
+          <thead className={s.headerRow}>
+            <tr>
+              <th></th>
+              <th>Route</th>
+              <th>Medication</th>
+              <th>Dose</th>
+              <th>Unit</th>
+              <th>Cycle</th>
+              <th>Duration</th>
+              <th>Unit</th>
+              <th>Instructions</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {medications.map((med, index) => (
+              <DocumentationMedicalHistoryFormMedication
+                key={index}
+                medIndex={index}
+                removeField={e => {
+                  e.preventDefault();
+                  if (medications.length === 1) {
+                    medications.addField({index: medications.length + 1});
+                  }
+                  medications.removeField(index);
+                }}
+                {...med}
+              />
+            ))}
+          </tbody>
+        </table>
+
+        <div className={s.addMedicationRow}>
+          <button
+            className={cx('btn btn-primary', s.multiTextFieldBtn)}
+            onClick={e => {
+              e.preventDefault();
+              medications.addField({index: medications.length + 1});
+            }}>
+            <FaPlus /> Add Row
+          </button>
+        </div>
 
         <div className={s.handleForm}>
           <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>

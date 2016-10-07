@@ -47,8 +47,14 @@
     }
   }
 
-  & .medicationTitle {
-    margin: 20px 0;
+  & .addMedicationRow {
+    text-align: right;
+
+    & .multiTextFieldBtn {
+      padding: 3px 10px;
+      width: auto;
+      margin: 10px auto 40px;
+    }
   }
 
   & .handleForm {

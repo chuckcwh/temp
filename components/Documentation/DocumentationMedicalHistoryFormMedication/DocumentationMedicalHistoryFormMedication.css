@@ -7,11 +7,10 @@
     outline: none;
   }
 
-  & .bodyRow {
-    & > td {
-      padding: 20px 0;
-    }
+  & > td {
+    padding: 20px 0;
   }
+
   & .selectInputColumn {
     width: 10%;
   }
@@ -63,15 +62,4 @@
       width: auto;
     }
   }
-
-  & .addRow {
-    text-align: right;
-
-    & .multiTextFieldBtn {
-      padding: 3px 10px;
-      width: auto;
-      margin: 10px auto 40px;
-    }
-  }
-
 }

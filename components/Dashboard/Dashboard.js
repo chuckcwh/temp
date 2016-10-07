@@ -136,7 +136,7 @@ class Dashboard extends Component {
             <DashboardStatButton
               color="orange"
               icon="checklist"
-              text="Appointments"
+              text="Other Appointments"
               stat={stats.others}
               onClick={() => this.setState({
                 panelChoice: 'Appointments'

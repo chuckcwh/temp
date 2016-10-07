@@ -130,7 +130,7 @@ class DashboardPendingPayment extends Component {
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
-                            <DashboardTableButton onClick={this.props.onCancelSession}>Cancel</DashboardTableButton>
+                            <DashboardTableButton onClick={this.props.onCancelSession(session._id)}>Cancel</DashboardTableButton>
                             <DashboardTableButton onClick={this.handlePay(session._id)} color="orange">Pay</DashboardTableButton>
                           </Col>
                         </Row>

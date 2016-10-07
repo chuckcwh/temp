@@ -28,7 +28,7 @@ import DocumentationSummaryForm from './DocumentationSummaryForm/DocumentationSu
 import FaPlus from 'react-icons/lib/fa/plus';
 
 
-const stepSections = {
+const stepSectionsSchema = {
   "1": {
     icon: "1",
     text: 'Patient Assessment',
@@ -36,16 +36,16 @@ const stepSections = {
       'Med History': { name: 'Med History', isDefault: true },
       'Overall': { name: 'Overall', isDefault: true },
       'Vital Signs': { name: 'Vital Signs', isDefault: true },
-      'FRAT': { name: 'FRAT', isDefault: true },
-      'MSE': { name: 'MSE', isDefault: true },
+      'FRAT': { name: 'FRAT', isDefault: false },
+      'MSE': { name: 'MSE', isDefault: false },
     }},
   "2": {
     icon: "2",
     text: 'Procedural Assessment',
     forms: {
-      'Bate': { name: 'Bate', isDefault: true },
-      'NGT': { name: 'NGT', isDefault: true },
-      'Catheter': { name: 'Catheter', isDefault: true },
+      'Bate': { name: ['Bate'], isDefault: false },
+      'NGT': { name: 'NGT', isDefault: false },
+      'Catheter': { name: 'Catheter', isDefault: false },
     }},
   "3": {
     icon: "3",
@@ -69,6 +69,8 @@ class Documentation extends Component {
     this.state = {
       step: "1",
       currentForm: 'Med History',
+      stepSections: stepSectionsSchema,
+      BateFormNum: stepSectionsSchema['2'].forms['Bate'].isDefault ? 1 : 0,
       wholeDocData: {}, // use obj because we need to check if the form data has been added by its key as formName
     }
   }
@@ -82,21 +84,53 @@ class Documentation extends Component {
   }
 
   getSubMenu = () => {
-    const { step, currentForm } = this.state;
+    const { step, currentForm, stepSections } = this.state;
     const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state[item.name]);
 
-    return subMenu && subMenu.map((form, index) => (
-      <div
-        key={index}
-        className={cx(
-          s.stepSectionCategoryUnit,
-          (currentForm === form.name
-            || (stepSections[step].forms[currentForm] === undefined && Object.values(stepSections[step].forms).length === 1))
-            && s.stepSectionCategoryUnitActive)}
-        onClick={() => this.setState({currentForm: form.name})}>
-        {form.name}
-      </div>
-    ))
+    return subMenu && subMenu.map((form, index) => {
+      if (Array.isArray(form.name)) {
+        return form.name.map((item, subIndex) => (
+          <div
+            key={subIndex}
+            className={cx(
+              s.stepSectionCategoryUnit,
+              currentForm === item && s.stepSectionCategoryUnitActive)}
+            onClick={() => this.setState({currentForm: item})}
+          >
+            {item}
+          </div>
+        ))
+      } else {
+        return (
+          <div
+            key={index}
+            className={cx(
+              s.stepSectionCategoryUnit,
+              (currentForm === form.name
+                || (stepSections[step].forms[currentForm] === undefined && Object.values(stepSections[step].forms).length === 1))
+                && s.stepSectionCategoryUnitActive)}
+            onClick={() => this.setState({currentForm: form.name})}
+          >
+            {form.name}
+          </div>
+        )
+      }
+    })
+  }
+
+  handleFormsAdd = (e, page, formName, formNum) => {
+    e.preventDefault();
+    const { stepSections } = this.state;
+
+    if (!stepSections[page].forms[formName].isDefault) {
+      stepSections[page].forms[formName].isDefault = true;
+    } else {
+      stepSections[page].forms[formName].name.push(`${formName} (${formNum + 1})`);
+    }
+    this.setState({
+      stepSections,
+      [`${formName}FormNum`]: formNum + 1
+    });
   }
 
   saveSingleFormInState = (formName, values) => {
@@ -110,7 +144,7 @@ class Documentation extends Component {
   render() {
     const { sessionId } = this.props.params;
     const { config, session, services } = this.props;
-    const { step, currentForm } = this.state;
+    const { step, BateFormNum, currentForm, stepSections } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
@@ -227,7 +261,12 @@ class Documentation extends Component {
                   </div>
                 )
 
-                : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm onFormSubmit={values => this.saveSingleFormInState('Bate form', values)} />)
+                : step === "2" && currentForm[3] === 'Bate' ? (
+                  <span>
+                    {[...Array(10)].map((item, index) => (
+                      <DocumentationBateForm key={index + 1} formKey={(index + 1).toString()} onFormSubmit={values => this.saveSingleFormInState(`Bate form ${index + 1}`, values)} />
+                    ))}
+                  </span>)
                 : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm onFormSubmit={values => this.saveSingleFormInState('NGT form', values)} />)
                 : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm onFormSubmit={values => this.saveSingleFormInState('catheter form', values)} />)
                 : step === "2" ? (
@@ -239,11 +278,8 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={e => {
-                            e.preventDefault();
-                            this.setState({Bate: true});
-                          }}
-                          disabled={stepSections["2"].forms['Bate'].isDefault || this.state.Bate}>
+                          onClick={e => this.handleFormsAdd(e, 2, 'Bate', BateFormNum)}
+                        >
                           {stepSections["2"].forms['Bate'].isDefault || this.state.Bate ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
                       </div>

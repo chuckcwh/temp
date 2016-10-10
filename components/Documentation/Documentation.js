@@ -9,7 +9,7 @@ import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 import { getUserName, configToName } from '../../core/util';
-import { getSession, showAlertPopup, fetchServices, getSessionDocumentation, createSessionDocumentation } from '../../actions';
+import { getSession, showAlertPopup, fetchServices, getSessionDocumentation, createSessionDocumentation, editSessionDocumentation } from '../../actions';
 import ConfirmPopup from '../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 // sub-component - step 1
@@ -72,6 +72,7 @@ class Documentation extends Component {
       stepSections: stepSectionsSchema,
       BateFormNum: stepSectionsSchema['2'].forms['Bate'].isDefault ? 1 : 0,
       wholeDocData: {}, // use obj because we need to check if the form data has been added by its key as formName
+      docAlreadyCreated: false,
     }
   }
 
@@ -83,10 +84,10 @@ class Documentation extends Component {
     getSession({ sessionId });
     getSessionDocumentation({ sessionId }).then(res => {
       if (res.type === 'SESSION_DOCUMENTATION_GET_FAILURE') {
-        showAlertPopup('Session Documentation Get Failure');
+        showAlertPopup('Case Doc Get Failure');
       } else if (res.type === 'SESSION_DOCUMENTATION_GET_SUCCESS' && res.response.data) {
-        showAlertPopup('Oops! Documentation already created for this session');
-        this.setState({ wholeDocData: res.response.data });
+        showAlertPopup('Doc already created! You are going to edit the current one');
+        this.setState({ wholeDocData: res.response.data, docAlreadyCreated: true });
       }
     });
   }
@@ -172,8 +173,12 @@ class Documentation extends Component {
 
   onSubmitFormAsWhole = () => {
     console.log('submit form!', this.state.wholeDocData);
-
-    this.props.createSessionDocumentation({...this.state.wholeDocData, sessionId: this.props.params.sessionId});
+    const { createSessionDocumentation, editSessionDocumentation } = this.props;
+    if (this.state.docAlreadyCreated) {
+      editSessionDocumentation({...this.state.wholeDocData, sessionId: this.props.params.sessionId});
+    } else {
+      createSessionDocumentation({...this.state.wholeDocData, sessionId: this.props.params.sessionId});
+    }
   }
 
   render() {
@@ -407,6 +412,7 @@ const mapDispatchToProps = (dispatch) => ({
   getSession: (params) => dispatch(getSession(params)),
   getSessionDocumentation: (params) => dispatch(getSessionDocumentation(params)),
   createSessionDocumentation: (params) => dispatch(createSessionDocumentation(params)),
+  editSessionDocumentation: (params) => dispatch(editSessionDocumentation(params)),
   // getDocumentation: (params) => dispatch(getDocumentation(params)),
 });
 

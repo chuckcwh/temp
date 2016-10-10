@@ -91,9 +91,20 @@
       padding: 20px 0;
 
       & .statusFieldTitle {
-        color: #f2635f;
         font-size: 28px;
         padding: 10px 0;
+
+        & .red {
+          color: #f2635f;
+        }
+
+        & .orange {
+          color: #fdbc1d;
+        }
+
+        & .green {
+          color: #18B905;
+        }
       }
     }
   }

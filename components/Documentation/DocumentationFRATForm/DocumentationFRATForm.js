@@ -62,16 +62,62 @@ class DocumentationFRATForm extends Component {
     ))
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {
+      recentFalls,
+      medications,
+      psychological,
+      cognitiveStatus,
+      recentChanges,
+      dizziness,
+      interventions
+    } = nextProps.fields;
+    let sum;
+    let fallRiskStatus;
+
+    if (recentFalls.value && medications.value && psychological.value && cognitiveStatus.value) {
+      sum = +recentFalls.value + +medications.value + +psychological.value + +cognitiveStatus.value;
+      if (sum < 12) {
+        fallRiskStatus = (<span className={s.green}>Low</span>)
+      } else if (sum < 16) {
+        fallRiskStatus = (<span className={s.orange}>Medium</span>)
+      } else {
+        fallRiskStatus = (<span className={s.red}>High</span>)
+      }
+    }
+    if (recentChanges.value || dizziness.value) {
+      fallRiskStatus = (<span className={s.red}>High</span>)
+    }
+
+    return this.setState({
+      riskScore: sum && `${sum} / 20`,
+      fallRiskStatus,
+    })
+  }
+
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
+
+    values['recentFalls'] = +values.recentFalls;
+    values['medications'] = +values.medications;
+    values['psychological'] = +values.psychological;
+    values['cognitiveStatus'] = +values.cognitiveStatus;
+    values['score'] = this.state.riskScore;
+    values['status'] = this.state.fallRiskStatus;
+
+    this.props.onFormSubmit(values);
+  }
+
   render() {
     const {
       fields: {
-        recentFall,
-        medication,
+        recentFalls,
+        medications,
         psychological,
-        cognitive,
-        mobility,
+        cognitiveStatus,
+        recentChanges,
         dizziness,
-        intervention,
+        interventions,
       },
 
       resetForm,
@@ -87,13 +133,13 @@ class DocumentationFRATForm extends Component {
       first: "Recent Falls",
       second: (
         <Selections
-          fieldName="recentFall"
-          field={recentFall}
+          fieldName="recentFalls"
+          field={recentFalls}
           items={[
-            {value: "1", label: (<span>None in last months</span>)},
-            {value: "2", label: (<span>One or more between 3 & 12 months ago</span>)},
-            {value: "3", label: (<span>One or more in last 3 months</span>)},
-            {value: "4", label: (<span>One or more in last 3 months whilst resident</span>)},
+            {value: "2", label: (<span>None in last months</span>)},
+            {value: "4", label: (<span>One or more between 3 & 12 months ago</span>)},
+            {value: "6", label: (<span>One or more in last 3 months</span>)},
+            {value: "8", label: (<span>One or more in last 3 months whilst resident</span>)},
           ]}
         />
     )}, {
@@ -101,8 +147,8 @@ class DocumentationFRATForm extends Component {
       firstSub: "(Sedatives, Anti-Depressants, Anti-Parkinson&#39;s, Diuretics, Anti-hypertensives, Hypnotics)",
       second: (
         <Selections
-          fieldName="medication"
-          field={medication}
+          fieldName="medications"
+          field={medications}
           items={[
             {value: "1", label: (<span>Not taking any of these</span>)},
             {value: "2", label: (<span>Taking 1</span>)},
@@ -128,8 +174,8 @@ class DocumentationFRATForm extends Component {
       first: "Cognitive Status",
       second: (
         <Selections
-          fieldName="cognitive"
-          field={cognitive}
+          fieldName="cognitiveStatus"
+          field={cognitiveStatus}
           items={[
             {value: "1", label: (<span>Intact</span>)},
             {value: "2", label: (<span>Mildly impaired</span>)},
@@ -144,11 +190,11 @@ class DocumentationFRATForm extends Component {
         <div>
           <input
             type="checkbox"
-            id="mobility"
-            name="mobility"
-            {...mobility}
+            id="recentChanges"
+            name="recentChanges"
+            {...recentChanges}
           />
-          <label htmlFor="mobility"><span></span><span>Recent change in functional status and/or medications affecting safe mobility (or anticipated)</span></label>
+          <label htmlFor="recentChanges"><span></span><span>Recent change in functional status and/or medications affecting safe mobility (or anticipated)</span></label>
         </div>
     )}, {
       first: (
@@ -197,11 +243,11 @@ class DocumentationFRATForm extends Component {
     const forthSec = [{
       first: 'Interventions',
       second: (
-        <textarea className={s.textareaInput} id="intervention" name="intervention" {...intervention} placeholder="Example: Recommended home modification for night lights & ensure clear pathway to toilet." />
+        <textarea className={s.textareaInput} id="interventions" name="interventions" {...interventions} placeholder="Example: Recommended home modification for night lights & ensure clear pathway to toilet." />
     )}]
 
     return (
-      <form className={s.documentationFRATForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
+      <form className={s.documentationFRATForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <h2>Fall Risk Assessment Tool (FRAT)</h2>
 
         <table className={s.issueSetTable}>
@@ -295,19 +341,25 @@ DocumentationFRATForm.propTypes = {
 const reduxFormConfig = {
   form: 'documentationFRATForm',
   fields: [
-    'recentFall',
-    'medication',
+    'recentFalls',
+    'medications',
     'psychological',
-    'cognitive',
-    'mobility',
+    'cognitiveStatus',
+    'recentChanges',
     'dizziness',
-    'intervention',
+    'interventions',
   ],
   validate,
 }
 
-const mapStateToProps = (state) => ({
-
+const mapStateToProps = (state, ownProps) => ({
+  initialValues: Object.keys(ownProps.initialValues).length && {
+    ...ownProps.initialValues,
+    recentFalls: ownProps.initialValues.recentFalls.toString(),
+    medications: ownProps.initialValues.medications.toString(),
+    psychological: ownProps.initialValues.psychological.toString(),
+    cognitiveStatus: ownProps.initialValues.cognitiveStatus.toString(),
+  }
 });
 
 const mapDispatchToProps = (dispatch) => ({

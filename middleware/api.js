@@ -1,5 +1,4 @@
 import { client } from '../utils/http'
-import { fetch } from 'isomorphic-fetch'
 import cookie from 'react-cookie'
 import util from '../core/util'
 
@@ -12,7 +11,7 @@ function callApi(store, endpoint, method, data) {
   let headers;
   const accessToken = cookie.load('user_token') || cookie.load('booking_token');
   if (accessToken) {
-    headers = { 'Authorization': 'Bearer ' + accessToken }
+    headers = { 'Authorization': `Bearer ${accessToken}` }
   }
   let request = client({
     host: util.host,

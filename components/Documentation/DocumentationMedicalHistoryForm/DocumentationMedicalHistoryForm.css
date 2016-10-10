@@ -27,14 +27,24 @@
         margin: 0;
       }
 
-      & .multiTextContainer {
-        width: 330px;
+      & .textInputWithSelection {
+        display: inline;
+        vertical-align: top;
+        margin: 0 0 0 10px;
+      }
 
-        & .textInput {
-          margin-top: 20px;
+      & .multiTextContainer {
+        width: 400px;
+
+        & .textInputBody {
+          display: inline-block;
+
+          & .textInput {
+            margin-top: 20px;
+          }
         }
 
-        & .textInput:first-of-type {
+        & .textInputBody:first-of-type .textInput {
           margin-top: 0;
         }
 

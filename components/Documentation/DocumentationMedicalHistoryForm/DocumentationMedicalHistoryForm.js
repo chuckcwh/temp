@@ -13,17 +13,19 @@ import { getSession, showConfirmPopup, fetchServices, createDocumentation } from
 import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, addArrayValue, reset } from 'redux-form';
+import { Selections } from '../DocumentationModules/DocumentationModules';
 // sub component
 import DocumentationMedicalHistoryFormMedication from '../DocumentationMedicalHistoryFormMedication/DocumentationMedicalHistoryFormMedication';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
+import FaMinus from 'react-icons/lib/fa/minus';
 import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 class DocumentationMedicalHistoryForm extends Component {
 
   componentDidMount() {
     const { medications } =this.props.fields;
-    this.props.fields.secondaryDiagnosis.addField();
+    this.props.fields.secDiagnosis.addField();
     this.props.fields.allergy.addField();
     medications.addField();
   }
@@ -31,7 +33,17 @@ class DocumentationMedicalHistoryForm extends Component {
   renderMultiTextField = (field) => (
     <div className={s.multiTextContainer}>
       {field.map((item, index) => (
-        <input key={index} className={s.textInput} type='text' {...item}/>
+        <div className={s.textInputBody}>
+          <input key={index} type='text' className={s.textInput} {...item}/>
+          <button
+            className={cx('btn btn-primary', s.multiTextFieldBtn)}
+            onClick={e => {
+              e.preventDefault();
+              field.removeField(index);
+          }}>
+            <FaMinus />
+          </button>
+        </div>
       ))}
       <button
         className={cx('btn btn-primary', s.multiTextFieldBtn)}
@@ -55,13 +67,31 @@ class DocumentationMedicalHistoryForm extends Component {
     ))
   }
 
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
+
+    if (values.vision !== 'others') {
+      delete values['visionOthers'];
+    }
+    if (values.hearing !== 'others') {
+      delete values['hearingOthers'];
+    }
+
+    values['secDiagnosis'] = values['secDiagnosis'].filter(item => !!item);
+    values['allergy'] = values['allergy'].filter(item => !!item);
+    values['medications'] = values['medications'].filter(item => Object.values(item).filter(i => !!i).length);
+    this.props.onFormSubmit(values);
+  }
+
   render() {
     const {
       fields: {
         mainDiagnosis,
-        secondaryDiagnosis,
+        secDiagnosis,
         vision,
+        visionOthers,
         hearing,
+        hearingOthers,
         mobility,
         healthHistory,
         allergy,
@@ -82,19 +112,38 @@ class DocumentationMedicalHistoryForm extends Component {
       second: (<input className={s.textInput} type='text' {...mainDiagnosis}/>),
     }, {
       first: "Secondary Diagnosis",
-      second: this.renderMultiTextField(secondaryDiagnosis),
+      second: this.renderMultiTextField(secDiagnosis),
     }, {
       first: "Vision",
-      second: (<input className={s.textInput} type='text' {...vision}/>),
-    }, {
+      second: (
+        <Selections
+          fieldName="vision"
+          field={vision}
+          items={[
+            {value: "normal", label: (<span>Normal</span>)},
+            {value: "need visual aids", label: (<span>Need visual aids</span>)},
+            {value: "others", label: (<span>Others:<input className={s.textInputWithSelection} type="text" {...visionOthers} disabled={vision.value !== 'others'} /></span>)},
+          ]}
+        />
+    )}, {
       first: "Hearing",
-      second: (<input className={s.textInput} type='text' {...hearing}/>),
-    }, {
+      second: (
+        <Selections
+          fieldName="hearing"
+          field={hearing}
+          items={[
+            {value: "normal", label: (<span>Normal</span>)},
+            {value: "need hearing aids", label: (<span>Need hearing aids</span>)},
+            {value: "others", label: (<span>Others:<input className={s.textInputWithSelection} type="text" {...hearingOthers} disabled={hearing.value !== 'others'} /></span>)},
+          ]}
+        />
+    )}, {
       first: "Mobility/ADL",
       second: (
         <div className={cx("select", s.selectInput)}>
           <span></span>
           <select id="mobility" name="mobility" value={mobilityChoice[0]} {...mobility}>
+            <option value="">-- SELECT --</option>
             {mobilityChoice && mobilityChoice.map((item, index) => (
               <option key={index} value={item.value}>{item.name}</option>
             ))}
@@ -109,7 +158,7 @@ class DocumentationMedicalHistoryForm extends Component {
     }]
 
     return (
-      <form className={s.documentationMedicalHistoryForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
+      <form className={s.documentationMedicalHistoryForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <h2>Medical History</h2>
 
         <div className={s.issueSetSection}>
@@ -194,9 +243,11 @@ const reduxFormConfig = {
   form: 'documentationMedicalHistoryForm',
   fields: [
     'mainDiagnosis',
-    'secondaryDiagnosis[]',
+    'secDiagnosis[]',
     'vision',
+    'visionOthers',
     'hearing',
+    'hearingOthers',
     'mobility',
     'healthHistory',
     'allergy[]',

@@ -51,6 +51,7 @@ class DocumentationMedicalHistoryFormMedication extends Component {
           <div className={cx("select", s.selectInputField)}>
             <span></span>
             <select className={s.selectInput} id="route" name="route" {...route}>
+              <option value="">---</option>
               {medicationChoice.route && medicationChoice.route.map((item, index) => (
                 <option key={index} value={item.value}>{item.name}</option>
               ))}
@@ -70,6 +71,7 @@ class DocumentationMedicalHistoryFormMedication extends Component {
           <div className={cx("select", s.selectInputField)}>
             <span></span>
             <select className={s.selectInput}  id="medicationDoseUnit" name="medicationDoseUnit" {...doseUnit}>
+              <option value="">---</option>
               {medicationChoice.doseUnit && medicationChoice.doseUnit.map((item, index) => (
                 <option key={index} value={item.value}>{item.name}</option>
               ))}
@@ -81,6 +83,7 @@ class DocumentationMedicalHistoryFormMedication extends Component {
           <div className={cx("select", s.selectInputField)}>
             <span></span>
             <select className={s.selectInput} id="medicationCycle" name="medicationCycle" {...cycle}>
+              <option value="">---</option>
               {medicationChoice.cycle && medicationChoice.cycle.map((item, index) => (
                 <option key={index} value={item.value}>{item.name}</option>
               ))}
@@ -96,6 +99,7 @@ class DocumentationMedicalHistoryFormMedication extends Component {
           <div className={cx("select", s.selectInputField)}>
             <span></span>
             <select className={s.selectInput} id="durationUnit" name="durationUnit" {...durationUnit}>
+              <option value="">---</option>
               {medicationChoice.durationUnit && medicationChoice.durationUnit.map((item, index) => (
                 <option key={index} value={item.value}>{item.name}</option>
               ))}

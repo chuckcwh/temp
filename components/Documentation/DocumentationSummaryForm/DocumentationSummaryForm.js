@@ -132,8 +132,8 @@ const reduxFormConfig = {
   validate,
 }
 
-const mapStateToProps = (state) => ({
-  // initialValues: {
+const mapStateToProps = (state, ownProps) => ({
+  // initialValues: Object.keys(ownProps.initialValues).length ? {...ownProps.initialValues} : {
   //   recommendPolyclinic: true,
   // },
 });

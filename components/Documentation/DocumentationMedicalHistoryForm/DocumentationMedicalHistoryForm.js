@@ -9,7 +9,7 @@ import Link from '../../Link';
 import Header from '../../Header';
 import history from '../../../core/history';
 import { getUserName, configToName } from '../../../core/util';
-import { getSession, showConfirmPopup, fetchServices } from '../../../actions';
+import { getSession, showConfirmPopup, fetchServices, createDocumentation } from '../../../actions';
 import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, addArrayValue, reset } from 'redux-form';
@@ -17,7 +17,7 @@ import { reduxForm, addArrayValue, reset } from 'redux-form';
 import DocumentationMedicalHistoryFormMedication from '../DocumentationMedicalHistoryFormMedication/DocumentationMedicalHistoryFormMedication';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
-
+import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 class DocumentationMedicalHistoryForm extends Component {
 
@@ -94,7 +94,7 @@ class DocumentationMedicalHistoryForm extends Component {
       second: (
         <div className={cx("select", s.selectInput)}>
           <span></span>
-          <select id="mobility" name="mobility" {...mobility}>
+          <select id="mobility" name="mobility" value={mobilityChoice[0]} {...mobility}>
             {mobilityChoice && mobilityChoice.map((item, index) => (
               <option key={index} value={item.value}>{item.name}</option>
             ))}
@@ -168,7 +168,7 @@ class DocumentationMedicalHistoryForm extends Component {
             Clear Values
           </button>
           <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
+            Save and Next <FaArrowCircleRight />
           </button>
         </div>
       </form>
@@ -207,7 +207,7 @@ const reduxFormConfig = {
     'medications[].cycle',
     'medications[].duration',
     'medications[].durationUnit',
-    'medications[].instruction',
+    'medications[].instructions',
   ],
   validate,
 }

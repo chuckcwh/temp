@@ -9,7 +9,7 @@ import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 import { getUserName, configToName } from '../../core/util';
-import { getSession, showConfirmPopup, fetchServices } from '../../actions';
+import { getSession, showAlertPopup, fetchServices, getSessionDocumentation, createSessionDocumentation } from '../../actions';
 import ConfirmPopup from '../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 // sub-component - step 1
@@ -33,25 +33,25 @@ const stepSectionsSchema = {
     icon: "1",
     text: 'Patient Assessment',
     forms: {
-      'Med History': { name: 'Med History', isDefault: true },
-      'Overall': { name: 'Overall', isDefault: true },
-      'Vital Signs': { name: 'Vital Signs', isDefault: true },
-      'FRAT': { name: 'FRAT', isDefault: false },
-      'MSE': { name: 'MSE', isDefault: false },
+      'Med History': { name: 'Med History', isDefault: true, next: {step: "1", formName: "Overall" }},
+      'Overall': { name: 'Overall', isDefault: true, next: {step: "1", formName: "Vital Signs" }},
+      'Vital Signs': { name: 'Vital Signs', isDefault: true, next: {step: "1", formName: "more" }},
+      'FRAT': { name: 'FRAT', isDefault: false, next: {step: "1", formName: "more" }},
+      'MSE': { name: 'MSE', isDefault: false, next: {step: "1", formName: "more" }},
     }},
   "2": {
     icon: "2",
     text: 'Procedural Assessment',
     forms: {
-      'Bate': { name: ['Bate'], isDefault: false },
-      'NGT': { name: 'NGT', isDefault: false },
-      'Catheter': { name: 'Catheter', isDefault: false },
+      'Bate': { name: ['Bate'], isDefault: false, next: {step: "2", formName: "more" }},
+      'NGT': { name: 'NGT', isDefault: false, next: {step: "2", formName: "more" }},
+      'Catheter': { name: 'Catheter', isDefault: false, next: {step: "2", formName: "more" }},
     }},
   "3": {
     icon: "3",
     text: 'Summary of Findings',
     forms: {
-      'Summary of Findings': { name: 'Summary of Findings', isDefault: true }
+      'Summary of Findings': { name: 'Summary of Findings', isDefault: true, next: {step: "4" }},
     }},
   "4": {
     icon: "4",
@@ -77,10 +77,29 @@ class Documentation extends Component {
 
   componentDidMount() {
     const { sessionId } = this.props.params;
-    const { fetchServices, getSession } = this.props;
+    const { fetchServices, getSession, getSessionDocumentation, showAlertPopup } = this.props;
 
     fetchServices();
     getSession({ sessionId });
+    getSessionDocumentation({ sessionId }).then(res => {
+      if (res.type === 'SESSION_DOCUMENTATION_GET_FAILURE') {
+        showAlertPopup('Session Documentation Get Failure');
+      } else if (res.type === 'SESSION_DOCUMENTATION_GET_SUCCESS' && res.response.data) {
+        showAlertPopup('Oops! Documentation already created for this session');
+        this.setState({ wholeDocData: res.response.data });
+      }
+    });
+  }
+
+  onStepChange = (newStep) => {
+    const { step, stepSections } = this.state;
+    if (step !== newStep) {
+      const nextForm = Object.values(stepSections[newStep].forms).filter(i => i.isDefault)[0];
+      this.setState({
+        step: newStep,
+        currentForm: nextForm && nextForm.name || 'more'
+      })
+    }
   }
 
   getSubMenu = () => {
@@ -133,24 +152,43 @@ class Documentation extends Component {
     });
   }
 
-  saveSingleFormInState = (formName, values) => {
+  saveFormAndNext = (formName, values) => {
     console.log(formName, values);
+    const { wholeDocData, step, currentForm, stepSections } = this.state;
+    wholeDocData[formName] = values;
+
+    this.setState({ wholeDocData });
+
+    if (stepSections[step].forms[currentForm].next) {
+      this.setState({
+        step: stepSections[step].forms[currentForm].next['step'],
+        currentForm: stepSections[step].forms[currentForm].next['formName'],
+      })
+    }
+
+    console.log('wholeDocData', this.state.wholeDocData);
+    window.scrollTo(0, 0);
   }
 
   onSubmitFormAsWhole = () => {
-    console.log('submit form!!!!!!!!!!!!!!!!!!!');
+    console.log('submit form!', this.state.wholeDocData);
+
+    this.props.createSessionDocumentation({...this.state.wholeDocData, sessionId: this.props.params.sessionId});
   }
 
   render() {
     const { sessionId } = this.props.params;
     const { config, session, services } = this.props;
-    const { step, BateFormNum, currentForm, stepSections } = this.state;
+    const { step, BateFormNum, currentForm, stepSections, wholeDocData } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
       const serviceClassName = session.serviceClass && Object.keys(services).length > 0 && services[session.service].classes[session.serviceClass].duration;
       return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})` : '';
     }
+    console.log('step', step);
+    console.log('currentForm', currentForm);
+    console.log('wholeDocData', wholeDocData);
 
     return (
       <div className={s.documentation}>
@@ -195,7 +233,7 @@ class Documentation extends Component {
               {Object.values(stepSections).map((item, index) => (
                 <div
                   className={cx(s.stepSectionUnit, step === item.icon && s.stepSectionUnitActive)}
-                  onClick={() => this.setState({step: item.icon})}
+                  onClick={() => this.onStepChange(item.icon)}
                   key={index}
                 >
                   <div>{item.icon}</div>
@@ -219,11 +257,11 @@ class Documentation extends Component {
             </div>
 
             <div className={s.formContent}>
-              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm onFormSubmit={values => this.saveSingleFormInState('Medical History form', values)} />)
-                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm onFormSubmit={values => this.saveSingleFormInState('Overall form', values)} />)
-                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm onFormSubmit={values => this.saveSingleFormInState('Vital-Signs form', values)} />)
-                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm onFormSubmit={values => this.saveSingleFormInState('FRAT form', values)} />)
-                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm onFormSubmit={values => this.saveSingleFormInState('MSE form', values)} />)
+              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm initialValues={{...wholeDocData.medHistForm}} onFormSubmit={values => this.saveFormAndNext('medHistForm', values)} />)
+                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm initialValues={{...wholeDocData.overallForm}} onFormSubmit={values => this.saveFormAndNext('overallForm', values)} />)
+                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm initialValues={{...wholeDocData.vitalSignsForm}} onFormSubmit={values => this.saveFormAndNext('vitalSignsForm', values)} />)
+                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm initialValues={{...wholeDocData.fratForm}} onFormSubmit={values => this.saveFormAndNext('fratForm', values)} />)
+                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm initialValues={{...wholeDocData.mseForm}} onFormSubmit={values => this.saveFormAndNext('mseForm', values)} />)
                 : step === "1" ? (
                   <div>
                     <h2>Add More</h2>
@@ -261,14 +299,9 @@ class Documentation extends Component {
                   </div>
                 )
 
-                : step === "2" && currentForm[3] === 'Bate' ? (
-                  <span>
-                    {[...Array(10)].map((item, index) => (
-                      <DocumentationBateForm key={index + 1} formKey={(index + 1).toString()} onFormSubmit={values => this.saveSingleFormInState(`Bate form ${index + 1}`, values)} />
-                    ))}
-                  </span>)
-                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm onFormSubmit={values => this.saveSingleFormInState('NGT form', values)} />)
-                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm onFormSubmit={values => this.saveSingleFormInState('catheter form', values)} />)
+                : step === "2" && currentForm.indexOf('Bate') !== -1 ? (<DocumentationBateForm formKey={parseInt(currentForm) || 1} initialValues={{...wholeDocData.bateForms}} onFormSubmit={values => this.saveFormAndNext(`bateForms`, values)} />)
+                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm initialValues={{...wholeDocData.ngtForm}} onFormSubmit={values => this.saveFormAndNext('ngtForm', values)} />)
+                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm initialValues={{...wholeDocData.catheterForm}} onFormSubmit={values => this.saveFormAndNext('catheterForm', values)} />)
                 : step === "2" ? (
                   <div>
                     <h2>Add More</h2>
@@ -318,7 +351,7 @@ class Documentation extends Component {
                     </div>
                   </div>
                 )
-                : step === "3" ? (<DocumentationSummaryForm onFormSubmit={values => this.saveSingleFormInState('summary form', values)} />)
+                : step === "3" ? (<DocumentationSummaryForm initialValues={{...wholeDocData.summaryForm}} onFormSubmit={values => this.saveFormAndNext('summaryForm', values)} />)
                 : step === "4" ? (
                   <div>
                     <h2>Confirmation</h2>
@@ -333,10 +366,7 @@ class Documentation extends Component {
                     <div className={s.handleForm}>
                       <button
                         className='btn btn-secondary'
-                        onClick={e => {
-                          e.preventDefault();
-                          this.setState({step: "3"});
-                        }}>
+                        onClick={() => this.onStepChange("3")}>
                         Back
                       </button>
                       <button
@@ -360,6 +390,7 @@ class Documentation extends Component {
 }
 
 Documentation.propTypes = {
+  showAlertPopup: React.PropTypes.func.isRequired,
   getSession: React.PropTypes.func.isRequired,
   fetchServices: React.PropTypes.func.isRequired,
 };
@@ -372,7 +403,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
+  showAlertPopup: (message) => dispatch(showAlertPopup(message)),
   getSession: (params) => dispatch(getSession(params)),
+  getSessionDocumentation: (params) => dispatch(getSessionDocumentation(params)),
+  createSessionDocumentation: (params) => dispatch(createSessionDocumentation(params)),
   // getDocumentation: (params) => dispatch(getDocumentation(params)),
 });
 

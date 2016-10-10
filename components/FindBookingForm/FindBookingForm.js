@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import s from './FindBookingForm.css';
 import sAccount from '../Account/Account.css';
-import { BOOKING_SUCCESS, getBooking } from '../../actions';
+import { LOGIN_BOOKING_SUCCESS, loginBooking } from '../../actions';
 
 const submit = (values, dispatch) => (
   new Promise((resolve, reject) => {
@@ -20,11 +20,11 @@ const submit = (values, dispatch) => (
     if (errors.bid || errors.contact) {
       reject(errors);
     } else {
-      dispatch(getBooking({
+      dispatch(loginBooking({
         bookingId: values.bid,
         bookingToken: values.contact,
       })).then((res) => {
-        if (res && res.type === BOOKING_SUCCESS) {
+        if (res && res.type === LOGIN_BOOKING_SUCCESS) {
           resolve();
         } else {
           reject({ _error: 'Sorry, we are not able to find your booking.' });

@@ -45,16 +45,16 @@ class BookingView extends Component {
               type: 'text',
               initialValue:
                 this.props.booking &&
-                this.props.booking.adhocClient &&
-                this.props.booking.adhocClient.name,
+                this.props.booking.client &&
+                this.props.booking.client.name,
             },
             clientContact: {
               label: 'Mobile Number',
               type: 'text',
               initialValue:
                 this.props.booking &&
-                this.props.booking.adhocClient &&
-                this.props.booking.adhocClient.contact,
+                this.props.booking.client &&
+                this.props.booking.client.contact,
             },
           },
           validate: (values) => {
@@ -190,7 +190,7 @@ class BookingView extends Component {
       applications: Object.keys(this.state.selected)
         .map(sessionId => sessions[sessionId].applications[0]).join(),
       bid: booking._id,
-      btoken: booking.adhocClient.contact,
+      btoken: booking.client.contact,
     } });
 
     setPostStatus('confirmation');
@@ -201,12 +201,12 @@ class BookingView extends Component {
       this.props.cancelSession({
         sessionId: session._id,
         bookingId: this.props.booking._id,
-        bookingToken: this.props.booking.adhocClient.contact,
+        bookingToken: this.props.booking.client.contact,
       }).then((res) => {
         if (res && res.type === SESSION_CANCEL_SUCCESS) {
           this.props.getBooking({
             bookingId: this.props.booking._id,
-            bookingToken: this.props.booking.adhocClient.contact,
+            bookingToken: this.props.booking.client.contact,
           });
         }
       });
@@ -220,7 +220,7 @@ class BookingView extends Component {
       sessionDetails,
       caregiverSection,
       paymentButton;
-    const { config, services, booking, bookingFetching } = this.props;
+    const { config, services, booking, bookingFetching, sessions } = this.props;
     if (this.state.editing && this.props.inlineForm && /^(userDetails)$/i.test(this.props.inlineForm.name)) {
       userDetails = <InlineForm />;
     } else {
@@ -228,15 +228,15 @@ class BookingView extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">Name</div>
-            <div className="TableRowItem3">{booking && booking.adhocClient && booking.adhocClient.name}</div>
+            <div className="TableRowItem3">{booking && booking.client && booking.client.name}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{booking && booking.adhocClient && booking.adhocClient.email}</div>
+            <div className="TableRowItem3">{booking && booking.client && booking.client.email}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Mobile Number</div>
-            <div className="TableRowItem3">{booking && booking.adhocClient && booking.adhocClient.contact}</div>
+            <div className="TableRowItem3">{booking && booking.client && booking.client.contact}</div>
           </div>
         </div>
       );

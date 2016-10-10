@@ -193,6 +193,7 @@ const booking = (state = {
   data: {}
 }, action) => {
   switch (action.type) {
+    case ActionTypes.LOGIN_BOOKING_REQUEST:
     case ActionTypes.BOOKING_REQUEST:
     case ActionTypes.BOOKING_CREATE_REQUEST:
     case ActionTypes.BOOKING_EDIT_REQUEST:
@@ -200,8 +201,19 @@ const booking = (state = {
         ...state,
         isFetching: true
       }
-    case ActionTypes.BOOKING_SUCCESS:
+    case ActionTypes.LOGIN_BOOKING_SUCCESS:
     case ActionTypes.BOOKING_CREATE_SUCCESS:
+      if (action.response && action.response.data && action.response.data._id && action.response.data.isAdhoc && action.response.token) {
+        cookie.save('booking_id', action.response.data._id, { path: '/' });
+        cookie.save('booking_token', action.response.token, { path: '/' });
+      }
+      return {
+        ...state,
+        isFetching: false,
+        data: action.response && action.response.data,
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.BOOKING_SUCCESS:
     case ActionTypes.BOOKING_EDIT_SUCCESS:
       return {
         ...state,
@@ -352,6 +364,7 @@ const sessions = (state = {
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.BOOKING_SUCCESS:
+    case ActionTypes.LOGIN_BOOKING_SUCCESS:
       return {
         ...state,
         isFetching: false,

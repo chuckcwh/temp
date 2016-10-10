@@ -311,6 +311,10 @@ export const LOGIN_CLIENT_REQUEST = 'LOGIN_CLIENT_REQUEST'
 export const LOGIN_CLIENT_SUCCESS = 'LOGIN_CLIENT_SUCCESS'
 export const LOGIN_CLIENT_FAILURE = 'LOGIN_CLIENT_FAILURE'
 
+export const LOGIN_BOOKING_REQUEST = 'LOGIN_BOOKING_REQUEST'
+export const LOGIN_BOOKING_SUCCESS = 'LOGIN_BOOKING_SUCCESS'
+export const LOGIN_BOOKING_FAILURE = 'LOGIN_BOOKING_FAILURE'
+
 export const EMAIL_EDIT_REQUEST = 'EMAIL_EDIT_REQUEST'
 export const EMAIL_EDIT_SUCCESS = 'EMAIL_EDIT_SUCCESS'
 export const EMAIL_EDIT_FAILURE = 'EMAIL_EDIT_FAILURE'
@@ -553,6 +557,11 @@ function fetchAction(route) {
     loginClient: {
       types: [ LOGIN_CLIENT_REQUEST, LOGIN_CLIENT_SUCCESS, LOGIN_CLIENT_FAILURE ],
       endpoint: '/auth/local',
+      method: 'post',
+    },
+    loginBooking: {
+      types: [ LOGIN_BOOKING_REQUEST, LOGIN_BOOKING_SUCCESS, LOGIN_BOOKING_FAILURE ],
+      endpoint: '/auth/booking',
       method: 'post',
     },
     getUsers: {
@@ -1091,6 +1100,10 @@ export function login(params) {
 
 export function loginClient(params) {
   return fetch('loginClient', params);
+}
+
+export function loginBooking(params) {
+  return fetch('loginBooking', params);
 }
 
 export function createUser(params) {

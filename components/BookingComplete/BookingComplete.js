@@ -47,7 +47,7 @@ class BookingComplete extends Component {
     const { booking } = this.props;
     this.props.getBooking({
       bookingId: booking && booking._id,
-      bookingToken: booking && booking.adhocClient && booking.adhocClient.contact,
+      bookingToken: booking && booking.client && booking.client.contact,
     }).then(() => {// Notify parent window of booking completion for embedded widget
       const location = history.getCurrentLocation();
       if (location && location.query && location.query.widget === 'true') {
@@ -78,7 +78,7 @@ class BookingComplete extends Component {
         </div>
       );
     } else {
-      if (booking.adhocClient) {
+      if (booking.isAdhoc) {
         let bookingLink,
           activateText;
         if (location && location.query && location.query.widget === 'true') {
@@ -92,7 +92,7 @@ class BookingComplete extends Component {
             <div>
               <Link
                 to={{ pathname: '/booking-manage',
-                  query: { bid: booking._id, btoken: booking.adhocClient.contact } }}
+                  query: { bid: booking._id, btoken: booking.client.contact } }}
                 className="btn btn-primary"
                 style={{ color: '#fff' }}
               >View Booking</Link>

@@ -89,7 +89,7 @@ class BookingPaymentPaypal extends Component {
           : window.location.href)}`
           + `?action=${encodeURIComponent('paypal-return')}`
           + `&bid=${encodeURIComponent(this.props.booking && this.props.booking._id)}`
-          + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact)}`
+          + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.client && this.props.booking.client.contact)}`
           + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
         returnUrl = returnUrl.replace('#', '');
         cancelUrl = `${(window.location.href.indexOf('?') > -1
@@ -97,7 +97,7 @@ class BookingPaymentPaypal extends Component {
           : window.location.href)}`
           + `?action=${encodeURIComponent('paypal-cancel')}`
           + `&bid=${encodeURIComponent(this.props.booking && this.props.booking._id)}`
-          + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact)}`
+          + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.client && this.props.booking.client.contact)}`
           + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
         cancelUrl = cancelUrl.replace('#', '');
 
@@ -109,7 +109,7 @@ class BookingPaymentPaypal extends Component {
             cancel_url: cancelUrl,
           },
           bookingId: this.props.booking && this.props.booking._id,
-          bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
+          bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
         }).then((res) => {
           if (res && res.type === APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS) {
             // console.log(res);

@@ -39,7 +39,7 @@ class BookingPaymentCard extends Component {
                   stripeToken: token,
                 },
                 bookingId: this.props.booking && this.props.booking._id,
-                bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
+                bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
               }).then((res) => {
                 if (res && res.type === APPLICATIONS_PAY_CARD_SUCCESS) {
                   resolve();

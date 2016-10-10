@@ -41,10 +41,10 @@ class BookingPaymentBankTransfer extends Component {
         bookingToken: location && location.query && location.query.btoken,
       }).then((res) => {
         if (res && res.type === APPLICATIONS_PAY_BANK_SUCCESS) {
-          if (this.props.booking && this.props.booking._id && this.props.booking.adhocClient) {
+          if (this.props.booking && this.props.booking._id && this.props.booking.isAdhoc) {
             this.props.getBooking({
               bookingId: this.props.booking && this.props.booking._id,
-              bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
+              bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
             });
           }
 

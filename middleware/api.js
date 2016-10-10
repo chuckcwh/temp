@@ -10,9 +10,9 @@ const API_ROOT = util.host + '/api'
 function callApi(store, endpoint, method, data) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
   let headers;
-  const userToken = cookie.load('user_token');
-  if (userToken) {
-    headers = { 'Authorization': 'Bearer ' + userToken }
+  const accessToken = cookie.load('user_token') || cookie.load('booking_token');
+  if (accessToken) {
+    headers = { 'Authorization': 'Bearer ' + accessToken }
   }
   let request = client({
     host: util.host,

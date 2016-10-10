@@ -108,6 +108,10 @@
     "page": "./pages/credits"
   },
   {
+    "path": "/credits-payment",
+    "page": "./pages/credits-payment"
+  },
+  {
     "path": "/profile",
     "page": "./pages/profile"
   },

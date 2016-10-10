@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import s from './BookingPaymentCard.css';
 import BookingPaymentCardForm from '../BookingPaymentCardForm';
-import { APPLICATIONS_PAY_CARD_SUCCESS,
-  getBooking, payApplicationsCard, setPostStatus, showAlertPopup } from '../../actions';
+import { APPLICATIONS_PAY_CARD_SUCCESS, USER_CREDITS_TOPUP_CARD_SUCCESS,
+  getBooking, payApplicationsCard, topupCreditsCard, setPostStatus, setSum, showAlertPopup } from '../../actions';
 import history from '../../core/history';
 
 const imgPaypal = require('../paypal.png');
@@ -21,70 +21,72 @@ class BookingPaymentCard extends Component {
     };
   }
 
-  componentDidMount() {
-    const location = history.getCurrentLocation();
-    if (location && location.query && location.query.action === 'paypal-return') {
-      // Execute paypal payment since this is returned from Paypal
-      this.props.payApplicationsPaypalExecute({
-        mode: 'paypal',
-        applications: location && location.query && location.query.applications && location.query.applications.split(','),
-        payment: {
-          paymentId: location && location.query && location.query.paymentId,
-          payerId: location && location.query && location.query.PayerID,
-        },
-        bookingId: location && location.query && location.query.bid,
-        bookingToken: location && location.query && location.query.btoken,
-      }).then((res) => {
-        if (res && res.type === APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS) {
-          // console.log(res.response.items);
-          this.props.getBooking({
-            bookingId: location && location.query && location.query.bid,
-            bookingToken: location && location.query && location.query.btoken,
-          });
-
-          this.props.setPostStatus('success');
-        } else {
-          // console.error('Failed to execute paypal payment.');
-        }
-      });
-    }
-  }
-
   handleSubmit = (values) => {
     return new Promise((resolve, reject) => {
-      if (typeof window !== 'undefined' && window.Stripe) {
-        window.Stripe.card.createToken(values, (status, response) => {
-          if (response.error) {
-            this.showAlertPopup('An error has occurred with the payment gateway. Please contact us to rectify the issue.');
-            reject();
-          } else {
-            const token = response.id;
-            const location = history.getCurrentLocation();
-            this.props.payApplicationsCard({
-              mode: 'stripe',
-              applications: Object.keys(this.props.applications),
-              payment: {
-                stripeToken: token,
-              },
-              bookingId: this.props.booking && this.props.booking._id,
-              bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
-            }).then((res) => {
-              if (res && res.type === APPLICATIONS_PAY_CARD_SUCCESS) {
-                resolve();
-                
-                this.props.getBooking({
-                  bookingId: location && location.query && location.query.bid,
-                  bookingToken: location && location.query && location.query.btoken,
-                });
+      const location = history.getCurrentLocation();
+      if (location && location.pathname && location.pathname.indexOf('/booking-confirmation') === 0) {
+        if (typeof window !== 'undefined' && window.Stripe) {
+          window.Stripe.card.createToken(values, (status, response) => {
+            if (response.error) {
+              this.showAlertPopup('An error has occurred with the payment gateway. Please contact us to rectify the issue.');
+              reject();
+            } else {
+              const token = response.id;
+              this.props.payApplicationsCard({
+                mode: 'stripe',
+                applications: Object.keys(this.props.applications),
+                payment: {
+                  stripeToken: token,
+                },
+                bookingId: this.props.booking && this.props.booking._id,
+                bookingToken: this.props.booking && this.props.booking.adhocClient && this.props.booking.adhocClient.contact,
+              }).then((res) => {
+                if (res && res.type === APPLICATIONS_PAY_CARD_SUCCESS) {
+                  resolve();
+                  
+                  this.props.getBooking({
+                    bookingId: location && location.query && location.query.bid,
+                    bookingToken: location && location.query && location.query.btoken,
+                  });
 
-                this.props.setPostStatus('success');
-              } else {
-                reject();
-                // console.error('Failed to create paypal payment.');
-              }
-            });
-          }
-        });
+                  this.props.setPostStatus('success');
+                } else {
+                  reject();
+                  // console.error('Failed to create paypal payment.');
+                }
+              });
+            }
+          });
+        }
+      } else if (location && location.pathname && location.pathname.indexOf('/credits-payment') === 0) {
+        if (typeof window !== 'undefined' && window.Stripe) {
+          window.Stripe.card.createToken(values, (status, response) => {
+            if (response.error) {
+              this.showAlertPopup('An error has occurred with the payment gateway. Please contact us to rectify the issue.');
+              reject();
+            } else {
+              const token = response.id;
+              const sum = parseFloat(location.query.deposit);
+              const total = ((sum + config.stripe.fixed) / (1 - config.stripe.percentage));
+              this.props.topupCreditsCard({
+                mode: 'stripe',
+                value: total,
+                payment: {
+                  stripeToken: token,
+                },
+              }).then((res) => {
+                if (res && res.type === USER_CREDITS_TOPUP_CARD_SUCCESS) {
+                  resolve();
+
+                  this.props.setPostStatus('success');
+                } else {
+                  reject();
+                  // console.error('Failed to create paypal payment.');
+                }
+              });
+            }
+          });
+        }
       }
     });
   }
@@ -94,12 +96,14 @@ class BookingPaymentCard extends Component {
     const { config, applications } = this.props;
     let sum = 0;
     if (location && location.query && location.query.paymentId) {
+      // View for paypal return
       return (
         <div className={s.bookingPaymentCard}>
           <Loader className="spinner" loaded={!this.state.pending} />
         </div>
       );
     } else if (this.state.redirecting) {
+      // View for pending paypal redirection
       return (
         <div className={s.bookingPaymentCard}>
           <div className="text-center">
@@ -109,12 +113,16 @@ class BookingPaymentCard extends Component {
         </div>
       );
     }
-    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
-      Object.values(applications).map(application => {
-        sum += parseFloat(application.price);
-      });
+    if (location && location.pathname.indexOf('/booking-confirmation') === 0) {
+      if (applications && Object.values(applications) && Object.values(applications).length > 0) {
+        Object.values(applications).map(application => {
+          sum += parseFloat(application.price);
+        });
+      }
+    } else if (location && location.pathname.indexOf('/credits-payment') === 0 && location.query && location.query.deposit) {
+      sum = parseFloat(location.query.deposit);
     }
-    const total = ((sum + config.stripe.fixed) / (1 - config.stripe.percentage));
+    const total = ((sum + parseFloat(config.stripe.fixed)) / (1 - parseFloat(config.stripe.percentage)));
     return (
       <div className={s.bookingPaymentCard}>
         <Loader className="spinner" loaded={!this.state.pending}>
@@ -140,7 +148,10 @@ BookingPaymentCard.propTypes = {
 
   getBooking: React.PropTypes.func.isRequired,
   payApplicationsCard: React.PropTypes.func.isRequired,
+  topupCreditsCard: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
+  setSum: React.PropTypes.func.isRequired,
+  showAlertPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -154,7 +165,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
   payApplicationsCard: (params) => dispatch(payApplicationsCard(params)),
+  topupCreditsCard: (params) => dispatch(topupCreditsCard(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
+  setSum: (sum) => dispatch(setSum(sum)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });
 

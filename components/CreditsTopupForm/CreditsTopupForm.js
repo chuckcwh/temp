@@ -8,12 +8,13 @@ class CreditsTopupForm extends Component {
 
   render() {
     const {
-      fields: { deposit, method, transRef, transDate },
+      fields: { deposit, mode, transRef, transDate },
       invalid,
       handleSubmit,
       submitFailed,
       submitting,
       user,
+      config,
     } = this.props;
     return (
       <form className={s.creditsTopupForm} onSubmit={handleSubmit}>
@@ -29,18 +30,22 @@ class CreditsTopupForm extends Component {
             <div className="TableRowItem1">Payment Method*</div>
             <div className="TableRowItem2">
               <div className="radio radio-inline">
-                <input type="radio" id="method_paypal" name="method" {...method} value="paypal" checked={method.value === 'paypal'} />
-                <label htmlFor="method_paypal"><span><span></span></span><span>Paypal</span></label>
+                <input type="radio" id="mode_card" name="mode" {...mode} value="card" checked={mode.value === 'card'} />
+                <label htmlFor="mode_card"><span><span></span></span><span>Credit Card</span></label>
               </div>
               <div className="radio radio-inline">
-                <input type="radio" id="method_bank_transfer" name="method" {...method} value="bank" checked={method.value === 'bank'} />
-                <label htmlFor="method_bank_transfer"><span><span></span></span><span>Bank Transfer</span></label>
+                <input type="radio" id="mode_paypal" name="mode" {...mode} value="paypal" checked={mode.value === 'paypal'} />
+                <label htmlFor="mode_paypal"><span><span></span></span><span>Paypal</span></label>
               </div>
-              {method.touched && method.error && <div className={s.creditsTopupFormError}>{method.error}</div>}
+              <div className="radio radio-inline">
+                <input type="radio" id="mode_bank_transfer" name="mode" {...mode} value="bank" checked={mode.value === 'bank'} />
+                <label htmlFor="mode_bank_transfer"><span><span></span></span><span>Bank Transfer</span></label>
+              </div>
+              {mode.touched && mode.error && <div className={s.creditsTopupFormError}>{mode.error}</div>}
             </div>
           </div>
         </div>
-        {method.value === 'paypal' && <div className={s.creditsTopupFormPaypal}>
+        {mode.value === 'card' && <div className={s.creditsTopupFormCard}>
           <div className={s.creditsTopupFormSection}>
             <div className={s.creditsTopupFormSectionBoxWrapper}>
               <div className={s.creditsTopupFormSectionBox}>
@@ -54,7 +59,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} id="pay">
-                    {util.isInt(deposit.value) ? `SGD ${((parseFloat(deposit.value) + 0.5) / (1 - 0.039)).toFixed(2)}`: '-'}
+                    {util.isInt(deposit.value) ? `SGD ${((parseFloat(deposit.value) + config.stripe.fixed) / (1 - config.stripe.percentage)).toFixed(2)}`: '-'}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>*Amount to Pay</div>
                 </div>
@@ -62,11 +67,37 @@ class CreditsTopupForm extends Component {
             </div>
           </div>
           <div className={s.creditsTopupFormSection}>
-            <p className="small">*PayPal Transaction Fee: SGD 0.50 + 3.90%</p>
+            <p className="small">*Transaction Fee: SGD {parseFloat(config.stripe.fixed).toFixed(2)} + {(parseFloat(config.stripe.percentage) * 100).toFixed(1)}%</p>
+            <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Pay via Credit Card</button>
+          </div>
+        </div>}
+        {mode.value === 'paypal' && <div className={s.creditsTopupFormPaypal}>
+          <div className={s.creditsTopupFormSection}>
+            <div className={s.creditsTopupFormSectionBoxWrapper}>
+              <div className={s.creditsTopupFormSectionBox}>
+                <div className={s.creditsTopupFormSectionBoxContent}>
+                  <div className={s.creditsTopupFormSectionBoxValue} name="credit">
+                    {`SGD ${user && parseFloat(user.credits.current + deposit.value).toFixed(2)}`}
+                  </div>
+                  <div className={s.creditsTopupFormSectionBoxTitle}>Balance Credits after Deposit</div>
+                </div>
+              </div>
+              <div className={s.creditsTopupFormSectionBox}>
+                <div className={s.creditsTopupFormSectionBoxContent}>
+                  <div className={s.creditsTopupFormSectionBoxValue} id="pay">
+                    {util.isInt(deposit.value) ? `SGD ${((parseFloat(deposit.value) + config.paypal.fixed) / (1 - config.paypal.percentage)).toFixed(2)}`: '-'}
+                  </div>
+                  <div className={s.creditsTopupFormSectionBoxTitle}>*Amount to Pay</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={s.creditsTopupFormSection}>
+            <p className="small">*Transaction Fee: SGD {parseFloat(config.paypal.fixed).toFixed(2)} + {(parseFloat(config.paypal.percentage) * 100).toFixed(1)}%</p>
             <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>Pay via Paypal</button>
           </div>
         </div>}
-        {method.value === 'bank' && <div className={s.creditsTopupFormBank}>
+        {mode.value === 'bank' && <div className={s.creditsTopupFormBank}>
           <div className={s.creditsTopupFormSection}>
             <div className={s.creditsTopupFormSectionBoxWrapper}>
               <div className={s.creditsTopupFormSectionBox}>
@@ -142,13 +173,13 @@ const validate = values => {
   } else if (!util.isInt(values.deposit)) {
     errors.deposit = 'Invalid top up amount';
   }
-  if (!values.method) {
-    errors.method = 'Required';
+  if (!values.mode) {
+    errors.mode = 'Required';
   }
-  if (values.method === 'bank' && !values.transRef) {
+  if (values.mode === 'bank' && !values.transRef) {
     errors.transRef = 'Required';
   }
-  if (values.method === 'bank' && !values.transDate) {
+  if (values.mode === 'bank' && !values.transDate) {
     errors.transDate = 'Required';
   }
   return errors;
@@ -165,12 +196,17 @@ CreditsTopupForm.propTypes = {
   // fetchAddress: PropTypes.func.isRequired,
   // onNext: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  config: PropTypes.object.isRequired,
 };
 
 const reduxFormConfig = {
   form: 'creditsTopupForm',
-  fields: ['deposit', 'method', 'transRef', 'transDate'],
+  fields: ['deposit', 'mode', 'transRef', 'transDate'],
   validate,
 };
 
-export default reduxForm(reduxFormConfig)(CreditsTopupForm);
+const mapStateToProps = (state) => ({
+  config: state.config.data,
+});
+
+export default reduxForm(reduxFormConfig, mapStateToProps)(CreditsTopupForm);

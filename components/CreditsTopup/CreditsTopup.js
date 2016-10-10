@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import s from './CreditsTopup.css';
-import { showDayPickerPopup } from '../../actions';
+import { setPostStatus, showDayPickerPopup } from '../../actions';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import moment from 'moment';
@@ -12,12 +12,22 @@ import DashboardTableButton from '../DashboardTableButton';
 import SideTabList from '../SideTabList';
 import SideTab from '../SideTab';
 import CreditsTopupForm from '../CreditsTopupForm';
+import history from '../../core/history';
 
 class CreditsTopup extends Component {
 
   constructor(props) {
     super(props);
   }
+
+  handleSubmit = (values) => {
+    return new Promise((resolve, reject) => {
+      this.props.setPostStatus(`payment-${values.mode}`);
+      history.push({ pathname: '/credits-payment', query: {
+        deposit: values.deposit,
+      } });
+    });
+  };
 
   render() {
     const { user, showDayPickerPopup } = this.props;
@@ -29,6 +39,7 @@ class CreditsTopup extends Component {
           <CreditsTopupForm
             user={user}
             showDayPickerPopup={showDayPickerPopup}
+            onSubmit={this.handleSubmit}
           />
         </div>
         <DayPickerPopup title="Transaction Date" />
@@ -43,7 +54,7 @@ CreditsTopup.propTypes = {
 
   // fetchLanguages: React.PropTypes.func.isRequired,
   // fetchAddress: React.PropTypes.func.isRequired,
-  // getPatients: React.PropTypes.func.isRequired,
+  setPostStatus: React.PropTypes.func.isRequired,
   showDayPickerPopup: React.PropTypes.func.isRequired,
 };
 
@@ -54,7 +65,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   // fetchLanguages: () => dispatch(fetchLanguages()),
   // fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
-  // getPatients: (params) => dispatch(getPatients(params)),
+  setPostStatus: (params) => dispatch(setPostStatus(params)),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   // showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });

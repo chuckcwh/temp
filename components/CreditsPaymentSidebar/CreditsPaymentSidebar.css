@@ -1,0 +1,59 @@
+@import '../variables.css';
+
+.creditsPaymentSidebar {
+  margin-left: 40px;
+  background-color: #fff;
+  flex: 5;
+  align-self: flex-start;
+
+  & .creditsPaymentSidebarTitle {
+    padding: 15px 25px;
+    border-bottom: 2px solid #f3f3f3;
+    font-size: 25px;
+  }
+
+  & .creditsPaymentSidebarContent {
+    padding: 15px 25px;
+    color: #969696;
+    font-size: 21px;
+
+    & .creditsPaymentSidebarService {
+      text-transform: uppercase;
+    }
+
+    & .creditsPaymentSidebarItem {
+      box-sizing: border-box;
+      width: 100%;
+      padding-right: 30px;
+
+      /* background: url(../pencil.png) no-repeat top right; */
+
+      & .creditsPaymentSidebarItemRight {
+        float: right;
+      }
+    }
+
+    & > div {
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  & .creditsPaymentSidebarFooter {
+    padding: 15px 25px;
+    border-top: 2px solid #f3f3f3;
+    font-size: 25px;
+
+    & .creditsPaymentSidebarPriceCost {
+      float: right;
+      color: var(--secondary-color);
+    }
+  }
+
+  @media (--sm-viewport) {
+    margin: 50px 0 0;
+  }
+}

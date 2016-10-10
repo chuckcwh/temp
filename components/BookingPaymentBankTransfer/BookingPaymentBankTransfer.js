@@ -5,7 +5,8 @@ import Loader from 'react-loader';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import s from './BookingPaymentBankTransfer.css';
-import { APPLICATIONS_PAY_BANK_SUCCESS, getBooking, payApplicationsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
+import { APPLICATIONS_PAY_BANK_SUCCESS,
+  getBooking, payApplicationsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
 import history from '../../core/history';
 
 class BookingPaymentBankTransfer extends Component {
@@ -65,12 +66,17 @@ class BookingPaymentBankTransfer extends Component {
   };
 
   render() {
-    const { applications, applicationsFetching, sessions } = this.props;
+    const location = history.getCurrentLocation();
+    const { config: { bankDetails }, applications, applicationsFetching, sessions } = this.props;
     let sum = 0;
-    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
-      Object.values(applications).map(application => {
-        sum += parseFloat(application.price);
-      });
+    if (location && location.pathname.indexOf('/booking-confirmation') === 0) {
+      if (applications && Object.values(applications) && Object.values(applications).length > 0) {
+        Object.values(applications).map(application => {
+          sum += parseFloat(application.price);
+        });
+      }
+    } else if (location && location.pathname.indexOf('/credits-payment') === 0 && location.query && location.query.deposit) {
+      sum = parseFloat(location.query.deposit);
     }
     return (
       <div className={s.bookingPaymentBankTransfer}>
@@ -80,9 +86,11 @@ class BookingPaymentBankTransfer extends Component {
             <p><b>Your Total Amount is SGD {parseFloat(sum).toFixed(2)}</b></p>
             <p>
               Please transfer the total amount to :-<br />
-              Bank: <b>UOB</b><br />
-              Type: <b>Current</b><br />
-              Account Number: <b>341-306-307-6</b><br />
+              Bank: <b>{bankDetails.bank}</b><br />
+              Type: <b>{bankDetails.accountType}</b><br />
+              Account Number: <b>{bankDetails.accountNumber}</b><br />
+              Bank Code: <b>{bankDetails.bankCode}</b><br />
+              Branch Code: <b>{bankDetails.branchCode}</b><br />
             </p>
             <ol>
               <li>
@@ -127,6 +135,7 @@ class BookingPaymentBankTransfer extends Component {
 }
 
 BookingPaymentBankTransfer.propTypes = {
+  config: React.PropTypes.object,
   booking: React.PropTypes.object,
   applications: React.PropTypes.object,
   applicationsFetching: React.PropTypes.bool,
@@ -139,6 +148,7 @@ BookingPaymentBankTransfer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   booking: state.booking.data,
   applications: state.applications.data,
   applicationsFetching: state.applications.isFetching,

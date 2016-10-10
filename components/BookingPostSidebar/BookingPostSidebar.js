@@ -39,11 +39,11 @@ class BookingPostSidebar extends Component {
       });
     }
     if (postStatus === 'payment-card') {
-      serviceFee = ((sum + config.stripe.fixed) / (1 - config.stripe.percentage)) - sum;
+      serviceFee = ((sum + parseFloat(config.stripe.fixed)) / (1 - parseFloat(config.stripe.percentage))) - sum;
       sum += serviceFee;
     }
     if (postStatus === 'payment-paypal') {
-      serviceFee = ((sum + config.paypal.fixed) / (1 - config.paypal.percentage)) - sum;
+      serviceFee = ((sum + parseFloat(config.paypal.fixed)) / (1 - parseFloat(config.paypal.percentage))) - sum;
       sum += serviceFee;
     }
     return (

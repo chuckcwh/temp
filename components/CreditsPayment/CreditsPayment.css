@@ -1,0 +1,114 @@
+@import '../variables.css';
+
+.creditsPayment {
+  background-color: #f3f3f3;
+
+  & .creditsPaymentNavWrapper {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--secondary-color);
+
+    @media (--sm-viewport) {
+      flex-direction: column;
+      border-bottom: none;
+    }
+  }
+
+  & .creditsPaymentNav {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 10px 0;
+    list-style: none;
+    justify-content: flex-start;
+    align-items: center;
+
+    @media (--lg-viewport) {
+      flex-wrap: wrap;
+    }
+
+    @media (--sm-viewport) {
+      justify-content: flex-start;
+    }
+  }
+
+  & .creditsPaymentNavItem {
+    padding: 0 1em;
+    text-align: center;
+
+    @media (--sm-viewport) {
+      width: 100%;
+      text-align: left;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 65px;
+      margin: 0 0.5em;
+      border-bottom: 1px solid var(--border-color);
+    }
+  }
+
+  & .creditsPaymentNavItem:not(:first-of-type) {
+    @media (--sm-xviewport) {
+      border-left: 1px solid var(--brand-color);
+    }
+  }
+
+  & .creditsPaymentNavLink {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    color: var(--text-color);
+    font-size: 25px;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--secondary-color);
+      text-decoration: none;
+    }
+
+    @media (--sm-viewport) {
+      font-size: 18px;
+    }
+
+    &.creditsPaymentNavLinkActive {
+      color: var(--brand-color);
+
+      & .creditsPaymentNavArrow {
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        width: 20px;
+        height: 14px;
+        bottom: -24px;
+        left: 0;
+        right: 0;
+
+        & :global .nav-caret {
+          display: block;
+        }
+
+        @media (--sm-viewport) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  & .creditsPaymentBody {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 50px;
+    padding-bottom: 100px;
+    background-color: #f3f3f3;
+
+    @media (--sm-viewport) {
+      flex-direction: column;
+    }
+  }
+}

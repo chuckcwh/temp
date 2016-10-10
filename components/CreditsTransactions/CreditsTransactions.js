@@ -27,32 +27,38 @@ class CreditsTransactions extends Component {
         {(() => {
           if (transactions) {
             return (
-              <table class="table table-striped table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Method</th>
-                    <th>Amount</th>
-                    <th>Reference No.</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {
-                  transactions.map(transaction => (
-                    <tr class="odd gradeX" key={transaction.id}>
-                      <td>{moment(transaction.transactionDate).format('ll')}</td>
-                      <td>{transaction.type}</td>
-                      <td>{transaction.method}</td>
-                      <td>{transaction.amount}</td>
-                      <td>{transaction.paymentID}</td>
-                      <td>{transaction.status}</td>
-                    </tr>
-                  ))
-                }
-                </tbody>
-              </table>
+              <DashboardDataTable css={s}>
+                <Grid fluid className={s.dashboardDataTable}>
+                  <Row className={s.lgHeader}>
+                    <Col md={2}>ID</Col>
+                    <Col md={2}>Date</Col>
+                    <Col md={2}>Type</Col>
+                    <Col md={2}>Method</Col>
+                    <Col md={2}>Amount</Col>
+                    <Col md={2}>Status</Col>
+                  </Row>
+                  {
+                    transactions.map(transaction => (
+                      <Row className={s.creditsTransactionsTableRow} key={transaction._id}>
+                        <Col xs={4}>ID</Col>
+                        <Col xs={8} md={2}>{transaction._id}</Col>
+                        <Col xs={4}>Date</Col>
+                        <Col xs={8} md={2}>{moment(transaction.createdAt).format('ll')}</Col>
+                        <Col xs={4}>Mode</Col>
+                        <Col xs={8} md={2}>{transaction.transactionType}</Col>
+                        <Col xs={4}>Method</Col>
+                        <Col xs={8} md={2}>{transaction.mode}</Col>
+                        <Col xs={4}>Amount</Col>
+                        <Col xs={8} md={2}>{`$${parseFloat(transaction.value).toFixed(2)}`}</Col>
+                        <Col xs={4}>Status</Col>
+                        <Col xs={8} md={2}>
+                          {configToName(config, 'transactionStatusesByValue', session.status)}
+                        </Col>
+                      </Row>
+                    ))
+                  }
+                </Grid>
+              </DashboardDataTable>
             );
           } else {
             return <p>No transaction history found.</p>;

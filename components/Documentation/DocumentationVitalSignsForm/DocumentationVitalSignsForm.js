@@ -43,29 +43,48 @@ class DocumentationVitalSignsForm extends Component {
     </div>
   )
 
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
+
+    if (values['bpAccess']) {
+      values['bpMin'] = undefined;
+      values['bpMax'] = undefined;
+    }
+    const onCheckValue = (fields) => {
+      fields.map(item => {
+        if (values[`${item}Access`]) {
+          values[item] = undefined;
+        }
+      })
+    }
+    onCheckValue(['glucose', 'temp', 'heart', 'oxygen', 'pain']);
+
+    this.props.onFormSubmit(values);
+  }
+
   render() {
     const {
       fields: {
-        BPlow,
-        BPhigh,
-        BPaccess,
-        BPcomment,
-        BGmmol,
-        BGmg,
-        BGaccess,
-        BGcomment,
+        bpMin,
+        bpMax,
+        bpAccess,
+        bpComments,
+        glucose,
+        glucoseMg,
+        glucoseAccess,
+        glucoseComments,
         temp,
         tempAccess,
-        tempComment,
-        heartRate,
-        heartRateAccess,
-        heartRateComment,
+        tempComments,
+        heart,
+        heartAccess,
+        heartComments,
         oxygen,
         oxygenAccess,
-        oxygenComment,
+        oxygenComments,
         pain,
         painAccess,
-        painComment,
+        painComments,
       },
 
       resetForm,
@@ -80,10 +99,10 @@ class DocumentationVitalSignsForm extends Component {
       second: (
         <div>
           <div>
-            <input className={s.numberInput} type='number' {...BPlow} disabled={BPaccess.value} />/&nbsp;&nbsp;&nbsp;&nbsp;
-            <input className={s.numberInput} type='number' {...BPhigh} disabled={BPaccess.value} />(mmHG)
+            <input className={s.numberInput} type='number' {...bpMin} disabled={bpAccess.value} />/&nbsp;&nbsp;&nbsp;&nbsp;
+            <input className={s.numberInput} type='number' {...bpMax} disabled={bpAccess.value} />(mmHG)
           </div>
-          {this.renderAssessWithComment('BPaccess', 'BPcomment')}
+          {this.renderAssessWithComment('bpAccess', 'bpComments')}
         </div>
     )}, {
       first: "Blood Glucose Level",
@@ -93,30 +112,30 @@ class DocumentationVitalSignsForm extends Component {
             <input
               className={s.numberInput}
               type='number'
-              {...BGmmol}
-              disabled={BGaccess.value}
+              {...glucose}
+              disabled={glucoseAccess.value}
               onChange={e => {
                 e.preventDefault();
                 const newValue = +e.target.value;
-                this.props.changeFieldValue('BGmmol', newValue);
-                this.props.changeFieldValue('BGmg', (newValue * 18).toFixed(1));
+                this.props.changeFieldValue('glucose', newValue);
+                this.props.changeFieldValue('glucoseMg', (newValue * 18).toFixed(1));
               }}
             />
               (mmol/L) &nbsp;&nbsp;<FaArrowsH />&nbsp;&nbsp;&nbsp;&nbsp;
             <input
               className={s.numberInput}
               type='number'
-              {...BGmg}
-              disabled={BGaccess.value}
+              {...glucoseMg}
+              disabled={glucoseAccess.value}
               onChange={e => {
                 e.preventDefault();
                 const newValue = +e.target.value;
-                this.props.changeFieldValue('BGmg', newValue);
-                this.props.changeFieldValue('BGmmol', (newValue / 18).toFixed(1));
+                this.props.changeFieldValue('glucoseMg', newValue);
+                this.props.changeFieldValue('glucose', (newValue / 18).toFixed(1));
               }}
             />(mg/dl)
           </div>
-          {this.renderAssessWithComment('BGaccess', 'BGcomment')}
+          {this.renderAssessWithComment('glucoseAccess', 'glucoseComments')}
         </div>
     )}, {
       first: "Temperature",
@@ -125,16 +144,16 @@ class DocumentationVitalSignsForm extends Component {
           <div>
             <input className={cx(s.textInput, s.textInputShort)} type='text' {...temp} disabled={tempAccess.value} />(&deg;C)
           </div>
-          {this.renderAssessWithComment('tempAccess', 'tempComment')}
+          {this.renderAssessWithComment('tempAccess', 'tempComments')}
         </div>
     )}, {
       first: "Heart Rate",
       second: (
         <div>
           <div>
-            <input className={cx(s.textInput, s.textInputShort)} type='text' {...heartRate} disabled={heartRateAccess.value} />per minute
+            <input className={cx(s.textInput, s.textInputShort)} type='text' {...heart} disabled={heartAccess.value} />per minute
           </div>
-          {this.renderAssessWithComment('heartRateAccess', 'heartRateComment')}
+          {this.renderAssessWithComment('heartAccess', 'heartComment')}
         </div>
     )}, {
       first: "Oxygen Saturation",
@@ -143,7 +162,7 @@ class DocumentationVitalSignsForm extends Component {
           <div>
             <input className={cx(s.textInput, s.textInputShort)} type='text' {...oxygen} disabled={oxygenAccess.value} />
           </div>
-          {this.renderAssessWithComment('oxygenAccess', 'oxygenComment')}
+          {this.renderAssessWithComment('oxygenAccess', 'oxygenComments')}
         </div>
     )}, {
       first: "Pain Score",
@@ -152,12 +171,12 @@ class DocumentationVitalSignsForm extends Component {
           <div>
             <input className={cx(s.textInput, s.textInputShort)} type='text' {...pain} disabled={painAccess.value} />
           </div>
-          {this.renderAssessWithComment('painAccess', 'painComment')}
+          {this.renderAssessWithComment('painAccess', 'painComments')}
         </div>
     )}];
 
     return (
-      <form className={s.documentationVitalSignsForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
+      <form className={s.documentationVitalSignsForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <h2>Vital Signs</h2>
 
         <div className={s.issueSetSection}>
@@ -194,36 +213,45 @@ DocumentationVitalSignsForm.propTypes = {
 const reduxFormConfig = {
   form: 'documentationVitalSignsForm',
   fields: [
-    'BPlow',
-    'BPhigh',
-    'BPaccess',
-    'BPcomment',
-    'BGmmol',
-    'BGmg',
-    'BGaccess',
-    'BGcomment',
+    'bpMin',
+    'bpMax',
+    'bpAccess',
+    'bpComments',
+    'glucose',
+    'glucoseMg',
+    'glucoseAccess',
+    'glucoseComments',
     'temp',
     'tempAccess',
-    'tempComment',
-    'heartRate',
-    'heartRateAccess',
-    'heartRateComment',
+    'tempComments',
+    'heart',
+    'heartAccess',
+    'heartComments',
     'oxygen',
     'oxygenAccess',
-    'oxygenComment',
+    'oxygenComments',
     'pain',
     'painAccess',
-    'painComment',
+    'painComments',
   ],
   validate,
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  initialValues: Object.keys(ownProps.initialValues).length ? {...ownProps.initialValues} : {
-    BPaccess: true,
-    BGaccess: true,
+  initialValues: Object.keys(ownProps.initialValues).length ? {
+    ...ownProps.initialValues,
+    glucoseMg: ownProps.initialValues.glucose && (ownProps.initialValues.glucose * 18).toFixed(1),
+    bpAccess: !ownProps.initialValues.bpMin && !ownProps.initialValues.bpMax,
+    glucoseAccess: !ownProps.initialValues.glucose,
+    tempAccess: !ownProps.initialValues.temp,
+    heartAccess: !ownProps.initialValues.heart,
+    oxygenAccess: !ownProps.initialValues.oxygen,
+    painAccess: !ownProps.initialValues.pain,
+  } : {
+    bpAccess: true,
+    glucoseAccess: true,
     tempAccess: true,
-    heartRateAccess: true,
+    heartAccess: true,
     oxygenAccess: true,
     painAccess: true,
   },

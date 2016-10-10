@@ -14,6 +14,8 @@ import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, addArrayValue, reset } from 'redux-form';
 import { Selections } from '../DocumentationModules/DocumentationModules';
+// react-icons
+import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 
 class DocumentationFRATForm extends Component {
@@ -268,7 +270,7 @@ class DocumentationFRATForm extends Component {
             Clear Values
           </button>
           <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
+            Save and Next <FaArrowCircleRight />
           </button>
         </div>
       </form>

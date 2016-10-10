@@ -14,6 +14,8 @@ import ConfirmPopup from '../../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, change, reset } from 'redux-form';
 import { YesNoSwitch } from '../DocumentationModules/DocumentationModules';
+// react-icons
+import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 
 class DocumentationOverallForm extends Component {
@@ -220,7 +222,7 @@ class DocumentationOverallForm extends Component {
             Clear Values
           </button>
           <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
+            Save and Next <FaArrowCircleRight />
           </button>
         </div>
       </form>

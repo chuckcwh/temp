@@ -15,6 +15,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, addArrayValue, reset, change } from 'redux-form';
 import MultiSelect from '../../MultiSelect';
 import { YesNoSwitch, Selections } from '../DocumentationModules/DocumentationModules';
+// react-icons
+import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 
 class DocumentationNGTForm extends Component {
@@ -296,7 +298,7 @@ class DocumentationNGTForm extends Component {
             Clear Values
           </button>
           <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
+            Save and Next <FaArrowCircleRight />
           </button>
         </div>
       </form>

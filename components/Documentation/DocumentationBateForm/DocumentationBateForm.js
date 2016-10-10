@@ -17,7 +17,8 @@ import MultiSelect from '../../MultiSelect';
 import { Selections } from '../DocumentationModules/DocumentationModules';
 // image
 import wound_status from '../../../assets/images/wound_status.png';
-
+// react-icons
+import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 class DocumentationBateForm extends Component {
 
@@ -412,7 +413,7 @@ class DocumentationBateForm extends Component {
             Clear Values
           </button>
           <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
+            Save and Next <FaArrowCircleRight />
           </button>
         </div>
 

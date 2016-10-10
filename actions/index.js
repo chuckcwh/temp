@@ -17,13 +17,13 @@ export const LANGUAGES_REQUEST = 'LANGUAGES_REQUEST'
 export const LANGUAGES_SUCCESS = 'LANGUAGES_SUCCESS'
 export const LANGUAGES_FAILURE = 'LANGUAGES_FAILURE'
 
-export const DOCUMENTATION_CREATE_REQUEST = 'DOCUMENTATION_CREATE_REQUEST'
-export const DOCUMENTATION_CREATE_SUCCESS = 'DOCUMENTATION_CREATE_SUCCESS'
-export const DOCUMENTATION_CREATE_FAILURE = 'DOCUMENTATION_CREATE_FAILURE'
+export const SESSION_DOCUMENTATION_CREATE_REQUEST = 'SESSION_DOCUMENTATION_CREATE_REQUEST'
+export const SESSION_DOCUMENTATION_CREATE_SUCCESS = 'SESSION_DOCUMENTATION_CREATE_SUCCESS'
+export const SESSION_DOCUMENTATION_CREATE_FAILURE = 'SESSION_DOCUMENTATION_CREATE_FAILURE'
 
-export const DOCUMENTATION_EDIT_REQUEST = 'DOCUMENTATION_EDIT_REQUEST'
-export const DOCUMENTATION_EDIT_SUCCESS = 'DOCUMENTATION_EDIT_SUCCESS'
-export const DOCUMENTATION_EDIT_FAILURE = 'DOCUMENTATION_EDIT_FAILURE'
+export const SESSION_DOCUMENTATION_EDIT_REQUEST = 'SESSION_DOCUMENTATION_EDIT_REQUEST'
+export const SESSION_DOCUMENTATION_EDIT_SUCCESS = 'SESSION_DOCUMENTATION_EDIT_SUCCESS'
+export const SESSION_DOCUMENTATION_EDIT_FAILURE = 'SESSION_DOCUMENTATION_EDIT_FAILURE'
 
 export const SESSION_DOCUMENTATION_GET_REQUEST = 'SESSION_DOCUMENTATION_GET_REQUEST'
 export const SESSION_DOCUMENTATION_GET_SUCCESS = 'SESSION_DOCUMENTATION_GET_SUCCESS'
@@ -681,21 +681,21 @@ function fetchAction(route) {
       endpoint: '/users/:userId/achievements/:achievementId',
       method: 'del'
     },
-    createDocumentation: {
-      types: [ DOCUMENTATION_CREATE_REQUEST, DOCUMENTATION_CREATE_SUCCESS, DOCUMENTATION_CREATE_FAILURE ],
-      endpoint: '/documentations',
+    createSessionDocumentation: {
+      types: [ SESSION_DOCUMENTATION_CREATE_REQUEST, SESSION_DOCUMENTATION_CREATE_SUCCESS, SESSION_DOCUMENTATION_CREATE_FAILURE ],
+      endpoint: '/sessions/:sessionId/documentation',
       method: 'post',
       auth: 'user'
     },
-    editDocumentation: {
-      types: [ DOCUMENTATION_EDIT_REQUEST, DOCUMENTATION_EDIT_SUCCESS, DOCUMENTATION_EDIT_FAILURE ],
-      endpoint: '/documentations/:documentationId',
+    editSessionDocumentation: {
+      types: [ SESSION_DOCUMENTATION_EDIT_REQUEST, SESSION_DOCUMENTATION_EDIT_SUCCESS, SESSION_DOCUMENTATION_EDIT_FAILURE ],
+      endpoint: '/sessions/:sessionId/documentation',
       method: 'put',
       auth: 'user'
     },
     getSessionDocumentation: {
       types: [ SESSION_DOCUMENTATION_GET_REQUEST, SESSION_DOCUMENTATION_GET_SUCCESS, SESSION_DOCUMENTATION_GET_FAILURE ],
-      endpoint: '/documentations/session/:sessionId',
+      endpoint: '/sessions/:sessionId/documentation',
       method: 'get',
       auth: 'user'
     },
@@ -1082,12 +1082,12 @@ export function editUser(params) {
   return fetch('editUser', params);
 }
 
-export function createDocumentation(params) {
-  return fetch('createDocumentation', params);
+export function createSessionDocumentation(params) {
+  return fetch('createSessionDocumentation', params);
 }
 
-export function editDocumentation(params) {
-  return fetch('editDocumentation', params);
+export function editSessionDocumentation(params) {
+  return fetch('editSessionDocumentation', params);
 }
 
 export function getSessionDocumentation(params) {

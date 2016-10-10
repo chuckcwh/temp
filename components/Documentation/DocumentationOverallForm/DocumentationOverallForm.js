@@ -39,30 +39,46 @@ class DocumentationOverallForm extends Component {
       </tr>
   ))}
 
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
+
+    const onCheckValue = (fields) => {
+      fields.map(item => {
+        if (!values[item]) {
+          values[`${item}Evi`] = undefined;
+          values[`${item}Int`] = undefined;
+        }
+      })
+    }
+    onCheckValue(['sleepDisorder', 'eatingFeeding', 'incontinence', 'breathing', 'confusion', 'fallRisk', 'skinBreakdown']);
+
+    this.props.onFormSubmit(values);
+  }
+
   render() {
     const {
       fields: {
-        sleep,
-        sleepEvidence,
-        sleepIntervention,
-        eat,
-        eatEvidence,
-        eatIntervention,
+        sleepDisorder,
+        sleepDisorderEvi,
+        sleepDisorderInt,
+        eatingFeeding,
+        eatingFeedingEvi,
+        eatingFeedingInt,
         incontinence,
-        incontinenceEvidence,
-        incontinenceIntervention,
+        incontinenceEvi,
+        incontinenceInt,
         breathing,
-        breathingEvidence,
-        breathingIntervention,
-        cognitive,
-        cognitiveEvidence,
-        cognitiveIntervention,
+        breathingEvi,
+        breathingInt,
+        confusion,
+        confusionEvi,
+        confusionInt,
         fallRisk,
-        fallRiskEvidence,
-        fallRiskIntervention,
-        skinBreak,
-        skinBreakEvidence,
-        skinBreakIntervention,
+        fallRiskEvi,
+        fallRiskInt,
+        skinBreakdown,
+        skinBreakdownEvi,
+        skinBreakdownInt,
       },
 
       resetForm,
@@ -77,31 +93,31 @@ class DocumentationOverallForm extends Component {
       firstSub: "How well do you sleep?",
       second: (
         <YesNoSwitch
-          fieldName="sleep"
-          field={sleep}
+          fieldName="sleepDisorder"
+          field={sleepDisorder}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       ),
       third: (
-        <textarea className={s.textareaInput} id="sleepEvidence" name="sleepEvidence" {...sleepEvidence} placeholder="e.g. Patient complains unable to sleep due to pain." />
+        <textarea className={s.textareaInput} id="sleepDisorderEvi" name="sleepDisorderEvi" {...sleepDisorderEvi} disabled={!sleepDisorder.value} placeholder="e.g. Patient complains unable to sleep due to pain." />
       ),
       forth: (
-        <textarea className={s.textareaInput} id="sleepIntervention" name="sleepIntervention" {...sleepIntervention} placeholder="e.g. Asked to evaluate her pain score and assess if the medication has been appropriately taken."/>
+        <textarea className={s.textareaInput} id="sleepDisorderInt" name="sleepDisorderInt" {...sleepDisorderInt} disabled={!sleepDisorder.value} placeholder="e.g. Asked to evaluate her pain score and assess if the medication has been appropriately taken."/>
     )}, {
       first: "Problems with eating and feeding:",
       firstSub: "How is the appetite? On NGT?",
       second: (
         <YesNoSwitch
-          fieldName="eat"
-          field={eat}
+          fieldName="eatingFeeding"
+          field={eatingFeeding}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       ),
       third: (
-        <textarea className={s.textareaInput} id="eatEvidence" name="eatEvidence" {...eatEvidence} placeholder="e.g. Patient's caregiver has feedback that the patient has been consuming lesser amount of food." />
+        <textarea className={s.textareaInput} id="eatingFeedingEvi" name="eatingFeedingEvi" {...eatingFeedingEvi} disabled={!eatingFeeding.value} placeholder="e.g. Patient's caregiver has feedback that the patient has been consuming lesser amount of food." />
       ),
       forth: (
-        <textarea className={s.textareaInput} id="eatIntervention" name="eatIntervention" {...eatIntervention} placeholder="e.g. Asked to evaluate her pain score and assess if the medication has been appropriately taken."/>
+        <textarea className={s.textareaInput} id="eatingFeedingInt" name="eatingFeedingInt" {...eatingFeedingInt} disabled={!eatingFeeding.value} placeholder="e.g. Asked to evaluate her pain score and assess if the medication has been appropriately taken."/>
     )}, {
       first: "Incontinence (Bowel & Urine):",
       firstSub: (
@@ -121,10 +137,10 @@ class DocumentationOverallForm extends Component {
         />
       ),
       third: (
-        <textarea className={s.textareaInput} id="incontinenceEvidence" name="incontinenceEvidence" {...incontinenceEvidence} placeholder="e.g. Noted patient is on IDC. Patient complains of constipation occasionally." />
+        <textarea className={s.textareaInput} id="incontinenceEvi" name="incontinenceEvi" {...incontinenceEvi} disabled={!incontinence.value} placeholder="e.g. Noted patient is on IDC. Patient complains of constipation occasionally." />
       ),
       forth: (
-        <textarea className={s.textareaInput} id="incontinenceIntervention" name="incontinenceIntervention" {...incontinenceIntervention} placeholder="e.g. Caregiver noted to track the bowel frequency. Recommended to give fleet enema to the patient if patient NBO for 3 days."/>
+        <textarea className={s.textareaInput} id="incontinenceInt" name="incontinenceInt" {...incontinenceInt} disabled={!incontinence.value} placeholder="e.g. Caregiver noted to track the bowel frequency. Recommended to give fleet enema to the patient if patient NBO for 3 days."/>
     )}, {
       first: "Breathing:",
       second: (
@@ -135,10 +151,10 @@ class DocumentationOverallForm extends Component {
         />
       ),
       third: (
-        <textarea className={s.textareaInput} id="breathingEvidence" name="breathingEvidence" {...breathingEvidence} placeholder="e.g. Patient complains of breathlessness after walking a short distance. Patient noted to have heart failure." />
+        <textarea className={s.textareaInput} id="breathingEvi" name="breathingEvi" {...breathingEvi} disabled={!breathing.value} placeholder="e.g. Patient complains of breathlessness after walking a short distance. Patient noted to have heart failure." />
       ),
       forth: (
-        <textarea className={s.textareaInput} id="breathingIntervention" name="breathingIntervention" {...breathingIntervention} placeholder="e.g. To ensure that there are sufficient rest areas at every few meters of the house. Advice that there should be someone always accompanying the patient when she goes out."/>
+        <textarea className={s.textareaInput} id="breathingInt" name="breathingInt" {...breathingInt} disabled={!breathing.value} placeholder="e.g. To ensure that there are sufficient rest areas at every few meters of the house. Advice that there should be someone always accompanying the patient when she goes out."/>
     )}, {
       first: "Cognitive Impaired:",
       firstSub: (
@@ -149,16 +165,16 @@ class DocumentationOverallForm extends Component {
       ),
       second: (
         <YesNoSwitch
-          fieldName="cognitive"
-          field={cognitive}
+          fieldName="confusion"
+          field={confusion}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       ),
       third: (
-        <textarea className={s.textareaInput} id="cognitiveEvidence" name="cognitiveEvidence" {...cognitiveEvidence} placeholder="e.g. Patient has been noted to be confused at times." />
+        <textarea className={s.textareaInput} id="confusionEvi" name="confusionEvi" {...confusionEvi} disabled={!confusion.value} placeholder="e.g. Patient has been noted to be confused at times." />
       ),
       forth: (
-        <textarea className={s.textareaInput} id="cognitiveIntervention" name="cognitiveIntervention" {...cognitiveIntervention} />
+        <textarea className={s.textareaInput} id="confusionInt" name="confusionInt" {...confusionInt} disabled={!confusion.value} />
     )}, {
       first: "Evidence of Fall Risk:",
       firstSub: (
@@ -175,29 +191,29 @@ class DocumentationOverallForm extends Component {
         />
       ),
       third: (
-        <textarea className={s.textareaInput} id="fallRiskEvidence" name="fallRiskEvidence" {...fallRiskEvidence} placeholder="e.g. Patient has unsteady gait" />
+        <textarea className={s.textareaInput} id="fallRiskEvi" name="fallRiskEvi" {...fallRiskEvi} disabled={!fallRisk.value} placeholder="e.g. Patient has unsteady gait" />
       ),
       forth: (
-        <textarea className={s.textareaInput} id="fallRiskIntervention" name="fallRiskIntervention" {...fallRiskIntervention} />
+        <textarea className={s.textareaInput} id="fallRiskInt" name="fallRiskInt" {...fallRiskInt} disabled={!fallRisk.value} />
     )}, {
       first: "Risk of Skin Breakdown:",
       firstSub: "Check Perineal for Pressure Ulcers",
       second: (
         <YesNoSwitch
-          fieldName="skinBreak"
-          field={skinBreak}
+          fieldName="skinBreakdown"
+          field={skinBreakdown}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       ),
       third: (
-        <textarea className={s.textareaInput} id="skinBreakEvidence" name="skinBreakEvidence" {...skinBreakEvidence} placeholder="e.g. Patient's bony areas are noted to be reddened" />
+        <textarea className={s.textareaInput} id="skinBreakdownEvi" name="skinBreakdownEvi" {...skinBreakdownEvi} disabled={!skinBreakdown.value} placeholder="e.g. Patient's bony areas are noted to be reddened" />
       ),
       forth: (
-        <textarea className={s.textareaInput} id="skinBreakIntervention" name="skinBreakIntervention" {...skinBreakIntervention} />
+        <textarea className={s.textareaInput} id="skinBreakdownInt" name="skinBreakdownInt" {...skinBreakdownInt} disabled={!skinBreakdown.value} />
     )}];
 
     return (
-      <form className={s.documentationOverallForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
+      <form className={s.documentationOverallForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <h2>Overall</h2>
 
         <p>Overall Assessment is an efficient and effective instrument for obtaining the information necessary to prevent health alterations in the older adult patient. Familiarity with these commonly-occurring disorders helps the nurse prevent unnecessary iatrogenesis and promote optimal function of the aging patient. Flagging conditions for further assessment allows the nurse to implement preventative and therapeutic interventions.</p>
@@ -218,6 +234,7 @@ class DocumentationOverallForm extends Component {
         </table>
 
         <div className={s.handleForm}>
+          {submitFailed && invalid && <div className={s.red}>You have one or more form field errors.</div>}
           <button className='btn btn-secondary' disabled={submitting} onClick={resetForm}>
             Clear Values
           </button>
@@ -233,6 +250,28 @@ class DocumentationOverallForm extends Component {
 const validate = values => {
   const errors = {};
 
+  if (values.sleepDisorder && (!values.sleepDisorderEvi || !values.sleepDisorderInt)) {
+    errors.sleepDisorder = 'Required'
+  }
+  if (values.eatingFeeding && (!values.eatingFeedingEvi || !values.eatingFeedingInt)) {
+    errors.eatingFeeding = 'Required'
+  }
+  if (values.incontinence && (!values.incontinenceEvi || !values.incontinenceInt)) {
+    errors.incontinence = 'Required'
+  }
+  if (values.breathing && (!values.breathingEvi || !values.breathingInt)) {
+    errors.breathing = 'Required'
+  }
+  if (values.confusion && (!values.confusionEvi || !values.confusionInt)) {
+    errors.confusion = 'Required'
+  }
+  if (values.fallRisk && (!values.fallRiskEvi || !values.fallRiskInt)) {
+    errors.fallRisk = 'Required'
+  }
+  if (values.skinBreakdown && (!values.skinBreakdownEvi || !values.skinBreakdownInt)) {
+    errors.skinBreakdown = 'Required'
+  }
+
   return errors
 }
 
@@ -247,33 +286,41 @@ DocumentationOverallForm.propTypes = {
 const reduxFormConfig = {
   form: 'documentationOverallForm',
   fields: [
-    'sleep',
-    'sleepEvidence',
-    'sleepIntervention',
-    'eat',
-    'eatEvidence',
-    'eatIntervention',
+    'sleepDisorder',
+    'sleepDisorderEvi',
+    'sleepDisorderInt',
+    'eatingFeeding',
+    'eatingFeedingEvi',
+    'eatingFeedingInt',
     'incontinence',
-    'incontinenceEvidence',
-    'incontinenceIntervention',
+    'incontinenceEvi',
+    'incontinenceInt',
     'breathing',
-    'breathingEvidence',
-    'breathingIntervention',
-    'cognitive',
-    'cognitiveEvidence',
-    'cognitiveIntervention',
+    'breathingEvi',
+    'breathingInt',
+    'confusion',
+    'confusionEvi',
+    'confusionInt',
     'fallRisk',
-    'fallRiskEvidence',
-    'fallRiskIntervention',
-    'skinBreak',
-    'skinBreakEvidence',
-    'skinBreakIntervention',
+    'fallRiskEvi',
+    'fallRiskInt',
+    'skinBreakdown',
+    'skinBreakdownEvi',
+    'skinBreakdownInt',
   ],
   validate,
 };
 
-const mapStateToProps = (state) => ({
-
+const mapStateToProps = (state, ownProps) => ({
+  initialValues: Object.keys(ownProps.initialValues).length ? {...ownProps.initialValues} : {
+    sleepDisorder: true,
+    eatingFeeding: true,
+    incontinence: true,
+    breathing: true,
+    confusion: false,
+    fallRisk: false,
+    skinBreakdown: false,
+  },
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -24,9 +24,9 @@ import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 class DocumentationMedicalHistoryForm extends Component {
 
   componentDidMount() {
-    const { medications } =this.props.fields;
-    this.props.fields.secDiagnosis.addField();
-    this.props.fields.allergy.addField();
+    const { secDiagnosis, allergy, medications } =this.props.fields;
+    secDiagnosis.addField();
+    allergy.addField();
     medications.addField();
   }
 
@@ -71,10 +71,10 @@ class DocumentationMedicalHistoryForm extends Component {
     console.log('onFormSubmit', values);
 
     if (values.vision !== 'others') {
-      delete values['visionOthers'];
+      values['visionOthers'] = undefined;
     }
     if (values.hearing !== 'others') {
-      delete values['hearingOthers'];
+      values['hearingOthers'] = undefined;
     }
 
     values['secDiagnosis'] = values['secDiagnosis'].filter(item => !!item);

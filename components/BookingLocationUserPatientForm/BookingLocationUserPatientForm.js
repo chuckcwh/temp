@@ -112,7 +112,7 @@ const validate = values => {
   } else if (!/[A-Z]\d{7}[A-Z]/i.test(values.idNum)) {
     errors.idNum = 'Invalid idNum (e.g. S1234567A)';
   }
-  if (values.contact && !/^([+]65)[8-9]{1}[0-9]{7}$/.test(values.contact)) {
+  if (values.contact && !/^([+]65)?[8-9]{1}[0-9]{7}$/.test(values.contact)) {
     errors.contact = 'Invalid mobile number';
   }
   if (!values.gender) {

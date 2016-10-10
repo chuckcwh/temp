@@ -73,6 +73,7 @@ class Documentation extends Component {
       BateFormNum: stepSectionsSchema['2'].forms['Bate'].isDefault ? 1 : 0,
       wholeDocData: {}, // use obj because we need to check if the form data has been added by its key as formName
       docAlreadyCreated: false,
+      formsAdded: {},
     }
   }
 
@@ -86,7 +87,7 @@ class Documentation extends Component {
       if (res.type === 'SESSION_DOCUMENTATION_GET_FAILURE') {
         showAlertPopup('Case Doc Get Failure');
       } else if (res.type === 'SESSION_DOCUMENTATION_GET_SUCCESS' && res.response.data) {
-        showAlertPopup('Doc already created! You are going to edit the current one');
+        showAlertPopup(<span>Doc already created!<br />You are going to edit the doc</span>);
         this.setState({ wholeDocData: res.response.data, docAlreadyCreated: true });
       }
     });
@@ -105,7 +106,7 @@ class Documentation extends Component {
 
   getSubMenu = () => {
     const { step, currentForm, stepSections } = this.state;
-    const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state[item.name]);
+    const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state.formsAdded[item.name]);
 
     return subMenu && subMenu.map((form, index) => {
       if (Array.isArray(form.name)) {
@@ -138,8 +139,13 @@ class Documentation extends Component {
     })
   }
 
-  handleFormsAdd = (e, page, formName, formNum) => {
-    e.preventDefault();
+  onFormAdded = (formName) => {
+    const { formsAdded } = this.state;
+    formsAdded[formName] = true;
+    this.setState({ formsAdded });
+  }
+
+  onMultiFormsAdded = (page, formName, formNum) => {
     const { stepSections } = this.state;
 
     if (!stepSections[page].forms[formName].isDefault) {
@@ -167,7 +173,7 @@ class Documentation extends Component {
       })
     }
 
-    console.log('wholeDocData', this.state.wholeDocData);
+    // console.log('wholeDocData', this.state.wholeDocData);
     window.scrollTo(0, 0);
   }
 
@@ -175,25 +181,40 @@ class Documentation extends Component {
     console.log('submit form!', this.state.wholeDocData);
     const { createSessionDocumentation, editSessionDocumentation } = this.props;
     if (this.state.docAlreadyCreated) {
-      editSessionDocumentation({...this.state.wholeDocData, sessionId: this.props.params.sessionId});
+      editSessionDocumentation({
+        ...this.state.wholeDocData,
+        sessionId: this.props.params.sessionId
+      }).then(res => {
+        if (res.type === 'SESSION_DOCUMENTATION_EDIT_SUCCESS') {
+          showAlertPopup('Edit Case Successful!');
+        } else {
+          showAlertPopup('Edit failed! Please check your forms.');
+        }
+      });
     } else {
-      createSessionDocumentation({...this.state.wholeDocData, sessionId: this.props.params.sessionId});
+      createSessionDocumentation({
+        ...this.state.wholeDocData,
+        sessionId: this.props.params.sessionId
+      }).then(res => {
+        if (res.type === 'SESSION_DOCUMENTATION_CREATE_SUCCESS') {
+          showAlertPopup('Create Case Successful!');
+        } else {
+          showAlertPopup('Created failed! Please check your forms.');
+        }
+      });
     }
   }
 
   render() {
     const { sessionId } = this.props.params;
     const { config, session, services } = this.props;
-    const { step, BateFormNum, currentForm, stepSections, wholeDocData } = this.state;
+    const { step, BateFormNum, currentForm, stepSections, wholeDocData, formsAdded } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
       const serviceClassName = session.serviceClass && Object.keys(services).length > 0 && services[session.service].classes[session.serviceClass].duration;
       return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})` : '';
     }
-    console.log('step', step);
-    console.log('currentForm', currentForm);
-    console.log('wholeDocData', wholeDocData);
 
     return (
       <div className={s.documentation}>
@@ -276,10 +297,7 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={e => {
-                            e.preventDefault();
-                            this.setState({FRAT: true});
-                          }}
+                          onClick={e => this.onFormAdded('FRAT')}
                           disabled={stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT}>
                           {stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
@@ -292,10 +310,7 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={e => {
-                            e.preventDefault();
-                            this.setState({MSE: true});
-                          }}
+                          onClick={e => this.onFormAdded('MSE')}
                           disabled={stepSections["1"].forms['MSE'].isDefault || this.state.MSE}>
                           {stepSections["1"].forms['MSE'].isDefault || this.state.MSE ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
@@ -316,7 +331,7 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={e => this.handleFormsAdd(e, 2, 'Bate', BateFormNum)}
+                          onClick={() => this.onMultiFormsAdded(2, 'Bate', BateFormNum)}
                         >
                           {stepSections["2"].forms['Bate'].isDefault || this.state.Bate ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
@@ -329,10 +344,7 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={e => {
-                            e.preventDefault();
-                            this.setState({NGT: true});
-                          }}
+                          onClick={() => this.onFormAdded('NGT')}
                           disabled={stepSections["2"].forms['NGT'].isDefault || this.state.NGT}>
                           {stepSections["2"].forms['NGT'].isDefault || this.state.NGT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
@@ -345,12 +357,9 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={e => {
-                            e.preventDefault();
-                            this.setState({Catheter: true});
-                          }}
-                          disabled={stepSections["2"].forms['Catheter'].isDefault || this.state.Catheter}>
-                          {stepSections["2"].forms['Catheter'].isDefault || this.state.Catheter ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                          onClick={() => this.onFormAdded('Catheter')}
+                          disabled={stepSections["2"].forms['Catheter'].isDefault || this.state.formsAdded.Catheter}>
+                          {stepSections["2"].forms['Catheter'].isDefault || this.state.formsAdded.Catheter ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
                       </div>
                     </div>
@@ -376,10 +385,7 @@ class Documentation extends Component {
                       </button>
                       <button
                         className='btn btn-primary'
-                        onClick={e => {
-                          e.preventDefault();
-                          this.onSubmitFormAsWhole();
-                        }}>
+                        onClick={() => this.onSubmitFormAsWhole()}>
                         Submit
                       </button>
                     </div>

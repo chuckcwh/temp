@@ -29,6 +29,18 @@ class Services extends Component {
     this.props.fetchServices();
   }
 
+  componentWillReceiveProps(newProps) {
+    const { categories } = newProps;
+    if (categories !== this.props.categories) {
+      const headCategories = categories && Object.values(categories)
+        .filter(category => category.cType === 'category')
+        .sort((a, b) => b.order - a.order);
+      this.setState({
+        filter: headCategories && headCategories[0] && headCategories[0]._id,
+      });
+    }
+  }
+
   onClickAllServices = (event) => {
     event.preventDefault();
 

@@ -176,7 +176,7 @@
     "page": "./pages/booking"
   },
   {
-    "path": "/documentation/:sessionId",
+    "path": "/session/:sessionId/documentation",
     "page": "./pages/documentation"
   }
 ]

@@ -17,6 +17,18 @@ export const LANGUAGES_REQUEST = 'LANGUAGES_REQUEST'
 export const LANGUAGES_SUCCESS = 'LANGUAGES_SUCCESS'
 export const LANGUAGES_FAILURE = 'LANGUAGES_FAILURE'
 
+export const SESSION_DOCUMENTATION_CREATE_REQUEST = 'SESSION_DOCUMENTATION_CREATE_REQUEST'
+export const SESSION_DOCUMENTATION_CREATE_SUCCESS = 'SESSION_DOCUMENTATION_CREATE_SUCCESS'
+export const SESSION_DOCUMENTATION_CREATE_FAILURE = 'SESSION_DOCUMENTATION_CREATE_FAILURE'
+
+export const SESSION_DOCUMENTATION_EDIT_REQUEST = 'SESSION_DOCUMENTATION_EDIT_REQUEST'
+export const SESSION_DOCUMENTATION_EDIT_SUCCESS = 'SESSION_DOCUMENTATION_EDIT_SUCCESS'
+export const SESSION_DOCUMENTATION_EDIT_FAILURE = 'SESSION_DOCUMENTATION_EDIT_FAILURE'
+
+export const SESSION_DOCUMENTATION_GET_REQUEST = 'SESSION_DOCUMENTATION_GET_REQUEST'
+export const SESSION_DOCUMENTATION_GET_SUCCESS = 'SESSION_DOCUMENTATION_GET_SUCCESS'
+export const SESSION_DOCUMENTATION_GET_FAILURE = 'SESSION_DOCUMENTATION_GET_FAILURE'
+
 export const BOOKINGS_REQUEST = 'BOOKINGS_REQUEST'
 export const BOOKINGS_SUCCESS = 'BOOKINGS_SUCCESS'
 export const BOOKINGS_FAILURE = 'BOOKINGS_FAILURE'
@@ -669,6 +681,24 @@ function fetchAction(route) {
       endpoint: '/users/:userId/achievements/:achievementId',
       method: 'del'
     },
+    createSessionDocumentation: {
+      types: [ SESSION_DOCUMENTATION_CREATE_REQUEST, SESSION_DOCUMENTATION_CREATE_SUCCESS, SESSION_DOCUMENTATION_CREATE_FAILURE ],
+      endpoint: '/sessions/:sessionId/documentation',
+      method: 'post',
+      auth: 'user'
+    },
+    editSessionDocumentation: {
+      types: [ SESSION_DOCUMENTATION_EDIT_REQUEST, SESSION_DOCUMENTATION_EDIT_SUCCESS, SESSION_DOCUMENTATION_EDIT_FAILURE ],
+      endpoint: '/sessions/:sessionId/documentation',
+      method: 'put',
+      auth: 'user'
+    },
+    getSessionDocumentation: {
+      types: [ SESSION_DOCUMENTATION_GET_REQUEST, SESSION_DOCUMENTATION_GET_SUCCESS, SESSION_DOCUMENTATION_GET_FAILURE ],
+      endpoint: '/sessions/:sessionId/documentation',
+      method: 'get',
+      auth: 'user'
+    },
     getUserReviews: {
       types: [ USER_REVIEWS_REQUEST, USER_REVIEWS_SUCCESS, USER_REVIEWS_FAILURE ],
       endpoint: '/users/:userId/reviews',
@@ -1050,6 +1080,18 @@ export function getUser(params) {
 
 export function editUser(params) {
   return fetch('editUser', params);
+}
+
+export function createSessionDocumentation(params) {
+  return fetch('createSessionDocumentation', params);
+}
+
+export function editSessionDocumentation(params) {
+  return fetch('editSessionDocumentation', params);
+}
+
+export function getSessionDocumentation(params) {
+  return fetch('getSessionDocumentation', params);
 }
 
 export function getUserDevices(params) {

@@ -18,7 +18,7 @@ class DocumentationMedicalHistoryFormMedication extends Component {
 
   render() {
     const {
-      // ife
+      // fields
       route,
       medication,
       dose,
@@ -26,7 +26,7 @@ class DocumentationMedicalHistoryFormMedication extends Component {
       cycle,
       duration,
       durationUnit,
-      instruction,
+      instructions,
       // form vars
       medIndex,
       medLength,
@@ -104,7 +104,7 @@ class DocumentationMedicalHistoryFormMedication extends Component {
         </td>
 
         <td className={s.textareaColumn}>
-          <textarea className={s.textareaInput} id="medicationInstruction" name="medicationInstruction" placeholder="(e.g. timing)" {...instruction}/>
+          <textarea className={s.textareaInput} id="medicationInstructions" name="medicationInstructions" placeholder="(e.g. timing)" {...instructions}/>
         </td>
 
         <td className={s.minusBtnColumn}>

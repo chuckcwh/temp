@@ -15,6 +15,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { reduxForm, change, reset } from 'redux-form';
 // react icons
 import FaArrowsH from 'react-icons/lib/fa/arrows-h';
+import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 
 class DocumentationVitalSignsForm extends Component {
@@ -168,7 +169,7 @@ class DocumentationVitalSignsForm extends Component {
             Clear Values
           </button>
           <button className='btn btn-primary' disabled={submitting || invalid}>
-            Submit
+            Save and Next <FaArrowCircleRight />
           </button>
         </div>
       </form>

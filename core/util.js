@@ -324,7 +324,7 @@ const u = {
   partners: ((typeof window !== 'undefined' &&
     window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
       'https://www.ebeepartners.com' :
-      'http://staging.ebeepartners.com'),
+      'http://ebeepartners-testing.firebaseapp.com'),
   blog: 'https://blog.ebeecare.com',
 
   getCookies,

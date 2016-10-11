@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import s from './CreditsTransactions.css';
-import { } from '../../actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Loader from 'react-loader';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import Link from '../Link';
 import Container from '../Container';
 import Header from '../Header';
+import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
 import SideTabList from '../SideTabList';
 import SideTab from '../SideTab';
 import DayPickerPopup from '../DayPickerPopup';
-import Loader from 'react-loader';
+import { getTransactions } from '../../actions';
+import { configToName } from '../../core/util';
 
 class CreditsTransactions extends Component {
 
@@ -18,9 +21,16 @@ class CreditsTransactions extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    if (this.props.user && this.props.user._id) {
+      this.props.getTransactions({
+        user: this.props.user._id,
+      });
+    }
+  }
+
   render() {
-    const { user } = this.props;
-    const transactions = null;
+    const { config, user, transactions, transactionsFetching } = this.props;
     return (
       <div className={s.creditsTransactions}>
         <h2>Transaction History</h2>
@@ -30,29 +40,33 @@ class CreditsTransactions extends Component {
               <DashboardDataTable css={s}>
                 <Grid fluid className={s.dashboardDataTable}>
                   <Row className={s.lgHeader}>
-                    <Col md={2}>ID</Col>
+                    <Col md={3}>ID</Col>
                     <Col md={2}>Date</Col>
                     <Col md={2}>Type</Col>
                     <Col md={2}>Method</Col>
-                    <Col md={2}>Amount</Col>
+                    <Col md={1}>Amount</Col>
                     <Col md={2}>Status</Col>
                   </Row>
                   {
-                    transactions.map(transaction => (
+                    Object.values(transactions).map(transaction => (
                       <Row className={s.creditsTransactionsTableRow} key={transaction._id}>
                         <Col xs={4}>ID</Col>
-                        <Col xs={8} md={2}>{transaction._id}</Col>
+                        <Col xs={8} md={3}>{transaction._id}</Col>
                         <Col xs={4}>Date</Col>
                         <Col xs={8} md={2}>{moment(transaction.createdAt).format('ll')}</Col>
-                        <Col xs={4}>Mode</Col>
-                        <Col xs={8} md={2}>{transaction.transactionType}</Col>
+                        <Col xs={4}>Type</Col>
+                        <Col xs={8} md={2}>
+                          {configToName(config, 'transactionTypesByValue', transaction.transactionType)}
+                        </Col>
                         <Col xs={4}>Method</Col>
-                        <Col xs={8} md={2}>{transaction.mode}</Col>
+                        <Col xs={8} md={2}>
+                          {configToName(config, 'transactionModesByValue', transaction.mode)}
+                        </Col>
                         <Col xs={4}>Amount</Col>
-                        <Col xs={8} md={2}>{`$${parseFloat(transaction.value).toFixed(2)}`}</Col>
+                        <Col xs={8} md={1}>{`$${parseFloat(transaction.value).toFixed(2)}`}</Col>
                         <Col xs={4}>Status</Col>
                         <Col xs={8} md={2}>
-                          {configToName(config, 'transactionStatusesByValue', session.status)}
+                          {configToName(config, 'transactionStatusesByValue', transaction.status)}
                         </Col>
                       </Row>
                     ))
@@ -61,7 +75,7 @@ class CreditsTransactions extends Component {
               </DashboardDataTable>
             );
           } else {
-            return <p>No transaction history found.</p>;
+            return <p>No transactions found.</p>;
           }
         })()}
       </div>
@@ -71,21 +85,29 @@ class CreditsTransactions extends Component {
 
 
 CreditsTransactions.propTypes = {
+  config: React.PropTypes.object,
   user: React.PropTypes.object,
+  transactions: React.PropTypes.object,
+  transactionsFetching: React.PropTypes.bool,
 
-  // fetchAddress: React.PropTypes.func.isRequired,
-  // getPatients: React.PropTypes.func.isRequired,
-  // showDayPickerPopup: React.PropTypes.func.isRequired,
+  getTransactions: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   user: state.user.data,
+  transactions: state.user.data && state.user.data._id &&
+    state.transactionsByUser &&
+    state.transactionsByUser[state.user.data._id] &&
+    state.transactionsByUser[state.user.data._id].data,
+  transactionsFetching: state.user.data && state.user.data._id &&
+    state.transactionsByUser &&
+    state.transactionsByUser[state.user.data._id] &&
+    state.transactionsByUser[state.user.data._id].isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
-  // getPatients: (params) => dispatch(getPatients(params)),
-  // showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
+  getTransactions: (params) => dispatch(getTransactions(params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditsTransactions);

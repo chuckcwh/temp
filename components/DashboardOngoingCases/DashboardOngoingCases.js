@@ -7,8 +7,9 @@ import s from './DashboardOngoingCases.css';
 import Link from '../Link';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
-import { fetchServices } from '../../actions';
+import { SESSION_VISIT_SUCCESS, visitSession } from '../../actions';
 import { configToName, formatSessionAlias } from '../../core/util';
+import history from '../../core/history';
 
 class DashboardOngoingCases extends Component {
 
@@ -16,6 +17,16 @@ class DashboardOngoingCases extends Component {
     super(props);
     this.state = {};
   }
+
+  handleVisit = (sessionId) => (e) => {
+    e.preventDefault();
+    this.props.visitSession({ sessionId });
+  };
+
+  handleDocumentation = (sessionId) => (e) => {
+    e.preventDefault();
+    history.push({ pathname: `/sessions/${sessionId}/documentation` })
+  };
 
   render() {
     const { config, services, applications, applicationsFetching, sessions } = this.props;
@@ -64,12 +75,17 @@ class DashboardOngoingCases extends Component {
                         <Col xs={8} md={1}>{`$${parseFloat(application.price).toFixed(2)}`}</Col>
                         <Col xs={4}>Status</Col>
                         <Col xs={8} md={1}>
-                          {configToName(config, 'applicationStatusesByValue', application.status)}
+                          {configToName(config, 'sessionStatusesByValue', session.status)}
                         </Col>
                         <Col xs={4}>Action(s)</Col>
                         <Col xs={8} md={2}>
                           <DashboardTableButton to={`/applications/${application._id}`}>View</DashboardTableButton>
-                          <DashboardTableButton>Cancel</DashboardTableButton>
+                          {session.status === 'pending-visit' &&
+                            <DashboardTableButton onClick={this.handleVisit(session._id)}>Set Visited</DashboardTableButton>
+                          }
+                          {session.status === 'pending-documentation' &&
+                            <DashboardTableButton onClick={this.handleDocumentation(session._id)}>Documentation</DashboardTableButton>
+                          }
                         </Col>
                       </Row>
                     );
@@ -97,7 +113,7 @@ DashboardOngoingCases.propTypes = {
   applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
 
-  fetchServices: React.PropTypes.func,
+  visitSession: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -116,7 +132,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchServices: () => dispatch(fetchServices()),
+  visitSession: (params) => dispatch(visitSession(params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardOngoingCases);

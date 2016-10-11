@@ -76,19 +76,19 @@ class DocumentationNGTForm extends Component {
       fields: {
         // NGT
         tubeType,
-        boreSize,
+        tubeSize,
         nostril,
-        gastricVol,
-        pHTesting,
+        volume,
+        ph,
         appearance,
         // NGT checklist
         coiling,
-        tapeSecure,
-        intersection,
-        tubeDislodgement,
-        familyEducation,
+        taped,
+        marked,
+        dislodgement,
+        education,
         // textarea
-        eventWhenInsert,
+        event,
         outcome,
       },
 
@@ -100,7 +100,7 @@ class DocumentationNGTForm extends Component {
     } = this.props;
 
     const { pHTestInterpretation } = this.state;
-    const tubeDislodgementChoice = [{label: 'Retching', value: 'Retching'}, {label: 'Agitated', value: 'Agitated'}];
+    const dislodgementChoice = [{label: 'Retching', value: 'Retching'}, {label: 'Agitated', value: 'Agitated'}];
 
     const firstSec = [{
       first: "Type of tube",
@@ -119,8 +119,8 @@ class DocumentationNGTForm extends Component {
       first: "Size of bore",
       second: (
         <Selections
-          fieldName="boreSize"
-          field={boreSize}
+          fieldName="tubeSize"
+          field={tubeSize}
           items={[
             {value: "1", label: (<span>12F</span>)},
             {value: "2", label: (<span>14F</span>)},
@@ -143,14 +143,16 @@ class DocumentationNGTForm extends Component {
       first: "Gastric Aspirate Volumes ",
       firstSub: "Observe for changes in gastric aspirate volumes & look at trends",
       second: (
-        <input className={s.numberInput} type='number' {...gastricVol} />
+        <div>
+          <input className={s.numberInput} type='number' {...volume} /> /mls
+        </div>
     )}, {
       first: "pH Testing",
       firstSub: "***Patient receiving H2 receptor antagonist or with recent alkaline reflux from the intestine may have elevated gastric pH. Proton Pump Inhibitors and Histamine receptor blocking agents, such as Omeprazole and Famotidine, fail to decrease gastric pH to below 6.5 but tends to elevate gastric pH.",
       second: (
         <Selections
-          fieldName="pHTesting"
-          field={pHTesting}
+          fieldName="ph"
+          field={ph}
           items={[
             {value: "1", label: (<span>&#60; 5 (gastric)</span>)},
             {value: "2", label: (<span>5 - 6 (Check visual characteristics of aspirates)</span>)},
@@ -183,16 +185,16 @@ class DocumentationNGTForm extends Component {
       first: "Tape secured?",
       second: (
         <YesNoSwitch
-          fieldName='tapeSecure'
-          field={tapeSecure}
+          fieldName='taped'
+          field={taped}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
     )}, {
       first: "Intersection where the NGT enters the nostril marked?",
       second: (
         <YesNoSwitch
-          fieldName='intersection'
-          field={intersection}
+          fieldName='marked'
+          field={marked}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
     )}, {
@@ -200,15 +202,15 @@ class DocumentationNGTForm extends Component {
       second: (
         <MultiSelect
           className={s.multiSelect}
-          options={tubeDislodgementChoice}
-          {...tubeDislodgement}
+          options={dislodgementChoice}
+          {...dislodgement}
         />
     )}, {
       first: "Patient/family education given?",
       second: (
         <YesNoSwitch
-          fieldName='familyEducation'
-          field={familyEducation}
+          fieldName='education'
+          field={education}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
     )}];
@@ -233,7 +235,7 @@ class DocumentationNGTForm extends Component {
     const forthSec = [{
       first: "Were there any significant events when inserting the NGT (If applicable)?",
       second: (
-        <textarea className={s.textareaInput} id="eventWhenInsert" name="eventWhenInsert" {...eventWhenInsert} />
+        <textarea className={s.textareaInput} id="event" name="event" {...event} />
       )
     }, {
       first: "Outcome and Evaluation",
@@ -325,26 +327,29 @@ const reduxFormConfig = {
   fields: [
     // NGT
     'tubeType',
-    'boreSize',
+    'tubeSize',
     'nostril',
-    'gastricVol',
-    'pHTesting',
+    'volume',
+    'ph',
     'appearance',
     // NGT checklist
     'coiling',
-    'tapeSecure',
-    'intersection',
-    'tubeDislodgement',
-    'familyEducation',
+    'taped',
+    'marked',
+    'dislodgement',
+    'education',
     // textarea
-    'eventWhenInsert',
+    'event',
     'outcome',
   ],
   validate,
 }
 
-const mapStateToProps = (state) => ({
-
+const mapStateToProps = (state, ownProps) => ({
+  // initialValues: Object.keys(ownProps.initialValues).length && {
+  //   ...ownProps.initialValues,
+  //   dislodgement: ownProps.initialValues.dislodgement,
+  // }
 });
 
 const mapDispatchToProps = (dispatch) => ({

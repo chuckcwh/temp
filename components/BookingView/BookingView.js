@@ -1,5 +1,3 @@
-/* global google */
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -121,54 +119,6 @@ class BookingView extends Component {
         break;
       default:
         break;
-    }
-  };
-
-  onSelectDob = (date) => {
-    this.setState({
-      patient_dob: date,
-    });
-  };
-
-  onChangePostalCode = (event) => {
-    const that = this;
-    const postalCodeInput = event.target;
-    this.setState({
-      postalCode: postalCodeInput.value,
-    });
-    if (postalCodeInput.value.length === 6) {
-      // console.log(postalCodeInput.value);
-      try {
-        // postalCodeInput.disabled = true;
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({
-          address: postalCodeInput.value,
-          region: 'SG',
-        }, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK) {
-            const position = results[0].geometry.location;
-            geocoder.geocode({
-              latLng: position,
-            }, (responses) => {
-              if (responses && responses.length > 0) {
-                that.setState({
-                  address: responses[0].formatted_address,
-                });
-                // postalCodeInput.disabled = false;
-              } else {
-                // postalCodeInput.disabled = false;
-                // console.error('Invalid postal code.');
-              }
-            });
-          } else {
-            // postalCodeInput.disabled = false;
-            // console.error('Invalid postal code.');
-          }
-        });
-      } catch (e) {
-        // postalCodeInput.disabled = false;
-        // console.error('Unable to find your address.');
-      }
     }
   };
 

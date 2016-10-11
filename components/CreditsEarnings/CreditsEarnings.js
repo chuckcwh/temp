@@ -55,7 +55,7 @@ class CreditsEarnings extends Component {
               <table class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                    <th>Session ID</th>
+                    <th>Case ID</th>
                     <th>Visit Date</th>
                     <th>Visit Time</th>
                     <th>Amount</th>
@@ -87,7 +87,7 @@ class CreditsEarnings extends Component {
               <table class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                    <th>Session ID</th>
+                    <th>Case ID</th>
                     <th>Visit Date</th>
                     <th>Visit Time</th>
                     <th>Amount</th>
@@ -119,10 +119,11 @@ class CreditsEarnings extends Component {
               <table class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                    <th>Session ID</th>
+                    <th>Case ID</th>
                     <th>Payment Date</th>
                     <th>Method</th>
                     <th>Amount</th>
+                    <th>Reference No.</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -134,6 +135,7 @@ class CreditsEarnings extends Component {
                         <td>{moment(transaction.date).format('ll')}</td>
                         <td>{configToName(config, 'transactionModesByValue', transaction.mode)}</td>
                         <td>{`SGD ${parseFloat(transaction.value).toFixed(2)}`}</td>
+                        <td>{transaction._id}</td>
                       </tr>
                     ))
                   })
@@ -157,9 +159,6 @@ CreditsEarnings.propTypes = {
 
   getApplications: React.PropTypes.func.isRequired,
   getTransactions: React.PropTypes.func.isRequired,
-  // fetchAddress: React.PropTypes.func.isRequired,
-  // getPatients: React.PropTypes.func.isRequired,
-  // showDayPickerPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -182,9 +181,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getApplications: (params) => dispatch(getApplications(params)),
   getTransactions: (params) => dispatch(getTransactions(params)),
-  // fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
-  // getPatients: (params) => dispatch(getPatients(params)),
-  // showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditsEarnings);

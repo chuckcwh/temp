@@ -334,6 +334,8 @@ const sessions = (state = {
         data: normalize(action.response && action.response.data),
         lastUpdated: action.response && action.response.receivedAt
       }
+    case ActionTypes.SESSION_CANCEL_SUCCESS:
+    case ActionTypes.SESSION_VISIT_SUCCESS:
     case ActionTypes.SESSION_SUGGESTED_SUCCESS:
       return {
         ...state,

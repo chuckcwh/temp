@@ -78,6 +78,10 @@ export const SESSION_CANCEL_REQUEST = 'SESSION_CANCEL_REQUEST'
 export const SESSION_CANCEL_SUCCESS = 'SESSION_CANCEL_SUCCESS'
 export const SESSION_CANCEL_FAILURE = 'SESSION_CANCEL_FAILURE'
 
+export const SESSION_VISIT_REQUEST = 'SESSION_VISIT_REQUEST'
+export const SESSION_VISIT_SUCCESS = 'SESSION_VISIT_SUCCESS'
+export const SESSION_VISIT_FAILURE = 'SESSION_VISIT_FAILURE'
+
 export const APPLICATIONS_REQUEST = 'APPLICATIONS_REQUEST'
 export const APPLICATIONS_SUCCESS = 'APPLICATIONS_SUCCESS'
 export const APPLICATIONS_FAILURE = 'APPLICATIONS_FAILURE'
@@ -505,6 +509,11 @@ function fetchAction(route) {
     cancelSession: {
       types: [ SESSION_CANCEL_REQUEST, SESSION_CANCEL_SUCCESS, SESSION_CANCEL_FAILURE ],
       endpoint: '/sessions/:sessionId/cancel',
+      method: 'put'
+    },
+    visitSession: {
+      types: [ SESSION_VISIT_REQUEST, SESSION_VISIT_SUCCESS, SESSION_VISIT_FAILURE ],
+      endpoint: '/sessions/:sessionId/visited',
       method: 'put'
     },
     getApplications: {
@@ -1092,6 +1101,10 @@ export function getAvailableSchedules(params) {
 
 export function cancelSession(params) {
   return fetch('cancelSession', params);
+}
+
+export function visitSession(params) {
+  return fetch('visitSession', params);
 }
 
 export function login(params) {

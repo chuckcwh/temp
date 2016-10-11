@@ -25,7 +25,7 @@ class DocumentationNGTForm extends Component {
     super(props);
 
     this.state = {
-      pHTestInterpretation: null,
+      interpretation: null,
     }
   }
 
@@ -71,6 +71,43 @@ class DocumentationNGTForm extends Component {
     ))
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {
+      ph,
+      appearance,
+      volume,
+    } = nextProps.fields;
+    let interpretation;
+
+    if (ph.value === '<5' && appearance.value === 'Gastric') {
+      interpretation = (<span className={s.green}>Proceed to Feed</span>)
+    } else if (ph.value === '5-6' && appearance.value === 'Gastric') {
+      interpretation = (<span className={s.green}>Proceed to Feed</span>)
+    } else if (ph.value === '>6' && appearance.value === 'Gastric') {
+      interpretation = (<span>Check X-ray to confirm placement</span>)
+    } else if (ph.value === '<5' && appearance.value === 'Intestinal') {
+      interpretation = (<span className={s.red}>Please Re-check</span>)
+    } else if (ph.value === '5-6' && appearance.value === 'Intestinal') {
+      interpretation = (<span className={s.red}>Re-adjust tube and Re-test</span>)
+    } else if (ph.value === '>6' && appearance.value === 'Intestinal') {
+      interpretation = (<span className={s.red}>Re-adjust tube and Re-test</span>)
+    } else if (ph.value === '<5' && appearance.value === 'Respiratory') {
+      interpretation = (<span className={s.red}>Please Re-check</span>)
+    } else if (ph.value === '5-6' && appearance.value === 'Respiratory') {
+      interpretation = (<span>Check X-ray to confirm placement</span>)
+    } else if (ph.value === '>6' && appearance.value === 'Respiratory') {
+      interpretation = (<span className={s.red}>Remove and re-insert tube</span>)
+    } else {
+      interpretation = "N/A";
+    }
+
+    if (volume.value === 0) {
+      interpretation = (<span>Reposition Patient for 10-15 mins/ Check X-ray to confirm placement</span>)
+    }
+
+    return this.setState({ interpretation });
+  }
+
   render() {
     const {
       fields: {
@@ -99,7 +136,7 @@ class DocumentationNGTForm extends Component {
       submitting,
     } = this.props;
 
-    const { pHTestInterpretation } = this.state;
+    const { interpretation } = this.state;
     const dislodgementChoice = [{label: 'Retching', value: 'Retching'}, {label: 'Agitated', value: 'Agitated'}];
 
     const firstSec = [{
@@ -109,10 +146,10 @@ class DocumentationNGTForm extends Component {
           fieldName="tubeType"
           field={tubeType}
           items={[
-            {value: "1", label: (<span>Polyvinylchloride</span>)},
-            {value: "2", label: (<span>Polyurethane</span>)},
-            {value: "3", label: (<span>Silicon</span>)},
-            {value: "4", label: (<span>Freka Tube</span>)},
+            {value: "Polyvinylchloride", label: (<span>Polyvinylchloride</span>)},
+            {value: "Polyurethane", label: (<span>Polyurethane</span>)},
+            {value: "Silicon", label: (<span>Silicon</span>)},
+            {value: "Freka Tube", label: (<span>Freka Tube</span>)},
           ]}
         />
     )}, {
@@ -122,10 +159,10 @@ class DocumentationNGTForm extends Component {
           fieldName="tubeSize"
           field={tubeSize}
           items={[
-            {value: "1", label: (<span>12F</span>)},
-            {value: "2", label: (<span>14F</span>)},
-            {value: "3", label: (<span>16F</span>)},
-            {value: "4", label: (<span>18F</span>)},
+            {value: "12F", label: (<span>12F</span>)},
+            {value: "14F", label: (<span>14F</span>)},
+            {value: "16F", label: (<span>16F</span>)},
+            {value: "18F", label: (<span>18F</span>)},
           ]}
         />
     )}, {
@@ -135,8 +172,8 @@ class DocumentationNGTForm extends Component {
           fieldName="nostril"
           field={nostril}
           items={[
-            {value: "1", label: (<span>Left</span>)},
-            {value: "2", label: (<span>Right</span>)},
+            {value: "Left", label: (<span>Left</span>)},
+            {value: "Right", label: (<span>Right</span>)},
           ]}
         />
     )}, {
@@ -154,9 +191,9 @@ class DocumentationNGTForm extends Component {
           fieldName="ph"
           field={ph}
           items={[
-            {value: "1", label: (<span>&#60; 5 (gastric)</span>)},
-            {value: "2", label: (<span>5 - 6 (Check visual characteristics of aspirates)</span>)},
-            {value: "3", label: (<span>&#62; 6 (Intestinal or Respiratory)</span>)},
+            {value: "<5", label: (<span>&#60; 5 (gastric)</span>)},
+            {value: "5-6", label: (<span>5 - 6 (Check visual characteristics of aspirates)</span>)},
+            {value: ">6", label: (<span>&#62; 6 (Intestinal or Respiratory)</span>)},
           ]}
         />
     )}, {
@@ -166,9 +203,9 @@ class DocumentationNGTForm extends Component {
           fieldName="appearance"
           field={appearance}
           items={[
-            {value: "1", label: (<span>Gastric (Colourless (often with shreds of off-white to tan mucus or sediment), light yellow, brown, grassy green, curdled formula)</span>)},
-            {value: "2", label: (<span>Intestinal (light to dark golden yellow)</span>)},
-            {value: "3", label: (<span>Respiratory (pale (may consist of off white to tan sediment), straw coloured, watery)</span>)},
+            {value: "Gastric", label: (<span>Gastric (Colourless (often with shreds of off-white to tan mucus or sediment), light yellow, brown, grassy green, curdled formula)</span>)},
+            {value: "Intestinal", label: (<span>Intestinal (light to dark golden yellow)</span>)},
+            {value: "Respiratory", label: (<span>Respiratory (pale (may consist of off white to tan sediment), straw coloured, watery)</span>)},
           ]}
         />
     )}];
@@ -217,30 +254,30 @@ class DocumentationNGTForm extends Component {
 
     const thirdSec = [{
       first: "< 5",
-      second: (<span className="s.colorGreen">Proceed to Feed</span>),
-      third: (<span className="s.colorRed">Please re-check</span>),
-      forth: (<span className="s.colorRed">Please re-check</span>),
+      second: (<span className={s.green}>Proceed to Feed</span>),
+      third: (<span className={s.red}>Please re-check</span>),
+      forth: (<span className={s.red}>Please re-check</span>),
     }, {
       first: "5 - 6",
-      second: (<span className="s.colorGreen">Proceed to Feed</span>),
-      third: (<span className="s.colorRed">Re-adjust tube and re-test</span>),
+      second: (<span className={s.green}>Proceed to Feed</span>),
+      third: (<span className={s.red}>Re-adjust tube and re-test</span>),
       forth: (<span>Check X-ray to confirm placement</span>),
     }, {
       first: "> 5",
       second: (<span>Check X-ray to confirm placement</span>),
-      third: (<span className="s.colorRed">Re-adjust tube and re-test</span>),
-      forth: (<span className="s.colorRed">Re-adjust tube and re-testRemove and re-insert tube</span>),
+      third: (<span className={s.red}>Re-adjust tube and re-test</span>),
+      forth: (<span className={s.red}>Re-adjust tube and re-testRemove and re-insert tube</span>),
     }];
 
     const forthSec = [{
       first: "Were there any significant events when inserting the NGT (If applicable)?",
       second: (
-        <textarea className={s.textareaInput} id="event" name="event" {...event} />
+        <textarea className={s.textareaInput} id="event" name="event" {...event} placeholder="Eg." />
       )
     }, {
       first: "Outcome and Evaluation",
       second: (
-        <textarea className={s.textareaInput} id="outcome" name="outcome" {...outcome} />
+        <textarea className={s.textareaInput} id="outcome" name="outcome" {...outcome} placeholder="Eg." />
       )
     }]
 
@@ -271,7 +308,7 @@ class DocumentationNGTForm extends Component {
             <div>
               pH Test Interpretation
               <div className={s.statusFieldTitle}>
-                {pHTestInterpretation || 'N/A'}
+                {interpretation || 'N/A'}
               </div>
             </div>
           </div>

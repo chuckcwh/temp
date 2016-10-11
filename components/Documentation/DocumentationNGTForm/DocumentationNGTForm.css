@@ -72,7 +72,7 @@
 
     & .statusField {
       display: inline-flex;
-      width: 200px;
+      width: 50%;
       background: #f0f0f0;
       margin: 0 10px;
       align-items: center;
@@ -90,5 +90,17 @@
   & .handleForm {
     text-align: center;
     margin: 40px auto 60px;
+  }
+
+  & .red {
+    color: #f2635f;
+  }
+
+  & .orange {
+    color: #f78d00;
+  }
+
+  & .green {
+    color: #18B905;
   }
 }

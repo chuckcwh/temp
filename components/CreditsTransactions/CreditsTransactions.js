@@ -35,7 +35,7 @@ class CreditsTransactions extends Component {
       <div className={s.creditsTransactions}>
         <h2>Transaction History</h2>
         {(() => {
-          if (transactions) {
+          if (transactions && Object.values(transactions) && Object.values(transactions).length > 0) {
             return (
               <DashboardDataTable css={s}>
                 <Grid fluid className={s.dashboardDataTable}>

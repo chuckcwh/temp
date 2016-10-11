@@ -18,7 +18,7 @@ import FaMoney from 'react-icons/lib/fa/money';
 import CreditsTopup from '../CreditsTopup';
 import CreditsTransactions from '../CreditsTransactions';
 import CreditsWithdraw from '../CreditsWithdraw';
-import CreditsPayments from '../CreditsPayments';
+import CreditsEarnings from '../CreditsEarnings';
 import { isClient, isProvider, getUserCurrentCredits } from '../../core/util';
 
 class Credits extends Component {
@@ -71,9 +71,9 @@ class Credits extends Component {
                       selectedIndex={this.state.selectedTabIndex}
                       selectable
                     >
-                      <SideTab><FaHistory /><span>Transaction History</span></SideTab>
+                      <SideTab><FaMoney /><span>Earnings / Payouts</span></SideTab>
                       <SideTab><FaGetPocket /><span>Withdraw Credits</span></SideTab>
-                      <SideTab><FaMoney /><span>Payments</span></SideTab>
+                      <SideTab><FaHistory /><span>Transaction History</span></SideTab>
                     </SideTabList>
                   );
                 }
@@ -92,9 +92,9 @@ class Credits extends Component {
                 } else if (isProvider(user)) {
                   return (
                     <div>
-                      {selectedTabIndex === 0 && <CreditsTransactions />}
+                      {selectedTabIndex === 0 && <CreditsEarnings />}
                       {selectedTabIndex === 1 && <CreditsWithdraw />}
-                      {selectedTabIndex === 2 && <CreditsPayments />}
+                      {selectedTabIndex === 2 && <CreditsTransactions />}
                     </div>
                   );
                 }

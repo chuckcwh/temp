@@ -24,17 +24,18 @@ class DocumentationMSEForm extends Component {
     super(props);
 
     this.state = {
-      suggestedInterpretation: null,
+      interpretation: "N/A",
     }
   }
 
-  renderRowsWith2Col = (items) => {
+  renderRowsWith2Col = (items, sub) => {
+    const { speech } = this.props.fields;
     return items.map((item, index) => (
       <tr key={index} className={s.bodyRow}>
         <td className={s.firstCol}>
-          <strong>{item.first}</strong>
+          <strong className={sub && s.firstSub}>{item.first}</strong>
         </td>
-        <td className={s.secondCol}>
+        <td className={cx(s.secondCol, sub && s.secondSub)}>
           {item.second}
         </td>
       </tr>
@@ -51,25 +52,71 @@ class DocumentationMSEForm extends Component {
     ))
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {
+      // recentFalls,
+      // medications,
+      // psychological,
+      // cognitiveStatus,
+      // recentChanges,
+      // dizziness,
+      // interventions
+      followUp,
+      family,
+    } = nextProps.fields;
+    let interpretation;
+
+    if (followUp.value === 'false' && family.value === 'false') {
+      interpretation = (<span className={s.red}>Do highlight that the family is strongly encouraged to bring the patient to see a doctor as soon as they can.</span>)
+    } else if (followUp.value === 'false' && family.value === 'true') {
+      interpretation = (<span className={s.orange}>Do highlight that they may consult a doctor to get proper advice.</span>)
+    } else if (followUp.value === 'true' && family.value === 'false') {
+      interpretation = (<span className={s.orange}>Encourage the family to explore more with the healthcare professionals on other possible solutions.</span>)
+    } else if (followUp.value === 'true' && family.value === 'true') {
+      interpretation = (<span className={s.green}>No actions needed. Ensure that all safety concerns are considered.</span>)
+    } else {
+      interpretation = "N/A";
+    }
+
+    return this.setState({ interpretation });
+  }
+
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
+
+    const onReturnBoolean = (fields) => {
+      fields.map(item => {
+        values[item] = (values[item] === "true");
+      })
+    }
+    onReturnBoolean(['suicide', 'harm', 'followUp', 'family']);
+
+    this.props.onFormSubmit(values);
+  }
+
   render() {
     const {
       fields: {
         // instructions
         appearance,
         psychomotor,
-        attitudeTwdNurse,
+        attitude,
         suicide,
-        thoughtHarming,
+        harm,
         speech,
-        speechDes,
+        rate,
+        flow,
+        intensity,
+        clarity,
+        liveliness,
         thoughtClarity,
         thoughtRelevance,
         thoughtContent,
         thoughtFlow,
         // cognition
-        cognitionOrientated,
-        cognitionFollowup,
-        cognitionFamilyCare,
+        orientated,
+        followUp,
+        family,
         // outcome
         outcome,
       },
@@ -81,7 +128,7 @@ class DocumentationMSEForm extends Component {
       submitting,
     } = this.props;
 
-    const { suggestedInterpretation } = this.state;
+    const { interpretation } = this.state;
 
     const firstSec = [{
       first: "General Appearance",
@@ -90,8 +137,8 @@ class DocumentationMSEForm extends Component {
           fieldName="appearance"
           field={appearance}
           items={[
-            {value: "1", label: (<span>Untidy</span>)},
-            {value: "2", label: (<span>Neat</span>)},
+            {value: "Untidy", label: (<span>Untidy</span>)},
+            {value: "Neat", label: (<span>Neat</span>)},
           ]}
         />
     )}, {
@@ -101,24 +148,24 @@ class DocumentationMSEForm extends Component {
           fieldName="psychomotor"
           field={psychomotor}
           items={[
-            {value: "1", label: (<span>Worked-Up</span>)},
-            {value: "2", label: (<span>At ease</span>)},
-            {value: "3", label: (<span>Psychomotor Impairment (Slowing of thought & physical movements)</span>)},
+            {value: "Worked-Up", label: (<span>Worked-Up</span>)},
+            {value: "At ease", label: (<span>At ease</span>)},
+            {value: "Psychomotor Impairment", label: (<span>Psychomotor Impairment (Slowing of thought & physical movements)</span>)},
           ]}
         />
     )}, {
       first: "Attitude Towards Nurse During Encounter",
       second: (
         <Selections
-          fieldName="attitudeTwdNurse"
-          field={attitudeTwdNurse}
+          fieldName="attitude"
+          field={attitude}
           items={[
-            {value: "1", label: (<span>Withdrawn</span>)},
-            {value: "2", label: (<span>Suspicious</span>)},
-            {value: "3", label: (<span>Hostile</span>)},
-            {value: "4", label: (<span>Evasive</span>)},
-            {value: "5", label: (<span>Negative</span>)},
-            {value: "5", label: (<span>Open</span>)},
+            {value: "Withdrawn", label: (<span>Withdrawn</span>)},
+            {value: "Suspicious", label: (<span>Suspicious</span>)},
+            {value: "Hostile", label: (<span>Hostile</span>)},
+            {value: "Evasive", label: (<span>Evasive</span>)},
+            {value: "Negative", label: (<span>Negative</span>)},
+            {value: "Open", label: (<span>Open</span>)},
           ]}
         />
     )}, {
@@ -128,19 +175,19 @@ class DocumentationMSEForm extends Component {
           fieldName="suicide"
           field={suicide}
           items={[
-            {value: "1", label: (<span>Yes</span>)},
-            {value: "2", label: (<span>No</span>)},
+            {value: "true", label: (<span>Yes</span>)},
+            {value: "false", label: (<span>No</span>)},
           ]}
         />
     )}, {
       first: "Thought of Harming Others",
       second: (
         <Selections
-          fieldName="thoughtHarming"
-          field={thoughtHarming}
+          fieldName="harm"
+          field={harm}
           items={[
-            {value: "1", label: (<span>Yes</span>)},
-            {value: "2", label: (<span>No</span>)},
+            {value: "true", label: (<span>Yes</span>)},
+            {value: "false", label: (<span>No</span>)},
           ]}
         />
     )}, {
@@ -150,19 +197,83 @@ class DocumentationMSEForm extends Component {
           fieldName="speech"
           field={speech}
           items={[
-            {value: "1", label: (<span>Clear & Ordinary</span>)},
-            {value: "2", label: (<span className={s.selectionWithComment}>Abnormal, please specify:<input className={s.textInputWithSelection} type="text" {...speechDes} /></span>)},
+            {value: "Clear & Ordinary", label: (<span>Clear & Ordinary</span>)},
+            {value: "Abnormal", label: (<span className={s.selectionWithComment}>Abnormal, <span className={s.orange}>please specify</span></span>)},
+          ]}
+        />
+    )}]
+
+    const secondSec = [{
+      first: "Rate",
+      second: (
+        <Selections
+          fieldName="rate"
+          field={rate}
+          items={[
+            {value: "Slow", label: (<span>Slow</span>)},
+            {value: "Rapid", label: (<span>Rapid</span>)},
           ]}
         />
     )}, {
+      first: "Flow",
+      second: (
+        <Selections
+          fieldName="flow"
+          field={flow}
+          items={[
+            {value: "Hesitant", label: (<span>Hesitant</span>)},
+            {value: "Rambling", label: (<span>Rambling</span>)},
+            {value: "Loud pauses", label: (<span>Loud pauses</span>)},
+            {value: "Forgetful", label: (<span>Forgetful</span>)},
+          ]}
+        />
+    )}, {
+      first: "Intensity",
+      second: (
+        <Selections
+          fieldName="intensity"
+          field={intensity}
+          items={[
+            {value: "Loud", label: (<span>Loud</span>)},
+            {value: "Soft", label: (<span>Soft</span>)},
+            {value: "Inaudible", label: (<span>Inaudible</span>)},
+            {value: "Slow", label: (<span>Slow</span>)},
+          ]}
+        />
+    )}, {
+      first: "Clarity",
+      second: (
+        <Selections
+          fieldName="clarity"
+          field={clarity}
+          items={[
+            {value: "Slurred", label: (<span>Slurred</span>)},
+            {value: "Incoherent", label: (<span>Incoherent</span>)},
+          ]}
+        />
+    )}, {
+      first: "Liveliness",
+      second: (
+        <Selections
+          fieldName="liveliness"
+          field={liveliness}
+          items={[
+            {value: "Monotonous", label: (<span>Monotonous</span>)},
+            {value: "Pressured", label: (<span>Pressured</span>)},
+            {value: "Explosive", label: (<span>Explosive</span>)},
+          ]}
+        />
+    )}]
+
+    const thirdSec = [{
       first: "Thought Clarity",
       second: (
         <Selections
           fieldName="thoughtClarity"
           field={thoughtClarity}
           items={[
-            {value: "1", label: (<span>Confused</span>)},
-            {value: "2", label: (<span>Incoherent</span>)},
+            {value: "Slow", label: (<span>Confused</span>)},
+            {value: "Rapid", label: (<span>Incoherent</span>)},
             {value: "3", label: (<span>Vague</span>)},
             {value: "4", label: (<span>Coherent</span>)},
           ]}
@@ -216,12 +327,12 @@ class DocumentationMSEForm extends Component {
         />
     )}];
 
-    const secondSec = [{
+    const forthSec = [{
       first: "Orientated to",
       second: (
         <Selections
-          fieldName="cognitionOrientated"
-          field={cognitionOrientated}
+          fieldName="orientated"
+          field={orientated}
           items={[
             {value: "1", label: (<span>Day</span>)},
             {value: "2", label: (<span>Person</span>)},
@@ -234,34 +345,34 @@ class DocumentationMSEForm extends Component {
       first: "Is the patient following up with any health care professionals for the mental impairment?",
       second: (
         <Selections
-          fieldName="cognitionFollowup"
-          field={cognitionFollowup}
+          fieldName="followUp"
+          field={followUp}
           items={[
-            {value: "1", label: (<span>Yes</span>)},
-            {value: "2", label: (<span>No</span>)},
+            {value: "true", label: (<span>Yes</span>)},
+            {value: "false", label: (<span>No</span>)},
           ]}
         />
     )}, {
       first: "Is the family able to manage care for patient?",
       second: (
         <Selections
-          fieldName="cognitionFamilyCare"
-          field={cognitionFamilyCare}
+          fieldName="family"
+          field={family}
           items={[
-            {value: "1", label: (<span>Yes</span>)},
-            {value: "2", label: (<span>No</span>)},
+            {value: "true", label: (<span>Yes</span>)},
+            {value: "false", label: (<span>No</span>)},
           ]}
         />
     )}];
 
-    const thirdSec = [{
+    const fifthSec = [{
       first: "Outcome and Evaluation",
       second: (
         <textarea className={s.textareaInput} id="outcome" name="outcome" {...outcome}/>
     )}];
 
     return (
-      <form className={s.documentationMSEForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
+      <form className={s.documentationMSEForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <h2>Mental State Examination (MSE)</h2>
 
         <h3>Instructions</h3>
@@ -270,6 +381,8 @@ class DocumentationMSEForm extends Component {
         <table className={s.issueSetTable}>
           <tbody>
             {this.renderRowsWith2Col(firstSec)}
+            {speech.value === 'Abnormal' && this.renderRowsWith2Col(secondSec, true)}
+            {this.renderRowsWith2Col(thirdSec)}
           </tbody>
         </table>
 
@@ -277,7 +390,7 @@ class DocumentationMSEForm extends Component {
 
         <table className={s.issueSetTable}>
           <tbody>
-            {this.renderRowsWith2Col(secondSec)}
+            {this.renderRowsWith2Col(forthSec)}
           </tbody>
         </table>
 
@@ -286,14 +399,14 @@ class DocumentationMSEForm extends Component {
             <div>
               Suggested interpretation
               <div className={s.statusFieldTitle}>
-                {suggestedInterpretation || 'N/A'}
+                {interpretation}
               </div>
             </div>
           </div>
         </div>
 
         <div className={s.issueSetSection}>
-          {this.renderIssueSet(thirdSec)}
+          {this.renderIssueSet(fifthSec)}
         </div>
 
         <div className={s.handleForm}>
@@ -329,27 +442,37 @@ const reduxFormConfig = {
     // instructions
     'appearance',
     'psychomotor',
-    'attitudeTwdNurse',
+    'attitude',
     'suicide',
-    'thoughtHarming',
+    'harm',
     'speech',
-    'speechDes',
+    'rate',
+    'flow',
+    'intensity',
+    'clarity',
+    'liveliness',
     'thoughtClarity',
     'thoughtRelevance',
     'thoughtContent',
     'thoughtFlow',
     // cognition
-    'cognitionOrientated',
-    'cognitionFollowup',
-    'cognitionFamilyCare',
+    'orientated',
+    'followUp',
+    'family',
     // outcome
     'outcome',
   ],
   validate,
 }
 
-const mapStateToProps = (state) => ({
-
+const mapStateToProps = (state, ownProps) => ({
+  initialValues: Object.keys(ownProps.initialValues).length && {
+    ...ownProps.initialValues,
+    suicide: ownProps.initialValues.suicide.toString(),
+    harm: ownProps.initialValues.harm.toString(),
+    followUp: ownProps.initialValues.followUp.toString(),
+    family: ownProps.initialValues.family.toString(),
+  }
 });
 
 const mapDispatchToProps = (dispatch) => ({

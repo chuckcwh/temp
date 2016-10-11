@@ -60,6 +60,15 @@
           margin: 0 0 0 10px;
         }
       }
+
+      & .firstSub {
+        padding-left: 40px;
+        color: #f78d00;
+      }
+
+      & .secondSub {
+        padding-left: 40px;
+      }
     }
 
     & .bodyRow:nth-of-type(odd) {
@@ -84,7 +93,6 @@
       padding: 20px 0;
 
       & .statusFieldTitle {
-        color: #f2635f;
         font-size: 28px;
         padding: 10px 0;
       }
@@ -94,5 +102,17 @@
   & .handleForm {
     text-align: center;
     margin: 40px auto 60px;
+  }
+
+  & .red {
+    color: #f2635f;
+  }
+
+  & .orange {
+    color: #f78d00;
+  }
+
+  & .green {
+    color: #18B905;
   }
 }

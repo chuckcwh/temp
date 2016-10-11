@@ -40,7 +40,9 @@ const config = (state = {
           religionsByValue: normalize(action.response.data.religions, 'value'),
           timeSlotsByValue: normalize(action.response.data.timeSlots, 'value'),
           sessionStatusesByValue: normalize(action.response.data.sessionStatuses, 'value'),
+          transactionModesByValue: normalize(action.response.data.transactionModes, 'value'),
           transactionStatusesByValue: normalize(action.response.data.transactionStatuses, 'value'),
+          transactionTypesByValue: normalize(action.response.data.transactionTypes, 'value'),
         },
         lastUpdated: action.response && action.response.receivedAt
       }
@@ -652,8 +654,20 @@ const transactions = (state = {
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS:
-      return {
+      return state
+    default:
+      return state
+  }
+}
 
+const transactionsByUser = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.TRANSACTIONS_REQUEST:
+    case ActionTypes.TRANSACTIONS_SUCCESS:
+      return {
+        ...state,
+        [action.data.user]:
+          transactions(state[action.data.user], action)
       }
     default:
       return state
@@ -835,6 +849,7 @@ const bookingApp = combineReducers({
   availableSchedules,
   // paypal,
   transactions,
+  transactionsByUser,
   transaction,
   totalSessionsCount,
   rankedServices,

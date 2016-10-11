@@ -30,7 +30,7 @@ class DashboardNextAppt extends Component {
   }
 
   hasEvent = (sessions, day) => (sessions.length > 0
-      && sessions.filter(session => DateUtils.isSameDay(new Date(session.date), day)).length > 0);
+    && sessions.filter(session => DateUtils.isSameDay(new Date(session.date), day)).length > 0);
 
   renderDay = (sessions) => (day) => {
     if (this.hasEvent(sessions, day)) {
@@ -44,7 +44,8 @@ class DashboardNextAppt extends Component {
     return (<span>{day.getDate()}</span>);
   }
 
-  handleDayClick = (event, day) => {
+  handleDayClick = (e, day) => {
+    e.preventDefault();
     this.setState({
       selectedDay: day,
     });
@@ -55,7 +56,7 @@ class DashboardNextAppt extends Component {
   };
 
   render() {
-    const { config, services, user, sessions, sessionsFetching } = this.props;
+    const { config, services, user, sessions, sessionsFetching, patients } = this.props;
     const { selectedDay } = this.state;
 
     const confirmedSessions = sessions && Object.values(sessions).filter((session) => {
@@ -85,8 +86,9 @@ class DashboardNextAppt extends Component {
         const filteredSessions = confirmedSessions.filter(session => DateUtils.isSameDay(new Date(session.date), selectedDay));
         content = (
           <div>
-            {filteredSessions.map(session => (
+            {filteredSessions.map((session, index) => (
               <div className={s.dashboardNextApptInfoTable} key={session._id}>
+                <h3>Appointment {index + 1}</h3>
                 <div className={s.dashboardNextApptInfoTableRow}>
                   <div className={s.dashboardNextApptInfoTableCol}>
                     ID
@@ -127,7 +129,8 @@ class DashboardNextAppt extends Component {
                     Patient
                   </div>
                   <div className={s.dashboardNextApptInfoTableCol}>
-                    
+                    {patients && session.patient && patients[(session.patient && session.patient._id) || session.patient]
+                      && patients[(session.patient && session.patient._id) || session.patient].name}
                   </div>
                 </div>
                 <div className={s.dashboardNextApptInfoTableRow}>
@@ -153,7 +156,7 @@ class DashboardNextAppt extends Component {
                     Caregiver
                   </div>
                   <div className={s.dashboardNextApptInfoTableCol}>
-                    
+                    {session.provider && session.provider.name}
                   </div>
                 </div>
               </div>
@@ -164,11 +167,13 @@ class DashboardNextAppt extends Component {
         // Obtains next earliest session
         content = (
           <div>
-            <div className={s.dashboardNextApptInfoTitle}>No Appointment</div>
+            <div className={s.dashboardNextApptInfoTitle}>No Appointments</div>
             <div className={s.dashboardNextApptInfoDesc}>
               <p>You do not have any appointment today.</p>
               <p>Your next appointment is on&nbsp;
-                <span className={s.dashboardNextApptInfoDescHighlight}>{this.formatDate(earliestSessionDate)}</span>
+                <a href="#" onClick={(e) => { this.handleDayClick(e, new Date(earliestSessionDate)); }}>
+                  <span className={s.dashboardNextApptInfoDescHighlight}>{this.formatDate(earliestSessionDate)}</span>
+                </a>
               .</p>
             </div>
           </div>
@@ -177,9 +182,9 @@ class DashboardNextAppt extends Component {
     } else {
       content = (
         <div>
-          <div className={s.dashboardNextApptInfoTitle}>No Appointment</div>
+          <div className={s.dashboardNextApptInfoTitle}>No Appointments</div>
           <div className={s.dashboardNextApptInfoDesc}>
-            <p>You have no appointment. You may book an appointment here:</p>
+            <p>You have no appointments. You may book an appointment here:</p>
             <Link
               className="btn btn-primary"
               to="/booking1"
@@ -214,10 +219,6 @@ DashboardNextAppt.propTypes = {
   user: React.PropTypes.object,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
-  servicesTree: React.PropTypes.array,
-  servicesTreeHash: React.PropTypes.object,
-  servicesSubtypesHash: React.PropTypes.object,
-  servicesSubtypesHashBySlug: React.PropTypes.object,
   patients: React.PropTypes.object,
   patientsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
@@ -232,10 +233,6 @@ const mapStateToProps = (state) => ({
   user: state.user.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  servicesTree: state.services.dashboardTree,
-  servicesTreeHash: state.services.dashboardTreeHash,
-  servicesSubtypesHash: state.services.subTypesHash,
-  servicesSubtypesHashBySlug: state.services.subTypesHashBySlug,
   patients: state.user.data && state.user.data._id
     && state.patientsByClient[state.user.data._id]
     && state.patientsByClient[state.user.data._id].data,

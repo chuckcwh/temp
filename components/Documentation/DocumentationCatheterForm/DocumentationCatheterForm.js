@@ -60,7 +60,7 @@ class DocumentationCatheterForm extends Component {
       />
       <div className={s.textContainerAfterSwitch}>
         <span className={s.title}>Comments:</span>
-        <textarea className={cx(s.textareaInput, s.input)} type='text' {...this.props.fields[`${fieldName}Text`]} />
+        <textarea className={cx(s.textareaInput, s.input)} type='text' {...this.props.fields[`${fieldName}Comments`]} />
       </div>
     </span>
   )
@@ -69,38 +69,43 @@ class DocumentationCatheterForm extends Component {
     const {
       fields: {
         // catheter removal
-        catheterType,
-        catheterSize,
-        patientFever,
-        patientFeverText,
-        ballon,
-        ballonText,
-        patientPain,
-        patientPainText,
-        bloodTrace,
-        bloodTraceText,
-        meatusAbnormal,
-        meatusAbnormalText,
-        catheterEncrustation,
-        catheterEncrustationText,
-        hematuriaUrine,
-        hematuriaUrineText,
-        badSmelling,
-        badSmellingText,
-        patientSentiment,
-        patientSentimentText,
+        catTypeR,
+        catSizeR,
+        fever,
+        feverComments,
+        empty,
+        emptyComments,
+        painR,
+        painRComments,
+        bloodR,
+        bloodRComments,
+        discharge,
+        dischargeComments,
+        encrustation,
+        encrustationComments,
+        cloudy,
+        cloudyComments,
+        smell,
+        smellComments,
+        sentiments,
+        sentitmentsComments,
         // catheter insertion
-        insertCatheterType,
-        insertCatheterSize,
-        insertPatientPain,
-        insertBloodTrace,
-        insertUrineDrainage,
-        insertBalloonResist,
-        insertLackOfMovement,
+        catTypeI,
+        catSizeI,
+        painI,
+        painIComments,
+        bloodI,
+        bloodIComments,
+        drainage,
+        drainageComments,
+        inflation,
+        inflationComments,
+        movement,
+        movementComments,
         // general
-        familyEducation,
-        reviewAcception,
-        reviewImpact,
+        education,
+        accept,
+        impact,
         outcome,
       },
 
@@ -117,106 +122,106 @@ class DocumentationCatheterForm extends Component {
       first: "Type of catheter",
       second: (
         <Selections
-          fieldName="catheterType"
-          field={catheterType}
+          fieldName="catTypeR"
+          field={catTypeR}
           items={[
-            {value: "1", label: (<span>Plain latex</span>)},
-            {value: "2", label: (<span>Silicon elastomer</span>)},
-            {value: "3", label: (<span>Full silicon</span>)},
+            {value: "Plain latex", label: (<span>Plain latex</span>)},
+            {value: "Silicon elastomer", label: (<span>Silicon elastomer</span>)},
+            {value: "Full silicon", label: (<span>Full silicon</span>)},
           ]}
         />
     )}, {
       first: "Size of catheter",
       second: (
         <Selections
-          fieldName="catheterSize"
-          field={catheterSize}
+          fieldName="catSizeR"
+          field={catSizeR}
           items={[
-            {value: "1", label: (<span>10</span>)},
-            {value: "2", label: (<span>12</span>)},
-            {value: "3", label: (<span>14</span>)},
-            {value: "4", label: (<span>16</span>)},
-            {value: "5", label: (<span>18</span>)},
+            {value: "10", label: (<span>10</span>)},
+            {value: "12", label: (<span>12</span>)},
+            {value: "14", label: (<span>14</span>)},
+            {value: "16", label: (<span>16</span>)},
+            {value: "18", label: (<span>18</span>)},
           ]}
         />
     )}, {
       first: "Patient is having a fever",
-      second: this.renderYesNoSwitchWithComment('patientFever', patientFever),
+      second: this.renderYesNoSwitchWithComment('fever', fever),
     }, {
       first: "Balloon cannot be emptied",
-      second: this.renderYesNoSwitchWithComment('ballon', ballon),
+      second: this.renderYesNoSwitchWithComment('empty', empty),
     }, {
       first: "Patient experiences pain",
-      second: this.renderYesNoSwitchWithComment('patientPain', patientPain),
+      second: this.renderYesNoSwitchWithComment('painR', painR),
     }, {
       first: "Traces of blood observed",
-      second: this.renderYesNoSwitchWithComment('bloodTrace', bloodTrace),
+      second: this.renderYesNoSwitchWithComment('bloodR', bloodR),
     }, {
       first: "Meatus or genital abnormalities observed, including discharge",
-      second: this.renderYesNoSwitchWithComment('meatusAbnormal', meatusAbnormal),
+      second: this.renderYesNoSwitchWithComment('discharge', discharge),
     }, {
       first: "Encrustation at catheter tip",
-      second: this.renderYesNoSwitchWithComment('catheterEncrustation', catheterEncrustation),
+      second: this.renderYesNoSwitchWithComment('encrustation', encrustation),
     }, {
       first: "Hematuria/cloudy/tea-looking urine observed",
-      second: this.renderYesNoSwitchWithComment('hematuriaUrine', hematuriaUrine),
+      second: this.renderYesNoSwitchWithComment('cloudy', cloudy),
     }, {
       first: "Bad smelling observed",
-      second: this.renderYesNoSwitchWithComment('badSmelling', badSmelling),
+      second: this.renderYesNoSwitchWithComment('smell', smell),
     }, {
       first: "Patient has bad sentiments",
-      second: this.renderYesNoSwitchWithComment('patientSentiment', patientSentiment),
+      second: this.renderYesNoSwitchWithComment('sentiments', sentiments),
     }];
 
     const secondSec = [{
       first: "Type of catheter",
       second: (
         <Selections
-          fieldName="insertCatheterType"
-          field={insertCatheterType}
+          fieldName="catTypeI"
+          field={catTypeI}
           items={[
-            {value: "1", label: (<span>Plain latex</span>)},
-            {value: "2", label: (<span>Silicon elastomer</span>)},
-            {value: "3", label: (<span>Full silicon</span>)},
+            {value: "Plain latex", label: (<span>Plain latex</span>)},
+            {value: "Silicon elastomer", label: (<span>Silicon elastomer</span>)},
+            {value: "Full silicon", label: (<span>Full silicon</span>)},
           ]}
         />
     )}, {
       first: "Size of catheter",
       second: (
         <Selections
-          fieldName="insertCatheterSize"
-          field={insertCatheterSize}
+          fieldName="catSizeI"
+          field={catSizeI}
           items={[
-            {value: "1", label: (<span>10</span>)},
-            {value: "2", label: (<span>12</span>)},
-            {value: "3", label: (<span>14</span>)},
-            {value: "4", label: (<span>16</span>)},
-            {value: "5", label: (<span>18</span>)},
+            {value: "10", label: (<span>10</span>)},
+            {value: "12", label: (<span>12</span>)},
+            {value: "14", label: (<span>14</span>)},
+            {value: "16", label: (<span>16</span>)},
+            {value: "18", label: (<span>18</span>)},
           ]}
         />
     )}, {
       first: "Patient complain of localised pain",
-      second: this.renderYesNoSwitchWithComment('insertPatientPain', insertPatientPain),
+      second: this.renderYesNoSwitchWithComment('painI', painI),
     }, {
       first: "Traces of blood observed",
-      second: this.renderYesNoSwitchWithComment('insertBloodTrace', insertBloodTrace),
+      second: this.renderYesNoSwitchWithComment('bloodI', bloodI),
     }, {
       first: "Absence in urine drainage",
-      second: this.renderYesNoSwitchWithComment('insertUrineDrainage', insertUrineDrainage),
+      second: this.renderYesNoSwitchWithComment('drainage', drainage),
     }, {
       first: "Resistance to balloon inflation",
-      second: this.renderYesNoSwitchWithComment('insertBalloonResist', insertBalloonResist),
+      second: this.renderYesNoSwitchWithComment('inflation', inflation),
     }, {
       first: "Lack of free movement of catheter once balloon inflated",
-      second: this.renderYesNoSwitchWithComment('insertLackOfMovement', insertLackOfMovement),
+      second: this.renderYesNoSwitchWithComment('movement', movement),
     }];
 
     const thirdSec = [{
       first: "Patient/ Family Education given?",
       second: (
         <YesNoSwitch
-          fieldName='familyEducation'
-          field={familyEducation}
+          fieldName='education'
+          field={education}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )
@@ -224,8 +229,8 @@ class DocumentationCatheterForm extends Component {
       first: "Reviewed how the patient accepts the use of a catheter?",
       second: (
         <YesNoSwitch
-          fieldName='reviewAcception'
-          field={reviewAcception}
+          fieldName='accept'
+          field={accept}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )
@@ -233,8 +238,8 @@ class DocumentationCatheterForm extends Component {
       first: "Reviewed the impact of the catheter on lifestyle and quality of life?",
       second: (
         <YesNoSwitch
-          fieldName='reviewImpact'
-          field={reviewImpact}
+          fieldName='impact'
+          field={impact}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )
@@ -284,7 +289,22 @@ class DocumentationCatheterForm extends Component {
             <div>
               Interpretation
               <div className={s.statusFieldTitle}>
-                {interpretation || 'N/A'}
+                {false ? ('N/A') : (
+                  <ul>
+                    {fever.value && <li><b>Fever:</b> Please refer to a doctor if it has not been done so or antibiotics not prescribed.</li>}
+                    {empty.value && <li><b>Balloon:</b> Push in another 1 ml of Water of Injection. Please refer to A&amp;E.</li>}
+                    {(painR.value || painI.value) && <li><b>Pain:</b> Please monitor. Consider smaller sized catheter/repositioning/refer to a doctor.</li>}
+                    {(bloodR.value || bloodI.value) && <li><b>Blood:</b> Please monitor. If blood persists, to refer to A&amp;E.</li>}
+                    {discharge.value && <li><b>Discharge:</b> May consider a silicon catheter due to irritation by the catheter. May go away after awhile.</li>}
+                    {encrustation.value && <li><b>Encrustation:</b> May consider washing meatus daily with soap and water. Strict compliance to cleaniless. If repeated encrustation, please refer to a doctor.</li>}
+                    {(cloudy.value || smell.value || sentiments.value) && <li><b>UTI:</b> Teach correct catheter care/ discuss personal hygiene/ monitor/ refer to a doctor. </li>}
+                    {catTypeI.value === 'Plain latex' && <li><b>Plain latex catheter:</b> Recommended to change in 2 weeks, subjected to catheter prior condition.</li>}
+                    {catTypeI.value === 'Silicon elastomer' && <li><b>Silicon elastomer catheter:</b> Recommended to change in 4 weeks, subjected to catheter prior condition.</li>}
+                    {catTypeI.value === 'Full silicon' && <li><b>Full silicon catheter:</b> Recommended to change in 3 months, subjected to catheter prior condition.</li>}
+                    {drainage.value && <li><b>No Urine:</b> Wait a little, push gently down on the bladder or reposition patient. May consider flushing the catheter with a few cc&#39;s of NaCL 0.9%. If nothing else helps, replace catheter. </li>}
+                    {inflation.value && <li><b>Resistance to inflation:</b> Advance further.</li>}
+                  </ul>
+                )}
               </div>
             </div>
           </div>
@@ -325,47 +345,68 @@ const reduxFormConfig = {
   form: 'documentationCatheterForm',
   fields: [
     // catheter removal
-    'catheterType',
-    'catheterSize',
-    'patientFever',
-    'patientFeverText',
-    'ballon',
-    'ballonText',
-    'patientPain',
-    'patientPainText',
-    'bloodTrace',
-    'bloodTraceText',
-    'meatusAbnormal',
-    'meatusAbnormalText',
-    'catheterEncrustation',
-    'catheterEncrustationText',
-    'hematuriaUrine',
-    'hematuriaUrineText',
-    'badSmelling',
-    'badSmellingText',
-    'patientSentiment',
-    'patientSentimentText',
+    'catTypeR',
+    'catSizeR',
+    'fever',
+    'feverComments',
+    'empty',
+    'emptyComments',
+    'painR',
+    'painRComments',
+    'bloodR',
+    'bloodRComments',
+    'discharge',
+    'dischargeComments',
+    'encrustation',
+    'encrustationComments',
+    'cloudy',
+    'cloudyComments',
+    'smell',
+    'smellComments',
+    'sentiments',
+    'sentitmentsComments',
     // catheter insertion
-    'insertCatheterType',
-    'insertCatheterSize',
-    'insertPatientPain',
-    'insertBloodTrace',
-    'insertUrineDrainage',
-    'insertBalloonResist',
-    'insertLackOfMovement',
+    'catTypeI',
+    'catSizeI',
+    'painI',
+    'painIComments',
+    'bloodI',
+    'bloodIComments',
+    'drainage',
+    'drainageComments',
+    'inflation',
+    'inflationComments',
+    'movement',
+    'movementComments',
     // general
-    'familyEducation',
-    'reviewAcception',
-    'reviewImpact',
+    'education',
+    'accept',
+    'impact',
     'outcome',
   ],
   validate,
 }
 
-const mapStateToProps = (state) => ({
-  // initialValues: {
-  //   patientFever: true,
-  // },
+const mapStateToProps = (state, ownProps) => ({
+  initialValues: Object.keys(ownProps.initialValues).length ? ownProps.initialValues : {
+    fever: false,
+    empty: false,
+    painR: false,
+    bloodR: false,
+    discharge: false,
+    encrustation: false,
+    cloudy: false,
+    smell: false,
+    sentiments: false,
+    painI: false,
+    bloodI: false,
+    drainage: false,
+    inflation: false,
+    movement: false,
+    education: false,
+    accept: false,
+    impact: false,
+  }
 });
 
 const mapDispatchToProps = (dispatch) => ({

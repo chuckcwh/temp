@@ -83,7 +83,7 @@
 
     & .statusField {
       display: inline-flex;
-      width: 200px;
+      width: 90%;
       background: #f0f0f0;
       margin: 0 10px;
       align-items: center;
@@ -94,6 +94,14 @@
         color: #f2635f;
         font-size: 28px;
         padding: 10px 0;
+
+        & ul {
+          text-align: left;
+
+          & li {
+            font-size: 20px;
+          }
+        }
       }
     }
   }

@@ -312,7 +312,7 @@ const reduxFormConfig = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  initialValues: Object.keys(ownProps.initialValues).length ? {...ownProps.initialValues} : {
+  initialValues: Object.keys(ownProps.initialValues).length ? ownProps.initialValues : {
     sleepDisorder: true,
     eatingFeeding: true,
     incontinence: true,

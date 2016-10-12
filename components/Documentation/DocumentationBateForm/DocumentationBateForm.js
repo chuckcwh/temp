@@ -19,6 +19,8 @@ import { Selections } from '../DocumentationModules/DocumentationModules';
 import wound_status from '../../../assets/images/wound_status.png';
 // react-icons
 import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
+import FaPlus from 'react-icons/lib/fa/plus';
+
 
 class DocumentationBateForm extends Component {
 
@@ -414,6 +416,15 @@ class DocumentationBateForm extends Component {
 
     return (
       <form className={s.documentationBateForm} onSubmit={handleSubmit(this.onFormSubmit)}>
+        <button
+          className={cx('btn btn-primary', s.addMoreForm)}
+          onClick={e => {
+            e.preventDefault();
+            this.props.onAddForm();
+          }}>
+          <FaPlus />Add Form
+        </button>
+
         <h2>Bate Jensen Wound Assessment & Intervention</h2>
 
         <table className={s.issueSetTable}>

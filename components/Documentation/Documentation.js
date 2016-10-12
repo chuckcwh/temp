@@ -73,6 +73,7 @@ class Documentation extends Component {
       currentFormId: undefined,
       stepSections: stepSectionsSchema,
       docAlreadyCreated: false,
+      refreshSubMenu: false,
     }
   }
 
@@ -108,6 +109,7 @@ class Documentation extends Component {
         }
         this.setState({
           docAlreadyCreated: true,
+          refreshSubMenu: true,
           stepSections,
         });
 
@@ -130,8 +132,14 @@ class Documentation extends Component {
   }
 
   getSubMenu = () => {
-    const { step, currentForm, currentFormId, stepSections } = this.state;
+    const { step, currentForm, currentFormId, stepSections, refreshSubMenu } = this.state;
+    const { wholeDocData } = this.props;
     const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault);
+
+    if (refreshSubMenu) {
+      stepSections['2'].forms['Bate'].forms = wholeDocData && Object.keys(wholeDocData['bateForms']);
+      this.setState({refreshSubMenu: false});
+    }
 
     return subMenu && subMenu.map((form, index) => {
       if (form.forms && form.forms.length) {
@@ -235,6 +243,7 @@ class Documentation extends Component {
     if (docAlreadyCreated) {
       editSessionDocumentation(formData).then(res => {
         if (res.type === 'SESSION_DOCUMENTATION_EDIT_SUCCESS') {
+          this.setState({refreshSubMenu: true});
           showAlertPopup('Edit Doc Successful!');
         } else {
           showAlertPopup('Edit failed! Please check your forms.');
@@ -243,8 +252,8 @@ class Documentation extends Component {
     } else {
       createSessionDocumentation(formData).then(res => {
         if (res.type === 'SESSION_DOCUMENTATION_CREATE_SUCCESS') {
+          this.setState({docAlreadyCreated: true, refreshSubMenu: true});
           showAlertPopup('Create Doc Successful!');
-          this.setState({docAlreadyCreated: true});
         } else {
           showAlertPopup('Created failed! Please check your forms.');
         }
@@ -330,11 +339,11 @@ class Documentation extends Component {
             </div>
 
             <div className={s.formContent}>
-              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm initialValues={wholeDocData && {...wholeDocData.medHistForm}} onFormSubmit={values => this.saveFormAndNext('medHistForm', values)} />)
-                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm initialValues={wholeDocData && {...wholeDocData.overallForm}} onFormSubmit={values => this.saveFormAndNext('overallForm', values)} />)
-                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm initialValues={wholeDocData && {...wholeDocData.vitalSignsForm}} onFormSubmit={values => this.saveFormAndNext('vitalSignsForm', values)} />)
-                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm initialValues={wholeDocData && {...wholeDocData.fratForm}} onFormSubmit={values => this.saveFormAndNext('fratForm', values)} />)
-                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm initialValues={wholeDocData && {...wholeDocData.mseForm}} onFormSubmit={values => this.saveFormAndNext('mseForm', values)} />)
+              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm initialValues={{...wholeDocData.medHistForm}} onFormSubmit={values => this.saveFormAndNext('medHistForm', values)} />)
+                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm initialValues={{...wholeDocData.overallForm}} onFormSubmit={values => this.saveFormAndNext('overallForm', values)} />)
+                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm initialValues={{...wholeDocData.vitalSignsForm}} onFormSubmit={values => this.saveFormAndNext('vitalSignsForm', values)} />)
+                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm initialValues={{...wholeDocData.fratForm}} onFormSubmit={values => this.saveFormAndNext('fratForm', values)} />)
+                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm initialValues={{...wholeDocData.mseForm}} onFormSubmit={values => this.saveFormAndNext('mseForm', values)} />)
                 : step === "1" ? (
                   <div>
                     <h2>Add More</h2>
@@ -366,9 +375,9 @@ class Documentation extends Component {
                   </div>
                 )
 
-                : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm formKey={currentFormId} initialValues={wholeDocData && {...wholeDocData.bateForms[currentFormId], _id: currentFormId}} onFormSubmit={values => this.saveFormAndNext('bateForms', values, true)} />)
-                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm initialValues={wholeDocData && {...wholeDocData.ngtForm}} onFormSubmit={values => this.saveFormAndNext('ngtForm', values)} />)
-                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm initialValues={wholeDocData && {...wholeDocData.catheterForm}} onFormSubmit={values => this.saveFormAndNext('catheterForm', values)} />)
+                : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm formKey={currentFormId} initialValues={wholeDocData.bateForms ? {...wholeDocData.bateForms[currentFormId], _id: currentFormId} : {_id: currentFormId}} onAddForm={() => this.onMultiFormsAdded('Bate')} onFormSubmit={values => this.saveFormAndNext('bateForms', values, true)} />)
+                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm initialValues={{...wholeDocData.ngtForm}} onFormSubmit={values => this.saveFormAndNext('ngtForm', values)} />)
+                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm initialValues={{...wholeDocData.catheterForm}} onFormSubmit={values => this.saveFormAndNext('catheterForm', values)} />)
                 : step === "2" ? (
                   <div>
                     <h2>Add More</h2>
@@ -412,7 +421,7 @@ class Documentation extends Component {
                     </div>
                   </div>
                 )
-                : step === "3" ? (<DocumentationSummaryForm initialValues={wholeDocData && {...wholeDocData.summaryForm}} onFormSubmit={values => this.saveFormAndNext('summaryForm', values)} />)
+                : step === "3" ? (<DocumentationSummaryForm initialValues={{...wholeDocData.summaryForm}} onFormSubmit={values => this.saveFormAndNext('summaryForm', values)} />)
                 : step === "4" ? (
                   <div>
                     <h2>Confirmation</h2>

@@ -589,13 +589,6 @@ function fetchAction(route) {
       method: 'get',
       entity: 'user'
     },
-    getUserWithToken: {
-      types: [ USER_TOKEN_REQUEST, USER_TOKEN_SUCCESS, USER_TOKEN_FAILURE ],
-      endpoint: '/users/:id',
-      method: 'get',
-      auth: 'userParams',
-      entity: 'user'
-    },
     changePassword: {
       types: [ CHANGE_PASSWORD_REQUEST, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE ],
       endpoint: '/users/:userId/changePassword',
@@ -1261,10 +1254,6 @@ export function deleteUserSchedule(params) {
 
 export function updateUserSchedules(params) {
   return fetch('updateUserSchedules', params);
-}
-
-export function getUserWithToken(params) {
-  return fetch('getUserWithToken', params);
 }
 
 export function topupCredits(params) {

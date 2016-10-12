@@ -419,7 +419,7 @@ const sessionsSuggestedToProvider = (state = {}, action) => {
 const documentation =  (state = {
   isFetching: false,
   didInvalidate: true,
-  data: {}
+  data: {},
 }, action) => {
   switch (action.type) {
     case ActionTypes.SESSION_DOCUMENTATION_GET_REQUEST:
@@ -436,7 +436,10 @@ const documentation =  (state = {
       return {
         ...state,
         isFetching: false,
-        data: docData ? {...docData, bateForms: docData.bateForms.length ? normalize(docData.bateForms) : {}} : {},
+        data: docData ? {
+          ...docData,
+          bateForms: docData.bateForms.length ? normalize(docData.bateForms) : {}}
+          : {bateForms: {}},
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.UPDATE_DOC_FORMS:

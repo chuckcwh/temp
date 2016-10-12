@@ -317,7 +317,7 @@ class AdminBookingsView extends Component {
                             return (
                               <div>
                                 <div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignDoc)}  onClick={() => history.push({ pathname: `/session/${cellData}/documentation` })}>Doc</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignDoc)}  onClick={() => history.push({ pathname: `/sessions/${cellData}/documentation` })}>Doc</div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
                                 </div>
                                 <div>

@@ -492,7 +492,7 @@ DocumentationBateForm.propTypes = {
 const reduxFormConfig = {
   form: 'documentationBateForm',
   fields: [
-    'bateCount',
+    '_id',
     // 1st sec
     'site',
     'anatomicOthers',

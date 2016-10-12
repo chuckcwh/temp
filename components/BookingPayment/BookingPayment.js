@@ -15,7 +15,7 @@ class BookingPayment extends Component {
   };
 
   render() {
-    const { booking, applications, sessions, postStatus } = this.props;
+    const { user, booking, applications, sessions, postStatus } = this.props;
     const location = history.getCurrentLocation();
     let bankTransferItem;
     const dates = booking && booking.case && booking.case.dates;
@@ -53,6 +53,19 @@ class BookingPayment extends Component {
         <div className={s.bookingPaymentNavWrapper}>
           <Container>
             <ul className={s.bookingPaymentNav}>
+              {user && user._id &&
+                <li className={s.bookingPaymentNavItem}>
+                  <a
+                    className={classNames(s.bookingPaymentNavLink,
+                      (location && location.pathname === '/booking-confirmation' && postStatus === 'payment-credits')
+                      ? s.bookingPaymentNavLinkActive : '')}
+                    href="#"
+                    onClick={this.onClick('credits')}
+                  >
+                    eBeeCare Credits<span className={s.bookingPaymentNavArrow}><div className="nav-caret"></div></span>
+                  </a>
+                </li>
+              }
               <li className={s.bookingPaymentNavItem}>
                 <a
                   className={classNames(s.bookingPaymentNavLink,
@@ -108,6 +121,7 @@ class BookingPayment extends Component {
 BookingPayment.propTypes = {
   children: React.PropTypes.node.isRequired,
 
+  user: React.PropTypes.object,
   booking: React.PropTypes.object,
   applications: React.PropTypes.object,
   applicationsFetching: React.PropTypes.bool,
@@ -119,6 +133,7 @@ BookingPayment.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  user: state.user.data,
   booking: state.booking.data,
   applications: state.applications.data,
   applicationsFetching: state.applications.isFetching,

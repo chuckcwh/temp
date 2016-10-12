@@ -688,6 +688,11 @@ const transaction = (state = {
     case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST:
     case ActionTypes.APPLICATIONS_PAY_BANK_REQUEST:
     case ActionTypes.APPLICATIONS_PAY_CARD_REQUEST:
+    case ActionTypes.APPLICATIONS_PAY_CREDITS_REQUEST:
+    case ActionTypes.USER_CREDITS_TOPUP_PAYPAL_EXECUTE_REQUEST:
+    case ActionTypes.USER_CREDITS_TOPUP_BANK_REQUEST:
+    case ActionTypes.USER_CREDITS_TOPUP_CARD_REQUEST:
+    case ActionTypes.USER_CREDITS_TOPUP_CREDITS_REQUEST:
       return {
         ...state,
         isFetching: true
@@ -698,6 +703,11 @@ const transaction = (state = {
     case ActionTypes.APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS:
     case ActionTypes.APPLICATIONS_PAY_BANK_SUCCESS:
     case ActionTypes.APPLICATIONS_PAY_CARD_SUCCESS:
+    case ActionTypes.APPLICATIONS_PAY_CREDITS_SUCCESS:
+    case ActionTypes.USER_CREDITS_TOPUP_PAYPAL_EXECUTE_SUCCESS:
+    case ActionTypes.USER_CREDITS_TOPUP_BANK_SUCCESS:
+    case ActionTypes.USER_CREDITS_TOPUP_CARD_SUCCESS:
+    case ActionTypes.USER_CREDITS_TOPUP_CREDITS_SUCCESS:
       return {
         ...state,
         isFetching: false,

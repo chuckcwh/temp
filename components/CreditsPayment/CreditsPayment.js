@@ -7,11 +7,20 @@ import Header from '../Header';
 import BookingPaymentCard from '../BookingPaymentCard';
 import BookingPaymentPaypal from '../BookingPaymentPaypal';
 import BookingPaymentBankTransfer from '../BookingPaymentBankTransfer';
+import BookingPostComplete from '../BookingPostComplete';
 import CreditsPaymentSidebar from '../CreditsPaymentSidebar';
 import { setPostStatus } from '../../actions';
 import history from '../../core/history';
 
 class CreditsPayment extends Component {
+
+  componentDidMount() {
+    const location = history.getCurrentLocation();
+    // Redirect to Paypal page if it's return from Paypal
+    if (location && location.query && location.query.action && location.query.action.indexOf('paypal') > -1) {
+      this.props.setPostStatus('payment-paypal');
+    }
+  }
 
   onClick = (paymentType) => (event) => {
     event.preventDefault();
@@ -23,7 +32,8 @@ class CreditsPayment extends Component {
     const { config, postStatus } = this.props;
     const location = history.getCurrentLocation();
     const deposit = location && location.query && parseFloat(location.query.deposit);
-    let component;
+    let component,
+      header;
     if (postStatus === 'payment-card') {
       component = (
         <div className={s.creditsPaymentBody}>
@@ -46,59 +56,56 @@ class CreditsPayment extends Component {
         </div>
       );
     }
+    else if (postStatus === 'success') {
+      component = (
+        <BookingPostComplete />
+      );
+    }
+    if (postStatus !== 'success') {
+      header = (
+        <ul className={s.creditsPaymentNav}>
+          <li className={s.creditsPaymentNavItem}>
+            <a
+              className={classNames(s.creditsPaymentNavLink,
+                (location && location.pathname === '/credits-payment' && postStatus === 'payment-card')
+                ? s.creditsPaymentNavLinkActive : '')}
+              href="#"
+              onClick={this.onClick('card')}
+            >
+              Credit Card<span className={s.creditsPaymentNavArrow}><div className="nav-caret"></div></span>
+            </a>
+          </li>
+          <li className={s.creditsPaymentNavItem}>
+            <a
+              className={classNames(s.creditsPaymentNavLink,
+                (location && location.pathname === '/credits-payment' && postStatus === 'payment-paypal')
+                ? s.creditsPaymentNavLinkActive : '')}
+              href="#"
+              onClick={this.onClick('paypal')}
+            >
+              Paypal<span className={s.creditsPaymentNavArrow}><div className="nav-caret"></div></span>
+            </a>
+          </li>
+          <li className={s.creditsPaymentNavItem}>
+            <a
+              className={classNames(s.creditsPaymentNavLink,
+                (location && location.pathname === '/credits-payment' && postStatus === 'payment-bank')
+                ? s.creditsPaymentNavLinkActive : '')}
+              href="#"
+              onClick={this.onClick('bank')}
+            >
+              Bank Transfer<span className={s.creditsPaymentNavArrow}><div className="nav-caret"></div></span>
+            </a>
+          </li>
+        </ul>
+      );
+    }
     return (
       <div className={s.creditsPayment}>
         <Header title="Credits" style={{marginBottom: 0}} />
         <div className={s.creditsPaymentNavWrapper}>
           <Container>
-            <ul className={s.creditsPaymentNav}>
-              <li className={s.creditsPaymentNavItem}>
-                <a
-                  className={classNames(s.creditsPaymentNavLink,
-                    (location && location.pathname === '/credits-payment' && postStatus === 'payment-card')
-                    ? s.creditsPaymentNavLinkActive : '')}
-                  href="#"
-                  onClick={this.onClick('card')}
-                >
-                  Credit Card<span className={s.creditsPaymentNavArrow}><div className="nav-caret"></div></span>
-                </a>
-              </li>
-              <li className={s.creditsPaymentNavItem}>
-                <a
-                  className={classNames(s.creditsPaymentNavLink,
-                    (location && location.pathname === '/credits-payment' && postStatus === 'payment-paypal')
-                    ? s.creditsPaymentNavLinkActive : '')}
-                  href="#"
-                  onClick={this.onClick('paypal')}
-                >
-                  Paypal<span className={s.creditsPaymentNavArrow}><div className="nav-caret"></div></span>
-                </a>
-              </li>
-              <li className={s.creditsPaymentNavItem}>
-                <a
-                  className={classNames(s.creditsPaymentNavLink,
-                    (location && location.pathname === '/credits-payment' && postStatus === 'payment-bank')
-                    ? s.creditsPaymentNavLinkActive : '')}
-                  href="#"
-                  onClick={this.onClick('bank')}
-                >
-                  Bank Transfer<span className={s.creditsPaymentNavArrow}><div className="nav-caret"></div></span>
-                </a>
-              </li>
-              {/*
-              <li className={s.creditsPaymentNavItem}>
-                <a
-                  className={classNames(s.creditsPaymentNavLink,
-                    (this.props.path === '/booking-confirmation' && this.props.postStatus === 'payment-credits')
-                    ? s.creditsPaymentNavLinkActive : '')}
-                  href="#"
-                  onClick={this._onClick.bind(this, 'credits')}
-                >
-                  eBeeCare Credits
-                  <span className={s.creditsPaymentNavArrow}><div className="nav-caret"></div></span>
-                </a>
-              </li> */}
-            </ul>
+            {header}
           </Container>
         </div>
         <div>
@@ -113,8 +120,6 @@ class CreditsPayment extends Component {
 }
 
 CreditsPayment.propTypes = {
-  children: React.PropTypes.node.isRequired,
-
   config: React.PropTypes.object,
   booking: React.PropTypes.object,
   applications: React.PropTypes.object,

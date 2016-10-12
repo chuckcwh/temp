@@ -102,6 +102,10 @@ export const APPLICATIONS_PAY_CARD_REQUEST = 'APPLICATIONS_PAY_CARD_REQUEST'
 export const APPLICATIONS_PAY_CARD_SUCCESS = 'APPLICATIONS_PAY_CARD_SUCCESS'
 export const APPLICATIONS_PAY_CARD_FAILURE = 'APPLICATIONS_PAY_CARD_FAILURE'
 
+export const APPLICATIONS_PAY_CREDITS_REQUEST = 'APPLICATIONS_PAY_CREDITS_REQUEST'
+export const APPLICATIONS_PAY_CREDITS_SUCCESS = 'APPLICATIONS_PAY_CREDITS_SUCCESS'
+export const APPLICATIONS_PAY_CREDITS_FAILURE = 'APPLICATIONS_PAY_CREDITS_FAILURE'
+
 export const APPLICATION_REQUEST = 'APPLICATION_REQUEST'
 export const APPLICATION_SUCCESS = 'APPLICATION_SUCCESS'
 export const APPLICATION_FAILURE = 'APPLICATION_FAILURE'
@@ -539,6 +543,11 @@ function fetchAction(route) {
     },
     payApplicationsCard: {
       types: [ APPLICATIONS_PAY_CARD_REQUEST, APPLICATIONS_PAY_CARD_SUCCESS, APPLICATIONS_PAY_CARD_FAILURE ],
+      endpoint: '/applications/pay',
+      method: 'put'
+    },
+    payApplicationsCredits: {
+      types: [ APPLICATIONS_PAY_CREDITS_REQUEST, APPLICATIONS_PAY_CREDITS_SUCCESS, APPLICATIONS_PAY_CREDITS_FAILURE ],
       endpoint: '/applications/pay',
       method: 'put'
     },
@@ -1256,8 +1265,20 @@ export function updateUserSchedules(params) {
   return fetch('updateUserSchedules', params);
 }
 
-export function topupCredits(params) {
-  return fetch('topupCredits', params);
+export function topupCreditsCard(params) {
+  return fetch('topupCreditsCard', params);
+}
+
+export function topupCreditsPaypalCreate(params) {
+  return fetch('topupCreditsPaypalCreate', params);
+}
+
+export function topupCreditsPaypalExecute(params) {
+  return fetch('topupCreditsPaypalExecute', params);
+}
+
+export function topupCreditsBankTransfer(params) {
+  return fetch('topupCreditsBankTransfer', params);
 }
 
 export function withdrawCredits(params) {
@@ -1356,6 +1377,10 @@ export function payApplicationsBankTransfer(params) {
 
 export function payApplicationsCard(params) {
   return fetch('payApplicationsCard', params);
+}
+
+export function payApplicationsCredits(params) {
+  return fetch('payApplicationsCredits', params);
 }
 
 export function getApplication(params) {

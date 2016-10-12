@@ -1,3 +1,4 @@
+import cookie from 'react-cookie';
 import moment from 'moment';
 import sortBy from 'lodash/sortBy';
 
@@ -177,6 +178,10 @@ export function configToName(config, map, value) {
  * User utility functions
  */
 
+export function getCookieUserId() {
+  return cookie.load('user_id');
+}
+
 export function isAdmin(user) {
   return user && user.role === 'admin';
 }
@@ -240,6 +245,7 @@ const u = {
   removeByKey,
   configToName,
 
+  getCookieUserId,
   isAdmin,
   isClient,
   isProvider,

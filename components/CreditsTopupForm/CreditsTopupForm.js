@@ -1,14 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
-import cx from 'classnames';
 import s from './CreditsTopupForm.css';
-import util from '../../core/util';
+import { isInt } from '../../core/util';
 
 class CreditsTopupForm extends Component {
 
   render() {
     const {
-      fields: { deposit, mode, transRef, transDate },
+      fields: { deposit, mode },
       invalid,
       handleSubmit,
       submitFailed,
@@ -51,7 +50,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} name="credit">
-                    {`SGD ${user && parseFloat(user.credits.current + deposit.value).toFixed(2)}`}
+                    {`SGD ${user && (parseFloat(user.credits.current) + parseFloat(deposit.value)).toFixed(2)}`}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>Balance Credits after Deposit</div>
                 </div>
@@ -59,7 +58,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} id="pay">
-                    {util.isInt(deposit.value) ? `SGD ${((parseFloat(deposit.value) + config.stripe.fixed) / (1 - config.stripe.percentage)).toFixed(2)}`: '-'}
+                    {isInt(deposit.value) ? `SGD ${((parseFloat(deposit.value) + parseFloat(config.stripe.fixed)) / (1 - parseFloat(config.stripe.percentage))).toFixed(2)}`: '-'}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>*Amount to Pay</div>
                 </div>
@@ -77,7 +76,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} name="credit">
-                    {`SGD ${user && parseFloat(user.credits.current + deposit.value).toFixed(2)}`}
+                    {`SGD ${user && (parseFloat(user.credits.current) + parseFloat(deposit.value)).toFixed(2)}`}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>Balance Credits after Deposit</div>
                 </div>
@@ -85,7 +84,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} id="pay">
-                    {util.isInt(deposit.value) ? `SGD ${((parseFloat(deposit.value) + config.paypal.fixed) / (1 - config.paypal.percentage)).toFixed(2)}`: '-'}
+                    {isInt(deposit.value) ? `SGD ${((parseFloat(deposit.value) + parseFloat(config.paypal.fixed)) / (1 - parseFloat(config.paypal.percentage))).toFixed(2)}`: '-'}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>*Amount to Pay</div>
                 </div>
@@ -103,7 +102,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} name="credit">
-                    {`SGD ${user && parseFloat(user.credits.current + deposit.value).toFixed(2)}`}
+                    {`SGD ${user && (parseFloat(user.credits.current) + parseFloat(deposit.value)).toFixed(2)}`}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>Balance Credits after Deposit</div>
                 </div>
@@ -111,7 +110,7 @@ class CreditsTopupForm extends Component {
               <div className={s.creditsTopupFormSectionBox}>
                 <div className={s.creditsTopupFormSectionBoxContent}>
                   <div className={s.creditsTopupFormSectionBoxValue} id="pay">
-                    {util.isInt(deposit.value) ? `SGD ${parseFloat(deposit.value).toFixed(2)}`: '-'}
+                    {isInt(deposit.value) ? `SGD ${parseFloat(deposit.value).toFixed(2)}`: '-'}
                   </div>
                   <div className={s.creditsTopupFormSectionBoxTitle}>*Amount to Pay</div>
                 </div>
@@ -119,42 +118,6 @@ class CreditsTopupForm extends Component {
             </div>
           </div>
           <div className={s.creditsTopupFormSection}>
-            <h4>Notes on Bank Transfer</h4>
-            <p>
-              Please make payment to the following bank account:
-              <br />
-              <strong>UOB Current Account: 341-306-307-6</strong>
-              <br />
-            </p>
-            <p>
-              After transferring, fill in your transaction reference number below and click "Pay via Bank Transfer".
-              <br />
-              We will verify the transaction and credit you accordingly within 3 working days.
-              <br />
-              Meanwhile, you will see a "Pending" transaction in your history.
-            </p>
-          </div>
-          <div className={s.creditsTopupFormSection}>
-            <div className="TableRow">
-              <div className="TableRowItem1">Transaction Reference No.*</div>
-              <div className="TableRowItem2">
-                <input type="text" {...transRef} />
-                {transRef.touched && transRef.error && <div className={s.creditsTopupFormError}>{transRef.error}</div>}
-              </div>
-            </div>
-            <div className="TableRow">
-              <div className="TableRowItem1">Transaction Date*</div>
-              <div className="TableRowItem2">
-                <div className="DateInput">
-                  <input type="text" {...transDate} />
-                  <span
-                    onClick={() =>
-                      this.props.showDayPickerPopup && this.props.showDayPickerPopup(transDate.value, 'creditsTopupForm')}
-                  ></span>
-                </div>
-                {transDate.touched && transDate.error && <div className={s.creditsTopupFormError}>{transDate.error}</div>}
-              </div>
-            </div>
             <button className="btn btn-primary" type="submit" disabled={invalid || submitting}>
               Pay via Bank Transfer
             </button>
@@ -170,17 +133,11 @@ const validate = values => {
   const errors = {};
   if (!values.deposit) {
     errors.deposit = 'Required';
-  } else if (!util.isInt(values.deposit)) {
+  } else if (!isInt(values.deposit)) {
     errors.deposit = 'Invalid top up amount';
   }
   if (!values.mode) {
     errors.mode = 'Required';
-  }
-  if (values.mode === 'bank' && !values.transRef) {
-    errors.transRef = 'Required';
-  }
-  if (values.mode === 'bank' && !values.transDate) {
-    errors.transDate = 'Required';
   }
   return errors;
 };
@@ -191,17 +148,13 @@ CreditsTopupForm.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  showDayPickerPopup: PropTypes.func.isRequired,
-  // showAlertPopup: PropTypes.func.isRequired,
-  // fetchAddress: PropTypes.func.isRequired,
-  // onNext: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
 };
 
 const reduxFormConfig = {
   form: 'creditsTopupForm',
-  fields: ['deposit', 'mode', 'transRef', 'transDate'],
+  fields: ['deposit', 'mode'],
   validate,
 };
 

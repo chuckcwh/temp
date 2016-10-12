@@ -5,8 +5,8 @@ import Loader from 'react-loader';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import s from './BookingPaymentBankTransfer.css';
-import { APPLICATIONS_PAY_BANK_SUCCESS,
-  getBooking, payApplicationsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
+import { APPLICATIONS_PAY_BANK_SUCCESS, USER_CREDITS_TOPUP_BANK_SUCCESS,
+  getUser, getBooking, payApplicationsBankTransfer, topupCreditsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
 import history from '../../core/history';
 
 class BookingPaymentBankTransfer extends Component {
@@ -32,33 +32,51 @@ class BookingPaymentBankTransfer extends Component {
       this.setState({ pending: true });
 
       const location = history.getCurrentLocation();
-      this.props.payApplicationsBankTransfer({
-        mode: 'bank',
-        applications: location && location.query && location.query.applications && location.query.applications.split(','),
-        transferTime: this.state.transferTime,
-        transferRef: this.state.transferRef,
-        bookingId: location && location.query && location.query.bid,
-        bookingToken: location && location.query && location.query.btoken,
-      }).then((res) => {
-        if (res && res.type === APPLICATIONS_PAY_BANK_SUCCESS) {
-          if (this.props.booking && this.props.booking._id && this.props.booking.isAdhoc) {
-            this.props.getBooking({
-              bookingId: this.props.booking && this.props.booking._id,
-              bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
-            });
-          }
+      if (location.query.applications) {
+        this.props.payApplicationsBankTransfer({
+          mode: 'bank',
+          applications: location && location.query && location.query.applications && location.query.applications.split(','),
+          transferTime: this.state.transferTime,
+          transferRef: this.state.transferRef,
+        }).then((res) => {
+          if (res && res.type === APPLICATIONS_PAY_BANK_SUCCESS) {
+            if (this.props.booking && this.props.booking._id && this.props.booking.isAdhoc) {
+              this.props.getBooking({
+                bookingId: this.props.booking && this.props.booking._id,
+                bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
+              });
+            }
 
-          this.props.setPostStatus('success');
-        } else {
-          this.setState({
-            pending: false,
-            error: true,
-            transferTime: undefined,
-            transferRef: undefined,
-          });
-          // console.error('Failed to verify bank transfer payment.');
-        }
-      });
+            this.props.setPostStatus('success');
+          } else {
+            this.setState({
+              pending: false,
+              error: true,
+              transferTime: undefined,
+              transferRef: undefined,
+            });
+            // console.error('Failed to verify bank transfer payment.');
+          }
+        });
+      } else if (location.query.deposit) {
+        this.props.topupCreditsBankTransfer({
+          mode: 'bank',
+          value: parseFloat(location.query.deposit),
+          transferTime: this.state.transferTime,
+          transferRef: this.state.transferRef,
+          userId: this.props.user && this.props.user._id,
+        }).then((res) => {
+          if (res && res.type === USER_CREDITS_TOPUP_BANK_SUCCESS) {
+            this.props.getUser({
+              userId: this.props.user && this.props.user._id,
+            });
+            
+            this.props.setPostStatus('success');
+          } else {
+            // console.error('Failed to execute paypal payment.');
+          }
+        });
+      }
     } else {
       event.preventDefault();
       this.props.showAlertPopup('Please fill up all required fields.');
@@ -94,10 +112,10 @@ class BookingPaymentBankTransfer extends Component {
             </p>
             <ol>
               <li>
-                Transfer the total amount via bank transfer (ATM / iBanking).
+                Transfer the <b>exact</b> total amount of SGD {parseFloat(sum).toFixed(2)} via bank transfer (ATM / iBanking).
               </li>
               <li>
-                Take note of the <b>reference number</b> of the bank transfer.
+                Take note of the <b>reference number</b> of the bank transfer. If the reference number is not correct, the transfer may not be recognized.
               </li>
               <li>
                 Fill in the input boxes below with the&nbsp;
@@ -136,19 +154,23 @@ class BookingPaymentBankTransfer extends Component {
 
 BookingPaymentBankTransfer.propTypes = {
   config: React.PropTypes.object,
+  user: React.PropTypes.object,
   booking: React.PropTypes.object,
   applications: React.PropTypes.object,
   applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
 
+  getUser: React.PropTypes.func.isRequired,
   getBooking: React.PropTypes.func.isRequired,
   payApplicationsBankTransfer: React.PropTypes.func.isRequired,
+  topupCreditsBankTransfer: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   config: state.config.data,
+  user: state.user.data,
   booking: state.booking.data,
   applications: state.applications.data,
   applicationsFetching: state.applications.isFetching,
@@ -156,8 +178,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getUser: (params) => dispatch(getUser(params)),
   getBooking: (params) => dispatch(getBooking(params)),
   payApplicationsBankTransfer: (params) => dispatch(payApplicationsBankTransfer(params)),
+  topupCreditsBankTransfer: (params) => dispatch(topupCreditsBankTransfer(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });

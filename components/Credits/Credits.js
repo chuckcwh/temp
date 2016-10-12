@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import s from './Credits.css';
-import { } from '../../actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Loader from 'react-loader';
+import FaBank from 'react-icons/lib/fa/bank';
+import FaHistory from 'react-icons/lib/fa/history';
+import FaGetPocket from 'react-icons/lib/fa/get-pocket';
+import FaMoney from 'react-icons/lib/fa/money';
+import s from './Credits.css';
 import Link from '../Link';
 import Container from '../Container';
 import Header from '../Header';
@@ -10,15 +14,11 @@ import DashboardTableButton from '../DashboardTableButton';
 import SideTabList from '../SideTabList';
 import SideTab from '../SideTab';
 import DayPickerPopup from '../DayPickerPopup';
-import Loader from 'react-loader';
-import FaBank from 'react-icons/lib/fa/bank';
-import FaHistory from 'react-icons/lib/fa/history';
-import FaGetPocket from 'react-icons/lib/fa/get-pocket';
-import FaMoney from 'react-icons/lib/fa/money';
 import CreditsTopup from '../CreditsTopup';
 import CreditsTransactions from '../CreditsTransactions';
 import CreditsWithdraw from '../CreditsWithdraw';
 import CreditsEarnings from '../CreditsEarnings';
+import { fetchServices } from '../../actions';
 import { isClient, isProvider, getUserCurrentCredits } from '../../core/util';
 
 class Credits extends Component {
@@ -31,7 +31,7 @@ class Credits extends Component {
   }
 
   componentDidMount() {
-    // this.props.fetchLanguages();
+    this.props.fetchServices();
   }
 
   handleTabSelect = (index) => {
@@ -111,10 +111,7 @@ class Credits extends Component {
 Credits.propTypes = {
   user: React.PropTypes.object,
 
-  // fetchLanguages: React.PropTypes.func.isRequired,
-  // fetchAddress: React.PropTypes.func.isRequired,
-  // getPatients: React.PropTypes.func.isRequired,
-  // showDayPickerPopup: React.PropTypes.func.isRequired,
+  fetchServices: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -122,10 +119,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // fetchLanguages: () => dispatch(fetchLanguages()),
-  // fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
-  // getPatients: (params) => dispatch(getPatients(params)),
-  // showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
+  fetchServices: () => dispatch(fetchServices()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Credits);

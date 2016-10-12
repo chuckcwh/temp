@@ -1,0 +1,43 @@
+@import '../variables.css';
+
+.bookingPaymentCredits {
+  position: relative;
+  flex: 10;
+  font-size: 21px;
+  justify-content: center;
+
+  & .bookingPaymentCreditsSection {
+    margin-bottom: 20px;
+
+    & .bookingPaymentCreditsSectionBoxWrapper {
+      display: flex;
+      justify-content: space-around;
+      flex-flow: row wrap;
+
+      & .bookingPaymentCreditsSectionBox {
+        display: table;
+        width: 250px;
+        height: 100px;
+        margin: 5px;
+        border: 1px dashed var(--border-color);
+        border-radius: 15px;
+        text-align: center;
+        
+        & .bookingPaymentCreditsSectionBoxContent {
+          display: table-cell;
+          vertical-align: middle;
+            
+          & .bookingPaymentCreditsSectionBoxValue {
+            font-size: 25px;
+            color: var(--secondary-color);
+          }
+
+          & .bookingPaymentCreditsSectionBoxTitle {
+            font-size: 14px;
+            color: var(--text-color);
+          }
+        }
+      }
+    }
+  }
+}

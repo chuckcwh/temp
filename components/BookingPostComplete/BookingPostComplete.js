@@ -4,14 +4,15 @@ import Loader from 'react-loader';
 import s from './BookingPostComplete.css';
 import Container from '../Container';
 import Link from '../Link';
+import { configToName, getCookieUserId } from '../../core/util';
 
-const BookingPostComplete = ({ transaction, transactionFetching, booking }) => {
+const BookingPostComplete = ({ config, transaction, transactionFetching, booking }) => {
   let component,
     message;
 
   if (transaction) {
     message = (
-      <span>Your payment via {transaction.mode} is {transaction.status}. Check your booking summary in our email.</span>
+      <span>Your payment via {configToName(config, 'transactionModesByValue', transaction.mode)} is {configToName(config, 'transactionStatusesByValue', transaction.status)}. Check your payment summary in our email.</span>
     );
   }
 
@@ -36,11 +37,8 @@ const BookingPostComplete = ({ transaction, transactionFetching, booking }) => {
         or call us at 6514 9729, Mon-Fri (9.00am - 6.00pm).
       </div>
       <div className={s.bookingPostCompleteFooter}>
-        {!!booking &&
+        {!getCookieUserId() &&
           <Link to="/booking-manage" className="btn btn-primary">Manage Booking</Link>
-        }
-        {!booking &&
-          <Link to="/dashboard" className="btn btn-primary">Back to Dashboard</Link>
         }
         <Link to="/" className="btn btn-primary">Back To Homepage</Link>
       </div>
@@ -79,12 +77,14 @@ const BookingPostComplete = ({ transaction, transactionFetching, booking }) => {
 };
 
 BookingPostComplete.propTypes = {
+  config: React.PropTypes.object,
   booking: React.PropTypes.object,
   transaction: React.PropTypes.object,
   transactionFetching: React.PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
+  config: state.config.data,
   booking: state.booking.data,
   transaction: state.transaction.data,
   transactionFetching: state.transaction.isFetching,

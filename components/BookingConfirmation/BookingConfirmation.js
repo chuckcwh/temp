@@ -205,7 +205,11 @@ class BookingConfirmation extends Component {
     // Link.handleClick(event);
     event.preventDefault();
 
-    this.props.setPostStatus('payment-card');
+    if (this.props.user && this.props.user._id) {
+      this.props.setPostStatus('payment-credits');
+    } else {
+      this.props.setPostStatus('payment-card');
+    }
   };
 
   render() {
@@ -590,6 +594,7 @@ BookingConfirmation.propTypes = {
 
   config: React.PropTypes.object,
   services: React.PropTypes.object,
+  user: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
   applications: React.PropTypes.object,
@@ -606,6 +611,7 @@ BookingConfirmation.propTypes = {
 const mapStateToProps = (state) => ({
   config: state.config.data,
   services: state.services.data,
+  user: state.user.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
   applications: state.applications.data,

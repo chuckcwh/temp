@@ -4,7 +4,7 @@ import Loader from 'react-loader';
 import s from './BookingPaymentCard.css';
 import BookingPaymentCardForm from '../BookingPaymentCardForm';
 import { APPLICATIONS_PAY_CARD_SUCCESS, USER_CREDITS_TOPUP_CARD_SUCCESS,
-  getBooking, payApplicationsCard, topupCreditsCard, setPostStatus, setSum, showAlertPopup } from '../../actions';
+  getUser, getBooking, payApplicationsCard, topupCreditsCard, setPostStatus, setSum, showAlertPopup } from '../../actions';
 import history from '../../core/history';
 
 const imgPaypal = require('../paypal.png');
@@ -16,8 +16,7 @@ class BookingPaymentCard extends Component {
     super(props);
     const location = history.getCurrentLocation();
     this.state = {
-      pending: location && location.query && location.query.paymentId && true,
-      redirecting: false,
+      pending: false,
     };
   }
 
@@ -26,6 +25,7 @@ class BookingPaymentCard extends Component {
       const location = history.getCurrentLocation();
       if (location && location.pathname && location.pathname.indexOf('/booking-confirmation') === 0) {
         if (typeof window !== 'undefined' && window.Stripe) {
+          this.setState({ pending: true });
           window.Stripe.card.createToken(values, (status, response) => {
             if (response.error) {
               this.showAlertPopup('An error has occurred with the payment gateway. Please contact us to rectify the issue.');
@@ -38,9 +38,8 @@ class BookingPaymentCard extends Component {
                 payment: {
                   stripeToken: token,
                 },
-                bookingId: this.props.booking && this.props.booking._id,
-                bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
               }).then((res) => {
+                this.setState({ pending: false });
                 if (res && res.type === APPLICATIONS_PAY_CARD_SUCCESS) {
                   resolve();
                   
@@ -60,6 +59,7 @@ class BookingPaymentCard extends Component {
         }
       } else if (location && location.pathname && location.pathname.indexOf('/credits-payment') === 0) {
         if (typeof window !== 'undefined' && window.Stripe) {
+          this.setState({ pending: true });
           window.Stripe.card.createToken(values, (status, response) => {
             if (response.error) {
               this.showAlertPopup('An error has occurred with the payment gateway. Please contact us to rectify the issue.');
@@ -67,16 +67,21 @@ class BookingPaymentCard extends Component {
             } else {
               const token = response.id;
               const sum = parseFloat(location.query.deposit);
-              const total = ((sum + config.stripe.fixed) / (1 - config.stripe.percentage));
               this.props.topupCreditsCard({
                 mode: 'stripe',
-                value: total,
+                value: sum,
                 payment: {
                   stripeToken: token,
                 },
+                userId: this.props.user && this.props.user._id,
               }).then((res) => {
+                this.setState({ pending: false });
                 if (res && res.type === USER_CREDITS_TOPUP_CARD_SUCCESS) {
                   resolve();
+
+                  this.props.getUser({
+                    userId: this.props.user && this.props.user._id,
+                  });
 
                   this.props.setPostStatus('success');
                 } else {
@@ -95,24 +100,14 @@ class BookingPaymentCard extends Component {
     const location = history.getCurrentLocation();
     const { config, applications } = this.props;
     let sum = 0;
-    if (location && location.query && location.query.paymentId) {
-      // View for paypal return
-      return (
-        <div className={s.bookingPaymentCard}>
-          <Loader className="spinner" loaded={!this.state.pending} />
-        </div>
-      );
-    } else if (this.state.redirecting) {
-      // View for pending paypal redirection
-      return (
-        <div className={s.bookingPaymentCard}>
-          <div className="text-center">
-            <p><b><i>Redirecting to Paypal in a few seconds ...</i></b></p>
-          </div>
-          <Loader className="spinner" loaded={!this.state.pending} />
-        </div>
-      );
-    }
+    // if (location && location.query && location.query.paymentId) {
+    //   // View for paypal return
+    //   return (
+    //     <div className={s.bookingPaymentCard}>
+    //       <Loader className="spinner" loaded={!this.state.pending} />
+    //     </div>
+    //   );
+    // }
     if (location && location.pathname.indexOf('/booking-confirmation') === 0) {
       if (applications && Object.values(applications) && Object.values(applications).length > 0) {
         Object.values(applications).map(application => {
@@ -131,6 +126,7 @@ class BookingPaymentCard extends Component {
           </div>
           <p><b>Your Total Amount is SGD {parseFloat(total).toFixed(2)}</b></p>
           <p>There will be an additional service fee of SGD {parseFloat(config.stripe.fixed).toFixed(2)} + {(parseFloat(config.stripe.percentage) * 100).toFixed(1)}%.</p>
+          <p>We do not store your credit card information on our servers in any way. The information is directly sent to the payment gateway for processing.</p>
           <BookingPaymentCardForm onSubmit={this.handleSubmit} />
         </Loader>
       </div>
@@ -141,11 +137,13 @@ class BookingPaymentCard extends Component {
 
 BookingPaymentCard.propTypes = {
   config: React.PropTypes.object,
+  user: React.PropTypes.object,
   booking: React.PropTypes.object,
   applications: React.PropTypes.object,
   applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
 
+  getUser: React.PropTypes.func.isRequired,
   getBooking: React.PropTypes.func.isRequired,
   payApplicationsCard: React.PropTypes.func.isRequired,
   topupCreditsCard: React.PropTypes.func.isRequired,
@@ -156,6 +154,7 @@ BookingPaymentCard.propTypes = {
 
 const mapStateToProps = (state) => ({
   config: state.config.data,
+  user: state.user.data,
   booking: state.booking.data,
   applications: state.applications.data,
   applicationsFetching: state.applications.isFetching,
@@ -163,6 +162,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getUser: (params) => dispatch(getUser(params)),
   getBooking: (params) => dispatch(getBooking(params)),
   payApplicationsCard: (params) => dispatch(payApplicationsCard(params)),
   topupCreditsCard: (params) => dispatch(topupCreditsCard(params)),

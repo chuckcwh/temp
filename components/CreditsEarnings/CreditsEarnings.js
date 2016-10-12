@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import s from './CreditsEarnings.css';
 import { connect } from 'react-redux';
-import Loader from 'react-loader';
 import moment from 'moment';
 import Link from '../Link';
 import Container from '../Container';

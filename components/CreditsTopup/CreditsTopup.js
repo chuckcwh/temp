@@ -38,11 +38,9 @@ class CreditsTopup extends Component {
           <h2>Top Up Credits</h2>
           <CreditsTopupForm
             user={user}
-            showDayPickerPopup={showDayPickerPopup}
             onSubmit={this.handleSubmit}
           />
         </div>
-        <DayPickerPopup title="Transaction Date" />
       </div>
     );
   }
@@ -52,8 +50,6 @@ class CreditsTopup extends Component {
 CreditsTopup.propTypes = {
   user: React.PropTypes.object,
 
-  // fetchLanguages: React.PropTypes.func.isRequired,
-  // fetchAddress: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
   showDayPickerPopup: React.PropTypes.func.isRequired,
 };
@@ -63,11 +59,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // fetchLanguages: () => dispatch(fetchLanguages()),
-  // fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
   setPostStatus: (params) => dispatch(setPostStatus(params)),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
-  // showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditsTopup);

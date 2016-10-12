@@ -12,6 +12,7 @@ import { getUserName, configToName } from '../../core/util';
 import { getSession, showAlertPopup, fetchServices, getSessionDocumentation, createSessionDocumentation, editSessionDocumentation } from '../../actions';
 import ConfirmPopup from '../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { normalize } from '../../core/util';
 // sub-component - step 1
 import DocumentationMedicalHistoryForm from './DocumentationMedicalHistoryForm/DocumentationMedicalHistoryForm';
 import DocumentationOverallForm from './DocumentationOverallForm/DocumentationOverallForm';
@@ -43,7 +44,7 @@ const stepSectionsSchema = {
     icon: "2",
     text: 'Procedural Assessment',
     forms: {
-      'Bate': { name: ['Bate'], isDefault: true, next: {step: "2", formName: "more" }},
+      'Bate': { name: 'Bate', forms: [], isDefault: false, next: {step: "2", formName: "more" }},
       'NGT': { name: 'NGT', isDefault: false, next: {step: "2", formName: "more" }},
       'Catheter': { name: 'Catheter', isDefault: false, next: {step: "2", formName: "more" }},
     }},
@@ -69,8 +70,8 @@ class Documentation extends Component {
     this.state = {
       step: "1",
       currentForm: 'Med History',
+      currentFormId: undefined,
       stepSections: stepSectionsSchema,
-      BateFormNum: stepSectionsSchema['2'].forms['Bate'].isDefault ? 1 : 0,
       wholeDocData: {}, // use obj because we need to check if the form data has been added by its key as formName
       docAlreadyCreated: false,
     }
@@ -79,6 +80,7 @@ class Documentation extends Component {
   componentDidMount() {
     const { sessionId } = this.props.params;
     const { fetchServices, getSession, getSessionDocumentation, showAlertPopup } = this.props;
+    const { stepSections } = this.state;
 
     fetchServices();
     getSession({ sessionId });
@@ -87,7 +89,32 @@ class Documentation extends Component {
         showAlertPopup('Case Doc Get Failure');
       } else if (res.type === 'SESSION_DOCUMENTATION_GET_SUCCESS' && res.response.data) {
         showAlertPopup(<span>Doc already created!<br />You are going to edit the doc</span>);
-        this.setState({ wholeDocData: res.response.data, docAlreadyCreated: true });
+        const docData = res.response.data;
+        // show the hide forms if data contains them
+        if (docData['fratForm']) {
+          stepSections['1'].forms['FRAT'].isDefault = true;
+        }
+        if (docData['mseForm']) {
+          stepSections['1'].forms['MSE'].isDefault = true;
+        }
+        if (docData['bateForms'].length) {
+          stepSections['2'].forms['Bate'].isDefault = true;
+          docData['bateForms'].map(item => stepSections['2'].forms['Bate'].forms.push(item._id));
+        }
+        if (docData['ngtForm']) {
+          stepSections['2'].forms['NGT'].isDefault = true;
+        }
+        if (docData['catheterForm']) {
+          stepSections['2'].forms['Catheter'].isDefault = true;
+        }
+        this.setState({
+          wholeDocData: {...docData, bateForms: docData.bateForms.length ? normalize(docData.bateForms) : {}},
+          docAlreadyCreated: true,
+          stepSections,
+        });
+
+        console.log('stepSections', this.state.stepSections);
+        console.log('a', this.state.wholeDocData);
       }
     });
   }
@@ -98,26 +125,27 @@ class Documentation extends Component {
       const nextForm = Object.values(stepSections[newStep].forms).filter(i => i.isDefault)[0];
       this.setState({
         step: newStep,
-        currentForm: nextForm && nextForm.name || 'more'
+        currentForm: nextForm && nextForm.name || 'more',
+        currentFormId: nextForm.forms && nextForm.forms[0],
       })
     }
   }
 
   getSubMenu = () => {
-    const { step, currentForm, stepSections } = this.state;
+    const { step, currentForm, currentFormId, stepSections } = this.state;
     const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault);
 
     return subMenu && subMenu.map((form, index) => {
-      if (Array.isArray(form.name)) {
-        return form.name.map((item, subIndex) => (
+      if (form.forms && form.forms.length) {
+        return form.forms.map((item, subIndex) => (
           <div
             key={subIndex}
             className={cx(
               s.stepSectionCategoryUnit,
-              currentForm === item && s.stepSectionCategoryUnitActive)}
-            onClick={() => this.setState({currentForm: item})}
+              currentForm === form.name && currentFormId === item && s.stepSectionCategoryUnitActive)}
+            onClick={() => this.setState({currentForm: form.name, currentFormId: item})}
           >
-            {item}
+            {form.name} ({subIndex + 1})
           </div>
         ))
       } else {
@@ -129,7 +157,7 @@ class Documentation extends Component {
               (currentForm === form.name
                 || (stepSections[step].forms[currentForm] === undefined && Object.values(stepSections[step].forms).length === 1))
                 && s.stepSectionCategoryUnitActive)}
-            onClick={() => this.setState({currentForm: form.name})}
+            onClick={() => this.setState({currentForm: form.name, currentFormId: undefined})}
           >
             {form.name}
           </div>
@@ -144,24 +172,27 @@ class Documentation extends Component {
     this.setState({ stepSections });
   }
 
-  onMultiFormsAdded = (formName, formNum) => {
+  onMultiFormsAdded = (formName) => {
     const { step, stepSections } = this.state;
 
     if (!stepSections[step].forms[formName].isDefault) {
       stepSections[step].forms[formName].isDefault = true;
-    } else {
-      stepSections[step].forms[formName].name.push(`${formName} (${formNum + 1})`);
     }
-    this.setState({
-      stepSections,
-      [`${formName}FormNum`]: formNum + 1
-    });
+    const pos = stepSections[step].forms[formName].forms.length;
+    stepSections[step].forms[formName].forms.push(`new${pos}`);
+
+    this.setState({ stepSections });
   }
 
-  saveFormAndNext = (formName, values) => {
+  saveFormAndNext = (formName, values, multi) => {
     console.log(formName, values);
     const { wholeDocData, step, currentForm, stepSections } = this.state;
-    wholeDocData[formName] = values;
+
+    if (multi) {
+      wholeDocData[formName][values._id] = values;
+    } else {
+      wholeDocData[formName] = values;
+    }
 
     this.setState({ wholeDocData });
 
@@ -177,7 +208,7 @@ class Documentation extends Component {
   }
 
   onSubmitFormAsWhole = () => {
-    console.log('submit form!', this.state.wholeDocData);
+    console.log('submit form!');
     const { sessionId } = this.props.params;
     const { createSessionDocumentation, editSessionDocumentation, showAlertPopup } = this.props;
     const { wholeDocData, docAlreadyCreated } = this.state;
@@ -190,11 +221,20 @@ class Documentation extends Component {
       return showAlertPopup('Please fill the Overall Form.');
     }
 
+    const bateForms = Object.values(wholeDocData['bateForms']);
+    bateForms.map(form => {
+      if (form._id.indexOf('new') !== -1) {
+        form._id = undefined;
+      }
+    })
+    const formData = {
+      ...wholeDocData,
+      bateForms,
+      sessionId,
+    };
+    console.log('formData', formData);
     if (docAlreadyCreated) {
-      editSessionDocumentation({
-        ...wholeDocData,
-        sessionId,
-      }).then(res => {
+      editSessionDocumentation(formData).then(res => {
         if (res.type === 'SESSION_DOCUMENTATION_EDIT_SUCCESS') {
           showAlertPopup('Edit Doc Successful!');
         } else {
@@ -202,10 +242,7 @@ class Documentation extends Component {
         }
       });
     } else {
-      createSessionDocumentation({
-        ...this.state.wholeDocData,
-        sessionId: this.props.params.sessionId
-      }).then(res => {
+      createSessionDocumentation(formData).then(res => {
         if (res.type === 'SESSION_DOCUMENTATION_CREATE_SUCCESS') {
           showAlertPopup('Create Doc Successful!');
           this.setState({docAlreadyCreated: true});
@@ -219,7 +256,7 @@ class Documentation extends Component {
   render() {
     const { sessionId } = this.props.params;
     const { config, session, services } = this.props;
-    const { step, BateFormNum, currentForm, stepSections, wholeDocData } = this.state;
+    const { step, currentForm, currentFormId, stepSections, wholeDocData } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
@@ -330,7 +367,7 @@ class Documentation extends Component {
                   </div>
                 )
 
-                : step === "2" && currentForm.indexOf('Bate') !== -1 ? (<DocumentationBateForm formKey={parseInt(currentForm) || 1} initialValues={{...wholeDocData.bateForms}} onFormSubmit={values => this.saveFormAndNext(`bateForms`, values)} />)
+                : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm formKey={currentFormId} initialValues={{...wholeDocData.bateForms[currentFormId], _id: currentFormId}} onFormSubmit={values => this.saveFormAndNext('bateForms', values, true)} />)
                 : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm initialValues={{...wholeDocData.ngtForm}} onFormSubmit={values => this.saveFormAndNext('ngtForm', values)} />)
                 : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm initialValues={{...wholeDocData.catheterForm}} onFormSubmit={values => this.saveFormAndNext('catheterForm', values)} />)
                 : step === "2" ? (
@@ -342,7 +379,7 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={() => this.onMultiFormsAdded('Bate', BateFormNum)}
+                          onClick={() => this.onMultiFormsAdded('Bate')}
                         >
                           <div><FaPlus />Add Form</div>
                         </button>

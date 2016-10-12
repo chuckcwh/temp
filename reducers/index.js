@@ -416,6 +416,34 @@ const sessionsSuggestedToProvider = (state = {}, action) => {
   }
 }
 
+const documentation =  (state = {
+  isFetching: false,
+  didInvalidate: true,
+  data: {}
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.SESSION_DOCUMENTATION_GET_REQUEST:
+    case ActionTypes.SESSION_DOCUMENTATION_CREATE_REQUEST:
+    case ActionTypes.SESSION_DOCUMENTATION_EDIT_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case ActionTypes.SESSION_DOCUMENTATION_GET_SUCCESS:
+    case ActionTypes.SESSION_DOCUMENTATION_CREATE_SUCCESS:
+    case ActionTypes.SESSION_DOCUMENTATION_EDIT_SUCCESS:
+      const docData = action.response.data;
+      return {
+        ...state,
+        isFetching: false,
+        data: docData && {...docData, bateForms: docData.bateForms.length ? normalize(docData.bateForms) : {}},
+        lastUpdated: action.response && action.response.receivedAt
+      }
+    default:
+      return state
+  }
+}
+
 const applications = (state = {
   isFetching: false,
   didInvalidate: true,
@@ -855,6 +883,7 @@ const bookingApp = combineReducers({
   sessions,
   sessionsByUser,
   sessionsSuggestedToProvider,
+  documentation,
   applications,
   applicationsByProvider,
   patientsByClient,

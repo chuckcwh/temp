@@ -20,14 +20,6 @@ import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 
 class DocumentationCatheterForm extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      interpretation: null,
-    }
-  }
-
   renderRowsWith2Col = (items) => {
     return items.map((item, index) => (
       <tr key={index} className={s.bodyRow}>
@@ -115,8 +107,6 @@ class DocumentationCatheterForm extends Component {
       submitFailed,
       submitting,
     } = this.props;
-
-    const { interpretation } = this.state;
 
     const firstSec = [{
       first: "Type of catheter",
@@ -289,7 +279,17 @@ class DocumentationCatheterForm extends Component {
             <div>
               Interpretation
               <div className={s.statusFieldTitle}>
-                {false ? ('N/A') : (
+                {(!fever.value &&
+                  !empty.value &&
+                  !(painR.value || painI.value) &&
+                  !(bloodR.value || bloodI.value) &&
+                  !(discharge.value) &&
+                  !(encrustation.value) &&
+                  !(cloudy.value || smell.value || sentiments.value) &&
+                  !(catTypeI.value) &&
+                  !(drainage.value) &&
+                  !(inflation.value)
+                ) ? ('N/A') : (
                   <ul>
                     {fever.value && <li><b>Fever:</b> Please refer to a doctor if it has not been done so or antibiotics not prescribed.</li>}
                     {empty.value && <li><b>Balloon:</b> Push in another 1 ml of Water of Injection. Please refer to A&amp;E.</li>}

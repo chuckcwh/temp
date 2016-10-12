@@ -5,7 +5,7 @@ import Loader from 'react-loader';
 import s from './BookingPaymentCredits.css';
 import Link from '../Link';
 import { APPLICATIONS_PAY_CREDITS_SUCCESS,
-  getBooking, payApplicationsCredits, setPostStatus, showAlertPopup } from '../../actions';
+  getBooking, payApplicationsCredits, setPostStatus } from '../../actions';
 import { isFloat } from '../../core/util';
 import history from '../../core/history';
 
@@ -16,39 +16,34 @@ class BookingPaymentCredits extends Component {
   }
 
   onConfirm = (event) => {
-    if (this.bookingPaymentCreditsForm.checkValidity()) {
-      event.preventDefault();
+    event.preventDefault();
 
-      this.setState({ pending: true });
+    this.setState({ pending: true });
 
-      const location = history.getCurrentLocation();
-      this.props.payApplicationsCredits({
-        mode: 'credit',
-        applications: location && location.query && location.query.applications && location.query.applications.split(','),
-      }).then((res) => {
-        if (res && res.type === APPLICATIONS_PAY_CREDITS_SUCCESS) {
-          if (this.props.booking && this.props.booking._id && this.props.booking.isAdhoc) {
-            this.props.getBooking({
-              bookingId: this.props.booking && this.props.booking._id,
-              bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
-            });
-          }
-
-          this.props.setPostStatus('success');
-        } else {
-          this.setState({
-            pending: false,
-            error: true,
-            transferTime: undefined,
-            transferRef: undefined,
+    const location = history.getCurrentLocation();
+    this.props.payApplicationsCredits({
+      mode: 'credit',
+      applications: location && location.query && location.query.applications && location.query.applications.split(','),
+    }).then((res) => {
+      if (res && res.type === APPLICATIONS_PAY_CREDITS_SUCCESS) {
+        if (this.props.booking && this.props.booking._id && this.props.booking.isAdhoc) {
+          this.props.getBooking({
+            bookingId: this.props.booking && this.props.booking._id,
+            bookingToken: this.props.booking && this.props.booking.client && this.props.booking.client.contact,
           });
-          // console.error('Failed to verify bank transfer payment.');
         }
-      });
-    } else {
-      event.preventDefault();
-      this.props.showAlertPopup('Please fill up all required fields.');
-    }
+
+        this.props.setPostStatus('success');
+      } else {
+        this.setState({
+          pending: false,
+          error: true,
+          transferTime: undefined,
+          transferRef: undefined,
+        });
+        // console.error('Failed to verify bank transfer payment.');
+      }
+    });
   };
 
   render() {
@@ -128,7 +123,6 @@ BookingPaymentCredits.propTypes = {
   getBooking: React.PropTypes.func.isRequired,
   payApplicationsCredits: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
-  showAlertPopup: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -143,7 +137,6 @@ const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
   payApplicationsCredits: (params) => dispatch(payApplicationsCredits(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
-  showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookingPaymentCredits);

@@ -35,15 +35,15 @@ class CreditsEarnings extends Component {
       application.status === 'completed');
     const paidTransactions = transactions && Object.values(transactions).filter(transaction =>
       transaction.transactionType === 'session-payment' && transaction.status === 'completed');
-    const futureAmount = pendingApplications.reduce((result, application) => {
+    const futureAmount = pendingApplications && pendingApplications.reduce((result, application) => {
       return result + application.session.price;
-    }, 0);
-    const pendingAmount = completedApplications.reduce((result, application) => {
+    }, 0) || 0;
+    const pendingAmount = completedApplications && completedApplications.reduce((result, application) => {
       return result + application.session.price;
-    }, 0);
-    const paidAmount = paidTransactions.reduce((result, transaction) => {
+    }, 0) || 0;
+    const paidAmount = paidTransactions && paidTransactions.reduce((result, transaction) => {
       return result + transaction.value;
-    }, 0);
+    }, 0) || 0;
     return (
       <div className={s.creditsEarnings}>
         <h2>Future Earnings</h2>

@@ -54,33 +54,86 @@ class DocumentationBateForm extends Component {
     ))
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {
+      size,
+      depth,
+      edges,
+      undermining,
+      tissueType,
+      tissueAmt,
+      exudateType,
+      exudateAmt,
+      color,
+      tissueEdema,
+      tissueInduration,
+      granulationTissue,
+      epithelialization,
+    } = nextProps.fields;
+    let sum;
+    let interpretation;
+
+    if (size.value && depth.value && edges.value && undermining.value && tissueType.value && tissueAmt.value && exudateType.value && exudateAmt.value && color.value && tissueEdema.value && tissueInduration.value && granulationTissue.value && epithelialization.value ) {
+      sum = +size.value + +depth.value + +edges.value + +undermining.value + +tissueType.value + +tissueAmt.value + +exudateType.value + +exudateAmt.value + +color.value + +tissueEdema.value + +tissueInduration.value + +granulationTissue.value + +epithelialization.value;
+      if (sum < 21) {
+        interpretation = (<span className={s.green}>Minimal Severity</span>)
+      } else if (sum < 31) {
+        interpretation = (<span className={s.orange}>Mild Severity</span>)
+      } else if (sum < 41) {
+        interpretation = (<span className={s.orange}>Moderate Severity</span>)
+      } else {
+        interpretation = (<span className={s.red}>Extreme Severity</span>)
+      }
+    }
+
+    return this.setState({
+      totalScore: sum && `${sum} / 65`,
+      interpretation,
+    })
+  }
+
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
+
+    const toNum = (items) => {
+      items.map(item => {
+        values[item] = values[item] && +values[item];
+      })
+    }
+    toNum(['size', 'depth', 'edges', 'undermining', 'tissueType', 'tissueAmt', 'exudateType', 'exudateAmt', 'color', 'tissueEdema', 'tissueInduration', 'granulationTissue', 'epithelialization']);
+
+    this.props.onFormSubmit(values);
+  }
+
   render() {
     const {
       fields: {
+        bateCount,
         // 1st sec
-        woundSite,
-        woundSiteText,
+        site,
+        anatomicOthers,
         woundType,
-        woundTypeText,
-        woundShape,
-        woundShapeText,
+        woundOthers,
+        shape,
+        shapeOthers,
         // 2nd sec
         size,
         depth,
         edges,
         undermining,
-        necroticType,
-        necroticAmount,
+        tissueType,
+        tissueAmt,
         exudateType,
-        exudateAmount,
-        skinColor,
-        peripheralEdema,
-        peripheralInduration,
-        granulation,
+        exudateAmt,
+        color,
+        tissueEdema,
+        tissueInduration,
+        granulationTissue,
         epithelialization,
-        treatmentObj,
-        solutionType,
-        dressingType,
+        // others
+        objective,
+        solution,
+        dressing,
         outcome,
       },
 
@@ -92,23 +145,23 @@ class DocumentationBateForm extends Component {
     } = this.props;
 
     const { totalScore, interpretation } = this.state;
-    const solutionTypeChoice = [{label: 'Protecting granulation/ephithelialisation', value: 'Protecting granulation/ephithelialisation'}, {label: 'Manage bacterial burden', value: 'Manage bacterial burden'}];
-    const treatmentObjChoice = [{label: 'Normal Saline', value: 'Normal Saline'}, {label: 'Chlorhexidine', value: 'Chlorhexidine'}];
+    const objectiveChoice = [{label: 'Normal Saline', value: 'Normal Saline'}, {label: 'Chlorhexidine', value: 'Chlorhexidine'}];
+    const solutionChoice = [{label: 'Protecting granulation/ephithelialisation', value: 'Protecting granulation/ephithelialisation'}, {label: 'Manage bacterial burden', value: 'Manage bacterial burden'}];
 
     const firstSec = [{
       first: "Location: Anatomic site",
       second: (
         <Selections
-          fieldName="woundSite"
-          field={woundSite}
+          fieldName="site"
+          field={site}
           items={[
-            {value: "1", label: (<span>Sacrum & Coccyx</span>)},
-            {value: "2", label: (<span>Lateral Ankle</span>)},
-            {value: "3", label: (<span>Trochanter</span>)},
-            {value: "4", label: (<span>Medial Ankle</span>)},
-            {value: "5", label: (<span>Ischial Tuberosity</span>)},
-            {value: "6", label: (<span>Heel</span>)},
-            {value: "7", label: (<span className={s.selectionWithComment}>Other site: <input type="text" {...woundSiteText} disabled={woundSite.value !== '7'} /></span>)},
+            {value: "Sacrum & Coccyx", label: (<span>Sacrum & Coccyx</span>)},
+            {value: "Lateral Ankle", label: (<span>Lateral Ankle</span>)},
+            {value: "Trochanter", label: (<span>Trochanter</span>)},
+            {value: "Medial Ankle", label: (<span>Medial Ankle</span>)},
+            {value: "Ischial Tuberosity", label: (<span>Ischial Tuberosity</span>)},
+            {value: "Heel", label: (<span>Heel</span>)},
+            {value: "Others", label: (<span className={s.selectionWithComment}>Other site: <input type="text" {...anatomicOthers} disabled={site.value !== 'Others'} /></span>)},
           ]}
         />
     )}, {
@@ -118,32 +171,32 @@ class DocumentationBateForm extends Component {
           fieldName="woundType"
           field={woundType}
           items={[
-            {value: "1", label: (<span>Venous Ulcer</span>)},
-            {value: "2", label: (<span>Arterial Ulcer</span>)},
-            {value: "3", label: (<span>Diabetic Foot Ulcer</span>)},
-            {value: "4", label: (<span>Cellulitis (Weeping)</span>)},
-            {value: "5", label: (<span>Fungating Lesions</span>)},
-            {value: "6", label: (<span>Surgical Wound</span>)},
-            {value: "7", label: (<span>Burn/Scalds</span>)},
-            {value: "8", label: (<span>Pressure Sore</span>)},
-            {value: "9", label: (<span>Traumatic Wound</span>)},
-            {value: "10", label: (<span className={s.selectionWithComment}>Others: <input type="text" {...woundTypeText} disabled={woundType.value !== '10'} /></span>)},
+            {value: "Venous Ulcer", label: (<span>Venous Ulcer</span>)},
+            {value: "Arterial Ulcer", label: (<span>Arterial Ulcer</span>)},
+            {value: "Diabetic Foot Ulcer", label: (<span>Diabetic Foot Ulcer</span>)},
+            {value: "Cellulitis", label: (<span>Cellulitis (Weeping)</span>)},
+            {value: "Fungating Lesions", label: (<span>Fungating Lesions</span>)},
+            {value: "Surgical Wound", label: (<span>Surgical Wound</span>)},
+            {value: "Burn/Scalds", label: (<span>Burn/Scalds</span>)},
+            {value: "Pressure Sore", label: (<span>Pressure Sore</span>)},
+            {value: "Traumatic Wound", label: (<span>Traumatic Wound</span>)},
+            {value: "Others", label: (<span className={s.selectionWithComment}>Others: <input type="text" {...woundOthers} disabled={woundType.value !== 'Others'} /></span>)},
           ]}
         />
     )}, {
       first: "Shape: Overall wound pattern; assess by observing perimeter and depth",
       second: (
         <Selections
-          fieldName="woundShape"
-          field={woundShape}
+          fieldName="shape"
+          field={shape}
           items={[
-            {value: "1", label: (<span>Irregular</span>)},
-            {value: "2", label: (<span>Linear or Elongated</span>)},
-            {value: "3", label: (<span>Round/Oval</span>)},
-            {value: "4", label: (<span>Bowl/Boat</span>)},
-            {value: "5", label: (<span>Square/Rectangle</span>)},
-            {value: "6", label: (<span>Butterfly</span>)},
-            {value: "7", label: (<span>Other shape: <input type="text" {...woundShapeText} disabled={woundShape.value !== '7'} /></span>)},
+            {value: "Irregular", label: (<span>Irregular</span>)},
+            {value: "Linear or Elongated", label: (<span>Linear or Elongated</span>)},
+            {value: "Round/Oval", label: (<span>Round/Oval</span>)},
+            {value: "Bowl/Boat", label: (<span>Bowl/Boat</span>)},
+            {value: "Square/Rectangle", label: (<span>Square/Rectangle</span>)},
+            {value: "Butterfly", label: (<span>Butterfly</span>)},
+            {value: "Others", label: (<span>Other shape: <input type="text" {...shapeOthers} disabled={shape.value !== 'Others'} /></span>)},
           ]}
         />
     )}]
@@ -208,8 +261,8 @@ class DocumentationBateForm extends Component {
       first: "Necrotic Tissue Type",
       second: (
         <Selections
-          fieldName="necroticType"
-          field={necroticType}
+          fieldName="tissueType"
+          field={tissueType}
           items={[
             {value: "1", label: (<span>None visible</span>)},
             {value: "2", label: (<span>White/ Grey non-viable tissue &/or non-adherent yellow slough</span>)},
@@ -222,8 +275,8 @@ class DocumentationBateForm extends Component {
       first: "Necrotic Tissue Amount",
       second: (
         <Selections
-          fieldName="necroticAmount"
-          field={necroticAmount}
+          fieldName="tissueAmt"
+          field={tissueAmt}
           items={[
             {value: "1", label: (<span>None visible</span>)},
             {value: "2", label: (<span>&#60; 25% of wound bed covered</span>)},
@@ -250,8 +303,8 @@ class DocumentationBateForm extends Component {
       first: "Exudate Amount",
       second: (
         <Selections
-          fieldName="exudateAmount"
-          field={exudateAmount}
+          fieldName="exudateAmt"
+          field={exudateAmt}
           items={[
             {value: "1", label: (<span>None, dry wound</span>)},
             {value: "2", label: (<span>Scant, wound moist but no observable exudate</span>)},
@@ -264,8 +317,8 @@ class DocumentationBateForm extends Component {
       first: "Skin Color Surrounding Wound",
       second: (
         <Selections
-          fieldName="skinColor"
-          field={skinColor}
+          fieldName="color"
+          field={color}
           items={[
             {value: "1", label: (<span>Pink or normal for ethnic group</span>)},
             {value: "2", label: (<span>Bright red &/or blanches to touch</span>)},
@@ -278,8 +331,8 @@ class DocumentationBateForm extends Component {
       first: "Peripheral Tissue Edema",
       second: (
         <Selections
-          fieldName="peripheralEdema"
-          field={peripheralEdema}
+          fieldName="tissueEdema"
+          field={tissueEdema}
           items={[
             {value: "1", label: (<span>No swelling or edema</span>)},
             {value: "2", label: (<span>Non-pitting edema extends &#60; 4 cm around wound</span>)},
@@ -292,8 +345,8 @@ class DocumentationBateForm extends Component {
       first: "Peripheral Tissue Induration",
       second: (
         <Selections
-          fieldName="peripheralInduration"
-          field={peripheralInduration}
+          fieldName="tissueInduration"
+          field={tissueInduration}
           items={[
             {value: "1", label: (<span>None present</span>)},
             {value: "2", label: (<span>Induration, &#60; 2 cm around wound</span>)},
@@ -306,8 +359,8 @@ class DocumentationBateForm extends Component {
       first: "Granulation Tissue",
       second: (
         <Selections
-          fieldName="granulation"
-          field={granulation}
+          fieldName="granulationTissue"
+          field={granulationTissue}
           items={[
             {value: "1", label: (<span>Skin intact or partial thickness wound</span>)},
             {value: "2", label: (<span>Bright, beefy red; 75% to 100% of wound filled &/or tissue overgrowth</span>)},
@@ -337,21 +390,21 @@ class DocumentationBateForm extends Component {
       second: (
         <MultiSelect
           className={s.multiSelect}
-          options={treatmentObjChoice}
-          {...treatmentObj}
+          options={objectiveChoice}
+          {...objective}
         />
     )}, {
       first: "Type of solution used",
       second: (
         <MultiSelect
           className={s.multiSelect}
-          options={solutionTypeChoice}
-          {...solutionType}
+          options={solutionChoice}
+          {...solution}
         />
     )}, {
       first: "Type of dressing used",
       second: (
-        <input className={s.textInput} type="text" {...dressingType} />
+        <input className={s.textInput} type="text" {...dressing} />
     )}, {
       first: "Outcome and Evaluation",
       second: (
@@ -360,7 +413,7 @@ class DocumentationBateForm extends Component {
 
 
     return (
-      <form className={s.documentationBateForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
+      <form className={s.documentationBateForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <h2>Bate Jensen Wound Assessment & Intervention</h2>
 
         <table className={s.issueSetTable}>
@@ -439,38 +492,52 @@ DocumentationBateForm.propTypes = {
 const reduxFormConfig = {
   form: 'documentationBateForm',
   fields: [
+    'bateCount',
     // 1st sec
-    'woundSite',
-    'woundSiteText',
+    'site',
+    'anatomicOthers',
     'woundType',
-    'woundTypeText',
-    'woundShape',
-    'woundShapeText',
+    'woundOthers',
+    'shape',
+    'shapeOthers',
     // 2nd sec
     'size',
     'depth',
     'edges',
     'undermining',
-    'necroticType',
-    'necroticAmount',
+    'tissueType',
+    'tissueAmt',
     'exudateType',
-    'exudateAmount',
-    'skinColor',
-    'peripheralEdema',
-    'peripheralInduration',
-    'granulation',
+    'exudateAmt',
+    'color',
+    'tissueEdema',
+    'tissueInduration',
+    'granulationTissue',
     'epithelialization',
-    'treatmentObj',
-    'solutionType',
-    'dressingType',
+    // others
+    'objective',
+    'solution',
+    'dressing',
     'outcome',
   ],
   validate,
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => {
+  let initialValues;
 
-});
+  const valueToString = (items) => {
+    items.map(item => {
+      ownProps.initialValues[item] = ownProps.initialValues[item] && ownProps.initialValues[item].toString();
+    })
+  }
+  if (Object.keys(ownProps.initialValues).length) {
+    valueToString(['size', 'depth', 'edges', 'undermining', 'tissueType', 'tissueAmt', 'exudateType', 'exudateAmt', 'color', 'tissueEdema', 'tissueInduration', 'granulationTissue', 'epithelialization']);
+    initialValues = ownProps.initialValues;
+  }
+
+  return { initialValues }
+};
 
 const mapDispatchToProps = (dispatch) => ({
   resetForm: () => dispatch(reset('documentationBateForm')),

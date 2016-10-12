@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import Banner from '../components/Banner';
-import Popular from '../components/Popular';
-import Partners from '../components/Partners';
-import Testimonials from '../components/Testimonials';
-import Features from '../components/Features';
-import Actions from '../components/Actions';
-import Download from '../components/Download';
-import AlertPopup from '../components/AlertPopup';
+import Home from '../components/Home';
 
 class HomePage extends Component {
 
@@ -16,16 +9,7 @@ class HomePage extends Component {
 
   render() {
     return (
-      <div>
-        <Banner />
-        <Popular />
-        <Partners />
-        <Testimonials />
-        <Features />
-        <Actions />
-        <Download />
-        <AlertPopup />
-      </div>
+      <Home />
     );
   }
 

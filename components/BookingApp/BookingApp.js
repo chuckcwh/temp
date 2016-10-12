@@ -23,7 +23,7 @@ import BookingPostSidebar from '../BookingPostSidebar';
 import BookingView from '../BookingView';
 import Account from '../Account';
 import LoginPopup from '../LoginPopup';
-import { BOOKING_SUCCESS, getBooking, getUserWithToken, setPostStatus } from '../../actions';
+import { BOOKING_SUCCESS, getBooking, setPostStatus } from '../../actions';
 import history from '../../core/history';
 import { isNavigationAllowed } from '../../core/util';
 
@@ -41,6 +41,7 @@ class BookingApp extends Component {
 
   componentDidMount() {
     const location = history.getCurrentLocation();
+    const { user } = this.props;
     // if "bid" query parameter exists, must be booking manage/confirmation
     if (location && location.query && location.query.bid && location.query.btoken) {
       if (location.query.action && location.query.action.indexOf('paypal') > -1) {
@@ -65,25 +66,21 @@ class BookingApp extends Component {
         }
       });
     }
-
-    // if "uid" query parameter exists, login automatically
-    if (location && location.query && location.query.uid && location.query.token) {
-      this.props.getUserWithToken({
-        id: location.query.uid,
-        token: location.query.token,
-      }).then((res) => {
-        if (res.response && res.response.status < 1) {
-          // console.error('Failed to get user data.');
-        }
-      });
+    // Prevent access for caregiver
+    if (user && user.role === 'provider') {
+      history.replace('');
     }
   }
 
   componentWillReceiveProps(props) {
-    const { lastPage } = props;
+    const { lastPage, user } = props;
     const location = history.getCurrentLocation();
     if (location && location.pathname && location.pathname.indexOf('booking-confirmation') === -1
       && !isNavigationAllowed(location.pathname, lastPage)) {
+      history.replace('');
+    }
+    // Prevent access for caregiver
+    if (user && user.role === 'provider') {
       history.replace('');
     }
   }
@@ -248,7 +245,6 @@ BookingApp.propTypes = {
   lastPage: React.PropTypes.string,
 
   getBooking: React.PropTypes.func,
-  getUserWithToken: React.PropTypes.func,
   setPostStatus: React.PropTypes.func,
 };
 
@@ -262,7 +258,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
-  getUserWithToken: (params) => dispatch(getUserWithToken(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
 });
 

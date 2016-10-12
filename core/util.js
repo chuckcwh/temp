@@ -16,42 +16,9 @@ export const PAGE_ORDERS = [
 
 export const ALL_SERVICES = 'All Services';
 
-export const SERVICES_CATEGORY_ORDER = [
-  ALL_SERVICES,
-  'Social Care',
-  'Nursing Care',
-  'Medical',
-  'TCM',
-  'Mother Care',
-];
-
-export function getCookies() {
-  let pairs;
-  const cookies = {};
-  if (typeof document !== 'undefined' && document && document.cookie) {
-    pairs = document.cookie.split(';');
-    for (let i = 0; i < pairs.length; i++) {
-      const pair = pairs[i].split('=');
-      if (pair[0]) pair[0] = pair[0].trim();
-      cookies[pair[0]] = unescape(pair[1]);
-    }
-    return cookies;
-  }
-  return {};
-}
-
 export function isProduction() {
   return (typeof window !== 'undefined' &&
     window.location.hostname.indexOf('www.ebeecare.com') > -1);
-}
-
-export function isLoggedInBackend() {
-  if (isProduction() && getCookies().sessionid) {
-    return true;
-  } else if (!isProduction() && getCookies().ebeecare_session_dev) {
-    return true;
-  }
-  return false;
 }
 
 export function isNavigationAllowed(path, lastPage) {
@@ -143,81 +110,6 @@ export function calcRate(session, promo, sid, scid) {
     return parseFloat(session.price);
   }
   return parseFloat(session.price);
-}
-
-export function getServiceIconClass(serviceId) {
-  let subcatClass;
-  switch (serviceId) {
-    case 10:
-      subcatClass = 'breast';
-      break;
-    case 11:
-      subcatClass = 'headheart';
-      break;
-    case 12:
-      subcatClass = 'physiotherapy';
-      break;
-    case 13:
-      subcatClass = 'elderly';
-      break;
-    case 14:
-      subcatClass = 'needle';
-      break;
-    case 15:
-      subcatClass = 'drip';
-      break;
-    case 16:
-      subcatClass = 'nutrition';
-      break;
-    case 17:
-      subcatClass = 'syringe';
-      break;
-    case 18:
-      subcatClass = 'urinary';
-      break;
-    case 19:
-      subcatClass = 'stomach';
-      break;
-    case 20:
-      subcatClass = 'diabetic';
-      break;
-    case 21:
-      subcatClass = 'bandage';
-      break;
-    case 22:
-      subcatClass = 'lung';
-      break;
-    case 23:
-      subcatClass = 'report';
-      break;
-    case 24:
-      subcatClass = 'headdots';
-      break;
-    case 27:
-      subcatClass = 'housecall';
-      break;
-    case 29:
-      subcatClass = 'stethoscope';
-      break;
-    case 30:
-      subcatClass = 'headheart';
-      break;
-    case 31:
-      subcatClass = 'heart';
-      break;
-    case 32:
-      subcatClass = 'baby';
-      break;
-    case 33:
-      subcatClass = 'homeheart';
-      break;
-    case 34:
-      subcatClass = 'breast';
-      break;
-    default:
-      subcatClass = 'ebeecare';
-  }
-  return subcatClass;
 }
 
 export function isInt(val) {
@@ -314,8 +206,6 @@ const u = {
     window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
       'https://api.ebeecare.com' :
       'https://devapi.ebeecare.com'),
-  authKey: 'secret',
-  authSecret: 'secret0nlyWeilsonKnowsShhh852~',
 
   backend: ((typeof window !== 'undefined' &&
     window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
@@ -327,23 +217,18 @@ const u = {
       'http://ebeepartners-testing.firebaseapp.com'),
   blog: 'https://blog.ebeecare.com',
 
-  getCookies,
-
   isProduction,
 
-  isLoggedInBackend,
   isNavigationAllowed,
   isNextLastPage,
   isBookingPage,
 
   ALL_SERVICES,
-  SERVICES_CATEGORY_ORDER,
 
   parseCategories,
   appendAllServices,
 
   calcRate,
-  getServiceIconClass,
 
   isInt,
   isFloat,

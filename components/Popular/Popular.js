@@ -6,7 +6,6 @@ import s from './Popular.css';
 import Container from '../Container';
 import Link from '../Link';
 import { fetchServices } from '../../actions';
-import { getServiceIconClass } from '../../core/util';
 
 class Popular extends Component {
 

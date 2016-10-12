@@ -179,14 +179,25 @@ class Documentation extends Component {
 
   onSubmitFormAsWhole = () => {
     console.log('submit form!', this.state.wholeDocData);
-    const { createSessionDocumentation, editSessionDocumentation } = this.props;
-    if (this.state.docAlreadyCreated) {
+    const { sessionId } = this.props.params;
+    const { createSessionDocumentation, editSessionDocumentation, showAlertPopup } = this.props;
+    const { wholeDocData, docAlreadyCreated } = this.state;
+
+    if (!wholeDocData.overallForm) {
+      this.setState({
+        step: "1",
+        currentForm: 'Overall',
+      });
+      return showAlertPopup('Please fill the Overall Form.');
+    }
+
+    if (docAlreadyCreated) {
       editSessionDocumentation({
-        ...this.state.wholeDocData,
-        sessionId: this.props.params.sessionId
+        ...wholeDocData,
+        sessionId,
       }).then(res => {
         if (res.type === 'SESSION_DOCUMENTATION_EDIT_SUCCESS') {
-          showAlertPopup('Edit Case Successful!');
+          showAlertPopup('Edit Doc Successful!');
         } else {
           showAlertPopup('Edit failed! Please check your forms.');
         }
@@ -197,7 +208,8 @@ class Documentation extends Component {
         sessionId: this.props.params.sessionId
       }).then(res => {
         if (res.type === 'SESSION_DOCUMENTATION_CREATE_SUCCESS') {
-          showAlertPopup('Create Case Successful!');
+          showAlertPopup('Create Doc Successful!');
+          this.setState({docAlreadyCreated: true});
         } else {
           showAlertPopup('Created failed! Please check your forms.');
         }

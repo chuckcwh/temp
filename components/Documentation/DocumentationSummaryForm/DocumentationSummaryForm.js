@@ -31,16 +31,26 @@ class DocumentationSummaryForm extends Component {
     ))
   }
 
+  onFormSubmit = (values) => {
+    console.log('onFormSubmit', values);
+
+    if (!values['isReqAne']) {
+      values['aneRemarks'] = undefined;
+    }
+
+    this.props.onFormSubmit(values);
+  }
+
   render() {
     const {
       fields: {
         // nursing notes
-        providerNote,
-        recommendPolyclinic,
-        remarks,
+        nursingNotes,
+        isReqAne,
+        aneRemarks,
         // note to stakeholders
-        caregiverNote,
-        externalSupportNote,
+        caregiverNotes,
+        externalNotes,
       },
 
       resetForm,
@@ -52,31 +62,31 @@ class DocumentationSummaryForm extends Component {
 
     const firstSec = [{
       first: "Nursing Notes",
-      second: (<textarea className={s.textareaInput} type='text' {...providerNote} placeholder="Only provider can view this section. e.g. Wound not looking good. Must check again on next visit." />)
+      second: (<textarea className={s.textareaInput} type='text' {...nursingNotes} placeholder="Only provider can view this section. e.g. Wound not looking good. Must check again on next visit." />)
     }, {
       first: "Recommend to send to A&E/ GP/ Polyclinic?",
       second: (
         <YesNoSwitch
-          fieldName='recommendPolyclinic'
-          field={recommendPolyclinic}
+          fieldName='isReqAne'
+          field={isReqAne}
           changeFieldValue={(field, onOff) => this.props.changeFieldValue(field, onOff)}
         />
       )
     }, {
       first: "Remarks",
-      second: (<textarea className={s.textareaInput} type='text' {...remarks} placeholder="e.g. Check x-ray for correct placement of NGT." disabled={!recommendPolyclinic.value} />)
+      second: (<textarea className={s.textareaInput} type='text' {...aneRemarks} placeholder="e.g. Check x-ray for correct placement of NGT." disabled={!isReqAne.value} />)
     }];
 
     const secondSec = [{
       first: "Notes to Caregiver",
-      second: (<textarea className={s.textareaInput} type='text' {...caregiverNote} placeholder="e.g. Special care on wound area." />)
+      second: (<textarea className={s.textareaInput} type='text' {...caregiverNotes} placeholder="e.g. Special care on wound area." />)
     }, {
       first: "Notes to External Support Groups (if any)",
-      second: (<textarea className={s.textareaInput} type='text' {...externalSupportNote} placeholder="e.g. Patient exhibits risk of mental instability." />)
+      second: (<textarea className={s.textareaInput} type='text' {...externalNotes} placeholder="e.g. Patient exhibits risk of mental instability." />)
     }]
 
     return (
-      <form className={s.documentationSummaryForm} onSubmit={handleSubmit(this.props.onFormSubmit)}>
+      <form className={s.documentationSummaryForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <h2>Provider Notes</h2>
 
         <div className={s.issueSetSection}>
@@ -122,20 +132,20 @@ const reduxFormConfig = {
   form: 'documentationSummaryForm',
   fields: [
     // nursing notes
-    'providerNote',
-    'recommendPolyclinic',
-    'remarks',
+    'nursingNotes',
+    'isReqAne',
+    'aneRemarks',
     // note to stakeholders
-    'caregiverNote',
-    'externalSupportNote',
+    'caregiverNotes',
+    'externalNotes',
   ],
   validate,
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  // initialValues: Object.keys(ownProps.initialValues).length ? {...ownProps.initialValues} : {
-  //   recommendPolyclinic: true,
-  // },
+  initialValues: Object.keys(ownProps.initialValues).length ? ownProps.initialValues : {
+    ifReqAne: false,
+  },
 });
 
 const mapDispatchToProps = (dispatch) => ({

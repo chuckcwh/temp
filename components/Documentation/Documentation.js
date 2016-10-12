@@ -43,7 +43,7 @@ const stepSectionsSchema = {
     icon: "2",
     text: 'Procedural Assessment',
     forms: {
-      'Bate': { name: ['Bate'], isDefault: false, next: {step: "2", formName: "more" }},
+      'Bate': { name: ['Bate'], isDefault: true, next: {step: "2", formName: "more" }},
       'NGT': { name: 'NGT', isDefault: false, next: {step: "2", formName: "more" }},
       'Catheter': { name: 'Catheter', isDefault: false, next: {step: "2", formName: "more" }},
     }},
@@ -73,7 +73,6 @@ class Documentation extends Component {
       BateFormNum: stepSectionsSchema['2'].forms['Bate'].isDefault ? 1 : 0,
       wholeDocData: {}, // use obj because we need to check if the form data has been added by its key as formName
       docAlreadyCreated: false,
-      formsAdded: {},
     }
   }
 
@@ -106,7 +105,7 @@ class Documentation extends Component {
 
   getSubMenu = () => {
     const { step, currentForm, stepSections } = this.state;
-    const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault || this.state.formsAdded[item.name]);
+    const subMenu = Object.values(stepSections[step].forms).filter(item => item.isDefault);
 
     return subMenu && subMenu.map((form, index) => {
       if (Array.isArray(form.name)) {
@@ -140,18 +139,18 @@ class Documentation extends Component {
   }
 
   onFormAdded = (formName) => {
-    const { formsAdded } = this.state;
-    formsAdded[formName] = true;
-    this.setState({ formsAdded });
+    const { step, stepSections } = this.state;
+    stepSections[step].forms[formName].isDefault = true;
+    this.setState({ stepSections });
   }
 
-  onMultiFormsAdded = (page, formName, formNum) => {
-    const { stepSections } = this.state;
+  onMultiFormsAdded = (formName, formNum) => {
+    const { step, stepSections } = this.state;
 
-    if (!stepSections[page].forms[formName].isDefault) {
-      stepSections[page].forms[formName].isDefault = true;
+    if (!stepSections[step].forms[formName].isDefault) {
+      stepSections[step].forms[formName].isDefault = true;
     } else {
-      stepSections[page].forms[formName].name.push(`${formName} (${formNum + 1})`);
+      stepSections[step].forms[formName].name.push(`${formName} (${formNum + 1})`);
     }
     this.setState({
       stepSections,
@@ -220,7 +219,7 @@ class Documentation extends Component {
   render() {
     const { sessionId } = this.props.params;
     const { config, session, services } = this.props;
-    const { step, BateFormNum, currentForm, stepSections, wholeDocData, formsAdded } = this.state;
+    const { step, BateFormNum, currentForm, stepSections, wholeDocData } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
@@ -310,8 +309,8 @@ class Documentation extends Component {
                         <button
                           className="btn btn-primary"
                           onClick={e => this.onFormAdded('FRAT')}
-                          disabled={stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT}>
-                          {stepSections["1"].forms['FRAT'].isDefault || this.state.FRAT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                          disabled={stepSections["1"].forms['FRAT'].isDefault}>
+                          {stepSections["1"].forms['FRAT'].isDefault ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
                       </div>
                     </div>
@@ -323,8 +322,8 @@ class Documentation extends Component {
                         <button
                           className="btn btn-primary"
                           onClick={e => this.onFormAdded('MSE')}
-                          disabled={stepSections["1"].forms['MSE'].isDefault || this.state.MSE}>
-                          {stepSections["1"].forms['MSE'].isDefault || this.state.MSE ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                          disabled={stepSections["1"].forms['MSE'].isDefault}>
+                          {stepSections["1"].forms['MSE'].isDefault ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
                       </div>
                     </div>
@@ -343,9 +342,9 @@ class Documentation extends Component {
                       <div className={s.rightAligned}>
                         <button
                           className="btn btn-primary"
-                          onClick={() => this.onMultiFormsAdded(2, 'Bate', BateFormNum)}
+                          onClick={() => this.onMultiFormsAdded('Bate', BateFormNum)}
                         >
-                          {stepSections["2"].forms['Bate'].isDefault || this.state.Bate ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                          <div><FaPlus />Add Form</div>
                         </button>
                       </div>
                     </div>
@@ -357,8 +356,8 @@ class Documentation extends Component {
                         <button
                           className="btn btn-primary"
                           onClick={() => this.onFormAdded('NGT')}
-                          disabled={stepSections["2"].forms['NGT'].isDefault || this.state.NGT}>
-                          {stepSections["2"].forms['NGT'].isDefault || this.state.NGT ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                          disabled={stepSections["2"].forms['NGT'].isDefault}>
+                          {stepSections["2"].forms['NGT'].isDefault ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
                       </div>
                     </div>
@@ -370,8 +369,8 @@ class Documentation extends Component {
                         <button
                           className="btn btn-primary"
                           onClick={() => this.onFormAdded('Catheter')}
-                          disabled={stepSections["2"].forms['Catheter'].isDefault || this.state.formsAdded.Catheter}>
-                          {stepSections["2"].forms['Catheter'].isDefault || this.state.formsAdded.Catheter ? "Form Added" : (<div><FaPlus />Add Form</div>)}
+                          disabled={stepSections["2"].forms['Catheter'].isDefault}>
+                          {stepSections["2"].forms['Catheter'].isDefault ? "Form Added" : (<div><FaPlus />Add Form</div>)}
                         </button>
                       </div>
                     </div>

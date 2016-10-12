@@ -33,8 +33,8 @@ class DocumentationMedicalHistoryForm extends Component {
   renderMultiTextField = (field) => (
     <div className={s.multiTextContainer}>
       {field.map((item, index) => (
-        <div className={s.textInputBody}>
-          <input key={index} type='text' className={s.textInput} {...item}/>
+        <div key={index} className={s.textInputBody}>
+          <input type='text' className={s.textInput} {...item}/>
           <button
             className={cx('btn btn-primary', s.multiTextFieldBtn)}
             onClick={e => {

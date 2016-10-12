@@ -9,7 +9,7 @@ import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
 import { getUserName, configToName } from '../../core/util';
-import { getSession, showAlertPopup, fetchServices, getSessionDocumentation, createSessionDocumentation, editSessionDocumentation } from '../../actions';
+import { getSession, showAlertPopup, fetchServices, getSessionDocumentation, createSessionDocumentation, editSessionDocumentation, updateDocForms } from '../../actions';
 import ConfirmPopup from '../ConfirmPopup';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { normalize } from '../../core/util';
@@ -72,7 +72,6 @@ class Documentation extends Component {
       currentForm: 'Med History',
       currentFormId: undefined,
       stepSections: stepSectionsSchema,
-      wholeDocData: {}, // use obj because we need to check if the form data has been added by its key as formName
       docAlreadyCreated: false,
     }
   }
@@ -108,7 +107,6 @@ class Documentation extends Component {
           stepSections['2'].forms['Catheter'].isDefault = true;
         }
         this.setState({
-          wholeDocData: {...docData, bateForms: docData.bateForms.length ? normalize(docData.bateForms) : {}},
           docAlreadyCreated: true,
           stepSections,
         });
@@ -126,7 +124,7 @@ class Documentation extends Component {
       this.setState({
         step: newStep,
         currentForm: nextForm && nextForm.name || 'more',
-        currentFormId: nextForm.forms && nextForm.forms[0],
+        currentFormId: nextForm && nextForm.forms && nextForm.forms[0],
       })
     }
   }
@@ -186,7 +184,8 @@ class Documentation extends Component {
 
   saveFormAndNext = (formName, values, multi) => {
     console.log(formName, values);
-    const { wholeDocData, step, currentForm, stepSections } = this.state;
+    const { step, currentForm, stepSections } = this.state;
+    const { wholeDocData, updateDocForms } = this.props;
 
     if (multi) {
       wholeDocData[formName][values._id] = values;
@@ -194,7 +193,7 @@ class Documentation extends Component {
       wholeDocData[formName] = values;
     }
 
-    this.setState({ wholeDocData });
+    updateDocForms(wholeDocData);
 
     if (stepSections[step].forms[currentForm].next) {
       this.setState({
@@ -203,16 +202,16 @@ class Documentation extends Component {
       })
     }
 
-    // console.log('wholeDocData', this.state.wholeDocData);
     window.scrollTo(0, 0);
   }
 
   onSubmitFormAsWhole = () => {
     console.log('submit form!');
     const { sessionId } = this.props.params;
-    const { createSessionDocumentation, editSessionDocumentation, showAlertPopup } = this.props;
-    const { wholeDocData, docAlreadyCreated } = this.state;
+    const { createSessionDocumentation, editSessionDocumentation, showAlertPopup, wholeDocData } = this.props;
+    const { docAlreadyCreated } = this.state;
 
+    // overall form is mandatory
     if (!wholeDocData.overallForm) {
       this.setState({
         step: "1",
@@ -255,8 +254,8 @@ class Documentation extends Component {
 
   render() {
     const { sessionId } = this.props.params;
-    const { config, session, services } = this.props;
-    const { step, currentForm, currentFormId, stepSections, wholeDocData } = this.state;
+    const { config, session, services, wholeDocData } = this.props;
+    const { step, currentForm, currentFormId, stepSections  } = this.state;
 
     const title = () => {
       const serviceName = session.service && Object.keys(services).length > 0 && services[session.service].name;
@@ -331,11 +330,11 @@ class Documentation extends Component {
             </div>
 
             <div className={s.formContent}>
-              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm initialValues={{...wholeDocData.medHistForm}} onFormSubmit={values => this.saveFormAndNext('medHistForm', values)} />)
-                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm initialValues={{...wholeDocData.overallForm}} onFormSubmit={values => this.saveFormAndNext('overallForm', values)} />)
-                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm initialValues={{...wholeDocData.vitalSignsForm}} onFormSubmit={values => this.saveFormAndNext('vitalSignsForm', values)} />)
-                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm initialValues={{...wholeDocData.fratForm}} onFormSubmit={values => this.saveFormAndNext('fratForm', values)} />)
-                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm initialValues={{...wholeDocData.mseForm}} onFormSubmit={values => this.saveFormAndNext('mseForm', values)} />)
+              {step === "1" && currentForm === 'Med History' ? (<DocumentationMedicalHistoryForm initialValues={wholeDocData && {...wholeDocData.medHistForm}} onFormSubmit={values => this.saveFormAndNext('medHistForm', values)} />)
+                : step === "1" && currentForm === 'Overall' ? (<DocumentationOverallForm initialValues={wholeDocData && {...wholeDocData.overallForm}} onFormSubmit={values => this.saveFormAndNext('overallForm', values)} />)
+                : step === "1" && currentForm === 'Vital Signs' ? (<DocumentationVitalSignsForm initialValues={wholeDocData && {...wholeDocData.vitalSignsForm}} onFormSubmit={values => this.saveFormAndNext('vitalSignsForm', values)} />)
+                : step === "1" && currentForm === 'FRAT' ? (<DocumentationFRATForm initialValues={wholeDocData && {...wholeDocData.fratForm}} onFormSubmit={values => this.saveFormAndNext('fratForm', values)} />)
+                : step === "1" && currentForm === 'MSE' ? (<DocumentationMSEForm initialValues={wholeDocData && {...wholeDocData.mseForm}} onFormSubmit={values => this.saveFormAndNext('mseForm', values)} />)
                 : step === "1" ? (
                   <div>
                     <h2>Add More</h2>
@@ -367,9 +366,9 @@ class Documentation extends Component {
                   </div>
                 )
 
-                : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm formKey={currentFormId} initialValues={{...wholeDocData.bateForms[currentFormId], _id: currentFormId}} onFormSubmit={values => this.saveFormAndNext('bateForms', values, true)} />)
-                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm initialValues={{...wholeDocData.ngtForm}} onFormSubmit={values => this.saveFormAndNext('ngtForm', values)} />)
-                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm initialValues={{...wholeDocData.catheterForm}} onFormSubmit={values => this.saveFormAndNext('catheterForm', values)} />)
+                : step === "2" && currentForm === 'Bate' ? (<DocumentationBateForm formKey={currentFormId} initialValues={wholeDocData && {...wholeDocData.bateForms[currentFormId], _id: currentFormId}} onFormSubmit={values => this.saveFormAndNext('bateForms', values, true)} />)
+                : step === "2" && currentForm === 'NGT' ? (<DocumentationNGTForm initialValues={wholeDocData && {...wholeDocData.ngtForm}} onFormSubmit={values => this.saveFormAndNext('ngtForm', values)} />)
+                : step === "2" && currentForm === 'Catheter' ? (<DocumentationCatheterForm initialValues={wholeDocData && {...wholeDocData.catheterForm}} onFormSubmit={values => this.saveFormAndNext('catheterForm', values)} />)
                 : step === "2" ? (
                   <div>
                     <h2>Add More</h2>
@@ -413,7 +412,7 @@ class Documentation extends Component {
                     </div>
                   </div>
                 )
-                : step === "3" ? (<DocumentationSummaryForm initialValues={{...wholeDocData.summaryForm}} onFormSubmit={values => this.saveFormAndNext('summaryForm', values)} />)
+                : step === "3" ? (<DocumentationSummaryForm initialValues={wholeDocData && {...wholeDocData.summaryForm}} onFormSubmit={values => this.saveFormAndNext('summaryForm', values)} />)
                 : step === "4" ? (
                   <div>
                     <h2>Confirmation</h2>
@@ -458,6 +457,7 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   session: state.session.data,
   services: state.services.data,
+  wholeDocData: state.documentation.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -467,7 +467,7 @@ const mapDispatchToProps = (dispatch) => ({
   getSessionDocumentation: (params) => dispatch(getSessionDocumentation(params)),
   createSessionDocumentation: (params) => dispatch(createSessionDocumentation(params)),
   editSessionDocumentation: (params) => dispatch(editSessionDocumentation(params)),
-  // getDocumentation: (params) => dispatch(getDocumentation(params)),
+  updateDocForms: (params) => dispatch(updateDocForms(params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Documentation);

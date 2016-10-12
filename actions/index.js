@@ -1648,6 +1648,12 @@ export const destroyOrder = () => {
   return { type: ORDER_DESTROY }
 }
 
+export const UPDATE_DOC_FORMS = 'UPDATE_DOC_FORMS'
+
+export const updateDocForms = (formData) => {
+  return { type: UPDATE_DOC_FORMS, formData }
+}
+
 export const SHOW_MODAL_ALERT = 'SHOW_MODAL_ALERT'
 export const HIDE_MODAL_ALERT = 'HIDE_MODAL_ALERT'
 export const SHOW_MODAL_CONFIRM = 'SHOW_MODAL_CONFIRM'

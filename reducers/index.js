@@ -436,8 +436,13 @@ const documentation =  (state = {
       return {
         ...state,
         isFetching: false,
-        data: docData && {...docData, bateForms: docData.bateForms.length ? normalize(docData.bateForms) : {}},
+        data: docData ? {...docData, bateForms: docData.bateForms.length ? normalize(docData.bateForms) : {}} : {},
         lastUpdated: action.response && action.response.receivedAt
+      }
+    case ActionTypes.UPDATE_DOC_FORMS:
+      return {
+        ...state,
+        data: action.formData,
       }
     default:
       return state

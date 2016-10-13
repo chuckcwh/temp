@@ -63,7 +63,10 @@ class DashboardPendingPayment extends Component {
               const patientName = patients && patients[patientId] && patients[patientId].name;
               const filteredSessions = sessionsByPatient[patientId].filter(session => session.status === 'pending-payment');
               if (filteredSessions.length === 0) {
-                return <p>No appointments found.</p>;
+                return <div>
+                  <h3>{patientName}</h3>
+                  <p>No appointments found.</p>
+                </div>;
               }
               return (
                 <DashboardDataTable css={s} key={patientId}>

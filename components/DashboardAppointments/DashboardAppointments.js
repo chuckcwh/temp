@@ -64,7 +64,10 @@ class DashboardAppointments extends Component {
                 }
               });
               if (filteredSessions.length === 0) {
-                return <p>No appointments found.</p>;
+                return <div>
+                  <h3>{patientName}</h3>
+                  <p>No appointments found.</p>
+                </div>;
               }
               return (
                 <DashboardDataTable css={s} key={patientId}>

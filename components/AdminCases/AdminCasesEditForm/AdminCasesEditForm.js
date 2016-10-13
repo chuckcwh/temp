@@ -9,6 +9,7 @@ import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
 import { reduxForm } from 'redux-form';
+import history from '../../../core/history';
 import { getSession, fetchServices } from '../../../actions';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { formatSessionAlias, configToName } from '../../../core/util';
@@ -114,10 +115,11 @@ class AdminCasesEditForm extends Component {
                 <h2>CASE STATUS</h2>
                 <ul>
                   <li><span className={s.title}>Status:</span>{configToName(config, 'sessionStatusesByValue',session.status)}</li>
-                  <li><span className={s.title}>Applications:</span>{session.applications.length ? session.applications : '-'}</li>
-                  <li><span className={s.title}>Transactions:</span>{session.transactions.length ? session.applications : '-'}</li>
+                  <li><span className={s.title}>Applications:</span>{session.applications && session.applications.length ? session.applications : '-'}</li>
+                  <li><span className={s.title}>Transactions:</span>{session.applications && session.transactions.length ? session.applications : '-'}</li>
                   <li><span className={s.title}>Paid:</span>{session.isPaid ? "Yes" : "No"}</li>
                   <li><span className={s.title}>Refund:</span>{session.isRefund ? "Yes" : "No"}</li>
+                  <li><div className={cx('btn', s.tableListSign, s.tableListSignDoc)}  onClick={() => history.push({ pathname: `/sessions/${session._id}/documentation` })}>Doc</div></li>
                 </ul>
               </Col>
             </Row>

@@ -112,9 +112,6 @@ class Documentation extends Component {
           refreshSubMenu: true,
           stepSections,
         });
-
-        console.log('stepSections', this.state.stepSections);
-        console.log('a', this.state.wholeDocData);
       }
     });
   }
@@ -191,7 +188,7 @@ class Documentation extends Component {
   }
 
   saveFormAndNext = (formName, values, multi) => {
-    console.log(formName, values);
+    // console.log(formName, values);
     const { step, currentForm, stepSections } = this.state;
     const { wholeDocData, updateDocForms } = this.props;
 
@@ -214,7 +211,7 @@ class Documentation extends Component {
   }
 
   onSubmitFormAsWhole = () => {
-    console.log('submit form!');
+    // console.log('submit form!');
     const { sessionId } = this.props.params;
     const { createSessionDocumentation, editSessionDocumentation, showAlertPopup, wholeDocData } = this.props;
     const { docAlreadyCreated } = this.state;
@@ -239,7 +236,7 @@ class Documentation extends Component {
       bateForms,
       sessionId,
     };
-    console.log('formData', formData);
+    // console.log('formData', formData);
     if (docAlreadyCreated) {
       editSessionDocumentation(formData).then(res => {
         if (res.type === 'SESSION_DOCUMENTATION_EDIT_SUCCESS') {

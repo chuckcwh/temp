@@ -156,7 +156,7 @@
     "page": "./pages/admin/cases"
   },
   {
-    "path": "/admin-cases/:view/:caseId",
+    "path": "/admin-cases/:view/:sessionId",
     "page": "./pages/admin/cases"
   },
   {

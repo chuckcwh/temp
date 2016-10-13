@@ -1,0 +1,37 @@
+@import '../../variables.css';
+
+/* .bookingApp {} */
+.adminCasesEditForm {
+  & .btnback {
+    float: left;
+  }
+
+  & .caseDetail, & .personDetail {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  & ul > li {
+    line-height: 28px;
+
+    & .title {
+      font-weight: bold;
+      width: 130px;
+      display: inline-block;
+    }
+
+    & .inlineBlock {
+      display: inline-block;
+    }
+  }
+
+  & .patientDetailCont {
+    margin-top: 80px;
+
+    & > li .title {
+      width: 150px;
+    }
+  }
+}

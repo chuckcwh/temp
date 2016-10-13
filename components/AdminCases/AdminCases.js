@@ -115,12 +115,10 @@ class AdminCases extends Component {
 
     return (
       <div className={s.adminCases}>
-        <Header title={add && "Add Booking" || edit && "Edit Case" || "Case Management"} />
+        <Header title={add && "Add Booking" || "Case Management"} />
         <Container>
 
           {user && add && <AdminCasesForm />}
-
-          {user && edit && <AdminCasesForm edit={true} sessionId={sessionId} />}
 
           {user && !add && !edit && (
             <div>

@@ -117,6 +117,12 @@
     width: 60px;
     margin-top: 1.5px;
     margin-bottom: 1.5px;
+    border: 2px solid green;
+  }
+
+  & .tableListSignDocNo {
+    background: transparent;
+    color: green;
   }
 
   & .tableListStatus {
@@ -139,5 +145,17 @@
   & .tableListStatusExpired {
     color: blue;
     border: 1px solid blue;
+  }
+
+  & .font_sm {
+    font-size: 14px;
+  }
+
+  & .textAlign_bottom {
+    vertical-align: bottom;
+  }
+
+  & .textAlign_textBottom {
+    vertical-align: text-bottom;
   }
 }

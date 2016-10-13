@@ -19,7 +19,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import AdminBookingsForm from '../AdminBookingsForm/AdminBookingsForm';
 // react-icons
 import FaCheck from 'react-icons/lib/fa/check';
-
+import FaPhoneSquare from 'react-icons/lib/fa/phone-square';
+import FaChild from 'react-icons/lib/fa/child';
 
 //TODO: nurse / nurse price data
 //TODO: nurse assign/de-assign
@@ -42,9 +43,13 @@ class AdminBookingsView extends Component {
     getBooking({ bookingId }).then(res => {
       if (res.type === 'BOOKING_FAILURE') {
         history.push({ pathname: '/admin-bookings' });
-        // history.goBack();
       }
     });
+
+    // Get user list for assigning service provider to session
+    this.props.getUsers({
+      filter: {role: 'provider'}
+    })
   }
 
   onAssignNurse = (sessionId) => {
@@ -73,7 +78,7 @@ class AdminBookingsView extends Component {
   }
 
   render() {
-    const { config, booking, services } = this.props;
+    const { config, booking, services, providerPickChoice } = this.props;
 
     const detail = {
       title: () => {
@@ -113,8 +118,19 @@ class AdminBookingsView extends Component {
         <Container>
           <ConfirmPopup />
           <GenericPopup>
-            Holy Shit
-
+            <div>
+              <h3>Pick a Service Provider</h3>
+              <div className={cx("select")}>
+                <span></span>
+                <select className={s.discountTypeInput} id='providerPick' name='providerPick' onChange={e => this.setState({providerPick: e.target.value})}>
+                  <option value="">-- SELECT --</option>
+                  {providerPickChoice && Object.values(providerPickChoice).map((item, index) => (
+                    <option key={index} value={item._id}>{item.name}</option>
+                  ))}
+                </select>
+              </div>
+              <button className="btn btn-primary" onClick={() => this.props.assignProvider(this.state.providerPickSession, this.state.providerPick)}>Assign</button>
+            </div>
           </GenericPopup>
 
           <button onClick={() => history.push({ pathname: '/admin-bookings' })} className={cx('btn', 'btn-primary', s.btnBack)}>back</button>
@@ -229,15 +245,26 @@ class AdminBookingsView extends Component {
                           width={80}
                         />
                         <Column
-                          label="date"
+                          label="datetime"
                           dataKey="date"
-                          cellRenderer={({cellData}) => moment(cellData).format('YYYY-MM-DD (ddd)')}
+                          cellRenderer={({rowData, cellData}) => (
+                            <span>
+                              {moment(cellData).format('YYYY-MM-DD (ddd)')}<br />
+                              {configToName(config, 'timeSlotsByValue', rowData.timeSlot)}
+                            </span>
+                          )}
                           width={180}
                         />
                         <Column
-                          label="time"
-                          dataKey="timeSlot"
-                          cellRenderer={({cellData}) => configToName(config, 'timeSlotsByValue', cellData)}
+                          label="patient"
+                          dataKey="patient"
+                          cellRenderer={({cellData}) => (
+                            <span className={cx(s.font_sm, s.textAlign_bottom)}>
+                              <strong>{cellData.name}</strong><br />
+                              <FaChild />{cellData.gender}<br />
+                              <FaPhoneSquare /> {cellData.contact}
+                            </span>
+                          )}
                           width={120}
                         />
                         <Column
@@ -269,12 +296,8 @@ class AdminBookingsView extends Component {
                                   <div
                                     className={cx(s.tableListSign, s.tableListSignPlus)}
                                     onClick={() => {
+                                      this.setState({providerPickSession: rowData._id})
                                       this.props.showGenericPopup();
-                                      this.props.getUsers({
-                                        page: 1,
-                                        count: 10,
-                                        filter: {role: 'provider'}
-                                      })
                                     }}>
                                     +
                                   </div>
@@ -287,7 +310,7 @@ class AdminBookingsView extends Component {
                         <Column
                           label="status"
                           dataKey="status"
-                          cellRenderer={({cellData}) => {
+                          cellRenderer={({rowData, cellData}) => {
                             let statusClass;
                             switch (cellData) {
                               case 'open':
@@ -306,7 +329,10 @@ class AdminBookingsView extends Component {
                                 break;
                             }
                             return (
-                              <div className={cx('btn', s.tableListStatus, statusClass)}>{configToName(config, 'sessionStatusesByValue', cellData)}</div>
+                              <div>
+                                <div className={cx('btn', s.tableListStatus, statusClass)}>{configToName(config, 'sessionStatusesByValue', cellData)}</div>
+                                <div className={cx('btn', s.tableListSign, s.tableListSignDoc, !rowData.documentation && s.tableListSignDocNo)} onClick={() => history.push({ pathname: `/sessions/${rowData._id}/documentation` })}>Doc{rowData.documentation && (<span className={s.textAlign_textBottom}> <FaCheck /></span>)}</div>
+                              </div>
                           )}}
                           width={120}
                         />
@@ -317,7 +343,6 @@ class AdminBookingsView extends Component {
                             return (
                               <div>
                                 <div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignDoc)}  onClick={() => history.push({ pathname: `/sessions/${cellData}/documentation` })}>Doc</div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
                                 </div>
                                 <div>
@@ -534,6 +559,7 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   services: state.services.data,
   booking: state.booking.data,
+  providerPickChoice: state.users.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({

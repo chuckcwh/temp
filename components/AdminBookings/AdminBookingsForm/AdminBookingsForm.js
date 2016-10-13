@@ -107,19 +107,17 @@ class AdminBookingsForm extends Component {
 
   onPostalChange = (postal) => {
     if (/^[0-9]{6}$/i.test(postal)) {
-      new Promise((resolve, reject) => {
-        this.props.fetchAddress(postal).then((res) => {
-          if (res.type === 'GEOCODE_SUCCESS') {
-            this.props.changeFieldValue('lat', res.lat);
-            this.props.changeFieldValue('lng', res.lng);
-            this.props.changeFieldValue('region', res.region);
-            this.props.changeFieldValue('neighborhood', res.neighborhood);
+      this.props.fetchAddress(postal).then((res) => {
+        if (res.type === 'GEOCODE_SUCCESS') {
+          this.props.changeFieldValue('lat', res.lat);
+          this.props.changeFieldValue('lng', res.lng);
+          this.props.changeFieldValue('region', res.region);
+          this.props.changeFieldValue('neighborhood', res.neighborhood);
 
-            this.setState({postalHint: "success"});
-          } else {
-            this.setState({postalHint: "failure"});
-          }
-        })
+          this.setState({postalHint: "success"});
+        } else {
+          this.setState({postalHint: "failure"});
+        }
       })
     }
   }

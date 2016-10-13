@@ -115,8 +115,8 @@ class AdminCasesEditForm extends Component {
                 <h2>CASE STATUS</h2>
                 <ul>
                   <li><span className={s.title}>Status:</span>{configToName(config, 'sessionStatusesByValue',session.status)}</li>
-                  <li><span className={s.title}>Applications:</span>{session.applications && session.applications.length ? session.applications : '-'}</li>
-                  <li><span className={s.title}>Transactions:</span>{session.applications && session.transactions.length ? session.applications : '-'}</li>
+                  <li><span className={s.title}>Applications:</span>{session.applications && session.applications.length}</li>
+                  <li><span className={s.title}>Transactions:</span>{session.applications && session.transactions.length}</li>
                   <li><span className={s.title}>Paid:</span>{session.isPaid ? "Yes" : "No"}</li>
                   <li><span className={s.title}>Refund:</span>{session.isRefund ? "Yes" : "No"}</li>
                   <li><div className={cx('btn', s.tableListSign, s.tableListSignDoc)}  onClick={() => history.push({ pathname: `/sessions/${session._id}/documentation` })}>Doc</div></li>
@@ -173,11 +173,11 @@ const validate = values => {
 }
 
 AdminCasesEditForm.propTypes = {
-  initialValues: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  session: PropTypes.object.isRequired,
-  config: PropTypes.object.isRequired,
-  services: PropTypes.object.isRequired,
+  // initialValues: PropTypes.object.isRequired,
+  // user: PropTypes.object.isRequired,
+  // session: PropTypes.object.isRequired,
+  // config: PropTypes.object.isRequired,
+  // services: PropTypes.object.isRequired,
 
   getSession: PropTypes.func.isRequired,
   fetchServices: PropTypes.func.isRequired,
@@ -193,7 +193,7 @@ const reduxFormConfig = {
 
 const mapStateToProps = (state) => {
   return {
-    initialValues: {},
+    // initialValues: {},
 
     user: state.user.data,
     session: state.session.data,

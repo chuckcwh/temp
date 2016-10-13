@@ -31,6 +31,17 @@
     }
   }
 
+  & .selectInput {
+    margin: 0;
+  }
+
+  & .providerPickPopup {
+    & .selectInput {
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+  }
+
   & .patientDetailCont {
     margin-top: 80px;
 
@@ -39,12 +50,9 @@
     }
   }
 
+  /* table classes */
   & .tableList {
     text-align: center;
-  }
-
-  & .colorRed {
-    color: #f2635f;
   }
 
   & .tableListHeader {
@@ -113,7 +121,7 @@
 
   & .tableListSignDoc {
     background: green;
-    padding: 5px;
+    padding: 3px;
     width: 60px;
     margin-top: 1.5px;
     margin-bottom: 1.5px;
@@ -127,26 +135,28 @@
 
   & .tableListStatus {
     width: 75px;
-    padding: 5px 3px;
+    padding: 3px 5px;
     text-align: center;
     margin: 0 auto;
+    white-space: initial;
   }
 
-  & .tableListStatusOpen {
+  & .tableListStatusGreen {
     color: #18B905;
     border: 1px solid #18B905;
   }
 
-  & .tableListStatusCancelled {
-    color: red;
-    border: 1px solid red;
+  & .tableListStatusRed {
+    color: #f2635f;
+    border: 1px solid #f2635f;
   }
 
-  & .tableListStatusExpired {
-    color: blue;
-    border: 1px solid blue;
+  & .tableListStatusOrange {
+    color: #f78d00;
+    border: 1px solid #f78d00;
   }
 
+  /* effect class */
   & .font_sm {
     font-size: 14px;
   }
@@ -157,5 +167,9 @@
 
   & .textAlign_textBottom {
     vertical-align: text-bottom;
+  }
+
+  & .colorRed {
+    color: #f2635f;
   }
 }

@@ -11,7 +11,16 @@ import Header from '../../Header';
 import GenericPopup from '../../GenericPopup';
 import ConfirmPopup from '../../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
-import { fetchServices, showGenericPopup, showConfirmPopup, getBooking, deleteBooking, createApplication, getUsers } from '../../../actions';
+import {
+  fetchServices,
+  showGenericPopup,
+  showConfirmPopup,
+  getBooking,
+  deleteBooking,
+  createApplication,
+  getUsers,
+  getUser,
+} from '../../../actions';
 import history from '../../../core/history';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -32,7 +41,10 @@ class AdminBookingsView extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      // Assign service provider to each session
+      providerPick: {},
+    }
   }
 
   componentDidMount() {
@@ -47,22 +59,16 @@ class AdminBookingsView extends Component {
     });
 
     // Get user list for assigning service provider to session
-    this.props.getUsers({
-      filter: {role: 'provider'}
-    })
+    this.props.getUsers({ filter: {role: 'provider'} })
   }
 
-  onAssignNurse = (sessionId) => {
-    console.log('assign nurse', sessionId);
-    this.props.createApplication({
-      provider: '57be829a69811c4544bf5eaf', // TODO: need real userid
-      session: sessionId,
-    }).then(res => {
-
-    })
+  onAssignProvider = (sessionId) => {
+    console.log('sessionId', sessionId);
+    this.setState({ providerPick: {sessionId} })
+    this.props.showGenericPopup();
   }
 
-  onDeAssignNurse = (bookingId) => {
+  onDeAssignProvider = (bookingId) => {
     console.log('deassign nurse', bookingId);
   }
 
@@ -79,6 +85,7 @@ class AdminBookingsView extends Component {
 
   render() {
     const { config, booking, services, providerPickChoice } = this.props;
+    const { providerPick } = this.state;
 
     const detail = {
       title: () => {
@@ -118,18 +125,30 @@ class AdminBookingsView extends Component {
         <Container>
           <ConfirmPopup />
           <GenericPopup>
-            <div>
+            <div className={s.providerPickPopup}>
               <h3>Pick a Service Provider</h3>
-              <div className={cx("select")}>
+              <div className={cx("select", s.selectInput)}>
                 <span></span>
-                <select className={s.discountTypeInput} id='providerPick' name='providerPick' onChange={e => this.setState({providerPick: e.target.value})}>
+                <select id='providerPick' name='providerPick' onChange={e => this.setState({providerPick: {...providerPick, providerId: e.target.value}})}>
                   <option value="">-- SELECT --</option>
                   {providerPickChoice && Object.values(providerPickChoice).map((item, index) => (
                     <option key={index} value={item._id}>{item.name}</option>
                   ))}
                 </select>
               </div>
-              <button className="btn btn-primary" onClick={() => this.props.assignProvider(this.state.providerPickSession, this.state.providerPick)}>Assign</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  console.log('providerPick', providerPick);
+                  this.props.createApplication({
+                    provider: providerPick.providerId,
+                    session: providerPick.sessionId,
+                  }).then(res => {
+                    this.setState({providerPick: {}});
+                  })
+                }}>
+                Assign
+              </button>
             </div>
           </GenericPopup>
 
@@ -219,7 +238,7 @@ class AdminBookingsView extends Component {
 
             <Row className={s.sessionDetail}>
               <Col xs={12} md={12} className={s.detailSection}>
-                <h2>SCHEDULED DATES</h2>
+                <h2>SCHEDULED CASES</h2>
 
                 {booking.sessions && (
                   <AutoSizer disableHeight>
@@ -248,24 +267,29 @@ class AdminBookingsView extends Component {
                           label="datetime"
                           dataKey="date"
                           cellRenderer={({rowData, cellData}) => (
-                            <span>
-                              {moment(cellData).format('YYYY-MM-DD (ddd)')}<br />
-                              {configToName(config, 'timeSlotsByValue', rowData.timeSlot)}
-                            </span>
+                            <div>
+                              {moment(cellData).format('YYYY-MM-DD')}<br />
+                              <div className={cx(s.font_sm, s.textAlign_bottom)}>
+                                {moment(cellData).format('(ddd)')}<br />
+                                {configToName(config, 'timeSlotsByValue', rowData.timeSlot)}
+                              </div>
+                            </div>
                           )}
-                          width={180}
+                          width={130}
                         />
                         <Column
                           label="patient"
                           dataKey="patient"
                           cellRenderer={({cellData}) => (
-                            <span className={cx(s.font_sm, s.textAlign_bottom)}>
-                              <strong>{cellData.name}</strong><br />
-                              <FaChild />{cellData.gender}<br />
-                              <FaPhoneSquare /> {cellData.contact}
-                            </span>
+                            <div>
+                              {cellData.name}
+                              <div className={cx(s.font_sm, s.textAlign_bottom)}>
+                                {cellData.gender && (<span><FaChild />{cellData.gender}</span>)}
+                                {cellData.contact && (<span><br /><FaPhoneSquare /> {cellData.contact}</span>)}
+                              </div>
+                            </div>
                           )}
-                          width={120}
+                          width={150}
                         />
                         <Column
                           label="price"
@@ -286,22 +310,15 @@ class AdminBookingsView extends Component {
                           width={130}
                         />
                         <Column
-                          label="nurse"
-                          dataKey="nurse"
+                          label="provider"
+                          dataKey="provider"
                           cellRenderer={({rowData, cellData}) => {
                             return (
                               <div>
-                                {'-'}
+                                {rowData.provider}
                                 <div>
-                                  <div
-                                    className={cx(s.tableListSign, s.tableListSignPlus)}
-                                    onClick={() => {
-                                      this.setState({providerPickSession: rowData._id})
-                                      this.props.showGenericPopup();
-                                    }}>
-                                    +
-                                  </div>
-                                  <div className={cx(s.tableListSign, s.tableListSignMinus)} onClick={() => this.onDeAssignNurse(rowData._id)}>-</div>
+                                  <div className={cx(s.tableListSign, s.tableListSignPlus)} onClick={() => this.onAssignProvider(rowData._id)}>+</div>
+                                  <div className={cx(s.tableListSign, s.tableListSignMinus)} onClick={() => this.onDeAssignProvider(rowData._id)}>-</div>
                                 </div>
                               </div>
                           )}}
@@ -310,40 +327,41 @@ class AdminBookingsView extends Component {
                         <Column
                           label="status"
                           dataKey="status"
-                          cellRenderer={({rowData, cellData}) => {
+                          cellRenderer={({cellData}) => {
                             let statusClass;
                             switch (cellData) {
-                              case 'open':
-                              case 'engaged':
-                                statusClass = s.tableListStatusOpen;
-                                break;
                               case 'completed':
-                              case 'cancelled':
-                                statusClass = s.tableListStatusCancelled;
+                                statusClass = s.tableListStatusGreen;
                                 break;
+                              case 'awaiting-caregiver':
+                              case 'pending-payment-approval':
+                              case 'pending-payment':
+                              case 'pending-documentation':
+                              case 'pending-visit':
+                                statusClass = s.tableListStatusOrange;
+                                break;
+                              case 'cancelled':
                               case 'suspended':
                               case 'expired':
-                                statusClass = s.tableListStatusExpired;
+                                statusClass = s.tableListStatusRed;
                                 break;
                               default:
                                 break;
                             }
                             return (
-                              <div>
-                                <div className={cx('btn', s.tableListStatus, statusClass)}>{configToName(config, 'sessionStatusesByValue', cellData)}</div>
-                                <div className={cx('btn', s.tableListSign, s.tableListSignDoc, !rowData.documentation && s.tableListSignDocNo)} onClick={() => history.push({ pathname: `/sessions/${rowData._id}/documentation` })}>Doc{rowData.documentation && (<span className={s.textAlign_textBottom}> <FaCheck /></span>)}</div>
-                              </div>
+                              <div className={cx('btn', s.tableListStatus, statusClass)}>{configToName(config, 'sessionStatusesByValue', cellData)}</div>
                           )}}
                           width={120}
                         />
                         <Column
                           label="actions"
                           dataKey="_id"
-                          cellRenderer={({cellData}) => {
+                          cellRenderer={({rowData, cellData}) => {
                             return (
                               <div>
                                 <div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Edit</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignDoc, !rowData.documentation && s.tableListSignDocNo)} onClick={() => history.push({ pathname: `/sessions/${cellData}/documentation` })}>Doc{rowData.documentation && (<span className={s.textAlign_textBottom}> <FaCheck /></span>)}</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)} onClick={() => history.push({ pathname: `/admin-cases/edit/${cellData}` })}>Edit</div>
                                 </div>
                                 <div>
                                   <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Cancel</div>

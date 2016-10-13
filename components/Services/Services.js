@@ -66,14 +66,13 @@ class Services extends Component {
   };
 
   render() {
-    const { params, services, servicesTree, servicesTreeHash, servicesUnderCategory,
+    const { params, services, servicesUnderCategory,
       servicesUnderSlug, categories, categoriesBySlug, servicesFetching } = this.props;
     const { filter } = this.state;
 
     let serviceContent;
     if (params && params.id && services) {
       const isIdSlug = isId(params.id);
-      // const id = isIdSlug ? params.id : parseInt(params.id);
       // services under subcat
       const services = isIdSlug
         ? servicesUnderCategory[params.id]
@@ -84,13 +83,15 @@ class Services extends Component {
       
       const relatedCategoryIds = (function getRelatedCategoryIds() {
         const map = {};
-        services.forEach(service => {
-          service.categories.forEach(cat => {
-            if (cat !== category._id && categories[cat].cType === 'sub-category') {
-              map[cat] = true;
-            }
-          })
-        });
+        if (services) {
+          Object.values(services).forEach(service => {
+            service.categories.forEach(cat => {
+              if (cat !== category._id && categories[cat].cType === 'sub-category') {
+                map[cat] = true;
+              }
+            })
+          });
+        }
         return Object.keys(map);
       }());
       serviceContent = (
@@ -194,36 +195,6 @@ class Services extends Component {
           <div>
             <Container>
               <div className={s.servicesBody}>
-                { /*
-                  servicesTreeHash && servicesTreeHash[filter].children.map(subType => (
-                    <div
-                      className={s.servicesBodySubcatSection}
-                      key={subType.children[0].category + subType.name}
-                    >
-                      <h2 className={s.servicesBodySubcatSectionTitle}>
-                        {this.state.filter === ALL_SERVICES &&
-                          <a href="#" onClick={this.onClickFilter(subType.children[0].category)}>
-                            {subType.children[0].category}
-                          </a>}
-                        {this.state.filter === ALL_SERVICES ? ' > ' : ''}
-                        {subType.name}
-                      </h2>
-                      <div className={s.servicesBodySubcatSectionBody}>
-                        {
-                          Object.values(groupBy(subType.children, 'name')).map((serviceGroup) => (
-                            <ServiceCard
-                              serviceGroup={serviceGroup}
-                              services={services}
-                              servicesFetching={servicesFetching}
-                              onBook={this.onClickBook}
-                              key={serviceGroup[0].id}
-                            />
-                          ))
-                        }
-                      </div>
-                    </div>
-                  ))
-                */ }
                 <div
                   className={s.servicesBodySubcatSection}
                 >
@@ -270,9 +241,7 @@ Services.propTypes = {
   lastPage: React.PropTypes.string,
   services: React.PropTypes.object,
   servicesFetching: React.PropTypes.bool,
-  servicesTree: React.PropTypes.array,
-  servicesTreeHash: React.PropTypes.object,
-  servicesSubtypesHash: React.PropTypes.object,
+  servicesUnderCategory: React.PropTypes.object,
   servicesUnderSlug: React.PropTypes.object,
   categories: React.PropTypes.object,
   categoriesBySlug: React.PropTypes.object,
@@ -287,8 +256,6 @@ const mapStateToProps = (state) => ({
   lastPage: state.lastPage,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
-  servicesTree: state.services.servicesTree,
-  servicesTreeHash: state.services.servicesTreeHash,
   servicesUnderCategory: state.services.servicesUnderCategory,
   servicesUnderSlug: state.services.servicesUnderSlug,
   categories: state.services.categories,

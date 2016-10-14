@@ -11,30 +11,35 @@ import Header from '../../Header';
 import GenericPopup from '../../GenericPopup';
 import ConfirmPopup from '../../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
+import history from '../../../core/history';
+import { formatSessionAlias, configToName } from '../../../core/util';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import {
   fetchServices,
+  showAlertPopup,
   showGenericPopup,
+  hideGenericPopup,
   showConfirmPopup,
   getBooking,
   deleteBooking,
   createApplication,
+  cancelApplication,
   getUsers,
   getUser,
 } from '../../../actions';
-import history from '../../../core/history';
-import { formatSessionAlias, configToName } from '../../../core/util';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-// Sub Component
-import AdminBookingsForm from '../AdminBookingsForm/AdminBookingsForm';
 // react-icons
 import FaCheck from 'react-icons/lib/fa/check';
 import FaPhoneSquare from 'react-icons/lib/fa/phone-square';
 import FaChild from 'react-icons/lib/fa/child';
 
-//TODO: nurse / nurse price data
 //TODO: nurse assign/de-assign
 //TODO: transaction / nurse payment
-//TODO: link to patient doc
+
+const providerPickDefault = {
+  choices: [],
+  sessionId: undefined,
+  providerId: undefined,
+};
 
 class AdminBookingsView extends Component {
 
@@ -43,7 +48,7 @@ class AdminBookingsView extends Component {
 
     this.state = {
       // Assign service provider to each session
-      providerPick: {},
+      providerPick: providerPickDefault,
     }
   }
 
@@ -62,14 +67,51 @@ class AdminBookingsView extends Component {
     this.props.getUsers({ filter: {role: 'provider'} })
   }
 
-  onAssignProvider = (sessionId) => {
-    console.log('sessionId', sessionId);
-    this.setState({ providerPick: {sessionId} })
-    this.props.showGenericPopup();
+  onFilterAvailableProvider = (date, time, sessionId) => {
+    const { providers } = this.props;
+    const { providerPick } = this.state;
+
+    const choices = Object.values(providers).filter(provider => {
+      const check = provider.schedules.filter(schedule => {
+        return (schedule.dateTimeStart === date) && (schedule.timeSlot === time)
+      })
+      return check.length
+    })
+
+    this.setState({ providerPick: {...providerPick, choices, sessionId} });
   }
 
-  onDeAssignProvider = (bookingId) => {
-    console.log('deassign nurse', bookingId);
+  onAssignProvider = (sessionId) => {
+    const { providerPick } = this.state;
+    const { hideGenericPopup, showAlertPopup, getBooking } = this.props;
+    const { bookingId } = this.props.params;
+
+    hideGenericPopup();
+    this.props.createApplication({
+      provider: providerPick.providerId,
+      session: providerPick.sessionId,
+    }).then(res => {
+      this.setState({providerPick: providerPickDefault});
+      if (res.type === "APPLICATION_CREATE_SUCCESS") {
+        showAlertPopup('Assign Provider Success');
+        getBooking({ bookingId }).then(res => {
+          if (res.type === 'BOOKING_FAILURE') {
+            history.push({ pathname: '/admin-bookings' });
+          }
+        });
+      } else {
+        showAlertPopup('Assign Provider Failure');
+      }
+    })
+  }
+
+  onDeAssignProvider = (applicationId) => {
+    console.log('deassign application', applicationId);
+    this.props.cancelApplication({ applicationId }).then(res => {
+      // TODO: provide status popup
+    })
+
+
   }
 
   deleteBooking = () => {
@@ -84,7 +126,7 @@ class AdminBookingsView extends Component {
   }
 
   render() {
-    const { config, booking, services, providerPickChoice } = this.props;
+    const { config, booking, services, showConfirmPopup } = this.props;
     const { providerPick } = this.state;
 
     const detail = {
@@ -126,27 +168,19 @@ class AdminBookingsView extends Component {
           <ConfirmPopup />
           <GenericPopup>
             <div className={s.providerPickPopup}>
-              <h3>Pick a Service Provider</h3>
+              <h3>Pick an Available Provider</h3>
               <div className={cx("select", s.selectInput)}>
                 <span></span>
                 <select id='providerPick' name='providerPick' onChange={e => this.setState({providerPick: {...providerPick, providerId: e.target.value}})}>
                   <option value="">-- SELECT --</option>
-                  {providerPickChoice && Object.values(providerPickChoice).map((item, index) => (
+                  {providerPick.choices && providerPick.choices.map((item, index) => (
                     <option key={index} value={item._id}>{item.name}</option>
                   ))}
                 </select>
               </div>
               <button
                 className="btn btn-primary"
-                onClick={() => {
-                  console.log('providerPick', providerPick);
-                  this.props.createApplication({
-                    provider: providerPick.providerId,
-                    session: providerPick.sessionId,
-                  }).then(res => {
-                    this.setState({providerPick: {}});
-                  })
-                }}>
+                onClick={() => this.onAssignProvider()}>
                 Assign
               </button>
             </div>
@@ -161,7 +195,7 @@ class AdminBookingsView extends Component {
             </Link>
             <button
               className={cx('btn', 'btn-secondary')}
-              onClick={() => this.props.showConfirmPopup('Do you really want to delete the booking?', () => this.deleteBooking())}>
+              onClick={() => showConfirmPopup('Do you really want to delete the booking?', () => this.deleteBooking())}>
               Delete
             </button>
           </div>
@@ -280,12 +314,20 @@ class AdminBookingsView extends Component {
                         <Column
                           label="patient"
                           dataKey="patient"
-                          cellRenderer={({cellData}) => (
+                          cellRenderer={({cellData}) => cellData ? (
                             <div>
                               {cellData.name}
                               <div className={cx(s.font_sm, s.textAlign_bottom)}>
                                 {cellData.gender && (<span><FaChild />{cellData.gender}</span>)}
                                 {cellData.contact && (<span><br /><FaPhoneSquare /> {cellData.contact}</span>)}
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              {booking && booking.patient && booking.patient.name}
+                              <div className={cx(s.font_sm, s.textAlign_bottom)}>
+                                {booking && booking.patient && booking.patient.gender && (<span><FaChild />{booking && booking.patient && booking.patient.gender}</span>)}
+                                {booking && booking.patient && booking.patient.contact && (<span><br /><FaPhoneSquare /> {booking && booking.patient && booking.patient.contact}</span>)}
                               </div>
                             </div>
                           )}
@@ -315,10 +357,21 @@ class AdminBookingsView extends Component {
                           cellRenderer={({rowData, cellData}) => {
                             return (
                               <div>
-                                {rowData.provider}
+                                {rowData.provider && rowData.provider.name}
                                 <div>
-                                  <div className={cx(s.tableListSign, s.tableListSignPlus)} onClick={() => this.onAssignProvider(rowData._id)}>+</div>
-                                  <div className={cx(s.tableListSign, s.tableListSignMinus)} onClick={() => this.onDeAssignProvider(rowData._id)}>-</div>
+                                  <div
+                                    className={cx(s.tableListSign, s.tableListSignPlus)}
+                                    onClick={() => {
+                                      this.onFilterAvailableProvider(rowData.date, rowData.timeSlot, rowData._id);
+                                      this.props.showGenericPopup();
+                                    }}>
+                                    +
+                                  </div>
+                                  <div
+                                    className={cx(s.tableListSign, s.tableListSignMinus)}
+                                    onClick={() => showConfirmPopup("Are you sure you want to cancel this application?", () => this.onDeAssignProvider(rowData.acceptedApplication._id))}>
+                                    -
+                                  </div>
                                 </div>
                               </div>
                           )}}
@@ -577,7 +630,7 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   services: state.services.data,
   booking: state.booking.data,
-  providerPickChoice: state.users.data,
+  providers: state.users.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -585,8 +638,11 @@ const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
   deleteBooking: (params) => dispatch(deleteBooking(params)),
   createApplication: (params) => dispatch(createApplication(params)),
+  cancelApplication: (params) => dispatch(cancelApplication(params)),
+  showAlertPopup: (body) => dispatch(showAlertPopup(body)),
   showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
   showGenericPopup: (body) => dispatch(showGenericPopup(body)),
+  hideGenericPopup: () => dispatch(hideGenericPopup()),
   getUsers: (params) => dispatch(getUsers(params)),
 });
 

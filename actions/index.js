@@ -118,6 +118,10 @@ export const APPLICATION_EDIT_REQUEST = 'APPLICATION_EDIT_REQUEST'
 export const APPLICATION_EDIT_SUCCESS = 'APPLICATION_EDIT_SUCCESS'
 export const APPLICATION_EDIT_FAILURE = 'APPLICATION_EDIT_FAILURE'
 
+export const APPLICATION_CANCEL_REQUEST = 'APPLICATION_CANCEL_REQUEST'
+export const APPLICATION_CANCEL_SUCCESS = 'APPLICATION_CANCEL_SUCCESS'
+export const APPLICATION_CANCEL_FAILURE = 'APPLICATION_CANCEL_FAILURE'
+
 export const USER_CREATE_REQUEST = 'USER_CREATE_REQUEST'
 export const USER_CREATE_SUCCESS = 'USER_CREATE_SUCCESS'
 export const USER_CREATE_FAILURE = 'USER_CREATE_FAILURE'
@@ -573,6 +577,11 @@ function fetchAction(route) {
     editApplication: {
       types: [ APPLICATION_EDIT_REQUEST, APPLICATION_EDIT_SUCCESS, APPLICATION_EDIT_FAILURE ],
       endpoint: '/applications/:applicationId',
+      method: 'put'
+    },
+    cancelApplication: {
+      types: [ APPLICATION_CANCEL_REQUEST, APPLICATION_CANCEL_SUCCESS, APPLICATION_CANCEL_FAILURE ],
+      endpoint: '/applications/:applicationId/cancel',
       method: 'put'
     },
     login: {
@@ -1397,6 +1406,10 @@ export function createApplication(params) {
 
 export function editApplication(params) {
   return fetch('editApplication', params);
+}
+
+export function cancelApplication(params) {
+  return fetch('cancelApplication', params);
 }
 
 export function getPromos(params, extend) {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Account from '../components/Account';
-import history from '../core/history';
 
 export default class extends Component {
 
@@ -8,14 +7,10 @@ export default class extends Component {
     document.title = 'eBeeCare | Forgot Password';
   }
 
-  handleSuccess = () => {
-    history.push({ pathname: '/dashboard', query: location.query });
-  };
-
   render() {
     return (
       <div>
-        <Account type="forgot-password" onSuccess={this.handleSuccess} />
+        <Account type="forgot-password" />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import Loader from 'react-loader';
 import s from './VerifyEmail.css';
 import Link from '../Link';
 import { VERIFY_USER_EMAIL_SUCCESS } from '../../actions';
-import { getCookieUserId, getUriQueryParam } from '../../core/util';
+import { getCookieUserId } from '../../core/util';
 
 class VerifyEmail extends Component {
 
@@ -12,16 +12,14 @@ class VerifyEmail extends Component {
     this.state = {
       resent: undefined,
       success: undefined,
-      token: undefined,
     };
   }
 
   componentDidMount() {
     if (this.props.user._id) {
-      if (getUriQueryParam('token')) {
-        this.setState({ token: getUriQueryParam('token') });
+      if (this.props.token) {
         this.props.verifyUserEmail({
-          token: getUriQueryParam('token'),
+          token: this.props.token,
           userId: this.props.user._id,
         }).then(res => {
           if (res && res.type === VERIFY_USER_EMAIL_SUCCESS) {
@@ -38,10 +36,10 @@ class VerifyEmail extends Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.user._id && !this.props.user._id) {
-      if (getUriQueryParam('token')) {
-        this.setState({ token: getUriQueryParam('token') });
+      if (this.props.token) {
+        this.setState({ token: this.props.token });
         this.props.verifyUserEmail({
-          token: getUriQueryParam('token'),
+          token: this.props.token,
           userId: newProps.user._id,
         }).then(res => {
           if (res && res.type === VERIFY_USER_EMAIL_SUCCESS) {
@@ -86,7 +84,7 @@ class VerifyEmail extends Component {
     } else if (this.state.success === false) {
       error = "Failed to verify email.";
     }
-    if (!this.state.token) {
+    if (!this.props.token) {
       error = "Token is missing.";
     }
     return (
@@ -118,6 +116,7 @@ VerifyEmail.propTypes = {
   verifyUserEmail: PropTypes.func,
   resendVerifyUserEmail: PropTypes.func,
   showConfirmPopup: PropTypes.func,
+  token: PropTypes.string,
 };
 
 export default VerifyEmail;

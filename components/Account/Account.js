@@ -18,6 +18,7 @@ import { USER_SUCCESS, BOOKING_FAILURE, VERIFY_USER_EMAIL_SUCCESS,
   getUser, getBooking, setLastPage, verifyUserEmail, showAlertPopup,
   showConfirmPopup, showVerifyUserPopup, showVerifyBookingPopup,
   resendVerifyUserEmail } from '../../actions';
+import { getUriQueryParam } from '../../core/util';
 import history from '../../core/history';
 
 class Account extends Component {
@@ -27,9 +28,6 @@ class Account extends Component {
     this.state = {
       bid: this.props.bid || undefined,
       contact: this.props.contact || undefined,
-      pin: undefined,
-      resend: false,
-      resent: false,
     };
   }
 
@@ -116,20 +114,20 @@ class Account extends Component {
         </div>
       );
     } else if (this.props.type === 'reset-password') {
-      const token = location && location.query && location.query.token;
+      const token = getUriQueryParam('token');
       components = (
         <div className={s.accountContainer}>
           <div className={classNames(s.accountReset, s.accountContainerItem)}>
-            <ResetPasswordForm {...this.props} token={token} />
+            <ResetPasswordForm {...this.props} initialValues={{ token }} />
           </div>
         </div>
       );
     } else if (this.props.type === 'verify-email') {
-      const token = location && location.query && location.query.token;
+      const token = getUriQueryParam('token');
       components = (
         <div className={s.accountContainer}>
           <div className={classNames(s.accountVerify, s.accountContainerItem)}>
-            <VerifyEmail {...this.props} />
+            <VerifyEmail {...this.props} token={token} />
           </div>
         </div>
       );

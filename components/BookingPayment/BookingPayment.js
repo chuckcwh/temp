@@ -15,14 +15,12 @@ class BookingPayment extends Component {
   };
 
   render() {
-    const { user, booking, applications, sessions, postStatus } = this.props;
+    const { user, booking, sessions, postStatus } = this.props;
     const location = history.getCurrentLocation();
     let bankTransferItem;
     const dates = booking && booking.case && booking.case.dates;
-    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
-      const earliestDate = Object.values(applications).reduce((result, application) => {
-        const sessionId = (application && application.session && application.session._id) || application.session;
-        const session = sessionId && sessions && sessions[sessionId];
+    if (sessions && Object.values(sessions) && Object.values(sessions).length > 0) {
+      const earliestDate = Object.values(sessions).reduce((result, session) => {
         if (session) {
           if (!result) return new Date(session.date);
           if (new Date(result) > new Date(session.date)) {
@@ -123,8 +121,6 @@ BookingPayment.propTypes = {
 
   user: React.PropTypes.object,
   booking: React.PropTypes.object,
-  applications: React.PropTypes.object,
-  applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
   sessionsFetching: React.PropTypes.bool,
   postStatus: React.PropTypes.string,
@@ -135,8 +131,6 @@ BookingPayment.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user.data,
   booking: state.booking.data,
-  applications: state.applications.data,
-  applicationsFetching: state.applications.isFetching,
   sessions: state.sessions.data,
   sessionsFetching: state.sessions.isFetching,
   postStatus: state.postStatus,

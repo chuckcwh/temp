@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import Loader from 'react-loader';
 import s from './BookingPaymentCredits.css';
 import Link from '../Link';
-import { APPLICATIONS_PAY_CREDITS_SUCCESS,
-  getBooking, payApplicationsCredits, setPostStatus } from '../../actions';
+import { SESSIONS_PAY_CREDITS_SUCCESS,
+  getBooking, paySessionsCredits, setPostStatus } from '../../actions';
 import { isFloat } from '../../core/util';
 import history from '../../core/history';
 
@@ -21,11 +21,11 @@ class BookingPaymentCredits extends Component {
     this.setState({ pending: true });
 
     const location = history.getCurrentLocation();
-    this.props.payApplicationsCredits({
+    this.props.paySessionsCredits({
       mode: 'credit',
-      applications: location && location.query && location.query.applications && location.query.applications.split(','),
+      sessions: location && location.query && location.query.sessions && location.query.sessions.split(','),
     }).then((res) => {
-      if (res && res.type === APPLICATIONS_PAY_CREDITS_SUCCESS) {
+      if (res && res.type === SESSIONS_PAY_CREDITS_SUCCESS) {
         if (this.props.booking && this.props.booking._id && this.props.booking.isAdhoc) {
           this.props.getBooking({
             bookingId: this.props.booking && this.props.booking._id,
@@ -48,12 +48,12 @@ class BookingPaymentCredits extends Component {
 
   render() {
     const location = history.getCurrentLocation();
-    const { user, userFetching, applications } = this.props;
+    const { user, userFetching, sessions } = this.props;
     const credits = user && user.credits && user.credits.current && parseFloat(user.credits.current) || 0;
     let sum = 0;
-    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
-      Object.values(applications).map(application => {
-        sum += parseFloat(application.price);
+    if (sessions && Object.values(sessions) && Object.values(sessions).length > 0) {
+      Object.values(sessions).map(session => {
+        sum += parseFloat(session.price);
       });
     }
     return (
@@ -117,11 +117,11 @@ BookingPaymentCredits.propTypes = {
   config: React.PropTypes.object,
   user: React.PropTypes.object,
   userFetching: React.PropTypes.bool,
-  applications: React.PropTypes.object,
-  applicationsFetching: React.PropTypes.bool,
+  sessions: React.PropTypes.object,
+  sessionsFetching: React.PropTypes.bool,
 
   getBooking: React.PropTypes.func.isRequired,
-  payApplicationsCredits: React.PropTypes.func.isRequired,
+  paySessionsCredits: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
 };
 
@@ -129,13 +129,13 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   user: state.user.data,
   userFetching: state.user.isFetching,
-  applications: state.applications.data,
-  applicationsFetching: state.applications.isFetching,
+  sessions: state.sessions.data,
+  sessionsFetching: state.sessions.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getBooking: (params) => dispatch(getBooking(params)),
-  payApplicationsCredits: (params) => dispatch(payApplicationsCredits(params)),
+  paySessionsCredits: (params) => dispatch(paySessionsCredits(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
 });
 

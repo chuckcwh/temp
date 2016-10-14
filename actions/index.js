@@ -82,29 +82,29 @@ export const SESSION_VISIT_REQUEST = 'SESSION_VISIT_REQUEST'
 export const SESSION_VISIT_SUCCESS = 'SESSION_VISIT_SUCCESS'
 export const SESSION_VISIT_FAILURE = 'SESSION_VISIT_FAILURE'
 
+export const SESSIONS_PAY_PAYPAL_CREATE_REQUEST = 'SESSIONS_PAY_PAYPAL_CREATE_REQUEST'
+export const SESSIONS_PAY_PAYPAL_CREATE_SUCCESS = 'SESSIONS_PAY_PAYPAL_CREATE_SUCCESS'
+export const SESSIONS_PAY_PAYPAL_CREATE_FAILURE = 'SESSIONS_PAY_PAYPAL_CREATE_FAILURE'
+
+export const SESSIONS_PAY_PAYPAL_EXECUTE_REQUEST = 'SESSIONS_PAY_PAYPAL_EXECUTE_REQUEST'
+export const SESSIONS_PAY_PAYPAL_EXECUTE_SUCCESS = 'SESSIONS_PAY_PAYPAL_EXECUTE_SUCCESS'
+export const SESSIONS_PAY_PAYPAL_EXECUTE_FAILURE = 'SESSIONS_PAY_PAYPAL_EXECUTE_FAILURE'
+
+export const SESSIONS_PAY_BANK_REQUEST = 'SESSIONS_PAY_BANK_REQUEST'
+export const SESSIONS_PAY_BANK_SUCCESS = 'SESSIONS_PAY_BANK_SUCCESS'
+export const SESSIONS_PAY_BANK_FAILURE = 'SESSIONS_PAY_BANK_FAILURE'
+
+export const SESSIONS_PAY_CARD_REQUEST = 'SESSIONS_PAY_CARD_REQUEST'
+export const SESSIONS_PAY_CARD_SUCCESS = 'SESSIONS_PAY_CARD_SUCCESS'
+export const SESSIONS_PAY_CARD_FAILURE = 'SESSIONS_PAY_CARD_FAILURE'
+
+export const SESSIONS_PAY_CREDITS_REQUEST = 'SESSIONS_PAY_CREDITS_REQUEST'
+export const SESSIONS_PAY_CREDITS_SUCCESS = 'SESSIONS_PAY_CREDITS_SUCCESS'
+export const SESSIONS_PAY_CREDITS_FAILURE = 'SESSIONS_PAY_CREDITS_FAILURE'
+
 export const APPLICATIONS_REQUEST = 'APPLICATIONS_REQUEST'
 export const APPLICATIONS_SUCCESS = 'APPLICATIONS_SUCCESS'
 export const APPLICATIONS_FAILURE = 'APPLICATIONS_FAILURE'
-
-export const APPLICATIONS_PAY_PAYPAL_CREATE_REQUEST = 'APPLICATIONS_PAY_PAYPAL_CREATE_REQUEST'
-export const APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS = 'APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS'
-export const APPLICATIONS_PAY_PAYPAL_CREATE_FAILURE = 'APPLICATIONS_PAY_PAYPAL_CREATE_FAILURE'
-
-export const APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST = 'APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST'
-export const APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS = 'APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS'
-export const APPLICATIONS_PAY_PAYPAL_EXECUTE_FAILURE = 'APPLICATIONS_PAY_PAYPAL_EXECUTE_FAILURE'
-
-export const APPLICATIONS_PAY_BANK_REQUEST = 'APPLICATIONS_PAY_BANK_REQUEST'
-export const APPLICATIONS_PAY_BANK_SUCCESS = 'APPLICATIONS_PAY_BANK_SUCCESS'
-export const APPLICATIONS_PAY_BANK_FAILURE = 'APPLICATIONS_PAY_BANK_FAILURE'
-
-export const APPLICATIONS_PAY_CARD_REQUEST = 'APPLICATIONS_PAY_CARD_REQUEST'
-export const APPLICATIONS_PAY_CARD_SUCCESS = 'APPLICATIONS_PAY_CARD_SUCCESS'
-export const APPLICATIONS_PAY_CARD_FAILURE = 'APPLICATIONS_PAY_CARD_FAILURE'
-
-export const APPLICATIONS_PAY_CREDITS_REQUEST = 'APPLICATIONS_PAY_CREDITS_REQUEST'
-export const APPLICATIONS_PAY_CREDITS_SUCCESS = 'APPLICATIONS_PAY_CREDITS_SUCCESS'
-export const APPLICATIONS_PAY_CREDITS_FAILURE = 'APPLICATIONS_PAY_CREDITS_FAILURE'
 
 export const APPLICATION_REQUEST = 'APPLICATION_REQUEST'
 export const APPLICATION_SUCCESS = 'APPLICATION_SUCCESS'
@@ -520,36 +520,36 @@ function fetchAction(route) {
       endpoint: '/sessions/:sessionId/visited',
       method: 'put'
     },
+    paySessionsPaypalCreate: {
+      types: [ SESSIONS_PAY_PAYPAL_CREATE_REQUEST, SESSIONS_PAY_PAYPAL_CREATE_SUCCESS, SESSIONS_PAY_PAYPAL_CREATE_FAILURE ],
+      endpoint: '/sessions/pay',
+      method: 'put'
+    },
+    paySessionsPaypalExecute: {
+      types: [ SESSIONS_PAY_PAYPAL_EXECUTE_REQUEST, SESSIONS_PAY_PAYPAL_EXECUTE_SUCCESS, SESSIONS_PAY_PAYPAL_EXECUTE_FAILURE ],
+      endpoint: '/sessions/pay',
+      method: 'put'
+    },
+    paySessionsBankTransfer: {
+      types: [ SESSIONS_PAY_BANK_REQUEST, SESSIONS_PAY_BANK_SUCCESS, SESSIONS_PAY_BANK_FAILURE ],
+      endpoint: '/sessions/pay',
+      method: 'put'
+    },
+    paySessionsCard: {
+      types: [ SESSIONS_PAY_CARD_REQUEST, SESSIONS_PAY_CARD_SUCCESS, SESSIONS_PAY_CARD_FAILURE ],
+      endpoint: '/sessions/pay',
+      method: 'put'
+    },
+    paySessionsCredits: {
+      types: [ SESSIONS_PAY_CREDITS_REQUEST, SESSIONS_PAY_CREDITS_SUCCESS, SESSIONS_PAY_CREDITS_FAILURE ],
+      endpoint: '/sessions/pay',
+      method: 'put'
+    },
     getApplications: {
       types: [ APPLICATIONS_REQUEST, APPLICATIONS_SUCCESS, APPLICATIONS_FAILURE ],
       endpoint: '/applications',
       method: 'get',
       entity: 'applications'
-    },
-    payApplicationsPaypalCreate: {
-      types: [ APPLICATIONS_PAY_PAYPAL_CREATE_REQUEST, APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS, APPLICATIONS_PAY_PAYPAL_CREATE_FAILURE ],
-      endpoint: '/applications/pay',
-      method: 'put'
-    },
-    payApplicationsPaypalExecute: {
-      types: [ APPLICATIONS_PAY_PAYPAL_EXECUTE_REQUEST, APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS, APPLICATIONS_PAY_PAYPAL_EXECUTE_FAILURE ],
-      endpoint: '/applications/pay',
-      method: 'put'
-    },
-    payApplicationsBankTransfer: {
-      types: [ APPLICATIONS_PAY_BANK_REQUEST, APPLICATIONS_PAY_BANK_SUCCESS, APPLICATIONS_PAY_BANK_FAILURE ],
-      endpoint: '/applications/pay',
-      method: 'put'
-    },
-    payApplicationsCard: {
-      types: [ APPLICATIONS_PAY_CARD_REQUEST, APPLICATIONS_PAY_CARD_SUCCESS, APPLICATIONS_PAY_CARD_FAILURE ],
-      endpoint: '/applications/pay',
-      method: 'put'
-    },
-    payApplicationsCredits: {
-      types: [ APPLICATIONS_PAY_CREDITS_REQUEST, APPLICATIONS_PAY_CREDITS_SUCCESS, APPLICATIONS_PAY_CREDITS_FAILURE ],
-      endpoint: '/applications/pay',
-      method: 'put'
     },
     getApplication: {
       types: [ APPLICATION_REQUEST, APPLICATION_SUCCESS, APPLICATION_FAILURE ],
@@ -1363,24 +1363,24 @@ export function getApplications(params) {
   return fetch('getApplications', params);
 }
 
-export function payApplicationsPaypalCreate(params) {
-  return fetch('payApplicationsPaypalCreate', params);
+export function paySessionsPaypalCreate(params) {
+  return fetch('paySessionsPaypalCreate', params);
 }
 
-export function payApplicationsPaypalExecute(params) {
-  return fetch('payApplicationsPaypalExecute', params);
+export function paySessionsPaypalExecute(params) {
+  return fetch('paySessionsPaypalExecute', params);
 }
 
-export function payApplicationsBankTransfer(params) {
-  return fetch('payApplicationsBankTransfer', params);
+export function paySessionsBankTransfer(params) {
+  return fetch('paySessionsBankTransfer', params);
 }
 
-export function payApplicationsCard(params) {
-  return fetch('payApplicationsCard', params);
+export function paySessionsCard(params) {
+  return fetch('paySessionsCard', params);
 }
 
-export function payApplicationsCredits(params) {
-  return fetch('payApplicationsCredits', params);
+export function paySessionsCredits(params) {
+  return fetch('paySessionsCredits', params);
 }
 
 export function getApplication(params) {

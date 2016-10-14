@@ -5,8 +5,8 @@ import Loader from 'react-loader';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import s from './BookingPaymentBankTransfer.css';
-import { APPLICATIONS_PAY_BANK_SUCCESS, USER_CREDITS_TOPUP_BANK_SUCCESS,
-  getUser, getBooking, payApplicationsBankTransfer, topupCreditsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
+import { SESSIONS_PAY_BANK_SUCCESS, USER_CREDITS_TOPUP_BANK_SUCCESS,
+  getUser, getBooking, paySessionsBankTransfer, topupCreditsBankTransfer, setPostStatus, showAlertPopup } from '../../actions';
 import history from '../../core/history';
 
 class BookingPaymentBankTransfer extends Component {
@@ -32,14 +32,14 @@ class BookingPaymentBankTransfer extends Component {
       this.setState({ pending: true });
 
       const location = history.getCurrentLocation();
-      if (location.query.applications) {
-        this.props.payApplicationsBankTransfer({
+      if (location.query.sessions) {
+        this.props.paySessionsBankTransfer({
           mode: 'bank',
-          applications: location && location.query && location.query.applications && location.query.applications.split(','),
+          sessions: location && location.query && location.query.sessions && location.query.sessions.split(','),
           transferTime: this.state.transferTime,
           transferRef: this.state.transferRef,
         }).then((res) => {
-          if (res && res.type === APPLICATIONS_PAY_BANK_SUCCESS) {
+          if (res && res.type === SESSIONS_PAY_BANK_SUCCESS) {
             if (this.props.booking && this.props.booking._id && this.props.booking.isAdhoc) {
               this.props.getBooking({
                 bookingId: this.props.booking && this.props.booking._id,
@@ -85,12 +85,12 @@ class BookingPaymentBankTransfer extends Component {
 
   render() {
     const location = history.getCurrentLocation();
-    const { config: { bankDetails }, applications, applicationsFetching, sessions } = this.props;
+    const { config: { bankDetails }, sessions } = this.props;
     let sum = 0;
     if (location && location.pathname.indexOf('/booking-confirmation') === 0) {
-      if (applications && Object.values(applications) && Object.values(applications).length > 0) {
-        Object.values(applications).map(application => {
-          sum += parseFloat(application.price);
+      if (sessions && Object.values(sessions) && Object.values(sessions).length > 0) {
+        Object.values(sessions).map(session => {
+          sum += parseFloat(session.price);
         });
       }
     } else if (location && location.pathname.indexOf('/credits-payment') === 0 && location.query && location.query.deposit) {
@@ -156,13 +156,11 @@ BookingPaymentBankTransfer.propTypes = {
   config: React.PropTypes.object,
   user: React.PropTypes.object,
   booking: React.PropTypes.object,
-  applications: React.PropTypes.object,
-  applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
 
   getUser: React.PropTypes.func.isRequired,
   getBooking: React.PropTypes.func.isRequired,
-  payApplicationsBankTransfer: React.PropTypes.func.isRequired,
+  paySessionsBankTransfer: React.PropTypes.func.isRequired,
   topupCreditsBankTransfer: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
@@ -172,15 +170,13 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   user: state.user.data,
   booking: state.booking.data,
-  applications: state.applications.data,
-  applicationsFetching: state.applications.isFetching,
   sessions: state.sessions.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getUser: (params) => dispatch(getUser(params)),
   getBooking: (params) => dispatch(getBooking(params)),
-  payApplicationsBankTransfer: (params) => dispatch(payApplicationsBankTransfer(params)),
+  paySessionsBankTransfer: (params) => dispatch(paySessionsBankTransfer(params)),
   topupCreditsBankTransfer: (params) => dispatch(topupCreditsBankTransfer(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),

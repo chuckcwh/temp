@@ -11,7 +11,7 @@ import Container from '../Container';
 import SessionClientDetails from '../SessionClientDetails';
 import SessionPatientDetails from '../SessionPatientDetails';
 import SessionAddressDetails from '../SessionAddressDetails';
-import { fetchServices, getApplications, editBooking, setPostStatus } from '../../actions';
+import { fetchServices, getSessions, editBooking, setPostStatus } from '../../actions';
 import { configToName } from '../../core/util';
 import history from '../../core/history';
 
@@ -28,12 +28,22 @@ class BookingConfirmation extends Component {
 
   componentDidMount() {
     const location = history.getCurrentLocation();
-    location && location.query && location.query.applications &&
-      this.props.getApplications({
-        ids: location.query.applications.split(','),
-        bookingId: location.query.bid,
-        bookingToken: location.query.btoken,
-      });
+    if (this.props.user._id || this.props.booking._id) {
+      location && location.query && location.query.sessions &&
+        this.props.getSessions({
+          ids: location.query.sessions.split(','),
+        });
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    const location = history.getCurrentLocation();
+    if ((newProps.user._id && !this.props.user._id) || (newProps.booking._id && !this.props.booking._id)) {
+      location && location.query && location.query.sessions &&
+        this.props.getSessions({
+          ids: location.query.sessions.split(','),
+        });
+    }
   }
 
   onClickEdit = (entity) => (event) => {
@@ -213,7 +223,7 @@ class BookingConfirmation extends Component {
   };
 
   render() {
-    const { config, services, booking, bookingFetching, applications, applicationsFetching, sessions, sessionsFetching } = this.props;
+    const { config, services, booking, bookingFetching, sessions, sessionsFetching } = this.props;
     let sessionsDetails,
       userDetails,
       patientDetails,
@@ -228,9 +238,7 @@ class BookingConfirmation extends Component {
           <div className="TableRowItem2">Cost</div>
         </div>
         {
-          applications && Object.values(applications).length > 0 && Object.values(applications).map(application => {
-            const sessionId = (application && application.session && application.session._id) || application.session;
-            const session = sessionId && sessions && sessions[sessionId];
+          sessions && Object.values(sessions).length > 0 && Object.values(sessions).map(session => {
             if (session) return (
               <div className="TableRow" key={session._id}>
                 <div className="TableRowItem2">{moment(session.date).format('D MMM YY')}</div>
@@ -323,19 +331,19 @@ class BookingConfirmation extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_firstName}</div>
+            <div className="TableRowItem3">{booking && booking.client_firstName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_lastName}</div>
+            <div className="TableRowItem3">{booking && booking.client_lastName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Email</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactEmail}</div>
+            <div className="TableRowItem3">{booking && booking.client_contactEmail}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Contact Number</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.client_contactNumber}</div>
+            <div className="TableRowItem3">{booking && booking.client_contactNumber}</div>
           </div>
         </div>
       );
@@ -351,7 +359,7 @@ class BookingConfirmation extends Component {
                   type="text"
                   id="patient_firstName"
                   name="patient_firstName"
-                  value={this.props.booking && this.props.booking.patient_firstName}
+                  value={booking && booking.patient_firstName}
                   placeholder="First Name*"
                   maxLength="50"
                   required
@@ -365,7 +373,7 @@ class BookingConfirmation extends Component {
                   type="text"
                   id="patient_lastName"
                   name="patient_lastName"
-                  value={this.props.booking && this.props.booking.patient_lastName}
+                  value={booking && booking.patient_lastName}
                   placeholder="Last Name*"
                   maxLength="50"
                   required
@@ -380,7 +388,7 @@ class BookingConfirmation extends Component {
                     type="radio"
                     id="patient_gender_male"
                     name="patient_gender"
-                    checked={this.props.booking && this.props.booking.patient_gender === 'Male'}
+                    checked={booking && booking.patient_gender === 'Male'}
                     value="Male"
                     required
                   />
@@ -391,7 +399,7 @@ class BookingConfirmation extends Component {
                     type="radio"
                     id="patient_gender_female"
                     name="patient_gender"
-                    checked={this.props.booking && this.props.booking.patient_gender === 'Female'}
+                    checked={booking && booking.patient_gender === 'Female'}
                     value="Female"
                     required
                   />
@@ -403,7 +411,7 @@ class BookingConfirmation extends Component {
               <div className="TableRowItem1">Date of Birth</div>
               <div className="TableRowItem3">
                 <DatePicker
-                  selected={this.props.booking && this.props.booking.patient_dob && moment(this.props.booking.patient_dob)}
+                  selected={booking && booking.patient_dob && moment(booking.patient_dob)}
                   maxDate={moment()}
                   dateFormat="YYYY-MM-DD"
                   showYearDropdown
@@ -424,21 +432,21 @@ class BookingConfirmation extends Component {
         <div>
           <div className="TableRow">
             <div className="TableRowItem1">First Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_firstName}</div>
+            <div className="TableRowItem3">{booking && booking.patient_firstName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Last Name</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_lastName}</div>
+            <div className="TableRowItem3">{booking && booking.patient_lastName}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Gender</div>
-            <div className="TableRowItem3">{this.props.booking && this.props.booking.patient_gender}</div>
+            <div className="TableRowItem3">{booking && booking.patient_gender}</div>
           </div>
           <div className="TableRow">
             <div className="TableRowItem1">Date of Birth</div>
             <div className="TableRowItem3">
-              {this.props.booking && this.props.booking.patient_dob
-                && moment(this.props.booking.patient_dob, 'YYYY-MM-DD').format('ll')}
+              {booking && booking.patient_dob
+                && moment(booking.patient_dob, 'YYYY-MM-DD').format('ll')}
             </div>
           </div>
         </div>
@@ -499,23 +507,23 @@ class BookingConfirmation extends Component {
       addressDetails = (
         <div>
           <div>
-            {this.props.booking && this.props.booking.case
-              && this.props.booking.case.addresses
-              && this.props.booking.case.addresses[0]
-              && this.props.booking.case.addresses[0].address}
+            {booking && booking.case
+              && booking.case.addresses
+              && booking.case.addresses[0]
+              && booking.case.addresses[0].address}
           </div>
           <div>
-            {this.props.booking && this.props.booking.case
-              && this.props.booking.case.addresses
-              && this.props.booking.case.addresses[0]
-              && this.props.booking.case.addresses[0].unit}
+            {booking && booking.case
+              && booking.case.addresses
+              && booking.case.addresses[0]
+              && booking.case.addresses[0].unit}
           </div>
         </div>
       );
     }
     // show payment button only if booking is "Closed" and not yet paid, and if not editing
-    if ((this.props.booking && this.props.booking.case
-      && this.props.booking.case.status === 'Closed' && !this.props.booking.case.isPaid)
+    if ((booking && booking.case
+      && booking.case.status === 'Closed' && !booking.case.isPaid)
       && (!this.state.editingUser && !this.state.editingPatient && !this.state.editingAddress)) {
       paymentButton = (
         <a href="#" className="btn btn-primary" onClick={this.onNext}>GO TO PAYMENT</a>
@@ -532,7 +540,7 @@ class BookingConfirmation extends Component {
                   <div className={s.bookingConfirmationBodySectionTitle}>
                     <h3>Appointment Sessions to Pay</h3>
                   </div>
-                  <Loader className="spinner" loaded={!applicationsFetching}>
+                  <Loader className="spinner" loaded={!sessionsFetching}>
                     {sessionsDetails}
                   </Loader>
                 </div>
@@ -597,13 +605,11 @@ BookingConfirmation.propTypes = {
   user: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
-  applications: React.PropTypes.object,
-  applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
   sessionsFetching: React.PropTypes.bool,
 
   fetchServices: React.PropTypes.func,
-  getApplications: React.PropTypes.func,
+  getSessions: React.PropTypes.func,
   editBooking: React.PropTypes.func,
   setPostStatus: React.PropTypes.func,
 };
@@ -614,15 +620,13 @@ const mapStateToProps = (state) => ({
   user: state.user.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
-  applications: state.applications.data,
-  applicationsFetching: state.applications.isFetching,
   sessions: state.sessions.data,
   sessionsFetching: state.sessions.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
-  getApplications: (params) => dispatch(getApplications(params)),
+  getSessions: (params) => dispatch(getSessions(params)),
   editBooking: (booking) => dispatch(editBooking(booking)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),
 });

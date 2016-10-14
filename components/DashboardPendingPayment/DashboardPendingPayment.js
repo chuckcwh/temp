@@ -29,7 +29,7 @@ class DashboardPendingPayment extends Component {
     const location = history.getCurrentLocation();
     history.push({ pathname: '/booking-confirmation', query: {
       ...location.query,
-      applications: this.props.sessions[sessionId].applications[0],
+      sessions: sessionId,
     } });
 
     this.props.setPostStatus('confirmation');
@@ -40,8 +40,7 @@ class DashboardPendingPayment extends Component {
     const location = history.getCurrentLocation();
     history.push({ pathname: '/booking-confirmation', query: {
       ...location.query,
-      applications: Object.keys(this.state.selected)
-        .map(sessionId => this.props.sessions[sessionId].applications[0]).join(),
+      sessions: Object.keys(this.state.selected).join(),
     } });
 
     this.props.setPostStatus('confirmation');

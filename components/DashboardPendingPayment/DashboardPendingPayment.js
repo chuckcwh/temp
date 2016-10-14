@@ -29,7 +29,7 @@ class DashboardPendingPayment extends Component {
     const location = history.getCurrentLocation();
     history.push({ pathname: '/booking-confirmation', query: {
       ...location.query,
-      applications: this.props.sessions[sessionId].applications[0],
+      sessions: sessionId,
     } });
 
     this.props.setPostStatus('confirmation');
@@ -40,8 +40,7 @@ class DashboardPendingPayment extends Component {
     const location = history.getCurrentLocation();
     history.push({ pathname: '/booking-confirmation', query: {
       ...location.query,
-      applications: Object.keys(this.state.selected)
-        .map(sessionId => this.props.sessions[sessionId].applications[0]).join(),
+      sessions: Object.keys(this.state.selected).join(),
     } });
 
     this.props.setPostStatus('confirmation');
@@ -78,8 +77,7 @@ class DashboardPendingPayment extends Component {
                       <Col md={2}>Date</Col>
                       <Col md={2}>Time</Col>
                       <Col md={2}>Service</Col>
-                      <Col md={1}>Price</Col>
-                      <Col md={1}>Status</Col>
+                      <Col md={2}>Price</Col>
                       <Col md={2}>Action(s)</Col>
                     </Row>
                     {
@@ -125,11 +123,7 @@ class DashboardPendingPayment extends Component {
                                   && services[session.service].classes[session.serviceClass].duration}hrs)`}
                           </Col>
                           <Col xs={4}>Price</Col>
-                          <Col xs={8} md={1}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
-                          <Col xs={4}>Status</Col>
-                          <Col xs={8} md={1}>
-                            {configToName(config, 'sessionStatusesByValue', session.status)}
-                          </Col>
+                          <Col xs={8} md={2}>{`SGD ${parseFloat(session.price).toFixed(2)}`}</Col>
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>

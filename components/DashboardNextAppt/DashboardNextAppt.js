@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 import Loader from 'react-loader';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import moment from 'moment';
@@ -11,10 +10,10 @@ import Link from '../Link';
 import Header from '../Header';
 import ServiceCard from '../ServiceCard';
 import DashboardStatButton from '../DashboardStatButton';
+import DashboardTableButton from '../DashboardTableButton';
 import { fetchServices, getPatients } from '../../actions';
-import history from '../../core/history';
 import { configToName, formatSessionAlias } from '../../core/util';
-import shuffle from 'lodash/shuffle';
+import history from '../../core/history';
 
 class DashboardNextAppt extends Component {
 
@@ -80,9 +79,6 @@ class DashboardNextAppt extends Component {
 
       if (this.hasEvent(confirmedSessions, selectedDay)) {
         // Default multiple or single appointment today
-        // earliestNewAppt.forEach((event) => {
-          // $('.dashboard-next-appointment-info').append(createAppointmentTable(event.caseId, event.price, event.service, event.date, event.time, event.estTime, event.caseNotes, event.patientFullName, event.engagedId, event.location, event.sessionId, event.isPaid, event.nurseId));
-        // });
         const filteredSessions = confirmedSessions.filter(session => DateUtils.isSameDay(new Date(session.date), selectedDay));
         content = (
           <div>
@@ -157,6 +153,13 @@ class DashboardNextAppt extends Component {
                   </div>
                   <div className={s.dashboardNextApptInfoTableCol}>
                     {session.provider && session.provider.name}
+                  </div>
+                </div>
+                <div className={s.dashboardNextApptInfoTableRow}>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                  </div>
+                  <div className={s.dashboardNextApptInfoTableCol}>
+                    <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
                   </div>
                 </div>
               </div>

@@ -69,7 +69,7 @@ class DashboardPendingConf extends Component {
                                   && services[session.service].classes[session.serviceClass].duration}hrs)`}
                           </Col>
                           <Col xs={4}>Price</Col>
-                          <Col xs={8} md={2}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
+                          <Col xs={8} md={2}>{`SGD ${parseFloat(session.price).toFixed(2)}`}</Col>
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>

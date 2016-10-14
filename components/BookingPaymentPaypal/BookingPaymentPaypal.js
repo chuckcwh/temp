@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import s from './BookingPaymentPaypal.css';
-import { APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS, APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS,
+import { SESSIONS_PAY_PAYPAL_CREATE_SUCCESS, SESSIONS_PAY_PAYPAL_EXECUTE_SUCCESS,
   USER_CREDITS_TOPUP_PAYPAL_CREATE_SUCCESS, USER_CREDITS_TOPUP_PAYPAL_EXECUTE_SUCCESS,
-  getUser, getBooking, payApplicationsPaypalCreate, payApplicationsPaypalExecute,
+  getUser, getBooking, paySessionsPaypalCreate, paySessionsPaypalExecute,
   topupCreditsPaypalCreate, topupCreditsPaypalExecute, setPostStatus } from '../../actions';
 import { getCookieUserId } from '../../core/util';
 import history from '../../core/history';
@@ -26,17 +26,17 @@ class BookingPaymentPaypal extends Component {
   componentDidMount() {
     const location = history.getCurrentLocation();
     if (location && location.query && location.query.action === 'paypal-return') {
-      if (location.query.applications) {
+      if (location.query.sessions) {
         // Execute paypal payment since this is returned from Paypal
-        this.props.payApplicationsPaypalExecute({
+        this.props.paySessionsPaypalExecute({
           mode: 'paypal',
-          applications: location && location.query && location.query.applications && location.query.applications.split(','),
+          sessions: location && location.query && location.query.sessions && location.query.sessions.split(','),
           payment: {
             paymentId: location && location.query && location.query.paymentId,
             payerId: location && location.query && location.query.PayerID,
           },
         }).then((res) => {
-          if (res && res.type === APPLICATIONS_PAY_PAYPAL_EXECUTE_SUCCESS) {
+          if (res && res.type === SESSIONS_PAY_PAYPAL_EXECUTE_SUCCESS) {
             if (location && location.query && location.query.bid && location.query.bid !== 'undefined') {
               this.props.getBooking({
                 bookingId: location && location.query && location.query.bid,
@@ -91,7 +91,7 @@ class BookingPaymentPaypal extends Component {
           + `?action=${encodeURIComponent('paypal-return')}`
           + `&bid=${encodeURIComponent(this.props.booking && this.props.booking._id)}`
           + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.client && this.props.booking.client.contact)}`
-          + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
+          + `&sessions=${encodeURIComponent(Object.keys(this.props.sessions).join())}`;
         returnUrl = returnUrl.replace('#', '');
         cancelUrl = `${(window.location.href.indexOf('?') > -1
           ? window.location.href.slice(0, window.location.href.indexOf('?'))
@@ -99,18 +99,18 @@ class BookingPaymentPaypal extends Component {
           + `?action=${encodeURIComponent('paypal-cancel')}`
           + `&bid=${encodeURIComponent(this.props.booking && this.props.booking._id)}`
           + `&btoken=${encodeURIComponent(this.props.booking && this.props.booking.client && this.props.booking.client.contact)}`
-          + `&applications=${encodeURIComponent(Object.keys(this.props.applications).join())}`;
+          + `&sessions=${encodeURIComponent(Object.keys(this.props.sessions).join())}`;
         cancelUrl = cancelUrl.replace('#', '');
 
-        this.props.payApplicationsPaypalCreate({
+        this.props.paySessionsPaypalCreate({
           mode: 'paypal',
-          applications: Object.keys(this.props.applications),
+          sessions: Object.keys(this.props.sessions),
           payment: {
             return_url: returnUrl,
             cancel_url: cancelUrl,
           },
         }).then((res) => {
-          if (res && res.type === APPLICATIONS_PAY_PAYPAL_CREATE_SUCCESS) {
+          if (res && res.type === SESSIONS_PAY_PAYPAL_CREATE_SUCCESS) {
             // console.log(res);
             // console.log(res.response.url.href);
             // console.log(res.response.payment_id);
@@ -167,7 +167,7 @@ class BookingPaymentPaypal extends Component {
 
   render() {
     const location = history.getCurrentLocation();
-    const { config, applications } = this.props;
+    const { config, sessions } = this.props;
     let sum = 0;
     if (location && location.query && location.query.paymentId) {
       // View for paypal return
@@ -188,9 +188,9 @@ class BookingPaymentPaypal extends Component {
       );
     }
     if (location && location.pathname.indexOf('/booking-confirmation') === 0) {
-      if (applications && Object.values(applications) && Object.values(applications).length > 0) {
-        Object.values(applications).map(application => {
-          sum += parseFloat(application.price);
+      if (sessions && Object.values(sessions) && Object.values(sessions).length > 0) {
+        Object.values(sessions).map(session => {
+          sum += parseFloat(session.price);
         });
       }
     } else if (location && location.pathname.indexOf('/credits-payment') === 0 && location.query && location.query.deposit) {
@@ -221,14 +221,12 @@ BookingPaymentPaypal.propTypes = {
   config: React.PropTypes.object,
   user: React.PropTypes.object,
   booking: React.PropTypes.object,
-  applications: React.PropTypes.object,
-  applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
 
   getUser: React.PropTypes.func.isRequired,
   getBooking: React.PropTypes.func.isRequired,
-  payApplicationsPaypalCreate: React.PropTypes.func.isRequired,
-  payApplicationsPaypalExecute: React.PropTypes.func.isRequired,
+  paySessionsPaypalCreate: React.PropTypes.func.isRequired,
+  paySessionsPaypalExecute: React.PropTypes.func.isRequired,
   topupCreditsPaypalCreate: React.PropTypes.func.isRequired,
   topupCreditsPaypalExecute: React.PropTypes.func.isRequired,
   setPostStatus: React.PropTypes.func.isRequired,
@@ -238,16 +236,14 @@ const mapStateToProps = (state) => ({
   config: state.config.data,
   user: state.user.data,
   booking: state.booking.data,
-  applications: state.applications.data,
-  applicationsFetching: state.applications.isFetching,
   sessions: state.sessions.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getUser: (params) => dispatch(getUser(params)),
   getBooking: (params) => dispatch(getBooking(params)),
-  payApplicationsPaypalCreate: (params) => dispatch(payApplicationsPaypalCreate(params)),
-  payApplicationsPaypalExecute: (params) => dispatch(payApplicationsPaypalExecute(params)),
+  paySessionsPaypalCreate: (params) => dispatch(paySessionsPaypalCreate(params)),
+  paySessionsPaypalExecute: (params) => dispatch(paySessionsPaypalExecute(params)),
   topupCreditsPaypalCreate: (params) => dispatch(topupCreditsPaypalCreate(params)),
   topupCreditsPaypalExecute: (params) => dispatch(topupCreditsPaypalExecute(params)),
   setPostStatus: (status) => dispatch(setPostStatus(status)),

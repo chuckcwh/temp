@@ -12,7 +12,7 @@ class BookingPostSidebar extends Component {
   }
 
   render() {
-    const { config, services, booking, applications, applicationsFetching, sessions, postStatus } = this.props;
+    const { config, services, booking, sessions, postStatus } = this.props;
     let service,
       loc,
       serviceFee = 0,
@@ -33,9 +33,9 @@ class BookingPostSidebar extends Component {
         </span>
       );
     }
-    if (applications && Object.values(applications) && Object.values(applications).length > 0) {
-      Object.values(applications).map(application => {
-        sum += parseFloat(application.price);
+    if (sessions && Object.values(sessions) && Object.values(sessions).length > 0) {
+      Object.values(sessions).map(session => {
+        sum += parseFloat(session.price);
       });
     }
     if (postStatus === 'payment-card') {
@@ -61,9 +61,7 @@ class BookingPostSidebar extends Component {
           <div className={s.bookingPostSidebarSessions}>
             <div className={s.bookingPostSidebarItem}>
             {
-              applications && Object.values(applications).length > 0 && Object.values(applications).map(application => {
-                const sessionId = (application && application.session && application.session._id) || application.session;
-                const session = sessionId && sessions && sessions[sessionId];
+              sessions && Object.values(sessions).length > 0 && Object.values(sessions).map(session => {
                 if (session) {
                   return (
                     <div className="TableRow" key={session._id}>
@@ -113,8 +111,6 @@ BookingPostSidebar.propTypes = {
   services: React.PropTypes.object,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
-  applications: React.PropTypes.object,
-  applicationsFetching: React.PropTypes.bool,
   sessions: React.PropTypes.object,
   postStatus: React.PropTypes.string,
 
@@ -126,8 +122,6 @@ const mapStateToProps = (state) => ({
   services: state.services.data,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
-  applications: state.applications.data,
-  applicationsFetching: state.applications.isFetching,
   sessions: state.sessions.data,
   postStatus: state.postStatus,
 });

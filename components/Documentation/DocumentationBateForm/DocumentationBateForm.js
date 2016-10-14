@@ -138,6 +138,8 @@ class DocumentationBateForm extends Component {
         dressing,
         outcome,
       },
+      objectiveChoice,
+      solutionChoice,
 
       resetForm,
       invalid,
@@ -147,8 +149,6 @@ class DocumentationBateForm extends Component {
     } = this.props;
 
     const { totalScore, interpretation } = this.state;
-    const objectiveChoice = [{label: 'Normal Saline', value: 'Normal Saline'}, {label: 'Chlorhexidine', value: 'Chlorhexidine'}];
-    const solutionChoice = [{label: 'Protecting granulation/ephithelialisation', value: 'Protecting granulation/ephithelialisation'}, {label: 'Manage bacterial burden', value: 'Manage bacterial burden'}];
 
     const firstSec = [{
       first: "Location: Anatomic site",
@@ -547,8 +547,11 @@ const mapStateToProps = (state, ownProps) => {
     initialValues = ownProps.initialValues;
   }
 
-  return { initialValues }
-};
+  return {
+    objectiveChoice: state.config.data && state.config.data.bateTreatmentObjs && state.config.data.bateTreatmentObjs.map(item => ({label: item.name, value: item.value})),
+    solutionChoice: state.config.data && state.config.data.bateSolutionTypes && state.config.data.bateSolutionTypes.map(item => ({label: item.name, value: item.value})),
+    initialValues,
+}};
 
 const mapDispatchToProps = (dispatch) => ({
   resetForm: () => dispatch(reset('documentationBateForm')),

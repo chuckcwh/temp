@@ -128,6 +128,7 @@ class DocumentationNGTForm extends Component {
         event,
         outcome,
       },
+      dislodgementChoice,
 
       resetForm,
       invalid,
@@ -137,7 +138,6 @@ class DocumentationNGTForm extends Component {
     } = this.props;
 
     const { interpretation } = this.state;
-    const dislodgementChoice = [{label: 'Retching', value: 'Retching'}, {label: 'Agitated', value: 'Agitated'}];
 
     const firstSec = [{
       first: "Type of tube",
@@ -387,6 +387,7 @@ const mapStateToProps = (state, ownProps) => ({
   //   ...ownProps.initialValues,
   //   dislodgement: ownProps.initialValues.dislodgement,
   // }
+  dislodgementChoice: state.config.data && state.config.data.ngtRisks && state.config.data.ngtRisks.map(item => ({label: item.name, value: item.value})),
 });
 
 const mapDispatchToProps = (dispatch) => ({

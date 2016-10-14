@@ -32,14 +32,16 @@ class DocumentationMedicalHistoryFormMedication extends Component {
       medLength,
       addField,
       removeField,
+      // selection choices
+      medicationChoice,
     } = this.props;
-    // const { medications } = this.props;
-    const medicationChoice = {
-      route: [{name: 'ORAL', value: 'ORAL'}, {name: '(IV) INTRAVENOUSLY', value: '(IV) INTRAVENOUSLY'}],
-      doseUnit: [{name: 'EA', value: 'EA'}, {name: 'VIAL', value: 'VIAL'}],
-      cycle: [{name: 'H, HOURLY', value: 'H, HOURLY'}, {name: '2H, 2 HOURLY', value: '2H, 2 HOURLY'}],
-      durationUnit: [{name: 'DAY', value: 'DAY'}, {name: 'WEEK', value: 'WEEK'}, {name: 'MONTH', value: 'MONTH'}],
-    }
+
+    // const medicationChoice = {
+    //   route: [{name: 'ORAL', value: 'ORAL'}, {name: '(IV) INTRAVENOUSLY', value: '(IV) INTRAVENOUSLY'}],
+    //   doseUnit: [{name: 'EA', value: 'EA'}, {name: 'VIAL', value: 'VIAL'}],
+    //   cycle: [{name: 'H, HOURLY', value: 'H, HOURLY'}, {name: '2H, 2 HOURLY', value: '2H, 2 HOURLY'}],
+    //   durationUnit: [{name: 'DAY', value: 'DAY'}, {name: 'WEEK', value: 'WEEK'}, {name: 'MONTH', value: 'MONTH'}],
+    // }
 
     return (
       <tr className={s.documentationMedicalHistoryFormMedication}>
@@ -127,6 +129,12 @@ DocumentationMedicalHistoryFormMedication.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  medicationChoice: {
+    route: state.config.data && state.config.data.medHistMedicationsRoutes,
+    doseUnit: state.config.data && state.config.data.medHistMedicationsUnits,
+    cycle: state.config.data && state.config.data.medHistMedicationsCycles,
+    durationUnit: state.config.data && state.config.data.medHistMedicationsDurationUnits,
+  }
 });
 
 const mapDispatchToProps = (dispatch) => ({

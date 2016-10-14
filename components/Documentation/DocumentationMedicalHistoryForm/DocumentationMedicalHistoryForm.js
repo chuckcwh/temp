@@ -68,7 +68,7 @@ class DocumentationMedicalHistoryForm extends Component {
   }
 
   onFormSubmit = (values) => {
-    console.log('onFormSubmit', values);
+    // console.log('onFormSubmit', values);
 
     if (values.vision !== 'others') {
       values['visionOthers'] = undefined;
@@ -97,6 +97,7 @@ class DocumentationMedicalHistoryForm extends Component {
         allergy,
         medications,
       },
+      mobilityChoice,
 
       resetForm,
       invalid,
@@ -104,8 +105,6 @@ class DocumentationMedicalHistoryForm extends Component {
       submitFailed,
       submitting,
     } = this.props;
-
-    const mobilityChoice = [{name: 'Walking (Without Aid)', value: 'Walking (Without Aid)'}, {name: 'Walking (Require Aid)', value: 'Walking (Require Aid)'}, {name: 'Wheelchair', value: 'Wheelchair'}, {name: 'Bed Bound', value: 'Bed Bound'}];
 
     const firstSec = [{
       first: "Main Diagnosis",
@@ -142,7 +141,7 @@ class DocumentationMedicalHistoryForm extends Component {
       second: (
         <div className={cx("select", s.selectInput)}>
           <span></span>
-          <select id="mobility" name="mobility" value={mobilityChoice[0]} {...mobility}>
+          <select id="mobility" name="mobility" {...mobility}>
             <option value="">-- SELECT --</option>
             {mobilityChoice && mobilityChoice.map((item, index) => (
               <option key={index} value={item.value}>{item.name}</option>
@@ -264,7 +263,7 @@ const reduxFormConfig = {
 }
 
 const mapStateToProps = (state) => ({
-
+  mobilityChoice: state.config.data && state.config.data.mobilities,
 });
 
 const mapDispatchToProps = (dispatch) => ({

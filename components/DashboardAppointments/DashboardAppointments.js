@@ -101,7 +101,7 @@ class DashboardAppointments extends Component {
                                   && services[session.service].classes[session.serviceClass].duration}hrs)`}
                           </Col>
                           <Col xs={4}>Price</Col>
-                          <Col xs={8} md={1}>{`$${parseFloat(session.price).toFixed(2)}`}</Col>
+                          <Col xs={8} md={1}>{`SGD ${parseFloat(session.price).toFixed(2)}`}</Col>
                           <Col xs={4}>Status</Col>
                           <Col xs={8} md={1}>
                             {configToName(config, 'sessionStatusesByValue', session.status)}

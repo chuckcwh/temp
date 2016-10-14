@@ -1,0 +1,22 @@
+@import '../variables.css';
+
+.verifyEmail {
+  & .verifyEmailError {
+    padding: 5px 0;
+    color: var(--secondary-color);
+    font-size: 85%;
+  }
+}
+
+.accountContainerItemMiddle {
+  composes: accountContainerItemMiddle from '../Account/Account.css';
+
+  & .loginContainer {
+    padding: 10px 0;
+
+    & .resendLink,
+    & .homeLink {
+      color: var(--secondary-color);
+    }
+  }
+}

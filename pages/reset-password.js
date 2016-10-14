@@ -9,6 +9,7 @@ export default class extends Component {
   }
 
   handleSuccess = () => {
+    const location = history.getCurrentLocation();
     history.push({ pathname: '/dashboard', query: location.query });
   };
 

@@ -400,6 +400,14 @@ export const RESEND_VERIFY_USER_PIN_REQUEST = 'RESEND_VERIFY_USER_PIN_REQUEST'
 export const RESEND_VERIFY_USER_PIN_SUCCESS = 'RESEND_VERIFY_USER_PIN_SUCCESS'
 export const RESEND_VERIFY_USER_PIN_FAILURE = 'RESEND_VERIFY_USER_PIN_FAILURE'
 
+export const VERIFY_USER_EMAIL_REQUEST = 'VERIFY_USER_EMAIL_REQUEST'
+export const VERIFY_USER_EMAIL_SUCCESS = 'VERIFY_USER_EMAIL_SUCCESS'
+export const VERIFY_USER_EMAIL_FAILURE = 'VERIFY_USER_EMAIL_FAILURE'
+
+export const RESEND_VERIFY_USER_EMAIL_REQUEST = 'RESEND_VERIFY_USER_EMAIL_REQUEST'
+export const RESEND_VERIFY_USER_EMAIL_SUCCESS = 'RESEND_VERIFY_USER_EMAIL_SUCCESS'
+export const RESEND_VERIFY_USER_EMAIL_FAILURE = 'RESEND_VERIFY_USER_EMAIL_FAILURE'
+
 export const VERIFY_BOOKING_PIN_REQUEST = 'VERIFY_BOOKING_PIN_REQUEST'
 export const VERIFY_BOOKING_PIN_SUCCESS = 'VERIFY_BOOKING_PIN_SUCCESS'
 export const VERIFY_BOOKING_PIN_FAILURE = 'VERIFY_BOOKING_PIN_FAILURE'
@@ -595,6 +603,12 @@ function fetchAction(route) {
     getUser: {
       types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
       endpoint: '/users/:userId',
+      method: 'get',
+      entity: 'user'
+    },
+    getMe: {
+      types: [ USER_REQUEST, USER_SUCCESS, USER_FAILURE ],
+      endpoint: '/users/me',
       method: 'get',
       entity: 'user'
     },
@@ -806,18 +820,6 @@ function fetchAction(route) {
       endpoint: '/users/:userId/withdrawCredits',
       method: 'post'
     },
-    editEmail: {
-      types: [ EMAIL_EDIT_REQUEST, EMAIL_EDIT_SUCCESS, EMAIL_EDIT_FAILURE ],
-      endpoint: '/changeEmail',
-      method: 'post',
-      auth: 'user'
-    },
-    editMobile: {
-      types: [ MOBILE_EDIT_REQUEST, MOBILE_EDIT_SUCCESS, MOBILE_EDIT_FAILURE ],
-      endpoint: '/changeMobileNumber',
-      method: 'post',
-      auth: 'user'
-    },
     getPatients: {
       types: [ PATIENTS_REQUEST, PATIENTS_SUCCESS, PATIENTS_FAILURE ],
       endpoint: '/users/:userId/patients',
@@ -930,6 +932,16 @@ function fetchAction(route) {
     resendVerifyUserPin: {
       types: [ RESEND_VERIFY_USER_PIN_REQUEST, RESEND_VERIFY_USER_PIN_SUCCESS, RESEND_VERIFY_USER_PIN_FAILURE ],
       endpoint: '/users/:userId/resendVerifyPin',
+      method: 'put',
+    },
+    verifyUserEmail: {
+      types: [ VERIFY_USER_EMAIL_REQUEST, VERIFY_USER_EMAIL_SUCCESS, VERIFY_USER_EMAIL_FAILURE ],
+      endpoint: '/users/:userId/verifyEmail',
+      method: 'put',
+    },
+    resendVerifyUserEmail: {
+      types: [ RESEND_VERIFY_USER_EMAIL_REQUEST, RESEND_VERIFY_USER_EMAIL_SUCCESS, RESEND_VERIFY_USER_EMAIL_FAILURE ],
+      endpoint: '/users/:userId/resendVerifyEmail',
       method: 'put',
     },
     verifyBookingPin: {
@@ -1133,6 +1145,10 @@ export function getUser(params) {
   return fetch('getUser', params);
 }
 
+export function getMe(params) {
+  return fetch('getMe', params);
+}
+
 export function editUser(params) {
   return fetch('editUser', params);
 }
@@ -1303,18 +1319,6 @@ export function destroyUser() {
   }
 }
 
-export function editEmail(params) {
-  return fetch('editEmail', params);
-}
-
-export function editMobile(params) {
-  return fetch('editMobile', params);
-}
-
-export function verifyMobile(params) {
-  return fetch('verifyMobile', params);
-}
-
 export function getPatients(params) {
   return fetch('getPatients', params);
 }
@@ -1457,6 +1461,14 @@ export function verifyUserPin(params) {
 
 export function resendVerifyUserPin(params) {
   return fetch('resendVerifyUserPin', params);
+}
+
+export function verifyUserEmail(params) {
+  return fetch('verifyUserEmail', params);
+}
+
+export function resendVerifyUserEmail(params) {
+  return fetch('resendVerifyUserEmail', params);
 }
 
 export function verifyBookingPin(params) {

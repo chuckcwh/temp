@@ -1,6 +1,7 @@
 import cookie from 'react-cookie';
 import moment from 'moment';
 import sortBy from 'lodash/sortBy';
+import history from './history';
 
 export const PAGE_ORDERS = [
   '',
@@ -16,6 +17,13 @@ export const PAGE_ORDERS = [
 ];
 
 export const ALL_SERVICES = 'All Services';
+
+export function getUriQueryParam(key) {
+  const location = history.getCurrentLocation();
+  return location
+    && location.query
+    && location.query[key];
+}
 
 export function isProduction() {
   return (typeof window !== 'undefined' &&
@@ -221,6 +229,8 @@ const u = {
       'https://www.ebeepartners.com' :
       'http://ebeepartners-testing.firebaseapp.com'),
   blog: 'https://blog.ebeecare.com',
+
+  getUriQueryParam,
 
   isProduction,
 

@@ -11,7 +11,7 @@ import configureStore from './core/configureStore';
 import router from './core/router';
 import history from './core/history';
 
-import { fetchConfig, getUser } from './actions';
+import { fetchConfig, getMe } from './actions';
 
 import Layout from './components/Layout';
 
@@ -19,13 +19,28 @@ const store = configureStore();
 
 store.dispatch(fetchConfig());
 
-// Start loading user if user id & token is present
-const userId = cookie.load('user_id');
-const userToken = cookie.load('user_token');
-if (userId && userToken) {
-  store.dispatch(getUser({
-    userId: userId,
-  }));
+function loadUserFromAccessToken() {
+  const userToken = history.getCurrentLocation().query.access_token;
+  if (userToken) {
+    const oldUserToken = cookie.load('user_token');
+    cookie.save('user_token', userToken, { path: '/' });
+    store.dispatch(getMe());
+  }
+}
+
+function loadUserFromCookies() {
+  const userToken = cookie.load('user_token');
+  if (userToken) {
+    store.dispatch(getMe());
+  }
+}
+
+if (history.getCurrentLocation()
+  && history.getCurrentLocation().query
+  && history.getCurrentLocation().query.access_token) {
+  loadUserFromAccessToken();
+} else {
+  loadUserFromCookies();
 }
 
 let routes = require('./routes.json'); // Loaded with utils/routes-loader.js

@@ -10,10 +10,14 @@ import SignupForm from '../SignupForm';
 import LoginForm from '../LoginForm';
 import ForgotPasswordForm from '../ForgotPasswordForm';
 import ResetPasswordForm from '../ResetPasswordForm';
+import VerifyEmail from '../VerifyEmail';
+import ConfirmPopup from '../ConfirmPopup';
 import VerifyUserPopup from '../VerifyUserPopup';
 import VerifyBookingPopup from '../VerifyBookingPopup';
-import { USER_SUCCESS, BOOKING_FAILURE,
-  getUser, getBooking, setLastPage, showAlertPopup, showVerifyUserPopup, showVerifyBookingPopup } from '../../actions';
+import { USER_SUCCESS, BOOKING_FAILURE, VERIFY_USER_EMAIL_SUCCESS,
+  getUser, getBooking, setLastPage, verifyUserEmail, showAlertPopup,
+  showConfirmPopup, showVerifyUserPopup, showVerifyBookingPopup,
+  resendVerifyUserEmail } from '../../actions';
 import history from '../../core/history';
 
 class Account extends Component {
@@ -120,12 +124,22 @@ class Account extends Component {
           </div>
         </div>
       );
+    } else if (this.props.type === 'verify-email') {
+      const token = location && location.query && location.query.token;
+      components = (
+        <div className={s.accountContainer}>
+          <div className={classNames(s.accountVerify, s.accountContainerItem)}>
+            <VerifyEmail {...this.props} />
+          </div>
+        </div>
+      );
     }
     return (
       <div className={s.account}>
         <Container>
           {components}
         </Container>
+        <ConfirmPopup />
         <VerifyBookingPopup onVerified={this.onVerifiedBooking} />
         <VerifyUserPopup onVerified={this.onVerifiedUser} />
       </div>
@@ -140,6 +154,7 @@ Account.propTypes = {
   type: React.PropTypes.string,
 
   user: React.PropTypes.object,
+  userFetching: React.PropTypes.bool,
   booking: React.PropTypes.object,
   bookingFetching: React.PropTypes.bool,
   patient: React.PropTypes.object,
@@ -147,13 +162,17 @@ Account.propTypes = {
   getUser: React.PropTypes.func,
   getBooking: React.PropTypes.func,
   setLastPage: React.PropTypes.func,
+  verifyUserEmail: React.PropTypes.func,
+  resendVerifyUserEmail: React.PropTypes.func,
   showAlertPopup: React.PropTypes.func,
+  showConfirmPopup: React.PropTypes.func,
   showVerifyUserPopup: React.PropTypes.func,
   showVerifyBookingPopup: React.PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
+  userFetching: state.user.isFetching,
   booking: state.booking.data,
   bookingFetching: state.booking.isFetching,
   patient: state.patient,
@@ -163,7 +182,10 @@ const mapDispatchToProps = (dispatch) => ({
   getUser: (params) => dispatch(getUser(params)),
   getBooking: (params) => dispatch(getBooking(params)),
   setLastPage: (page) => dispatch(setLastPage(page)),
+  verifyUserEmail: (params) => dispatch(verifyUserEmail(params)),
+  resendVerifyUserEmail: (params) => dispatch(resendVerifyUserEmail(params)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
+  showConfirmPopup: (message, accept) => dispatch(showConfirmPopup(message, accept)),
   showVerifyUserPopup: (userId) => dispatch(showVerifyUserPopup(userId)),
   showVerifyBookingPopup: (bookingId) => dispatch(showVerifyBookingPopup(bookingId)),
 });

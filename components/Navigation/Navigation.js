@@ -191,6 +191,24 @@ class Navigation extends Component {
               >USERS</Link>
             </li>
             <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/admin-transactions') ? s.navigationLinkActive : '')}
+                to="/admin-transactions"
+              >TRANSACTIONS</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/admin-services') ? s.navigationLinkActive : '')}
+                to="/admin-services"
+              >SERVICES</Link>
+            </li>
+            <li className={s.navigationItem}>
+              <Link
+                className={classNames(s.navigationLink, (location.pathname === '/admin-categories') ? s.navigationLinkActive : '')}
+                to="/admin-categories"
+              >CATEGORIES</Link>
+            </li>
+            <li className={s.navigationItem}>
               <a className={s.navigationLink} onClick={this.handleLogout}>LOGOUT</a>
             </li>
           </Menu>
@@ -227,6 +245,24 @@ class Navigation extends Component {
                     className={classNames(s.navigationLink, (location.pathname === '/admin-users') ? s.navigationLinkActive : '')}
                     to="/admin-users"
                   >USERS</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/admin-transactions') ? s.navigationLinkActive : '')}
+                    to="/admin-transactions"
+                  >TRANSACTIONS</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/admin-services') ? s.navigationLinkActive : '')}
+                    to="/admin-services"
+                  >SERVICES</Link>
+                </li>
+                <li className={s.navigationItem}>
+                  <Link
+                    className={classNames(s.navigationLink, (location.pathname === '/admin-categories') ? s.navigationLinkActive : '')}
+                    to="/admin-categories"
+                  >CATEGORIES</Link>
                 </li>
                 <li className={s.navigationItem}>
                   <a className={classNames(s.navigationLink)} onClick={this.handleLogout}>LOGOUT</a>

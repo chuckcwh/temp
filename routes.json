@@ -182,5 +182,17 @@
   {
     "path": "/sessions/:sessionId/documentation",
     "page": "./pages/documentation"
+  },
+  {
+    "path": "/admin-transactions",
+    "page": "./pages/admin/transactions"
+  },
+  {
+    "path": "/admin-categories",
+    "page": "./pages/admin/categories"
+  },
+  {
+    "path": "/admin-services",
+    "page": "./pages/admin/services"
   }
 ]

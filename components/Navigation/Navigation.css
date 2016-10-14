@@ -31,6 +31,7 @@
     list-style: none;
     justify-content: flex-end;
     align-items: center;
+    flex-wrap: wrap;
 
     @media (--lg-viewport) {
       flex-wrap: wrap;

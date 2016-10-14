@@ -1,0 +1,4 @@
+{
+  "name": "AdminTransactions",
+  "main": "./AdminTransactions.js"
+}

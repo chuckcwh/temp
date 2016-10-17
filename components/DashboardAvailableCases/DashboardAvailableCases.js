@@ -9,7 +9,7 @@ import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
 import { APPLICATION_CREATE_SUCCESS,
   fetchServices, getSuggestedSessions, createApplication, showConfirmPopup, showAlertPopup } from '../../actions';
-import { isProvider, configToName, formatSessionAlias } from '../../core/util';
+import { isActivatedProvider, isProvider, configToName, formatSessionAlias } from '../../core/util';
 
 class DashboardAvailableCases extends Component {
 
@@ -52,10 +52,13 @@ class DashboardAvailableCases extends Component {
   };
 
   render() {
-    const { config, services, sessions, sessionsFetching } = this.props;
+    const { config, user, services, sessions, sessionsFetching } = this.props;
     return (
       <div className={s.dashboardAvailableCases}>
         <Container>
+          {isActivatedProvider(user) &&
+            <p>You are unable to view cases because your account is not activated. Please contact eBeeCare at 6514 9729 or <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> to activate your account right away.</p>
+          }
           <Loader className="spinner" loaded={!sessionsFetching}>
             <div className={s.cases}>
               {sessions && Object.values(sessions).length > 0 &&

@@ -8,7 +8,7 @@ import ConfirmPopup from '../ConfirmPopup';
 import { setOrderBooker, setLastPage, createBookingWithOptions, showLoginPopup, showDayPickerPopup,
   showAlertPopup, showConfirmPopup } from '../../actions';
 import history from '../../core/history';
-import { isNextLastPage } from '../../core/util';
+import { getUniqueId, isNextLastPage } from '../../core/util';
 
 class BookingPatient extends Component {
 
@@ -17,6 +17,10 @@ class BookingPatient extends Component {
     this.state = {
       agree: false,
     };
+  }
+
+  componentWillMount() {
+    this.agreeId = getUniqueId();
   }
 
   componentWillReceiveProps(props) {
@@ -73,7 +77,7 @@ class BookingPatient extends Component {
 
       resolve();
     });
-  };
+  }
 
   render() {
     return (
@@ -101,13 +105,12 @@ class BookingPatient extends Component {
               <input
                 className={s.agreeCheckbox}
                 type="checkbox"
-                id="agree"
-                name="agree"
+                id={this.agreeId}
                 checked={this.state.agree}
                 onChange={this.onCheckedAgree}
                 required
               />
-              <label className={s.agreeCheckboxLabel} htmlFor="agree">
+              <label className={s.agreeCheckboxLabel} htmlFor={this.agreeId}>
                 <span></span>
                 <span>
                   By making this booking, I agree to the&nbsp;

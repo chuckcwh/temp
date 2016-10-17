@@ -53,6 +53,7 @@
     font-size: 15px;
     text-decoration: none;
     cursor: pointer;
+    border-bottom: 3px solid transparent;
 
     &:hover {
       border-bottom: 3px solid var(--text-color);

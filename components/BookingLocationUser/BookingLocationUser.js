@@ -193,7 +193,8 @@ class BookingLocationUser extends Component {
               type: 'date',
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].dob,
+                && this.props.patients[this.state.patientId].dob
+                && moment(this.props.patients[this.state.patientId].dob).format('YYYY-MM-DD'),
             },
           },
           validate: (values) => {

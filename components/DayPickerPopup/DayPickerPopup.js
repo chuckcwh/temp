@@ -60,9 +60,19 @@ class DayPickerPopup extends Component {
 
   constructor(props) {
     super(props);
+    const { value } = props;
     this.state = {
-      initialMonth: this.props.value && new Date(this.props.value) || new Date(),
+      initialMonth: value && new Date(value) || new Date(),
     };
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { value } = newProps;
+    if (value !== this.props.value) {
+      this.setState({
+        initialMonth: value && new Date(value) || new Date(),
+      });
+    }
   }
 
   handleClickDay = (event, day, { disabled }) => {

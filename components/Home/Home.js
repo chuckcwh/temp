@@ -14,14 +14,14 @@ class Home extends Component {
   
   componentDidMount() {
     const { user } = this.props;
-    if (user && user._id) {
+    if (user && user.role === 'provider') {
       history.push('/dashboard');
     }
   }
 
   componentWillReceiveProps(newProps) {
     const { user } = newProps;
-    if (user && user._id) {
+    if (user && user.role === 'provider') {
       history.push('/dashboard');
     }
   }

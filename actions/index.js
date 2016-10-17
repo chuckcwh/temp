@@ -893,7 +893,8 @@ function fetchAction(route) {
       types: [ TRANSACTIONS_REQUEST, TRANSACTIONS_SUCCESS, TRANSACTIONS_FAILURE ],
       endpoint: '/transactions',
       method: 'get',
-      entity: 'transactions'
+      entity: 'transactions',
+      auth: 'user',
     },
     getTransaction: {
       types: [ TRANSACTION_REQUEST, TRANSACTION_SUCCESS, TRANSACTION_FAILURE ],

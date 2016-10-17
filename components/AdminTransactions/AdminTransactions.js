@@ -9,7 +9,7 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
-import { getPromos } from '../../actions';
+import { getTransactions } from '../../actions';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -32,14 +32,14 @@ class AdminTransactions extends Component {
   }
 
   componentDidMount() {
-    this.props.getPromos({
+    this.props.getTransactions({
       count: 10,
       page: this.state.page,
     });
   }
 
   isRowLoaded = ({ index }) => {
-    return !!Object.values(this.props.promos)[index];
+    return !!Object.values(this.props.transactions)[index];
   }
 
   loadMoreRows = ({startIndex, stopIndex}) => {
@@ -58,7 +58,7 @@ class AdminTransactions extends Component {
       data['filter'] = {[filterField]: filterKwd};
     }
 
-    return this.props.getPromos(data, true);
+    return this.props.getTransactions(data, true);
   }
 
   setHeaderLabel = ({dataKey, label}) => {
@@ -85,7 +85,7 @@ class AdminTransactions extends Component {
       data['sorting'] = sortDirection;
     }
 
-    this.props.getPromos(data);
+    this.props.getTransactions(data);
   }
 
   onClearSortFilter = () => {
@@ -98,15 +98,15 @@ class AdminTransactions extends Component {
 
     this.refs.filterField.value = filterChoice[0];
     this.refs.filterKwd.value = "";
-    this.props.getPromos({
+    this.props.getTransactions({
       count: 10,
       page: 1,
     });
   }
 
   render() {
-    const { add, edit, promoId } = this.props.params;
-    const { user, promos } = this.props;
+    const { add, edit, transactionId } = this.props.params;
+    const { user, transactions } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
@@ -116,15 +116,13 @@ class AdminTransactions extends Component {
 
           {user && add && <AdminTransactionsForm />}
 
-          {user && edit && <AdminTransactionsForm edit={true} promoId={promoId} />}
-
           {user && !add && !edit && (
             <div>
               <div className={s.addLink}>
                 <Link
                   className={cx('btn', 'btn-primary')}
-                  to="/admin-promocodes/add">
-                  New Promo Code
+                  to="/admin-transactions/add">
+                  New Transaction
                 </Link>
               </div>
 
@@ -167,7 +165,7 @@ class AdminTransactions extends Component {
                         headerClassName={s.tableListHeader}
                         headerHeight={30}
                         sort={({sortBy}) => {
-                          this.props.getPromos({
+                          this.props.getTransactions({
                             count: 10,
                             page: 1,
                             sorting: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1},
@@ -179,71 +177,33 @@ class AdminTransactions extends Component {
                         noRowsRenderer={() => (<div>No data</div>)}
                         rowHeight={50}
                         rowClassName={s.tableListRow}
-                        rowCount={Object.values(promos).length}
-                        rowGetter={({index}) => Object.values(promos)[index]}
+                        rowCount={Object.values(transactions).length}
+                        rowGetter={({index}) => Object.values(transactions)[index]}
                       >
                         <Column
-                          label="#code"
+                          label="created at"
                           headerRenderer={this.setHeaderLabel}
-                          dataKey="code"
+                          dataKey="createdAt"
+                          cellRenderer={({cellData}) => moment(cellData).format('YYYY-MM-DD')}
                           width={150}
                         />
                         <Column
-                          label="name"
+                          label="value"
                           headerRenderer={this.setHeaderLabel}
-                          dataKey="name"
+                          dataKey="value"
                           width={150}
                         />
                         <Column
-                          label="label"
+                          label="user payment"
                           headerRenderer={this.setHeaderLabel}
-                          dataKey="isActive"
-                          cellRenderer={({cellData}) => cellData ? (
-                            <div className={s.tableListRadio}>
-                              Active
-                            </div>
-                          ) : null}
-                          width={100}
-                        />
-                        <Column
-                          label="start"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="dateTimeStart"
-                          cellRenderer={({rowData}) => moment(rowData.dateTimeStart).format('YYYY-MM-DD')}
-                          width={130}
-                        />
-                        <Column
-                          label="end"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="dateTimeEnd"
-                          cellRenderer={({rowData}) => moment(rowData.dateTimeEnd).format('YYYY-MM-DD')}
-                          width={130}
-                        />
-                        <Column
-                          label="discount"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="discountRate"
-                          cellRenderer={({rowData}) => `${rowData.discountRate} ${rowData.discountType}`}
+                          dataKey="user payment"
                           width={150}
                         />
                         <Column
-                          label="view"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="_id"
-                          cellRenderer={({cellData}) => (
-                              <Link className={cx('btn', s.tableListToEdit)} to={`/admin-promocodes/edit/${cellData}`}>
-                                Edit
-                              </Link>
-                          )}
-                          disableSort={true}
-                          width={100}
-                        />
-                        <Column
-                          label="description"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="description"
-                          disableSort={true}
-                          width={500}
+                          label="status"
+                          headerRenderer={this.setHeaderLabel}
+                          dataKey="status"
+                          width={150}
                         />
                       </Table>
                     )}
@@ -265,11 +225,11 @@ AdminTransactions.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  promos: state.promos.data,
+  transactions: state.transactions.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getPromos: (params, extend) => dispatch(getPromos(params, extend)),
+  getTransactions: (params, extend) => dispatch(getTransactions(params, extend)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminTransactions);

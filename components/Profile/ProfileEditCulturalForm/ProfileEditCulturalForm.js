@@ -64,8 +64,8 @@ class ProfileEditCulturalForm extends Component {
                   <span></span>
                   <select id={race} name={race} {...race} value={race.value || ''}>
                     <option value="">-- Select --</option>
-                    {raceChoice && raceChoice.map(item => (
-                      <option value={item.value}>{item.name}</option>
+                    {raceChoice && raceChoice.map((item, index) => (
+                      <option key={index} value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -80,8 +80,8 @@ class ProfileEditCulturalForm extends Component {
                   <span></span>
                   <select id={religion} name={religion} {...religion} value={religion.value || ''}>
                     <option value="">-- Select --</option>
-                    {religionChoice && religionChoice.map(item => (
-                      <option value={item.value}>{item.name}</option>
+                    {religionChoice && religionChoice.map((item, index) => (
+                      <option key={index} value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>
@@ -107,8 +107,8 @@ class ProfileEditCulturalForm extends Component {
                   <span></span>
                   <select id={nationality} name={nationality} {...nationality} value={nationality.value || ''}>
                     <option value="">-- Select --</option>
-                    {nationalityChoice && nationalityChoice.map(item => (
-                      <option value={item.value}>{item.name}</option>
+                    {nationalityChoice && nationalityChoice.map((item, index) => (
+                      <option key={index} value={item.value}>{item.name}</option>
                     ))}
                   </select>
                 </div>

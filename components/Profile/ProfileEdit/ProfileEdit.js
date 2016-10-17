@@ -51,8 +51,23 @@ class ProfileEdit extends Component {
     const { user, userFetching } = this.props;
     const { selectedTabIndex } = this.state;
     let content;
+    let sideTab;
 
     if (isClient(user)) {
+      sideTab = (
+        <SideTabList
+          onSelect={this.handleTabSelect}
+          selectedIndex={this.state.selectedTabIndex}
+          selectable
+        >
+          <SideTab><MdPerson /><span>Basic Details</span></SideTab>
+          <SideTab><MdHome /><span>Residential Details</span></SideTab>
+          <SideTab><FaComments /><span>Cultural Details</span></SideTab>
+          <SideTab><FaImage /><span>Profile Picture</span></SideTab>
+          <SideTab><FaLock /><span>Password</span></SideTab>
+        </SideTabList>
+      )
+
       content = (
         <div className={s.editPanelContainer}>
           {selectedTabIndex === 0 && (<ProfileEditBasicForm />)}
@@ -63,6 +78,22 @@ class ProfileEdit extends Component {
         </div>
       )
     } else if (isProvider(user)) {
+      sideTab = (
+        <SideTabList
+          onSelect={this.handleTabSelect}
+          selectedIndex={this.state.selectedTabIndex}
+          selectable
+        >
+          <SideTab><MdPerson /><span>Basic Details</span></SideTab>
+          <SideTab><MdHome /><span>Residential Details</span></SideTab>
+          <SideTab><FaComments /><span>Cultural Details</span></SideTab>
+          <SideTab><FaBook /><span>Education History</span></SideTab>,
+          <SideTab><FaBriefcase /><span>Employment History</span></SideTab>,
+          <SideTab><FaTrophy /><span>Achievements</span></SideTab>
+          <SideTab><FaImage /><span>Profile Picture</span></SideTab>
+          <SideTab><FaLock /><span>Password</span></SideTab>
+        </SideTabList>
+      )
 
       content = (
         <div className={s.editPanelContainer}>
@@ -89,22 +120,7 @@ class ProfileEdit extends Component {
                   <img src={user.avatar ? user.avatar : imgBlankAvatar} key={user.avatar ? user.avatar : 'noimage'} />
                 </div>
 
-                <SideTabList
-                  onSelect={this.handleTabSelect}
-                  selectedIndex={this.state.selectedTabIndex}
-                  selectable
-                >
-                  <SideTab><MdPerson /><span>Basic Details</span></SideTab>
-                  <SideTab><MdHome /><span>Residential Details</span></SideTab>
-                  <SideTab><FaComments /><span>Cultural Details</span></SideTab>
-                  {isProvider(user) && ([
-                    <SideTab key={1}><FaBook /><span>Education History</span></SideTab>,
-                    <SideTab key={2}><FaBriefcase /><span>Employment History</span></SideTab>,
-                    <SideTab key={3}><FaTrophy /><span>Achievements</span></SideTab>
-                  ])}
-                  <SideTab><FaImage /><span>Profile Picture</span></SideTab>
-                  <SideTab><FaLock /><span>Password</span></SideTab>
-                </SideTabList>
+                {sideTab}
               </Loader>
             </div>
 

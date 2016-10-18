@@ -11,7 +11,7 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import { reduxForm, change } from 'redux-form';
 import InlineForm from '../../MultiSelect';
-import { fetchAddress, editUser } from '../../../actions';
+import { GEOCODE_SUCCESS, fetchAddress, editUser } from '../../../actions';
 // react-icons
 import FaLock from 'react-icons/lib/fa/lock';
 
@@ -20,14 +20,13 @@ class ProfileEditResidentialForm extends Component {
 
   onPostalChange = (postal) => {
     if (/^[0-9]{6}$/i.test(postal)) {
-      new Promise((resolve, reject) => {
-        this.props.fetchAddress(postal).then((res) => {
-          if (res.type === 'GEOCODE_SUCCESS') {
-            this.props.changeFieldValue('lat', res.lat);
-            this.props.changeFieldValue('lng', res.lng);
-            this.props.changeFieldValue('neighborhood', res.neighborhood);
-          }
-        })
+      this.props.fetchAddress(postal).then((res) => {
+        if (res.type === GEOCODE_SUCCESS) {
+          this.props.changeFieldValue('lat', res.lat);
+          this.props.changeFieldValue('lng', res.lng);
+          this.props.changeFieldValue('neighborhood', res.neighborhood);
+          this.props.changeFieldValue('description', res.description);
+        }
       })
     }
   };
@@ -35,7 +34,7 @@ class ProfileEditResidentialForm extends Component {
   onSubmit = (values) => {
     return new Promise((resolve,reject) => {
       this.props.editUser({
-        _id: values._id,
+        userId: values._id,
         address: {
           postal: values.postal,
           unit: values.unit,
@@ -86,7 +85,7 @@ class ProfileEditResidentialForm extends Component {
             </div>
 
             <div className="TableRow">
-              <div className="TableRowItem1">Unit Number<sup>*</sup></div>
+              <div className="TableRowItem1">Unit Number</div>
               <div className="TableRowItem2">
                 <input type="text" {...unit} />
                 {unit.touched && unit.error && <div className={s.formError}>{unit.error}</div>}
@@ -139,9 +138,6 @@ const validate = values => {
     errors.postal = 'Required';
   } else if (!/^[0-9]{6}$/i.test(values.postal)) {
     errors.postal = 'Invalid postal code (e.g. 123456)';
-  }
-  if (!values.unit) {
-    errors.unit = 'Required';
   }
   if (!values.description) {
     errors.description = 'Required';

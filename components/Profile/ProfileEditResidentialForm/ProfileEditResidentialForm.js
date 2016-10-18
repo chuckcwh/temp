@@ -103,7 +103,7 @@ class ProfileEditResidentialForm extends Component {
             <div className="TableRow">
               <div className="TableRowItem1">Neighborhood</div>
               <div className="TableRowItem2">
-                <input type="text" {...neighborhood} />
+                <input type="text" {...neighborhood} disabled />
                 {/*}
                 <div className={cx("select", s.selectInput)}>
                   <span></span>

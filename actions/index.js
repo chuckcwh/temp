@@ -940,9 +940,9 @@ function fetchAction(route) {
     },
     approveTransaction: {
       types: [ TRANSACTION_APPROVE_REQUEST, TRANSACTION_APPROVE_SUCCESS, TRANSACTION_APPROVE_FAILURE ],
-      endpoint: '/approveTransaction/:transactionId/approvePending',
+      endpoint: '/transactions/:transactionId/approvePending',
       method: 'put',
-      auth: 'app'
+      auth: 'user',
     },
     verifyUserPin: {
       types: [ VERIFY_USER_PIN_REQUEST, VERIFY_USER_PIN_SUCCESS, VERIFY_USER_PIN_FAILURE ],

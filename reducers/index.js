@@ -525,7 +525,8 @@ const patients = (state = {
         lastUpdated: action.response && action.response.receivedAt
       }
     case ActionTypes.PATIENT_SUCCESS:
-      if (action.response && action.response.data && action.response.data.id && state.data[action.response.data._id]) {
+    case ActionTypes.PATIENT_EDIT_SUCCESS:
+      if (action.response && action.response.data && action.response.data._id && state.data[action.response.data._id]) {
         return {
           ...state,
           isFetching: false,
@@ -562,6 +563,7 @@ const patientsByClient = (state = {}, action) => {
     case ActionTypes.PATIENTS_REQUEST:
     case ActionTypes.PATIENTS_SUCCESS:
     case ActionTypes.PATIENT_SUCCESS:
+    case ActionTypes.PATIENT_EDIT_SUCCESS:
     case ActionTypes.PATIENT_DELETE_SUCCESS:
       return {
         ...state,

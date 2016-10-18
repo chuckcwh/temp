@@ -15,13 +15,13 @@ class InlineForm extends Component {
     }
   }
 
-  handleSubmit = () => {
+  handleSubmit = (values, dispatch) => {
     if (this.props.onSave) {
-      return this.props.onSave.apply(this, arguments).then(() => {
+      return this.props.onSave(values, dispatch).then(() => {
         this.props.hideInlineForm();
       });
     } else if (this.props.ok) {
-      return this.props.ok.apply(this, arguments).then(() => {
+      return this.props.ok(values, dispatch).then(() => {
         this.props.hideInlineForm();
       });
     }

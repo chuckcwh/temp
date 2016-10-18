@@ -1,17 +1,22 @@
-/* eslint-disable camelcase */
-
 import React, { Component, PropTypes } from 'react';
-import { reduxForm } from 'redux-form';
+import { reduxForm, change } from 'redux-form';
 import moment from 'moment';
 import s from './PatientsFormSecond.css';
 
 class PatientsFormSecond extends Component {
 
   componentWillReceiveProps(props) {
-    const { fields: { postal } } = this.props;
+    const { fields: { postal, sameAddress } } = this.props;
     const newpostal = props && props.fields && props.fields.postal;
     if (newpostal.value.length === 6 && newpostal.value !== postal.value) {
       this.props.fetchAddress(newpostal.value);
+    }
+    const newSameAddress = props && props.fields && props.fields.sameAddress;
+    if (newSameAddress.value && !sameAddress.value) {
+      if (props.user) {
+        this.props.changeFieldValue('postal', props.user.address.postal);
+        this.props.changeFieldValue('unit', props.user.address.unit);
+      }
     }
   }
 
@@ -34,16 +39,19 @@ class PatientsFormSecond extends Component {
       submitting,
       previousPage,
       action,
+      user,
     } = this.props;
     return (
       <form className={s.patientsFormSecond} onSubmit={handleSubmit}>
         <div className={s.patientsFormSecondSection}>
-          <div className="TableRow">
-            <input className={s.rememberMeCheckbox} type="checkbox" id="sameAddress" name="sameAddress" {...sameAddress} />
-            <label className={s.rememberMeCheckboxLabel} htmlFor="sameAddress">
-              <span></span><span>Use my address</span>
-            </label>
-          </div>
+          {user.address &&
+            <div className="TableRow">
+              <input className={s.rememberMeCheckbox} type="checkbox" id="sameAddress" name="sameAddress" {...sameAddress} />
+              <label className={s.rememberMeCheckboxLabel} htmlFor="sameAddress">
+                <span></span><span>Use my address</span>
+              </label>
+            </div>
+          }
           <div className="TableRow">
             <div className="TableRowItem1">Postal Code*</div>
             <div className="TableRowItem2">
@@ -121,6 +129,12 @@ PatientsFormSecond.propTypes = {
   previousPage: PropTypes.func.isRequired,
   fetchAddress: PropTypes.func.isRequired,
   action: PropTypes.string.isRequired,
+
+  config: PropTypes.object,
+  user: PropTypes.object,
+  initialValues: PropTypes.object,
+
+  changeFieldValue: PropTypes.func.isRequired,
 };
 
 const reduxFormConfig = {
@@ -157,6 +171,7 @@ const mapStateToProps = (state, ownProps) => {
   } = patientAddress;
   return {
     config: state.config.data,
+    user: state.user.data,
     initialValues: {
       sameAddress,
       postal,
@@ -170,4 +185,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default reduxForm(reduxFormConfig, mapStateToProps)(PatientsFormSecond);
+const mapDispatchToProps = (dispatch) => ({
+  changeFieldValue: (field, value) => dispatch(change('patientsForm', field, value)),
+});
+
+export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(PatientsFormSecond);

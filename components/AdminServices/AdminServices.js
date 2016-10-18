@@ -9,7 +9,7 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
-import { getPromos } from '../../actions';
+import { fetchServices } from '../../actions';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -32,14 +32,15 @@ class AdminServices extends Component {
   }
 
   componentDidMount() {
-    this.props.getPromos({
-      count: 10,
-      page: this.state.page,
-    });
+    // this.props.getServices({
+    //   count: 10,
+    //   page: this.state.page,
+    // });
+    this.props.fetchServices();
   }
 
   isRowLoaded = ({ index }) => {
-    return !!Object.values(this.props.promos)[index];
+    return !!Object.values(this.props.services)[index];
   }
 
   loadMoreRows = ({startIndex, stopIndex}) => {
@@ -58,7 +59,7 @@ class AdminServices extends Component {
       data['filter'] = {[filterField]: filterKwd};
     }
 
-    return this.props.getPromos(data, true);
+    return this.props.getServices(data, true);
   }
 
   setHeaderLabel = ({dataKey, label}) => {
@@ -85,7 +86,7 @@ class AdminServices extends Component {
       data['sorting'] = sortDirection;
     }
 
-    this.props.getPromos(data);
+    this.props.getServices(data);
   }
 
   onClearSortFilter = () => {
@@ -98,15 +99,15 @@ class AdminServices extends Component {
 
     this.refs.filterField.value = filterChoice[0];
     this.refs.filterKwd.value = "";
-    this.props.getPromos({
+    this.props.getServices({
       count: 10,
       page: 1,
     });
   }
 
   render() {
-    const { add, edit, promoId } = this.props.params;
-    const { user, promos } = this.props;
+    const { add, edit, serviceId } = this.props.params;
+    const { user, services } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
@@ -167,7 +168,7 @@ class AdminServices extends Component {
                         headerClassName={s.tableListHeader}
                         headerHeight={30}
                         sort={({sortBy}) => {
-                          this.props.getPromos({
+                          this.props.getServices({
                             count: 10,
                             page: 1,
                             sorting: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1},
@@ -179,71 +180,14 @@ class AdminServices extends Component {
                         noRowsRenderer={() => (<div>No data</div>)}
                         rowHeight={50}
                         rowClassName={s.tableListRow}
-                        rowCount={Object.values(promos).length}
-                        rowGetter={({index}) => Object.values(promos)[index]}
+                        rowCount={Object.values(services).length}
+                        rowGetter={({index}) => Object.values(services)[index]}
                       >
                         <Column
                           label="#code"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="code"
                           width={150}
-                        />
-                        <Column
-                          label="name"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="name"
-                          width={150}
-                        />
-                        <Column
-                          label="label"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="isActive"
-                          cellRenderer={({cellData}) => cellData ? (
-                            <div className={s.tableListRadio}>
-                              Active
-                            </div>
-                          ) : null}
-                          width={100}
-                        />
-                        <Column
-                          label="start"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="dateTimeStart"
-                          cellRenderer={({rowData}) => moment(rowData.dateTimeStart).format('YYYY-MM-DD')}
-                          width={130}
-                        />
-                        <Column
-                          label="end"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="dateTimeEnd"
-                          cellRenderer={({rowData}) => moment(rowData.dateTimeEnd).format('YYYY-MM-DD')}
-                          width={130}
-                        />
-                        <Column
-                          label="discount"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="discountRate"
-                          cellRenderer={({rowData}) => `${rowData.discountRate} ${rowData.discountType}`}
-                          width={150}
-                        />
-                        <Column
-                          label="view"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="_id"
-                          cellRenderer={({cellData}) => (
-                              <Link className={cx('btn', s.tableListToEdit)} to={`/admin-promocodes/edit/${cellData}`}>
-                                Edit
-                              </Link>
-                          )}
-                          disableSort={true}
-                          width={100}
-                        />
-                        <Column
-                          label="description"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="description"
-                          disableSort={true}
-                          width={500}
                         />
                       </Table>
                     )}
@@ -265,11 +209,12 @@ AdminServices.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  promos: state.promos.data,
+  services: state.services.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getPromos: (params, extend) => dispatch(getPromos(params, extend)),
+  fetchServices: () => dispatch(fetchServices()),
+  // getServices: (params, extend) => dispatch(getServices(params, extend)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminServices);

@@ -7,7 +7,6 @@ import s from './DocumentationBateForm.css';
 import Container from '../../Container';
 import Link from '../../Link';
 import Header from '../../Header';
-import history from '../../../core/history';
 import { getUserName, configToName } from '../../../core/util';
 import { getSession, showConfirmPopup, fetchServices } from '../../../actions';
 import ConfirmPopup from '../../ConfirmPopup';

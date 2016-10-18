@@ -54,13 +54,6 @@ class DocumentationMSEForm extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {
-      // recentFalls,
-      // medications,
-      // psychological,
-      // cognitiveStatus,
-      // recentChanges,
-      // dizziness,
-      // interventions
       followUp,
       family,
     } = nextProps.fields;

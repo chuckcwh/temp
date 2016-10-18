@@ -8,8 +8,7 @@ import Container from '../Container';
 import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
-import { USER_EDIT_SUCCESS, PATIENTS_SUCCESS, PATIENT_CREATE_SUCCESS, PATIENT_EDIT_SUCCESS, fetchAddress, getPatients, createPatient, getPatient, getUser,
-  editPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
+import { USER_EDIT_SUCCESS, PATIENTS_SUCCESS, PATIENT_CREATE_SUCCESS, PATIENT_EDIT_SUCCESS, fetchAddress, getPatients, createPatient,getPatient, editPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
   setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import history from '../../core/history';
 import { isNextLastPage, configToName } from '../../core/util';
@@ -42,6 +41,7 @@ class BookingLocationUser extends Component {
   }
 
   onClickEdit = (entity) => (event) => {
+    const { config } = this.props;
     event.preventDefault();
     this.setState({ editing: true });
 
@@ -146,7 +146,7 @@ class BookingLocationUser extends Component {
               options: config.languages.map((l) => ({ label: l.name, value: l.value })),
               initialValue: this.props.patients && this.state.patientId
                 && this.props.patients[this.state.patientId]
-                && this.props.patients[this.state.patientId].languages.map(l => l.value).join(','),
+                && this.props.patients[this.state.patientId].languages.join(','),
             },
           },
           validate: (values) => {
@@ -270,7 +270,7 @@ class BookingLocationUser extends Component {
                 && this.props.patients[this.state.patientId].address
                 && this.props.patients[this.state.patientId].address.postal,
             },
-            address: {
+            description: {
               label: 'Address',
               type: 'text',
               initialValue: this.props.patients && this.state.patientId
@@ -294,8 +294,8 @@ class BookingLocationUser extends Component {
             } else if (!/^[0-9]{6}$/i.test(values.postal)) {
               errors.postal = 'Invalid postal code (e.g. 123456)';
             }
-            if (!values.address) {
-              errors.address = 'Required';
+            if (!values.description) {
+              errors.description = 'Required';
             }
             return errors;
           },
@@ -317,12 +317,8 @@ class BookingLocationUser extends Component {
             name: values.name,
           }).then((res) => {
             if (res && res.type === USER_EDIT_SUCCESS) {
-              this.props.getUser({
-                userId: this.props.user && this.props.user._id,
-              }).then(() => {
-                resolve();
-                this.setState({ editing: false });
-              });
+              resolve();
+              this.setState({ editing: false });
             } else {
               reject({ _error: res.response.message });
             }
@@ -336,12 +332,8 @@ class BookingLocationUser extends Component {
             email: values.email,
           }).then((res) => {
             if (res && res.type === USER_EDIT_SUCCESS) {
-              this.props.getUser({
-                userId: this.props.user && this.props.user._id,
-              }).then(() => {
-                resolve();
-                this.setState({ editing: false });
-              });
+              resolve();
+              this.setState({ editing: false });
             } else {
               reject({ _error: res.response.message });
             }
@@ -355,12 +347,8 @@ class BookingLocationUser extends Component {
             contact: values.contact,
           }).then((res) => {
             if (res && res.type === USER_EDIT_SUCCESS) {
-              this.props.getUser({
-                userId: this.props.user && this.props.user._id,
-              }).then(() => {
-                resolve();
-                this.setState({ editing: false });
-              });
+              resolve();
+              this.setState({ editing: false });
             } else {
               reject({ _error: res.response.message });
             }
@@ -374,16 +362,12 @@ class BookingLocationUser extends Component {
         case 'patientRace':
         case 'patientReligion':
           this.props.editPatient(Object.assign({
+            userId: this.props.user && this.props.user._id,
             patientId: this.state.patientId,
           }, values)).then((res) => {
             if (res && res.type === PATIENT_EDIT_SUCCESS) {
-              this.props.getPatient({
-                userId: this.props.user && this.props.user._id,
-                patientId: this.state.patientId,
-              }).then(() => {
-                resolve();
-                this.setState({ editing: false });
-              });
+              resolve();
+              this.setState({ editing: false });
             } else {
               reject({ _error: res.response.message });
             }
@@ -391,17 +375,13 @@ class BookingLocationUser extends Component {
           break;
         case 'patientLanguages':
           this.props.editPatient({
+            userId: this.props.user && this.props.user._id,
             patientId: this.state.patientId,
             languages: values.languages.split(','),
           }).then((res) => {
             if (res && res.type === PATIENT_EDIT_SUCCESS) {
-              this.props.getPatient({
-                userId: this.props.user && this.props.user._id,
-                patientId: this.state.patientId,
-              }).then(() => {
-                resolve();
-                this.setState({ editing: false });
-              });
+              resolve();
+              this.setState({ editing: false });
             } else {
               reject({ _error: res.response.message });
             }
@@ -409,20 +389,16 @@ class BookingLocationUser extends Component {
           break;
         case 'patientLocation':
           this.props.editPatient({
+            userId: this.props.user && this.props.user._id,
             patientId: this.state.patientId,
-            address: [Object.assign(this.props.patients &&
+            address: Object.assign({}, this.props.patients &&
               this.props.patients[this.state.patientId] &&
               this.props.patients[this.state.patientId].address
-            , values)],
+            , values),
           }).then((res) => {
             if (res && res.type === PATIENT_EDIT_SUCCESS) {
-              this.props.getPatient({
-                userId: this.props.user && this.props.user._id,
-                patientId: this.state.patientId,
-              }).then(() => {
-                resolve();
-                this.setState({ editing: false });
-              });
+              resolve();
+              this.setState({ editing: false });
             } else {
               reject({ _error: res.response.message });
             }
@@ -584,7 +560,7 @@ class BookingLocationUser extends Component {
           />
         </div>
       );
-    } else if (this.props.patients && this.state.patientId) {
+    } else if (this.props.patients && this.state.patientId && this.props.patients[this.state.patientId]) {
       patientDetails = (
         <div>
           <div className="TableRow">
@@ -768,7 +744,6 @@ BookingLocationUser.propTypes = {
   getPatients: React.PropTypes.func.isRequired,
   createPatient: React.PropTypes.func.isRequired,
   getPatient: React.PropTypes.func.isRequired,
-  getUser: React.PropTypes.func.isRequired,
   editPatient: React.PropTypes.func.isRequired,
   editUser: React.PropTypes.func.isRequired,
   editEmail: React.PropTypes.func.isRequired,
@@ -803,7 +778,6 @@ const mapDispatchToProps = (dispatch) => ({
   getPatients: (params) => dispatch(getPatients(params)),
   createPatient: (patient) => dispatch(createPatient(patient)),
   getPatient: (params) => dispatch(getPatient(params)),
-  getUser: (params) => dispatch(getUser(params)),
   editPatient: (params) => dispatch(editPatient(params)),
   editUser: (params) => dispatch(editUser(params)),
   editEmail: (params) => dispatch(editEmail(params)),

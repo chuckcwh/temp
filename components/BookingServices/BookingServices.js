@@ -24,10 +24,12 @@ class BookingServices extends Component {
       selectedServiceClass: undefined,
     };
     if (order && order.service) {
+      this.state.filter = services && services[order.service] && services[order.service].parentCategory;
       this.state.selectedService = order.service;
       this.state.selectedServiceClass = order.serviceClass;
     } else if (services && location.query && location.query.sid && location.query.scid) {
       if (services[location.query.sid]) {
+        this.state.filter = services[location.query.sid].parentCategory;
         this.state.selectedService = location.query.sid;
         this.state.selectedServiceClass = location.query.scid;
       }
@@ -49,12 +51,14 @@ class BookingServices extends Component {
     });
     if (order && order.service) {
       this.setState({
+        filter: services && services[order.service] && services[order.service].parentCategory,
         selectedService: order.service,
         selectedServiceClass: order.serviceClass,
       });
     } else if (services && location.query && location.query.sid && location.query.scid) {
       if (services[location.query.sid]) {
         this.setState({
+          filter: services[location.query.sid].parentCategory,
           selectedService: location.query.sid,
           selectedServiceClass: location.query.scid,
         });

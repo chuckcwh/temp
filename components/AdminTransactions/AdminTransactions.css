@@ -44,14 +44,22 @@
     width: 55px;
   }
 
-  & .tableListToEdit {
-    display: block;
-    background-color: #f78d00;
+  & .tableListBtn {
+    display: inline-block;
     color: #FFFFFF;
     border-radius: 15px;
-    padding: 5px 3px;
+    padding: 5px;
     text-align: center;
-    width: 65px;
+    min-width: 65px;
+    cursor: pointer;
+  }
+
+  & .green {
+    background-color: #18B905;
+  }
+
+  & .red {
+    background-color: #f2635f;
   }
 
   & .clearSortFilter {

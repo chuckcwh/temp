@@ -384,6 +384,10 @@ export const TRANSACTION_DELETE_REQUEST = 'TRANSACTION_DELETE_REQUEST'
 export const TRANSACTION_DELETE_SUCCESS = 'TRANSACTION_DELETE_SUCCESS'
 export const TRANSACTION_DELETE_FAILURE = 'TRANSACTION_DELETE_FAILURE'
 
+export const TRANSACTION_APPROVE_REQUEST = 'TRANSACTION_APPROVE_REQUEST'
+export const TRANSACTION_APPROVE_SUCCESS = 'TRANSACTION_APPROVE_SUCCESS'
+export const TRANSACTION_APPROVE_FAILURE = 'TRANSACTION_APPROVE_FAILURE'
+
 export const TRANSACTION_PAYPAL_CREATE_REQUEST = 'TRANSACTION_PAYPAL_CREATE_REQUEST'
 export const TRANSACTION_PAYPAL_CREATE_SUCCESS = 'TRANSACTION_PAYPAL_CREATE_SUCCESS'
 export const TRANSACTION_PAYPAL_CREATE_FAILURE = 'TRANSACTION_PAYPAL_CREATE_FAILURE'
@@ -934,6 +938,12 @@ function fetchAction(route) {
       method: 'post',
       auth: 'app'
     },
+    approveTransaction: {
+      types: [ TRANSACTION_APPROVE_REQUEST, TRANSACTION_APPROVE_SUCCESS, TRANSACTION_APPROVE_FAILURE ],
+      endpoint: '/approveTransaction/:transactionId/approvePending',
+      method: 'put',
+      auth: 'app'
+    },
     verifyUserPin: {
       types: [ VERIFY_USER_PIN_REQUEST, VERIFY_USER_PIN_SUCCESS, VERIFY_USER_PIN_FAILURE ],
       endpoint: '/users/:userId/verifyPin',
@@ -1451,6 +1461,10 @@ export function editTransaction(params) {
 
 export function deleteTransaction(params) {
   return fetch('deleteTransaction', params);
+}
+
+export function approveTransaction(params) {
+  return fetch('approveTransaction', params);
 }
 
 export function destroyTransaction() {

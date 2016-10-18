@@ -15,6 +15,8 @@ import history from '../../../core/history';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {
+  APPLICATION_CREATE_SUCCESS,
+  BOOKING_DELETE_SUCCESS,
   fetchServices,
   showAlertPopup,
   showGenericPopup,
@@ -92,7 +94,7 @@ class AdminBookingsView extends Component {
       session: providerPick.sessionId,
     }).then(res => {
       this.setState({providerPick: providerPickDefault});
-      if (res.type === "APPLICATION_CREATE_SUCCESS") {
+      if (res.type === APPLICATION_CREATE_SUCCESS) {
         showAlertPopup('Assign Provider Success');
         getBooking({ bookingId }).then(res => {
           if (res.type === 'BOOKING_FAILURE') {
@@ -119,7 +121,7 @@ class AdminBookingsView extends Component {
 
     console.log('delete action', booking._id);
     deleteBooking({ bookingId: booking._id }).then(res => {
-      if (res.type === 'BOOKING_DELETE_SUCCESS') {
+      if (res.type === BOOKING_DELETE_SUCCESS) {
         history.push({ pathname: '/admin-bookings' });
       }
     })

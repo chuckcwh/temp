@@ -212,14 +212,14 @@ class AdminTransactions extends Component {
                         />
                         <Column
                           label="payer"
-                          headerRenderer={this.setHeaderLabel}
+                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="payment"
                           cellRenderer={({cellData}) => cellData && cellData.payer && cellData.payer.payer_info && `${cellData.payer.payer_info.first_name} ${cellData.payer.payer_info.last_name}`}
                           width={150}
                         />
                         <Column
                           label="transaction type"
-                          headerRenderer={this.setHeaderLabel}
+                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="transactionType"
                           width={170}
                         />

@@ -192,6 +192,10 @@
     "page": "./pages/admin/categories"
   },
   {
+    "path": "/admin-categories/:add",
+    "page": "./pages/admin/categories"
+  },
+  {
     "path": "/admin-services",
     "page": "./pages/admin/services"
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AdminCategories from '../../components/AdminCategories';
 
+
 export default class extends Component {
 
   componentDidMount() {
@@ -9,7 +10,7 @@ export default class extends Component {
 
   render() {
     return (
-      <AdminCategories {...this.props}/>
+      <AdminCategories {...this.props} />
     );
   }
 

@@ -280,8 +280,8 @@ class AdminPromocodesForm extends Component {
                       <div className={cx("select", s.dateInput)}>
                         <span></span>
                         <select className={s.discountTypeInput} id={discountType} name={discountType} {...discountType}>
-                          {discountTypeChoice && discountTypeChoice.map(item => (
-                            <option key={discountTypeChoice.indexOf(item)} value={item.value}>{item.name}</option>
+                          {discountTypeChoice && discountTypeChoice.map((item, index) => (
+                            <option key={index} value={item.value}>{item.name}</option>
                           ))}
                         </select>
                       </div>

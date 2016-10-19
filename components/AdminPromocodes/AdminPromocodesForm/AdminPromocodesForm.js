@@ -9,7 +9,18 @@ import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
 import s from './AdminPromocodesForm.css';
 import history from '../../../core/history';
-import { PROMOCODE_EDIT_SUCCESS, PROMO_SUCCESS, showDayPickerPopup, showAlertPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
+import {
+  PROMO_DELETE_SUCCESS,
+  PROMOCODE_EDIT_SUCCESS,
+  PROMO_SUCCESS,
+  showDayPickerPopup,
+  showAlertPopup,
+  fetchServices,
+  createPromo,
+  getPromo,
+  editPromo,
+  deletePromo
+} from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -65,8 +76,11 @@ class AdminPromocodesForm extends Component {
     e.preventDefault();
 
     this.props.deletePromo({promoId: this.props.fields._id.value}, true).then(res => {
-      if (res.type === 'PROMO_DELETE_SUCCESS') {
+      if (res.type === PROMO_DELETE_SUCCESS) {
+        showAlertPopup('Promocode delete success!');
         history.push({ pathname: '/admin-promocodes' });
+      } else {
+        showAlertPopup('Promocode delete failed.');
       }
     });
   }

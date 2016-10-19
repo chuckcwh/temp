@@ -14,6 +14,7 @@ import {
   CATEGORY_CREATE_SUCCESS,
   CATEGORY_FAILURE,
   CATEGORY_EDIT_SUCCESS,
+  CATEGORY_DELETE_SUCCESS,
   createCategory,
   getCategory,
   editCategory,
@@ -47,12 +48,16 @@ class AdminCategoriesForm extends Component {
 
   onDeleteCategory = (e) => {
     e.preventDefault();
+    const { fields, deleteCategory } = this.props;
 
-    // this.props.deletePromo({promoId: this.props.fields._id.value}, true).then(res => {
-    //   if (res.type === 'PROMO_DELETE_SUCCESS') {
-    //     history.push({ pathname: '/admin-promocodes' });
-    //   }
-    // });
+    deleteCategory({categoryId: fields._id.value}).then(res => {
+      if (res.type === CATEGORY_DELETE_SUCCESS) {
+        showAlertPopup('Category delete success!');
+        history.push({ pathname: '/admin-categories' });
+      } else {
+        showAlertPopup('Category delete failed.');
+      }
+    });
   }
 
   onEditCategory = (e) => {
@@ -206,7 +211,7 @@ class AdminCategoriesForm extends Component {
           <div className={s.formSectionSubmit}>
             {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
             <button className="btn btn-primary" disabled={invalid || submitting} onClick={this.onEditCategory}>Update</button>&nbsp;&nbsp;
-            <button className="btn btn-secondary" onClick={this.onDeletePromo}>Delete</button>
+            <button className="btn btn-secondary" onClick={this.onDeleteCategory}>Delete</button>
           </div>
         ) : (
           <div className={s.formSectionSubmit}>

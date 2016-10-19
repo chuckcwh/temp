@@ -9,8 +9,16 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import { AutoSizer, Table, Column } from 'react-virtualized';
-import { SERVICES_SUCCESS, fetchServices } from '../../actions';
+import {
+  SERVICES_SUCCESS,
+  CATEGORY_DELETE_SUCCESS,
+  fetchServices,
+  showConfirmPopup,
+  showAlertPopup,
+  deleteCategory,
+} from '../../actions';
 import { isAdmin } from '../../core/util';
+import ConfirmPopup from '../ConfirmPopup';
 // sub-component
 import AdminCategoriesForm from './AdminCategoriesForm/AdminCategoriesForm';
 // react-icons
@@ -34,6 +42,19 @@ class AdminCategories extends Component {
 
   componentDidMount() {
     this.updateCategoryList();
+  }
+
+  onDeleteCategory = (categoryId) => {
+    const { fields, deleteCategory } = this.props;
+
+    deleteCategory({categoryId}).then(res => {
+      if (res.type === CATEGORY_DELETE_SUCCESS) {
+        showAlertPopup('Category delete success!');
+        this.updateCategoryList();
+      } else {
+        showAlertPopup('Category delete failed.');
+      }
+    });
   }
 
   updateCategoryList() {
@@ -68,7 +89,7 @@ class AdminCategories extends Component {
   }
 
   render() {
-    const { user } = this.props;
+    const { user, showConfirmPopup } = this.props;
     const { add, edit, categoryId } = this.props.params;
     const { renderCategories } = this.state;
     const categorySelections = [{value: 'category', name: 'Category only'}, {value: "sub-category", name: 'Sub-category only'}, {value: "", name: 'Both'}];
@@ -77,6 +98,8 @@ class AdminCategories extends Component {
       <div className={s.adminCategories}>
         <Header title={add ? "Add Category" : edit ? "Edit Category" : "Category Management"} />
         <Container>
+          <ConfirmPopup />
+
           {isAdmin(user) && add && (
             <AdminCategoriesForm updateCategoryList={() => this.updateCategoryList()}/>
           )}
@@ -153,9 +176,10 @@ class AdminCategories extends Component {
                             <Link className={cx('btn', s.tableListBtn, s.orange)} to={`/admin-categories/edit/${cellData}`}>
                               Edit
                             </Link>
-                            <Link className={cx('btn', s.tableListBtn, s.red)} to={`/admin-categories/edit/${cellData}`}>
+                            <div className={cx('btn', s.tableListBtn, s.red)}
+                              onClick={() => showConfirmPopup("Are you sure you want to delete?", this.onDeleteCategory(cellData))}>
                               Delete
-                            </Link>
+                            </div>
                           </div>
                         )}
                         disableSort={true}
@@ -193,6 +217,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
+  deleteCategory: (params) => dispatch(deleteCategory(params)),
+  showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminCategories);

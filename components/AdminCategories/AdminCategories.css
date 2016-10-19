@@ -52,6 +52,7 @@
     padding: 5px 3px;
     text-align: center;
     width: 65px;
+    cursor: pointer;
   }
 
   & .clearSortFilter {

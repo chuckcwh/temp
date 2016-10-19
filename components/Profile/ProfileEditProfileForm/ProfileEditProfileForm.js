@@ -76,7 +76,7 @@ class ProfileEditProfileForm extends Component {
 
     this.props.getS3UploadUrl({
       fileName: this.state.newAvatarName,
-      fileType: this.state.fileType,
+      fileType: this.state.newAvatarSelected.type,
     }).then((res) => {
 
       if (res && res.type === S3_UPLOAD_URL_SUCCESS) {

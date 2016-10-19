@@ -109,7 +109,7 @@ class AdminTransactions extends Component {
     const { transactionId } = this.props.params;
     const { user, transactions } = this.props;
     const { sortDirection, filterField, filterKwd, showPendingTransaction } = this.state;
-    console.log('showPendingTransaction', showPendingTransaction);
+
     return (
       <div className={s.adminTransactions}>
         <Header title="Transactions Management" />
@@ -155,7 +155,7 @@ class AdminTransactions extends Component {
                   }, () => this.onGetTransactions())}}
                   value={showPendingTransaction}
                 />
-              <label htmlFor="pendingTransactions"><span></span><span>show only pending transactions</span></label>
+                <label htmlFor="pendingTransactions"><span></span><span>show only pending transactions</span></label>
               </div>
 
               <InfiniteLoader

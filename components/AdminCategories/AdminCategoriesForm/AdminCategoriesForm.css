@@ -1,0 +1,40 @@
+@import '../../variables.css';
+
+
+.adminCategoriesForm {
+  & .mainCat {
+    & .mainCatCol {
+      padding: 0 30px;
+
+      & .mainCatContainer {
+
+        & .inputField {
+          text-align: right;
+
+          & .textInput, & .selectionInput {
+            margin-right: 0;
+          }
+
+          & .numberInput {
+            padding: 15px;
+            border: 1px solid #ccc;
+            width: 230px;
+          }
+
+          & .descriptionInput {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  & .formSectionSubmit {
+    text-align: center;
+    margin: 40px auto 80px;
+  }
+
+  & .formError {
+    color: red;
+  }
+}

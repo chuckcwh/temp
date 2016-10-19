@@ -10,6 +10,7 @@ import Link from '../Link';
 import Header from '../Header';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { getPromos } from '../../actions';
+import { isAdmin } from '../../core/util';
 // Sub Component
 import AdminPromocodesForm from './AdminPromocodesForm/AdminPromocodesForm';
 // react-icons
@@ -116,11 +117,11 @@ class AdminPromocodes extends Component {
         <Header title={add && "Add PromoCode" || edit && "Edit PromoCode" || "PromoCode Management"} />
         <Container>
 
-          {user && add && <AdminPromocodesForm />}
+          {isAdmin(user) && add && <AdminPromocodesForm />}
 
-          {user && edit && <AdminPromocodesForm edit={true} promoId={promoId} />}
+          {isAdmin(user) && edit && <AdminPromocodesForm edit={true} promoId={promoId} />}
 
-          {user && !add && !edit && (
+          {isAdmin(user) && !add && !edit && (
             <div>
               <div className={s.addLink}>
                 <Link

@@ -196,6 +196,10 @@
     "page": "./pages/admin/categories"
   },
   {
+    "path": "/admin-categories/:edit/:categoryId",
+    "page": "./pages/admin/categories"
+  },
+  {
     "path": "/admin-services",
     "page": "./pages/admin/services"
   }

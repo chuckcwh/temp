@@ -72,7 +72,7 @@ class ProfileEditProfileForm extends Component {
 
   onHandleUpload = (e) => {
     e.preventDefault();
-    this.setState({ processing: "uploading..." });
+    this.setState({ processing: 'uploading...' });
 
     this.props.getS3UploadUrl({
       fileName: this.state.newAvatarName,

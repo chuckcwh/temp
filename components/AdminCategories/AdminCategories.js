@@ -70,7 +70,6 @@ class AdminCategories extends Component {
       <div className={s.isActiveInput} key={index}>
         <input
           type="radio"
-          ref="filter_category"
           name="filter_category"
           id={`filter_${item.name}`}
           value={item.value}

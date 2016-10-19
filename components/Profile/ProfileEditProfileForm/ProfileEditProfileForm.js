@@ -63,7 +63,7 @@ class ProfileEditProfileForm extends Component {
   }
 
   _crop = () => {
-    this.refs.cropper.getCroppedCanvas().toBlob((blob) => {
+    this.cropper.getCroppedCanvas().toBlob((blob) => {
       this.setState({
         newAvatarSelected: blob,
       });
@@ -116,7 +116,7 @@ class ProfileEditProfileForm extends Component {
         {newAvatar ? (
           <div className={s.formCropperContainer}>
             <Cropper
-              ref='cropper'
+              ref={(c) => this.cropper = c}
               src={newAvatar}
               style={{height: '100%', width: '100%'}}
               aspectRatio={1/1}

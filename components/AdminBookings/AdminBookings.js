@@ -99,8 +99,8 @@ class AdminBookings extends Component {
       filterField: filterChoice[0],
     });
 
-    this.refs.filterField.value = filterChoice[0];
-    this.refs.filterKwd.value = "";
+    this.filterField.value = filterChoice[0];
+    this.filterKwd.value = "";
     this.props.getBookings({
       count: 10,
       page: 1,
@@ -120,7 +120,7 @@ class AdminBookings extends Component {
             <div>
               <div className={s.addLink}>
                 <Link
-                  className={cx('btn', 'btn-primary', s.addLink)}
+                  className={cx("btn", "btn-primary", s.addLink)}
                   to="/admin-bookings/add">
                   New Booking
                 </Link>
@@ -130,7 +130,7 @@ class AdminBookings extends Component {
                 <div className={s.inlineField}>
                   <div className={cx("select", s.filterInput)}>
                     <span></span>
-                    <select ref="filterField" className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
+                    <select ref={(c) => this.filterField = c} className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
                       {filterChoice && filterChoice.map(item => (
                         <option key={filterChoice.indexOf(item)} value={item}>{item}</option>
                       ))}
@@ -138,7 +138,7 @@ class AdminBookings extends Component {
                   </div>
                 </div>
                 <div className={s.inlineField}>
-                  <input ref="filterKwd" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
+                  <input ref={(c) => this.filterKwd = c} type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
                 </div>
                 <div className={s.inlineField}>
                   <span type="text" className={s.clearSortFilter} onClick={this.onClearSortFilter}>
@@ -223,7 +223,7 @@ class AdminBookings extends Component {
                           headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                           dataKey="_id"
                           cellRenderer={({cellData}) => (
-                            <Link className={cx('btn', s.tableListToEdit)} to={`/admin-bookings/view/${cellData}`}>
+                            <Link className={cx("btn", s.tableListToEdit)} to={`/admin-bookings/view/${cellData}`}>
                               Edit
                             </Link>
                           )}

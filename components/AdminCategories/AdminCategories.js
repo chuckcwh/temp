@@ -8,8 +8,11 @@ import s from './AdminCategories.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
-import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
-import { getPromos } from '../../actions';
+import { AutoSizer, Table, Column } from 'react-virtualized';
+import { SERVICES_SUCCESS, fetchServices } from '../../actions';
+import { isAdmin } from '../../core/util';
+// sub-component
+import AdminCategoriesForm from './AdminCategoriesForm/AdminCategoriesForm';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -24,232 +27,137 @@ class AdminCategories extends Component {
     super(props);
 
     this.state = {
-      page: 1,
-      sortDirection: {},
-      filterKwd: null,
-      filterField: filterChoice[0],
+      renderCategories: [],
+      filters: {}
     }
   }
 
   componentDidMount() {
-    this.props.getPromos({
-      count: 10,
-      page: this.state.page,
+    this.updateCategoryList();
+  }
+
+  updateCategoryList() {
+    this.props.fetchServices().then(res => {
+      if (res.type === SERVICES_SUCCESS) {
+        this.setState({renderCategories: Object.values(this.props.categories)})
+      }
     });
   }
 
-  isRowLoaded = ({ index }) => {
-    return !!Object.values(this.props.promos)[index];
-  }
-
-  loadMoreRows = ({startIndex, stopIndex}) => {
-    const { sortDirection, filterKwd, filterField } = this.state;
-    this.setState({page: this.state.page + 1});
-
-    const data = {
-      count: 10,
-      page: this.state.page,
-    }
-
-    if (Object.keys(sortDirection).length !== 0) {
-      data['sorting'] = sortDirection;
-    }
-    if (filterKwd) {
-      data['filter'] = {[filterField]: filterKwd};
-    }
-
-    return this.props.getPromos(data, true);
-  }
-
-  setHeaderLabel = ({dataKey, label}) => {
-    const {sortDirection} = this.state;
-    const arrow = sortDirection[dataKey] === 1 ? <FaCaretSquareODown /> : sortDirection[dataKey] === -1 ? <FaCaretSquareOUp />  : <FaCaretDown />;
-    return (
-      <div>{label}  {arrow}</div>
-  )}
-
-  onFilterData = (e) => {
-    e.preventDefault();
-
-    const { sortDirection, filterField } = this.state;
-    const { value } = e.target;
-    this.setState({page: 1, filterKwd: value});
-
-    const data = {
-      count: 10,
-      page: 1,
-      filter: {[filterField]: value},
-    }
-
-    if (Object.keys(sortDirection).length !== 0) {
-      data['sorting'] = sortDirection;
-    }
-
-    this.props.getPromos(data);
-  }
-
-  onClearSortFilter = () => {
-    this.setState({
-      page: 1,
-      sortDirection: {},
-      filterKwd: null,
-      filterField: filterChoice[0],
-    });
-
-    this.refs.filterField.value = filterChoice[0];
-    this.refs.filterKwd.value = "";
-    this.props.getPromos({
-      count: 10,
-      page: 1,
-    });
+  renderFilterSelections = (selections) => {
+    return selections.map((item, index) => (
+      <div className={s.isActiveInput} key={index}>
+        <input
+          type="radio"
+          ref="filter_category"
+          name="filter_category"
+          id={`filter_${item.name}`}
+          value={item.value}
+          onChange={e => {
+            const data = Object.values(this.props.categories);
+            if (item.value === '') {
+              this.setState({renderCategories: data});
+            } else {
+              this.setState({renderCategories: data.filter(cat => cat.cType === item.value)});
+            }
+          }}
+        />
+        <label className={s.selectionLabel} htmlFor={`filter_${item.name}`}><span><span></span></span><span>{item.name}</span></label>
+      </div>
+    ))
   }
 
   render() {
-    const { add, edit, promoId } = this.props.params;
-    const { user, promos } = this.props;
-    const { sortDirection, filterField, filterKwd } = this.state;
+    const { user } = this.props;
+    const { add } = this.props.params;
+    const { renderCategories } = this.state;
+    const categorySelections = [{value: 'category', name: 'Category only'}, {value: "sub-category", name: 'Sub-category only'}, {value: "", name: 'Both'}];
 
     return (
       <div className={s.adminCategories}>
         <Header title="Category Management" />
         <Container>
-
-          {user && add && <AdminCategoriesForm />}
-
-          {user && edit && <AdminCategoriesForm edit={true} promoId={promoId} />}
-
-          {user && !add && !edit && (
+          {isAdmin(user) && add && (
+            <AdminCategoriesForm updateCategoryList={() => this.updateCategoryList()}/>
+          )}
+          {isAdmin(user) && !add && (
             <div>
               <div className={s.addLink}>
                 <Link
                   className={cx('btn', 'btn-primary')}
-                  to="/admin-promocodes/add">
-                  New Promo Code
+                  to="/admin-categories/add">
+                  New Category
                 </Link>
               </div>
 
-              <div className={s.filter}>
-                <div className={s.inlineField}>
-                  <div className={cx("select", s.filterInput)}>
-                    <span></span>
-                    <select ref="filterField" className={s.filterInputInner} name={filterField} onChange={(e) => this.setState({filterField: e.target.value})}>
-                      {filterChoice && filterChoice.map(item => (
-                        <option key={filterChoice.indexOf(item)} value={item}>{item}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className={s.inlineField}>
-                  <input ref="filterKwd" type="text" className={s.textInput} placeholder="Filter keyword" onChange={this.onFilterData} />
-                </div>
-                <div className={s.inlineField}>
-                  <span type="text" className={s.clearSortFilter} onClick={this.onClearSortFilter}>
-                    clear sort & filter
-                  </span>
-                </div>
+              <div>
+                {this.renderFilterSelections(categorySelections)}
               </div>
 
-              <InfiniteLoader
-                isRowLoaded={this.isRowLoaded}
-                loadMoreRows={this.loadMoreRows}
-                rowCount={10000}
-              >
-                {({ onRowsRendered, registerChild }) => (
+              {renderCategories && (
+                <AutoSizer disableHeight>
+                  {({width}) => (
+                    <Table
+                      className={s.tableList}
+                      height={400}
+                      width={width}
 
-                  <AutoSizer disableHeight>
-                    {({width}) => (
-                      <Table
-                        ref={registerChild}
-                        className={s.tableList}
-                        height={400}
-                        width={width}
+                      headerClassName={s.tableListHeader}
+                      headerHeight={30}
 
-                        headerClassName={s.tableListHeader}
-                        headerHeight={30}
-                        sort={({sortBy}) => {
-                          this.props.getPromos({
-                            count: 10,
-                            page: 1,
-                            sorting: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1},
-                          });
-                          this.setState({page: 1, sortDirection: {...sortDirection, [sortBy]: sortDirection[sortBy] === -1 ? 1 : sortDirection[sortBy] === 1 ? -1 : -1}});
-                        }}
-
-                        onRowsRendered={onRowsRendered}
-                        noRowsRenderer={() => (<div>No data</div>)}
-                        rowHeight={50}
-                        rowClassName={s.tableListRow}
-                        rowCount={Object.values(promos).length}
-                        rowGetter={({index}) => Object.values(promos)[index]}
+                      noRowsRenderer={() => (<div>No data</div>)}
+                      rowHeight={50}
+                      rowClassName={({index}) => index % 2 === 0 ? s.tableListEvenRow : null}
+                      rowCount={renderCategories.length}
+                      rowGetter={({index}) => renderCategories[index]}
                       >
-                        <Column
-                          label="#code"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="code"
-                          width={150}
+                      <Column
+                        label="cType"
+                        headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
+                        dataKey="cType"
+                        width={130}
                         />
-                        <Column
-                          label="name"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="name"
-                          width={150}
+                      <Column
+                        label="name"
+                        headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
+                        dataKey="name"
+                        width={250}
                         />
-                        <Column
-                          label="label"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="isActive"
-                          cellRenderer={({cellData}) => cellData ? (
-                            <div className={s.tableListRadio}>
-                              Active
-                            </div>
-                          ) : null}
-                          width={100}
+                      <Column
+                        label="order"
+                        headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
+                        dataKey="order"
+                        width={60}
                         />
-                        <Column
-                          label="start"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="dateTimeStart"
-                          cellRenderer={({rowData}) => moment(rowData.dateTimeStart).format('YYYY-MM-DD')}
-                          width={130}
+                      <Column
+                        label="popularity"
+                        headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
+                        dataKey="popularity"
+                        width={100}
                         />
-                        <Column
-                          label="end"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="dateTimeEnd"
-                          cellRenderer={({rowData}) => moment(rowData.dateTimeEnd).format('YYYY-MM-DD')}
-                          width={130}
+                      <Column
+                        label="view"
+                        headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
+                        dataKey="_id"
+                        cellRenderer={({cellData}) => (
+                          <Link className={cx('btn', s.tableListToEdit)} to={`/admin-categories/edit/${cellData}`}>
+                            Edit
+                          </Link>
+                        )}
+                        disableSort={true}
+                        width={100}
                         />
-                        <Column
-                          label="discount"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="discountRate"
-                          cellRenderer={({rowData}) => `${rowData.discountRate} ${rowData.discountType}`}
-                          width={150}
+                      <Column
+                        label="description"
+                        headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
+                        dataKey="description"
+                        disableSort={true}
+                        width={500}
                         />
-                        <Column
-                          label="view"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="_id"
-                          cellRenderer={({cellData}) => (
-                              <Link className={cx('btn', s.tableListToEdit)} to={`/admin-promocodes/edit/${cellData}`}>
-                                Edit
-                              </Link>
-                          )}
-                          disableSort={true}
-                          width={100}
-                        />
-                        <Column
-                          label="description"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="description"
-                          disableSort={true}
-                          width={500}
-                        />
-                      </Table>
-                    )}
-                  </AutoSizer>
-                )}
-              </InfiniteLoader>
+                    </Table>
+                  )}
+                </AutoSizer>
+              )}
 
             </div>
           )}
@@ -265,11 +173,12 @@ AdminCategories.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  promos: state.promos.data,
+  services: state.services.data,
+  categories: state.services.categories,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getPromos: (params, extend) => dispatch(getPromos(params, extend)),
+  fetchServices: () => dispatch(fetchServices()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminCategories);

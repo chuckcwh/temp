@@ -31,7 +31,7 @@
     font-size: 14px;
   }
 
-  & .tableListRow:nth-child(even) {
+  & .tableListEvenRow {
     background: lightgrey;
   }
 

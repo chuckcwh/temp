@@ -11,7 +11,7 @@ import history from '../../../core/history';
 import util from '../../../core/util';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import { USER_EDIT_SUCCESS, GET_S3_POLICY_SUCCESS, getS3Policy, editUser } from '../../../actions';
+import { USER_EDIT_SUCCESS, S3_UPLOAD_URL_SUCCESS, getS3UploadUrl, editUser } from '../../../actions';
 
 
 const s3Url = 'https://ebeecare-dev.s3.amazonaws.com/';
@@ -74,12 +74,12 @@ class ProfileEditProfileForm extends Component {
     e.preventDefault();
     this.setState({ processing: "uploading..." });
 
-    this.props.getS3Policy({
+    this.props.getS3UploadUrl({
       fileName: this.state.newAvatarName,
       fileType: this.state.fileType,
     }).then((res) => {
 
-      if (res && res.type === GET_S3_POLICY_SUCCESS) {
+      if (res && res.type === S3_UPLOAD_URL_SUCCESS) {
         const {signedRequest, url} = res.response;
 
         const xhr = new XMLHttpRequest();
@@ -169,7 +169,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  getS3Policy: (params) => dispatch(getS3Policy(params)),
+  getS3UploadUrl: (params) => dispatch(getS3UploadUrl(params)),
   editUser: (params) => dispatch(editUser(params)),
 });
 

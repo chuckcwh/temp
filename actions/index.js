@@ -424,9 +424,13 @@ export const RESEND_VERIFY_BOOKING_PIN_REQUEST = 'RESEND_VERIFY_BOOKING_PIN_REQU
 export const RESEND_VERIFY_BOOKING_PIN_SUCCESS = 'RESEND_VERIFY_BOOKING_PIN_SUCCESS'
 export const RESEND_VERIFY_BOOKING_PIN_FAILURE = 'RESEND_VERIFY_BOOKING_PIN_FAILURE'
 
-export const GET_S3_POLICY_REQUEST = 'GET_S3_POLICY_REQUEST'
-export const GET_S3_POLICY_SUCCESS = 'GET_S3_POLICY_SUCCESS'
-export const GET_S3_POLICY_FAILURE = 'GET_S3_POLICY_FAILURE'
+export const S3_UPLOAD_URL_REQUEST = 'S3_UPLOAD_URL_REQUEST'
+export const S3_UPLOAD_URL_SUCCESS = 'S3_UPLOAD_URL_SUCCESS'
+export const S3_UPLOAD_URL_FAILURE = 'S3_UPLOAD_URL_FAILURE'
+
+export const S3_DOWNLOAD_URL_REQUEST = 'S3_DOWNLOAD_URL_REQUEST'
+export const S3_DOWNLOAD_URL_SUCCESS = 'S3_DOWNLOAD_URL_SUCCESS'
+export const S3_DOWNLOAD_URL_FAILURE = 'S3_DOWNLOAD_URL_FAILURE'
 
 export const STATS_SESSIONS_REQUEST = 'STATS_SESSIONS_REQUEST'
 export const STATS_SESSIONS_SUCCESS = 'STATS_SESSIONS_SUCCESS'
@@ -975,39 +979,16 @@ function fetchAction(route) {
       method: 'post',
       auth: 'app'
     },
-    getTotalSessionsCount: {
-      types: [ STATS_SESSIONS_REQUEST, STATS_SESSIONS_SUCCESS, STATS_SESSIONS_FAILURE ],
-      endpoint: '/getTotalSessionsCount',
-      method: 'get',
-      auth: 'app',
-      entity: 'totalSessionsCount'
-    },
-    getRankedServices: {
-      types: [ STATS_SERVICES_REQUEST, STATS_SERVICES_SUCCESS, STATS_SERVICES_FAILURE ],
-      endpoint: '/getRankedServices',
-      method: 'get',
-      auth: 'app',
-      entity: 'rankedServices'
-    },
-    getRankedSubcategories: {
-      types: [ STATS_SUBCATEGORIES_REQUEST, STATS_SUBCATEGORIES_SUCCESS, STATS_SUBCATEGORIES_FAILURE ],
-      endpoint: '/getRankedSubCategory',
-      method: 'get',
-      auth: 'app',
-      entity: 'rankedSubcategories'
-    },
-    getS3Policy: {
-      types: [ GET_S3_POLICY_REQUEST, GET_S3_POLICY_SUCCESS, GET_S3_POLICY_FAILURE ],
+    getS3UploadUrl: {
+      types: [ S3_UPLOAD_URL_REQUEST, S3_UPLOAD_URL_SUCCESS, S3_UPLOAD_URL_FAILURE ],
       endpoint: '/s3/putObjectUrl',
       method: 'get',
+    },
+    getS3DownloadUrl: {
+      types: [ S3_DOWNLOAD_URL_REQUEST, S3_DOWNLOAD_URL_SUCCESS, S3_DOWNLOAD_URL_FAILURE ],
+      endpoint: '/s3/getObjectUrl',
+      method: 'get',
     }
-    // getAvailableSessions:{
-    //   types: [ AVAILABLE_SESSIONS_REQUEST, AVAILABLE_SESSIONS_SUCCESS, AVAILABLE_SESSIONS_FAILURE ],
-    //   endpoint: '/getAvailableCases',
-    //   method: 'get',
-    //   auth: 'user',
-    //   entity: 'availableSessions'
-    // }
   }[route]
 }
 
@@ -1507,20 +1488,12 @@ export function resendVerifyBookingPin(params) {
   return fetch('resendVerifyBookingPin', params);
 }
 
-export function getTotalSessionsCount() {
-  return fetch('getTotalSessionsCount');
+export function getS3UploadUrl(params) {
+  return fetch('getS3UploadUrl', params);
 }
 
-export function getRankedServices() {
-  return fetch('getRankedServices');
-}
-
-export function getS3Policy(params) {
-  return fetch('getS3Policy', params);
-}
-
-export function getRankedSubcategories() {
-  return fetch('getRankedSubcategories');
+export function getS3DownloadUrl(params) {
+  return fetch('getS3DownloadUrl', params);
 }
 
 export function clearBooking() {

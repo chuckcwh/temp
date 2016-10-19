@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import cx from 'classnames';
 import moment from 'moment';
+import fetch from 'isomorphic-fetch';
 import s from './ProfileEditProfileForm.css';
 import Container from '../../Container';
 import Link from '../../Link';
@@ -76,17 +77,17 @@ class ProfileEditProfileForm extends Component {
 
     this.props.getS3UploadUrl({
       fileName: this.state.newAvatarName,
-      fileType: this.state.fileType,
+      fileType: this.state.newAvatarSelected.type,
     }).then((res) => {
 
       if (res && res.type === S3_UPLOAD_URL_SUCCESS) {
         const {signedRequest, url} = res.response;
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', signedRequest);
-
-        xhr.onload = () => {
-          if (xhr.status === 200) {
+        fetch(signedRequest, {
+          method: 'PUT',
+          body: this.state.newAvatarSelected,
+        }).then(res => {
+          if (res.ok) {
             this.props.editUser({
               userId: this.props.userId,
               avatar: url,
@@ -98,8 +99,7 @@ class ProfileEditProfileForm extends Component {
           } else {
             this.setState({ processing: 'Server request error' })
           }
-        }
-        xhr.send(this.state.newAvatarSelected);
+        });
       } else {
         this.setState({ processing: 'Server request error' })
       }

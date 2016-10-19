@@ -44,8 +44,8 @@
     width: 55px;
   }
 
-  & .tableListToEdit {
-    display: block;
+  & .tableListBtn {
+    display: inline-block;
     background-color: #f78d00;
     color: #FFFFFF;
     border-radius: 15px;
@@ -58,5 +58,13 @@
     cursor: pointer;
     text-decoration: underline;
     color: #f78d00;
+  }
+
+  & .red {
+    background-color: #f2635f;
+  }
+
+  & .orange {
+    background-color: #f78d00;
   }
 }

@@ -69,7 +69,7 @@ class AdminCategories extends Component {
 
   render() {
     const { user } = this.props;
-    const { add } = this.props.params;
+    const { add, edit, categoryId } = this.props.params;
     const { renderCategories } = this.state;
     const categorySelections = [{value: 'category', name: 'Category only'}, {value: "sub-category", name: 'Sub-category only'}, {value: "", name: 'Both'}];
 
@@ -80,7 +80,16 @@ class AdminCategories extends Component {
           {isAdmin(user) && add && (
             <AdminCategoriesForm updateCategoryList={() => this.updateCategoryList()}/>
           )}
-          {isAdmin(user) && !add && (
+
+          {isAdmin(user) && edit && (
+            <AdminCategoriesForm
+              edit={true}
+              categoryId={categoryId}
+              updateCategoryList={() => this.updateCategoryList()}
+            />
+          )}
+
+          {isAdmin(user) && !add && !edit && (
             <div>
               <div className={s.addLink}>
                 <Link
@@ -140,19 +149,24 @@ class AdminCategories extends Component {
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                         dataKey="_id"
                         cellRenderer={({cellData}) => (
-                          <Link className={cx('btn', s.tableListToEdit)} to={`/admin-categories/edit/${cellData}`}>
-                            Edit
-                          </Link>
+                          <div>
+                            <Link className={cx('btn', s.tableListBtn, s.orange)} to={`/admin-categories/edit/${cellData}`}>
+                              Edit
+                            </Link>
+                            <Link className={cx('btn', s.tableListBtn, s.red)} to={`/admin-categories/edit/${cellData}`}>
+                              Delete
+                            </Link>
+                          </div>
                         )}
                         disableSort={true}
-                        width={100}
+                        width={170}
                         />
                       <Column
                         label="description"
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                         dataKey="description"
                         disableSort={true}
-                        width={500}
+                        width={400}
                         />
                     </Table>
                   )}

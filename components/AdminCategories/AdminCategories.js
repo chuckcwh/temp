@@ -75,7 +75,7 @@ class AdminCategories extends Component {
 
     return (
       <div className={s.adminCategories}>
-        <Header title="Category Management" />
+        <Header title={add ? "Add Category" : edit ? "Edit Category" : "Category Management"} />
         <Container>
           {isAdmin(user) && add && (
             <AdminCategoriesForm updateCategoryList={() => this.updateCategoryList()}/>

@@ -9,7 +9,7 @@ import { reduxForm } from 'redux-form';
 import 'react-day-picker/lib/style.css';
 import s from './AdminPromocodesForm.css';
 import history from '../../../core/history';
-import { showDayPickerPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
+import { PROMOCODE_EDIT_SUCCESS, PROMO_SUCCESS, showDayPickerPopup, showAlertPopup, fetchServices, createPromo, getPromo, editPromo, deletePromo } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -31,10 +31,10 @@ class AdminPromocodesForm extends Component {
 
     if (edit) {
       getPromo({ promoId }).then(res => {
-        if (res.type === 'PROMO_FAILURE') {
-          history.push({ pathname: '/admin-promocodes' });
-        } else if (res.type === 'PROMO_SUCCESS') {
+        if (res.type === PROMO_SUCCESS) {
           this.setState({selectedDates: res.response.data.voidDates.map(item => new Date(item))})
+        } else {
+          history.push({ pathname: '/admin-promocodes' });
         }
       });
     }
@@ -73,15 +73,14 @@ class AdminPromocodesForm extends Component {
 
   onEditPromo = (e) => {
     e.preventDefault();
-    const {fields} = this.props;
+    const { fields, editPromo, showAlertPopup } = this.props;
 
     const serviceReturn = fields.services.value && fields.services.value.map(service => {
       const q = service.split(':');
       return {id: q[0], classId: q[1]}
     })
 
-
-    this.props.editPromo({
+    const data = {
       promoId: fields._id.value,
       isActive: !!fields.isActive.value,
       code: fields.code.value,
@@ -94,11 +93,20 @@ class AdminPromocodesForm extends Component {
       regions: fields.regions.value || [],
       discountRate: +(fields.discountRate.value),
       discountType: fields.discountType.value,
+    };
+
+    editPromo(data).then(res => {
+      if (res.type === PROMOCODE_EDIT_SUCCESS) {
+        showAlertPopup('Promocode edit success!');
+      } else {
+        showAlertPopup('Promocode edit failure!');
+      }
     })
 
   }
 
   onSubmit = (values) => {
+    const { showAlertPopup } = this.props;
     const serviceReturn = values.services && values.services.split(',').map(service => {
       const q = service.split(':');
       return {id: q[0], classId: q[1]}
@@ -122,6 +130,9 @@ class AdminPromocodesForm extends Component {
         if (res.type === 'PROMO_CREATE_SUCCESS') {
           this.props.resetForm();
           this.setState({selectedDates: []});
+          showAlertPopup('Promocode create success!');
+        } else {
+          showAlertPopup('Promocode create failed.');
         }
       })
     ])

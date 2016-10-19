@@ -12,7 +12,12 @@ import { isAdmin } from '../../../core/util';
 import history from '../../../core/history';
 import {
   CATEGORY_CREATE_SUCCESS,
+  CATEGORY_FAILURE,
+  CATEGORY_EDIT_SUCCESS,
   createCategory,
+  getCategory,
+  editCategory,
+  deleteCategory,
   showAlertPopup,
 } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
@@ -29,17 +34,15 @@ class AdminCategoriesForm extends Component {
   }
 
   componentDidMount() {
-    // const { fetchServices, edit, promoId, getPromo } = this.props;
-    //
-    // if (edit) {
-    //   getPromo({ promoId }).then(res => {
-    //     if (res.type === 'PROMO_FAILURE') {
-    //       history.push({ pathname: '/admin-promocodes' });
-    //     } else if (res.type === 'PROMO_SUCCESS') {
-    //       this.setState({selectedDates: res.response.data.voidDates.map(item => new Date(item))})
-    //     }
-    //   });
-    // }
+    const { getCategory, edit, categoryId } = this.props;
+
+    if (edit) {
+      getCategory({ categoryId }).then(res => {
+        if (res.type === CATEGORY_FAILURE) {
+          history.push({ pathname: '/admin-categories' });
+        }
+      });
+    }
   }
 
   onDeleteCategory = (e) => {
@@ -54,7 +57,26 @@ class AdminCategoriesForm extends Component {
 
   onEditCategory = (e) => {
     e.preventDefault();
-    const { fields } = this.props;
+    const { fields, editCategory, showAlertPopup, updateCategoryList } = this.props;
+
+    const data = {
+      categoryId: fields._id.value,
+      name: fields.name.value,
+      cType: fields.cType.value,
+      order: fields.order.value,
+      slug: fields.slug.value,
+      description: fields.description.value,
+      // avatar,
+    }
+
+    editCategory(data).then(res => {
+      if (res.type === CATEGORY_EDIT_SUCCESS) {
+        showAlertPopup('Category edit success!');
+        updateCategoryList();
+      } else {
+        showAlertPopup('Category edit failure');
+      }
+    });
   }
 
   onSubmit = (values) => {
@@ -183,7 +205,7 @@ class AdminCategoriesForm extends Component {
         {edit ? (
           <div className={s.formSectionSubmit}>
             {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
-            <button className="btn btn-primary" disabled={invalid || submitting} onClick={this.onEditPromo}>Update</button>&nbsp;&nbsp;
+            <button className="btn btn-primary" disabled={invalid || submitting} onClick={this.onEditCategory}>Update</button>&nbsp;&nbsp;
             <button className="btn btn-secondary" onClick={this.onDeletePromo}>Delete</button>
           </div>
         ) : (
@@ -248,9 +270,9 @@ const mapDispatchToProps = (dispatch) => ({
   createCategory: (params) => dispatch(createCategory(params)),
   resetForm: () => dispatch(reset('adminCategoriesForm')),
   showAlertPopup: (body) => dispatch(showAlertPopup(body)),
-  // getPromo: (params) => dispatch(getPromo(params)),
-  // editPromo: (params) => dispatch(editPromo(params)),
-  // deletePromo: (params, extend) => dispatch(deletePromo(params, extend)),
+  getCategory: (params) => dispatch(getCategory(params)),
+  editCategory: (params) => dispatch(editCategory(params)),
+  deleteCategory: (params) => dispatch(deleteCategory(params)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminCategoriesForm);

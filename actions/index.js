@@ -13,6 +13,18 @@ export const CATEGORY_CREATE_REQUEST = 'CATEGORY_CREATE_REQUEST'
 export const CATEGORY_CREATE_SUCCESS = 'CATEGORY_CREATE_SUCCESS'
 export const CATEGORY_CREATE_FAILURE = 'CATEGORY_CREATE_FAILURE'
 
+export const CATEGORY_REQUEST = 'CATEGORY_REQUEST'
+export const CATEGORY_SUCCESS = 'CATEGORY_SUCCESS'
+export const CATEGORY_FAILURE = 'CATEGORY_FAILURE'
+
+export const CATEGORY_EDIT_REQUEST = 'CATEGORY_EDIT_REQUEST'
+export const CATEGORY_EDIT_SUCCESS = 'CATEGORY_EDIT_SUCCESS'
+export const CATEGORY_EDIT_FAILURE = 'CATEGORY_EDIT_FAILURE'
+
+export const CATEGORY_DELETE_REQUEST = 'CATEGORY_DELETE_REQUEST'
+export const CATEGORY_DELETE_SUCCESS = 'CATEGORY_DELETE_SUCCESS'
+export const CATEGORY_DELETE_FAILURE = 'CATEGORY_DELETE_FAILURE'
+
 export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
@@ -475,6 +487,23 @@ function fetchAction(route) {
       types: [ CATEGORY_CREATE_REQUEST, CATEGORY_CREATE_SUCCESS, CATEGORY_CREATE_FAILURE ],
       endpoint: '/categories',
       method: 'post',
+      auth: 'user',
+    },
+    getCategory: {
+      types: [ CATEGORY_REQUEST, CATEGORY_SUCCESS, CATEGORY_FAILURE ],
+      endpoint: '/categories/:categoryId',
+      method: 'get',
+    },
+    editCategory: {
+      types: [ CATEGORY_EDIT_REQUEST, CATEGORY_EDIT_SUCCESS, CATEGORY_EDIT_FAILURE ],
+      endpoint: '/categories/:categoryId',
+      method: 'put',
+      auth: 'user',
+    },
+    deleteCategory: {
+      types: [ CATEGORY_DELETE_REQUEST, CATEGORY_DELETE_SUCCESS, CATEGORY_DELETE_FAILURE ],
+      endpoint: '/categories/:categoryId',
+      method: 'del',
       auth: 'user',
     },
     getBookings: {
@@ -1044,6 +1073,16 @@ export function fetchConfig() {
 
 export function createCategory(params) {
   return fetch('createCategory', params);
+}
+
+export function getCategory(params) {
+  return fetch('getCategory', params);
+}
+export function editCategory(params) {
+  return fetch('editCategory', params);
+}
+export function deleteCategory(params) {
+  return fetch('deleteCategory', params);
 }
 
 export function fetchServices() {

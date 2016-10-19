@@ -9,6 +9,10 @@ export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST'
 export const CATEGORIES_SUCCESS = 'CATEGORIES_SUCCESS'
 export const CATEGORIES_FAILURE = 'CATEGORIES_FAILURE'
 
+export const CATEGORY_CREATE_REQUEST = 'CATEGORY_CREATE_REQUEST'
+export const CATEGORY_CREATE_SUCCESS = 'CATEGORY_CREATE_SUCCESS'
+export const CATEGORY_CREATE_FAILURE = 'CATEGORY_CREATE_FAILURE'
+
 export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
@@ -466,6 +470,12 @@ function fetchAction(route) {
       types: [ CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE ],
       endpoint: '/categories',
       method: 'get'
+    },
+    createCategory: {
+      types: [ CATEGORY_CREATE_REQUEST, CATEGORY_CREATE_SUCCESS, CATEGORY_CREATE_FAILURE ],
+      endpoint: '/categories',
+      method: 'post',
+      auth: 'user',
     },
     getBookings: {
       types: [ BOOKINGS_REQUEST, BOOKINGS_SUCCESS, BOOKINGS_FAILURE ],
@@ -1030,6 +1040,10 @@ function fetch(route, data, extend = false) {
 
 export function fetchConfig() {
   return fetch('getConfig');
+}
+
+export function createCategory(params) {
+  return fetch('createCategory', params);
 }
 
 export function fetchServices() {

@@ -275,24 +275,24 @@ class BookingView extends Component {
       <div>
         <div className="TableRow">
           <div className="TableRowItem1">Name</div>
-          <div className="TableRowItem3">{booking && booking.adhocPatient && booking.adhocPatient.name}</div>
+          <div className="TableRowItem3">{booking && booking.patient && booking.patient.name}</div>
         </div>
         <div className="TableRow">
           <div className="TableRowItem1">Gender</div>
           <div className="TableRowItem3">
-            {configToName(config, 'gendersByValue', booking && booking.adhocPatient && booking.adhocPatient.gender)}
+            {configToName(config, 'gendersByValue', booking && booking.patient && booking.patient.gender)}
           </div>
         </div>
         <div className="TableRow">
           <div className="TableRowItem1">Date of Birth</div>
           <div className="TableRowItem3">
-            {booking && booking.adhocPatient && booking.adhocPatient.dob
-              && moment(booking.adhocPatient.dob).format('ll')}
+            {booking && booking.patient && booking.patient.dob
+              && moment(booking.patient.dob).format('ll')}
           </div>
         </div>
         <div className="TableRow">
           <div className="TableRowItem1">Mobile Number</div>
-          <div className="TableRowItem3">{booking && booking.adhocPatient && booking.adhocPatient.contact}</div>
+          <div className="TableRowItem3">{booking && booking.patient && booking.patient.contact}</div>
         </div>
       </div>
     );

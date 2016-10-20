@@ -1,5 +1,6 @@
 import { CALL_API } from '../middleware/api'
 import moment from 'moment';
+import isomorphicFetch from 'isomorphic-fetch';
 
 export const CONFIG_REQUEST = 'CONFIG_REQUEST'
 export const CONFIG_SUCCESS = 'CONFIG_SUCCESS'
@@ -440,13 +441,17 @@ export const RESEND_VERIFY_BOOKING_PIN_REQUEST = 'RESEND_VERIFY_BOOKING_PIN_REQU
 export const RESEND_VERIFY_BOOKING_PIN_SUCCESS = 'RESEND_VERIFY_BOOKING_PIN_SUCCESS'
 export const RESEND_VERIFY_BOOKING_PIN_FAILURE = 'RESEND_VERIFY_BOOKING_PIN_FAILURE'
 
+export const S3_DOWNLOAD_URL_REQUEST = 'S3_DOWNLOAD_URL_REQUEST'
+export const S3_DOWNLOAD_URL_SUCCESS = 'S3_DOWNLOAD_URL_SUCCESS'
+export const S3_DOWNLOAD_URL_FAILURE = 'S3_DOWNLOAD_URL_FAILURE'
+
 export const S3_UPLOAD_URL_REQUEST = 'S3_UPLOAD_URL_REQUEST'
 export const S3_UPLOAD_URL_SUCCESS = 'S3_UPLOAD_URL_SUCCESS'
 export const S3_UPLOAD_URL_FAILURE = 'S3_UPLOAD_URL_FAILURE'
 
-export const S3_DOWNLOAD_URL_REQUEST = 'S3_DOWNLOAD_URL_REQUEST'
-export const S3_DOWNLOAD_URL_SUCCESS = 'S3_DOWNLOAD_URL_SUCCESS'
-export const S3_DOWNLOAD_URL_FAILURE = 'S3_DOWNLOAD_URL_FAILURE'
+export const S3_UPLOAD_REQUEST = 'S3_UPLOAD_REQUEST'
+export const S3_UPLOAD_SUCCESS = 'S3_UPLOAD_SUCCESS'
+export const S3_UPLOAD_FAILURE = 'S3_UPLOAD_FAILURE'
 
 export const STATS_SESSIONS_REQUEST = 'STATS_SESSIONS_REQUEST'
 export const STATS_SESSIONS_SUCCESS = 'STATS_SESSIONS_SUCCESS'
@@ -1541,12 +1546,64 @@ export function resendVerifyBookingPin(params) {
   return fetch('resendVerifyBookingPin', params);
 }
 
+export function getS3DownloadUrl(params) {
+  return fetch('getS3DownloadUrl', params);
+}
+
 export function getS3UploadUrl(params) {
   return fetch('getS3UploadUrl', params);
 }
 
-export function getS3DownloadUrl(params) {
-  return fetch('getS3DownloadUrl', params);
+function requestUploadS3(signedUrl, data) {
+  return {
+    type: S3_UPLOAD_REQUEST,
+    signedUrl,
+    data,
+  };
+}
+
+function passedUploadS3(signedUrl) {
+  return {
+    type: S3_UPLOAD_SUCCESS,
+    signedUrl,
+  };
+}
+
+function failedUploadS3(signedUrl) {
+  return {
+    type: S3_UPLOAD_FAILURE,
+    signedUrl,
+  };
+}
+
+function uploadFile(signedUrl, data) {
+  return new Promise((resolve, reject) => {
+    isomorphicFetch(signedUrl, {
+      method: 'PUT',
+      body: data,
+    }).then(res => {
+      if (res.ok) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  });
+}
+
+/**
+ * Upload to S3 using signed request URL
+ * @param  {String} signedUrl AWS S3 signed request URL
+ * @param  {Mixed}  data      Data to be uploaded (file/blob)
+ * @return {Promise}          [description]
+ */
+export function uploadS3(signedUrl, data) {
+  return dispatch => {
+    dispatch(requestUploadS3(signedUrl, data))
+    return uploadFile(signedUrl, data)
+      .then(result => dispatch(passedUploadS3(signedUrl)),
+        () => dispatch(failedUploadS3(signedUrl)))
+  }
 }
 
 export function clearBooking() {

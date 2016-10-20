@@ -1,0 +1,63 @@
+@import '../../variables.css';
+
+
+.adminServicesForm {
+  & .mainCat {
+    & .mainCatCol {
+      padding: 0 30px;
+
+      & .mainCatContainer {
+
+        & .inputField {
+          text-align: right;
+
+          & .textInput, & .selectionInput {
+            margin-right: 0;
+          }
+
+          & .numberInput {
+            padding: 15px;
+            border: 1px solid #ccc;
+            width: 230px;
+          }
+
+          & .descriptionInput {
+            width: 100%;
+          }
+
+          & .multiSelect {
+            text-align: left;
+          }
+
+          & .classesContainer {
+            & .textInput, & .numberInput {
+              display: inline-block;
+              width: 100px;
+              margin: 0 10px 30px 20px;
+            }
+          }
+
+          & .keywordsContainer {
+            & .textInput {
+              display: inline-block;
+              margin: 0 10px 30px 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  & .formSectionSubmit {
+    text-align: center;
+    margin: 40px auto 80px;
+  }
+
+  & .formError {
+    color: red;
+  }
+
+  & .orange {
+    color: #f78d00;
+  }
+}

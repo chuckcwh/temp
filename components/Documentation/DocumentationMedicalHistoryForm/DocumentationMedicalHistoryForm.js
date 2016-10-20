@@ -24,7 +24,7 @@ import FaArrowCircleRight from 'react-icons/lib/fa/arrow-right';
 class DocumentationMedicalHistoryForm extends Component {
 
   componentDidMount() {
-    const { secDiagnosis, allergy, medications } =this.props.fields;
+    const { secDiagnosis, allergy, medications } = this.props.fields;
     secDiagnosis.addField();
     allergy.addField();
     medications.addField();

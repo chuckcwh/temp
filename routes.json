@@ -202,5 +202,13 @@
   {
     "path": "/admin-services",
     "page": "./pages/admin/services"
+  },
+  {
+    "path": "/admin-services/:add",
+    "page": "./pages/admin/services"
+  },
+  {
+    "path": "/admin-services/:edit/:serviceId",
+    "page": "./pages/admin/services"
   }
 ]

@@ -104,25 +104,6 @@ class AdminCategoriesForm extends Component {
         showAlertPopup('Category create failed.');
       }
     });
-    // return new Promise((resolve, reject) => [
-    //   this.props.createPromo({
-    //     code: values.code,
-    //     services: serviceReturn || [],
-    //     name: values.name,
-    //     description: values.description,
-    //     dateTimeStart: values.dateTimeStart,
-    //     dateTimeEnd: values.dateTimeEnd,
-    //     voidDates: this.state.selectedDates || [],
-    //     regions: regionReturn || [],
-    //     discountRate: +(values.discountRate),
-    //     discountType: values.discountType,
-    //   }).then((res) => {
-    //     if (res.type === 'PROMO_CREATE_SUCCESS') {
-    //       this.props.resetForm();
-    //       this.setState({selectedDates: []});
-    //     }
-    //   })
-    // ])
   }
 
   render() {
@@ -273,11 +254,12 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   createCategory: (params) => dispatch(createCategory(params)),
-  resetForm: () => dispatch(reset('adminCategoriesForm')),
-  showAlertPopup: (body) => dispatch(showAlertPopup(body)),
   getCategory: (params) => dispatch(getCategory(params)),
   editCategory: (params) => dispatch(editCategory(params)),
   deleteCategory: (params) => dispatch(deleteCategory(params)),
+
+  resetForm: () => dispatch(reset('adminCategoriesForm')),
+  showAlertPopup: (body) => dispatch(showAlertPopup(body)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminCategoriesForm);

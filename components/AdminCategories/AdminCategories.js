@@ -8,6 +8,8 @@ import s from './AdminCategories.css';
 import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
+import { isAdmin } from '../../core/util';
+import ConfirmPopup from '../ConfirmPopup';
 import { AutoSizer, Table, Column } from 'react-virtualized';
 import {
   SERVICES_SUCCESS,
@@ -17,8 +19,6 @@ import {
   showAlertPopup,
   deleteCategory,
 } from '../../actions';
-import { isAdmin } from '../../core/util';
-import ConfirmPopup from '../ConfirmPopup';
 // sub-component
 import AdminCategoriesForm from './AdminCategoriesForm/AdminCategoriesForm';
 // react-icons
@@ -36,12 +36,19 @@ class AdminCategories extends Component {
 
     this.state = {
       renderCategories: [],
-      filters: {}
     }
   }
 
   componentDidMount() {
     this.updateCategoryList();
+  }
+
+  updateCategoryList() {
+    this.props.fetchServices().then(res => {
+      if (res.type === SERVICES_SUCCESS) {
+        this.setState({renderCategories: Object.values(this.props.categories)})
+      }
+    });
   }
 
   onDeleteCategory = (categoryId) => {
@@ -53,14 +60,6 @@ class AdminCategories extends Component {
         this.updateCategoryList();
       } else {
         showAlertPopup('Category delete failed.');
-      }
-    });
-  }
-
-  updateCategoryList() {
-    this.props.fetchServices().then(res => {
-      if (res.type === SERVICES_SUCCESS) {
-        this.setState({renderCategories: Object.values(this.props.categories)})
       }
     });
   }
@@ -82,7 +81,7 @@ class AdminCategories extends Component {
             }
           }}
         />
-        <label className={s.selectionLabel} htmlFor={`filter_${item.name}`}><span><span></span></span><span>{item.name}</span></label>
+        <label htmlFor={`filter_${item.name}`}><span><span></span></span><span>{item.name}</span></label>
       </div>
     ))
   }
@@ -147,25 +146,25 @@ class AdminCategories extends Component {
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                         dataKey="cType"
                         width={130}
-                        />
+                      />
                       <Column
                         label="name"
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                         dataKey="name"
                         width={250}
-                        />
+                      />
                       <Column
                         label="order"
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                         dataKey="order"
                         width={60}
-                        />
+                      />
                       <Column
                         label="popularity"
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                         dataKey="popularity"
                         width={100}
-                        />
+                      />
                       <Column
                         label="view"
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
@@ -183,14 +182,14 @@ class AdminCategories extends Component {
                         )}
                         disableSort={true}
                         width={170}
-                        />
+                      />
                       <Column
                         label="description"
                         headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
                         dataKey="description"
                         disableSort={true}
                         width={400}
-                        />
+                      />
                     </Table>
                   )}
                 </AutoSizer>
@@ -210,7 +209,6 @@ AdminCategories.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.data,
-  services: state.services.data,
   categories: state.services.categories,
 });
 

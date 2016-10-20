@@ -29,6 +29,22 @@ export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
 
+export const SERVICE_REQUEST = 'SERVICE_REQUEST'
+export const SERVICE_SUCCESS = 'SERVICE_SUCCESS'
+export const SERVICE_FAILURE = 'SERVICE_FAILURE'
+
+export const SERVICE_CREATE_REQUEST = 'SERVICE_CREATE_REQUEST'
+export const SERVICE_CREATE_SUCCESS = 'SERVICE_CREATE_SUCCESS'
+export const SERVICE_CREATE_FAILURE = 'SERVICE_CREATE_FAILURE'
+
+export const SERVICE_EDIT_REQUEST = 'SERVICE_EDIT_REQUEST'
+export const SERVICE_EDIT_SUCCESS = 'SERVICE_EDIT_SUCCESS'
+export const SERVICE_EDIT_FAILURE = 'SERVICE_EDIT_FAILURE'
+
+export const SERVICE_DELETE_REQUEST = 'SERVICE_DELETE_REQUEST'
+export const SERVICE_DELETE_SUCCESS = 'SERVICE_DELETE_SUCCESS'
+export const SERVICE_DELETE_FAILURE = 'SERVICE_DELETE_FAILURE'
+
 export const LANGUAGES_REQUEST = 'LANGUAGES_REQUEST'
 export const LANGUAGES_SUCCESS = 'LANGUAGES_SUCCESS'
 export const LANGUAGES_FAILURE = 'LANGUAGES_FAILURE'
@@ -477,6 +493,29 @@ function fetchAction(route) {
       auth: 'app',
       entity: 'services',
       defaultEntity: {}
+    },
+    getService: {
+      types: [ SERVICE_REQUEST, SERVICE_SUCCESS, SERVICE_FAILURE ],
+      endpoint: '/services/:serviceId',
+      method: 'get',
+    },
+    createService: {
+      types: [ SERVICE_CREATE_REQUEST, SERVICE_CREATE_SUCCESS, SERVICE_CREATE_FAILURE ],
+      endpoint: '/services',
+      method: 'post',
+      auth: 'user',
+    },
+    editService: {
+      types: [ SERVICE_EDIT_REQUEST, SERVICE_EDIT_SUCCESS, SERVICE_EDIT_FAILURE ],
+      endpoint: '/services/:serviceId',
+      method: 'put',
+      auth: 'user',
+    },
+    deleteService: {
+      types: [ SERVICE_CREATE_REQUEST, SERVICE_CREATE_SUCCESS, SERVICE_CREATE_FAILURE ],
+      endpoint: '/services/:serviceId',
+      method: 'del',
+      auth: 'user',
     },
     getCategories: {
       types: [ CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE ],
@@ -1078,9 +1117,11 @@ export function createCategory(params) {
 export function getCategory(params) {
   return fetch('getCategory', params);
 }
+
 export function editCategory(params) {
   return fetch('editCategory', params);
 }
+
 export function deleteCategory(params) {
   return fetch('deleteCategory', params);
 }
@@ -1095,6 +1136,22 @@ export function fetchServices() {
         return new Promise((resolve) => resolve());
       });
   }
+}
+
+export function createService(params) {
+  return fetch('createService', params);
+}
+
+export function getService(params) {
+  return fetch('getService', params);
+}
+
+export function editService(params) {
+  return fetch('editService', params);
+}
+
+export function deleteService(params) {
+  return fetch('deleteService', params);
 }
 
 export function getBookings(params, extend) {

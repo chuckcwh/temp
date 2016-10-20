@@ -22,7 +22,7 @@
 
   & .tableList {
     margin: 40px auto;
-
+    padding-top: 90px;
   }
 
   & .tableListHeader {
@@ -31,7 +31,7 @@
     font-size: 14px;
   }
 
-  & .tableListRow:nth-child(even) {
+  & .tableListEvenRow {
     background: lightgrey;
   }
 
@@ -44,19 +44,28 @@
     width: 55px;
   }
 
-  & .tableListToEdit {
-    display: block;
+  & .tableListBtn {
+    display: inline-block;
     background-color: #f78d00;
     color: #FFFFFF;
     border-radius: 15px;
     padding: 5px 3px;
     text-align: center;
     width: 65px;
+    cursor: pointer;
   }
 
   & .clearSortFilter {
     cursor: pointer;
     text-decoration: underline;
     color: #f78d00;
+  }
+
+  & .red {
+    background-color: #f2635f;
+  }
+
+  & .orange {
+    background-color: #f78d00;
   }
 }

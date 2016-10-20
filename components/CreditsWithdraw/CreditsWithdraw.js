@@ -16,14 +16,6 @@ import CreditsWithdrawAmountForm from '../CreditsWithdrawAmountForm';
 
 class CreditsWithdraw extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    // this.props.fetchLanguages();
-  }
-
   handleUpdateBankDetails = (values) => {
     return new Promise((resolve, reject) => {
       this.props.editUser({
@@ -42,16 +34,22 @@ class CreditsWithdraw extends Component {
 
   handleWithdrawCredits = (values) => {
     return new Promise((resolve, reject) => {
-      this.props.withdrawCredits({
-        value: values.withdrawAmt,
-      }).then(res => {
-        if (res && res.type === USER_CREDITS_WITHDRAW_SUCCESS) {
-          this.props.showAlertPopup(`You have successfully submitted a request to withdraw.`);
-          resolve();
-        } else {
-          reject();
-        }
-      })
+      if (parseFloat(values.withdrawAmt) <= this.props.user.credits.current) {
+        this.props.withdrawCredits({
+          value: values.withdrawAmt,
+        }).then(res => {
+          if (res && res.type === USER_CREDITS_WITHDRAW_SUCCESS) {
+            this.props.showAlertPopup('You have successfully submitted a request to withdraw.');
+            resolve();
+          } else {
+            this.props.showAlertPopup('Your withdrawal request has been rejected.');
+            reject();
+          }
+        });
+      } else {
+        this.props.showAlertPopup('You do not have enough credits.');
+        reject();
+      }
     });
   }
 
@@ -81,10 +79,6 @@ class CreditsWithdraw extends Component {
 CreditsWithdraw.propTypes = {
   user: React.PropTypes.object,
 
-  // fetchLanguages: React.PropTypes.func.isRequired,
-  // fetchAddress: React.PropTypes.func.isRequired,
-  // getPatients: React.PropTypes.func.isRequired,
-  // showDayPickerPopup: React.PropTypes.func.isRequired,
   editUser: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
 };
@@ -94,10 +88,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // fetchLanguages: () => dispatch(fetchLanguages()),
-  // fetchAddress: (postalCode) => dispatch(fetchAddress(postalCode)),
-  // getPatients: (params) => dispatch(getPatients(params)),
-  // showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   editUser: (params) => dispatch(editUser(params)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
 });

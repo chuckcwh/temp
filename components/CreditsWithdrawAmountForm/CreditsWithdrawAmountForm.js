@@ -15,7 +15,7 @@ class CreditsWithdrawAmountForm extends Component {
       submitting,
     } = this.props;
     return (
-      <form className={s.creditsWithdrawAmountForm} onSubmit={handleSubmit}>
+      <form className={s.creditsWithdrawAmountForm} onSubmit={handleSubmit} noValidate>
         <div className={s.creditsWithdrawAmountFormSection}>
           <div className="TableRow">
             <div className="TableRowItem1">Amount (SGD)*</div>
@@ -40,7 +40,7 @@ const validate = values => {
   if (!values.withdrawAmt) {
     errors.withdrawAmt = 'Required';
   } else if (!/\d+/i.test(values.withdrawAmt)) {
-    errors.withdrawAmt = 'Invalid withdraw amount';
+    errors.withdrawAmt = 'Invalid withdrawal amount';
   }
   return errors;
 };
@@ -52,9 +52,6 @@ CreditsWithdrawAmountForm.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  // showLoginPopup: PropTypes.func.isRequired,
-  // fetchAddress: PropTypes.func.isRequired,
-  // onNext: PropTypes.func.isRequired,
 };
 
 const reduxFormConfig = {

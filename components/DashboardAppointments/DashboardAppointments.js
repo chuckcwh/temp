@@ -49,7 +49,8 @@ class DashboardAppointments extends Component {
               const filteredSessions = sessionsByPatient[patientId].filter(session => {
                 switch (this.state.selectedFilter) {
                   case 'completed':
-                    return session.status === 'completed';
+                    return session.status === 'completed'
+                      || session.status === 'pending-documentation';
                   case 'pending-payment-approval':
                     return session.status === 'pending-payment-approval';
                   case 'cancelled':
@@ -58,6 +59,7 @@ class DashboardAppointments extends Component {
                     return session.status === 'expired';
                   default:
                     return (session.status === 'completed'
+                      || session.status === 'pending-documentation'
                       || session.status === 'pending-payment-approval'
                       || session.status === 'cancelled'
                       || session.status === 'expired');

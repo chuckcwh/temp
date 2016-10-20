@@ -95,7 +95,6 @@ class Dashboard extends Component {
               stats.pendingPayment += session.price;
               break;
             case 'pending-visit':
-            case 'pending-documentation':
               stats.nextAppt++;
               break;
             default:

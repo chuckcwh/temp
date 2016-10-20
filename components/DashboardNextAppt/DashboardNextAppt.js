@@ -60,7 +60,7 @@ class DashboardNextAppt extends Component {
 
     const confirmedSessions = sessions && Object.values(sessions).filter((session) => {
       return moment(session.date).isSameOrAfter(moment(), 'day')
-        && (session.status === 'pending-visit' || session.status === 'pending-documentation')
+        && session.status === 'pending-visit'
         && session.isPaid;
     }) || [];
 

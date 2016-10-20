@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import s from './Schedule.css';
-import { USER_SCHEDULES_UPDATE_FAILURE,
+import { USER_SCHEDULES_UPDATE_SUCCESS,
   getUserSchedules, updateUserSchedules, showAlertPopup } from '../../actions';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
@@ -95,7 +95,9 @@ class Schedule extends Component {
         userId: this.props.user._id,
         data: data,
       }).then((res) => {
-        if (res && res.type === USER_SCHEDULES_UPDATE_FAILURE) {
+        if (res && res.type === USER_SCHEDULES_UPDATE_SUCCESS) {
+          this.props.showAlertPopup('Your schedule has been updated.')
+        } else {
           this.props.showAlertPopup('Sorry, there was a system error.')
         }
         this.setState({ selectedDates: [] });

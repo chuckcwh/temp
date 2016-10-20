@@ -91,8 +91,7 @@ class BookingComplete extends Component {
           bookingLink = (
             <div>
               <Link
-                to={{ pathname: '/booking-manage',
-                  query: { bid: booking._id, btoken: booking.client.contact } }}
+                to={{ pathname: '/booking-manage' }}
                 className="btn btn-primary"
                 style={{ color: '#fff' }}
               >View Booking</Link>

@@ -1346,7 +1346,6 @@ const bookingApp = combineReducers({
       switch (action.type) {
         case ActionTypes.CATEGORY_SUCCESS:
           const { data } = action.response;
-          console.log('data', data);
           return {
             ...state,
             _id: { ...state._id, value: data._id },
@@ -1356,6 +1355,21 @@ const bookingApp = combineReducers({
             slug: { ...state.slug, value: data.slug },
             order: { ...state.order, value: data.order },
             description: { ...state.description, value: data.description },
+          }
+        default:
+          return state;
+      }
+    },
+    adminServicesForm: (state, action) => {
+      switch (action.type) {
+        case ActionTypes.SERVICE_SUCCESS:
+          const { data } = action.response;
+          console.log('data', data);
+          return {
+            ...state,
+            _id: { ...state._id, value: data._id },
+            name: { ...state.name, value: data.name },
+            categories: { ...state.categories, value: data.categories.join(',') },
           }
         default:
           return state;

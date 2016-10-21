@@ -217,9 +217,13 @@ AdminCategoriesForm.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  resetForm: PropTypes.func.isRequired,
 
-  resetForm: React.PropTypes.func,
-  createCategory: React.PropTypes.func,
+  createCategory: PropTypes.func,
+  editCategory: PropTypes.func,
+  deleteCategory: PropTypes.func,
+  showAlertPopup: PropTypes.func,
+  showConfirmPopup: PropTypes.func,
 };
 
 const reduxFormConfig = {

@@ -317,12 +317,14 @@ AdminServicesForm.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  destroyForm: PropTypes.func.isRequired,
+  initializeForm: PropTypes.func.isRequired,
 
-  resetForm: React.PropTypes.func,
-  createService: React.PropTypes.func,
-  getService: React.PropTypes.func,
-  editService: React.PropTypes.func,
-  deleteService: React.PropTypes.func,
+  createService: PropTypes.func,
+  editService: PropTypes.func,
+  deleteService: PropTypes.func,
+  showAlertPopup: PropTypes.func,
+  showConfirmPopup: PropTypes.func,
 };
 
 const reduxFormConfig = {

@@ -210,6 +210,13 @@ class AdminServices extends Component {
 }
 
 AdminServices.propTypes = {
+  user: PropTypes.object,
+  services: PropTypes.object,
+  categories: PropTypes.object,
+
+  fetchServices: PropTypes.func,
+  deleteService: PropTypes.func,
+  showConfirmPopup: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -219,8 +226,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  deleteService: (params) => dispatch(deleteService(params)),
   fetchServices: () => dispatch(fetchServices()),
+  deleteService: (params) => dispatch(deleteService(params)),
   showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 

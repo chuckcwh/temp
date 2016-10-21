@@ -205,6 +205,12 @@ class AdminCategories extends Component {
 }
 
 AdminCategories.propTypes = {
+  user: PropTypes.object,
+  categories: PropTypes.object,
+
+  fetchServices: PropTypes.func,
+  deleteCategory: PropTypes.func,
+  showConfirmPopup: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

@@ -133,9 +133,9 @@ class AdminBookingsView extends Component {
 
     const detail = {
       title: () => {
-        const serviceName = booking.sessions && booking.sessions[0].service && Object.keys(services).length > 0 && services[booking.sessions[0].service].name;
-        const serviceClassName = booking.sessions && booking.sessions[0].serviceClass && Object.keys(services).length > 0 && services[booking.sessions[0].service].classes[booking.sessions[0].serviceClass].duration;
-        return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})` : 'Unknown';
+        const serviceName = booking.sessions && booking.sessions[0].service && Object.keys(services).length > 0 && services[booking.sessions[0].service._id].name;
+        const serviceClassName = booking.sessions && booking.sessions[0].serviceClass && Object.keys(services).length > 0 && services[booking.sessions[0].service._id].classes[booking.sessions[0].serviceClass].duration;
+        return serviceName ? `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})` : '';
       },
       price: () => {
         const p = booking.sessions && booking.sessions.length && booking.sessions.reduce((result, session) => result + parseFloat(session.price), 0).toFixed(2);

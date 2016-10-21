@@ -205,8 +205,8 @@ class AdminBookings extends Component {
                           label="service"
                           dataKey="sessions"
                           cellRenderer={({cellData}) => {
-                            const serviceName = cellData && cellData[0].service && Object.keys(services).length > 0 && services[cellData[0].service].name;
-                            const serviceClassName = cellData && cellData[0].serviceClass && Object.keys(services).length > 0 && services[cellData[0].service].classes[cellData[0].serviceClass].duration;
+                            const serviceName = cellData && cellData[0].service && Object.keys(services).length > 0 && services[cellData[0].service._id].name;
+                            const serviceClassName = cellData && cellData[0].serviceClass && Object.keys(services).length > 0 && services[cellData[0].service._id].classes[cellData[0].serviceClass].duration;
                             return serviceName && `${serviceName} (${serviceClassName} hr${parseFloat(serviceClassName) > 1 ? 's' : ''})`
                           }}
                           width={200}

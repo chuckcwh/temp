@@ -14,10 +14,6 @@ export const CATEGORY_CREATE_REQUEST = 'CATEGORY_CREATE_REQUEST'
 export const CATEGORY_CREATE_SUCCESS = 'CATEGORY_CREATE_SUCCESS'
 export const CATEGORY_CREATE_FAILURE = 'CATEGORY_CREATE_FAILURE'
 
-export const CATEGORY_REQUEST = 'CATEGORY_REQUEST'
-export const CATEGORY_SUCCESS = 'CATEGORY_SUCCESS'
-export const CATEGORY_FAILURE = 'CATEGORY_FAILURE'
-
 export const CATEGORY_EDIT_REQUEST = 'CATEGORY_EDIT_REQUEST'
 export const CATEGORY_EDIT_SUCCESS = 'CATEGORY_EDIT_SUCCESS'
 export const CATEGORY_EDIT_FAILURE = 'CATEGORY_EDIT_FAILURE'
@@ -523,11 +519,6 @@ function fetchAction(route) {
       endpoint: '/categories',
       method: 'post',
       auth: 'user',
-    },
-    getCategory: {
-      types: [ CATEGORY_REQUEST, CATEGORY_SUCCESS, CATEGORY_FAILURE ],
-      endpoint: '/categories/:categoryId',
-      method: 'get',
     },
     editCategory: {
       types: [ CATEGORY_EDIT_REQUEST, CATEGORY_EDIT_SUCCESS, CATEGORY_EDIT_FAILURE ],
@@ -1108,10 +1099,6 @@ export function fetchConfig() {
 
 export function createCategory(params) {
   return fetch('createCategory', params);
-}
-
-export function getCategory(params) {
-  return fetch('getCategory', params);
 }
 
 export function editCategory(params) {

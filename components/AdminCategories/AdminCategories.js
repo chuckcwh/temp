@@ -87,8 +87,8 @@ class AdminCategories extends Component {
   }
 
   render() {
-    const { user, showConfirmPopup } = this.props;
     const { add, edit, categoryId } = this.props.params;
+    const { user, showConfirmPopup, categories } = this.props;
     const { renderCategories } = this.state;
     const categorySelections = [{value: 'category', name: 'Category only'}, {value: "sub-category", name: 'Sub-category only'}, {value: "", name: 'Both'}];
 
@@ -105,7 +105,7 @@ class AdminCategories extends Component {
           {isAdmin(user) && edit && (
             <AdminCategoriesForm
               edit={true}
-              categoryId={categoryId}
+              initialValues={{ ...categories[categoryId] }}
               updateCategoryList={() => this.updateCategoryList()}
             />
           )}

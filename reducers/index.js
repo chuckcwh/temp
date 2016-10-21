@@ -1341,25 +1341,25 @@ const bookingApp = combineReducers({
         default:
           return state;
       }
-    },
-    adminCategoriesForm: (state, action) => {
-      switch (action.type) {
-        case ActionTypes.CATEGORY_SUCCESS:
-          const { data } = action.response;
-          return {
-            ...state,
-            _id: { ...state._id, value: data._id },
-            name: { ...state.name, value: data.name },
-            cType: { ...state.cType, value: data.cType },
-            // avatar: { ...state.avatar, value: data.avatar },
-            slug: { ...state.slug, value: data.slug },
-            order: { ...state.order, value: data.order },
-            description: { ...state.description, value: data.description },
-          }
-        default:
-          return state;
-      }
     }
+    // adminCategoriesForm: (state, action) => {
+    //   switch (action.type) {
+    //     case ActionTypes.CATEGORY_SUCCESS:
+    //       const { data } = action.response;
+    //       return {
+    //         ...state,
+    //         _id: { ...state._id, value: data._id },
+    //         name: { ...state.name, value: data.name },
+    //         cType: { ...state.cType, value: data.cType },
+    //         // avatar: { ...state.avatar, value: data.avatar },
+    //         slug: { ...state.slug, value: data.slug },
+    //         order: { ...state.order, value: data.order },
+    //         description: { ...state.description, value: data.description },
+    //       }
+    //     default:
+    //       return state;
+    //   }
+    // }
   })
 });
 

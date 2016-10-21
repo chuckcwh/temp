@@ -17,7 +17,6 @@ import {
   CATEGORY_EDIT_SUCCESS,
   CATEGORY_DELETE_SUCCESS,
   createCategory,
-  getCategory,
   editCategory,
   deleteCategory,
   showAlertPopup,
@@ -34,18 +33,6 @@ class AdminCategoriesForm extends Component {
     super(props);
     this.state = {
     };
-  }
-
-  componentDidMount() {
-    const { getCategory, edit, categoryId } = this.props;
-
-    if (edit) {
-      getCategory({ categoryId }).then(res => {
-        if (res.type === CATEGORY_FAILURE) {
-          history.push({ pathname: '/admin-categories' });
-        }
-      });
-    }
   }
 
   onDeleteCategory = (values) => {
@@ -249,15 +236,14 @@ const reduxFormConfig = {
   validate,
 }
 
-const mapStateToProps = (state) => ({
-  initialValues: {
+const mapStateToProps = (state, ownProps) => ({
+  initialValues: ownProps.initialValues || {
     cType: 'category',
     order: 0,
 }});
 
 const mapDispatchToProps = (dispatch) => ({
   createCategory: (params) => dispatch(createCategory(params)),
-  getCategory: (params) => dispatch(getCategory(params)),
   editCategory: (params) => dispatch(editCategory(params)),
   deleteCategory: (params) => dispatch(deleteCategory(params)),
 

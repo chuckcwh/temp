@@ -175,7 +175,7 @@ class AdminCategories extends Component {
                               Edit
                             </Link>
                             <div className={cx('btn', s.tableListBtn, s.red)}
-                              onClick={() => showConfirmPopup("Are you sure you want to delete?", this.onDeleteCategory(cellData))}>
+                              onClick={() => showConfirmPopup("Are you sure you want to delete?", () => this.onDeleteCategory(cellData))}>
                               Delete
                             </div>
                           </div>

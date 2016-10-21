@@ -10,6 +10,7 @@ import 'react-day-picker/lib/style.css';
 import s from './AdminCategoriesForm.css';
 import { isAdmin } from '../../../core/util';
 import history from '../../../core/history';
+import ConfirmPopup from '../../ConfirmPopup';
 import {
   CATEGORY_CREATE_SUCCESS,
   CATEGORY_FAILURE,
@@ -20,6 +21,7 @@ import {
   editCategory,
   deleteCategory,
   showAlertPopup,
+  showConfirmPopup,
 } from '../../../actions';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
@@ -46,35 +48,44 @@ class AdminCategoriesForm extends Component {
     }
   }
 
-  onDeleteCategory = (e) => {
-    e.preventDefault();
-    const { fields, deleteCategory } = this.props;
+  onDeleteCategory = (values) => {
+    const { updateCategoryList, deleteCategory, showConfirmPopup } = this.props;
 
-    deleteCategory({categoryId: fields._id.value}).then(res => {
-      if (res.type === CATEGORY_DELETE_SUCCESS) {
-        showAlertPopup('Category delete success!');
-        history.push({ pathname: '/admin-categories' });
-      } else {
-        showAlertPopup('Category delete failed.');
+    showConfirmPopup(
+      'Are you sure you want to delete?',
+      () => {
+        deleteCategory({categoryId: values._id}).then(res => {
+          if (res.type === CATEGORY_DELETE_SUCCESS) {
+            showAlertPopup('Category delete success!');
+            updateCategoryList();
+            history.push({ pathname: '/admin-categories' });
+          } else {
+            showAlertPopup('Category delete failed.');
+          }
+        });
       }
-    });
+    );
+
   }
 
-  onEditCategory = (e) => {
-    e.preventDefault();
-    const { fields, editCategory, showAlertPopup, updateCategoryList } = this.props;
+  processedData = (values) => {
+    const { _id, name, cType, order, slug, description, avatar } = values;
 
-    const data = {
-      categoryId: fields._id.value,
-      name: fields.name.value,
-      cType: fields.cType.value,
-      order: fields.order.value,
-      slug: fields.slug.value,
-      description: fields.description.value,
+    return {
+      categoryId: values._id,
+      name,
+      cType,
+      order,
+      slug,
+      description,
       // avatar,
     }
+  }
 
-    editCategory(data).then(res => {
+  onEditCategory = (values) => {
+    const { showAlertPopup, updateCategoryList, editCategory } = this.props;
+
+    editCategory(this.processedData(values)).then(res => {
       if (res.type === CATEGORY_EDIT_SUCCESS) {
         showAlertPopup('Category edit success!');
         updateCategoryList();
@@ -85,17 +96,9 @@ class AdminCategoriesForm extends Component {
   }
 
   onSubmit = (values) => {
-    const { showAlertPopup, resetForm, updateCategoryList } = this.props;
-    console.log('submit', values);
-    const data = {
-      name: values.name,
-      cType: values.cType,
-      order: values.order,
-      slug: values.slug,
-      description: values.description,
-      // avatar,
-    }
-    this.props.createCategory(data).then(res => {
+    const { showAlertPopup, resetForm, updateCategoryList, createCategory } = this.props;
+
+    createCategory(this.processedData(values)).then(res => {
       if (res.type === CATEGORY_CREATE_SUCCESS) {
         showAlertPopup('Category create success!');
         updateCategoryList();
@@ -128,6 +131,7 @@ class AdminCategoriesForm extends Component {
       <form className={s.adminCategoriesForm} onSubmit={handleSubmit(this.onSubmit)}>
         <Grid fluid>
           <Row className={s.mainCat}>
+            <ConfirmPopup />
 
             <Col xs={12} md={6} className={s.mainCatCol}>
               <div className={s.mainCatContainer}>
@@ -191,8 +195,8 @@ class AdminCategoriesForm extends Component {
         {edit ? (
           <div className={s.formSectionSubmit}>
             {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
-            <button className="btn btn-primary" disabled={invalid || submitting} onClick={this.onEditCategory}>Update</button>&nbsp;&nbsp;
-            <button className="btn btn-secondary" onClick={this.onDeleteCategory}>Delete</button>
+            <button className="btn btn-primary" disabled={invalid || submitting} onClick={handleSubmit(this.onEditCategory)}>Update</button>&nbsp;&nbsp;
+            <button className="btn btn-secondary" onClick={handleSubmit(this.onDeleteCategory)}>Delete</button>
           </div>
         ) : (
           <div className={s.formSectionSubmit}>
@@ -227,7 +231,6 @@ AdminCategoriesForm.propTypes = {
   submitFailed: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
 
-
   resetForm: React.PropTypes.func,
   createCategory: React.PropTypes.func,
 };
@@ -260,6 +263,7 @@ const mapDispatchToProps = (dispatch) => ({
 
   resetForm: () => dispatch(reset('adminCategoriesForm')),
   showAlertPopup: (body) => dispatch(showAlertPopup(body)),
+  showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminCategoriesForm);

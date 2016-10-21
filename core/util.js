@@ -19,6 +19,23 @@ export const PAGE_ORDERS = [
 
 export const ALL_SERVICES = 'All Services';
 
+export const host = ((typeof window !== 'undefined' &&
+  window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
+    'https://api.ebeecare.com' :
+    'https://devapi.ebeecare.com');
+
+export const backend = ((typeof window !== 'undefined' &&
+  window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
+    'https://app.ebeecare.com' :
+    'https://dev.ebeecare.com');
+
+export const partners = ((typeof window !== 'undefined' &&
+  window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
+    'https://www.ebeepartners.com' :
+    'http://ebeepartners-testing.firebaseapp.com');
+
+export const blog = 'https://blog.ebeecare.com';
+
 export function getUniqueId() {
   return uniqueId('ebc');
 }
@@ -220,20 +237,11 @@ export function getUserCurrentCredits(user) {
 }
 
 const u = {
-  host: ((typeof window !== 'undefined' &&
-    window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
-      'https://api.ebeecare.com' :
-      'https://devapi.ebeecare.com'),
+  host,
 
-  backend: ((typeof window !== 'undefined' &&
-    window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
-      'https://app.ebeecare.com' :
-      'https://dev.ebeecare.com'),
-  partners: ((typeof window !== 'undefined' &&
-    window.location.hostname.indexOf('www.ebeecare.com') > -1) ?
-      'https://www.ebeepartners.com' :
-      'http://ebeepartners-testing.firebaseapp.com'),
-  blog: 'https://blog.ebeecare.com',
+  backend,
+  partners,
+  blog,
 
   getUniqueId,
   getUriQueryParam,

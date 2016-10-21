@@ -57,7 +57,7 @@ class AdminServices extends Component {
     deleteService({serviceId}).then(res => {
       if (res.type === SERVICE_DELETE_SUCCESS) {
         showAlertPopup('Service delete success!');
-        this.updateCategoryList();
+        this.updateServiceList();
       } else {
         showAlertPopup('Service delete failed.');
       }
@@ -88,7 +88,7 @@ class AdminServices extends Component {
 
   render() {
     const { add, edit, serviceId } = this.props.params;
-    const { user, showConfirmPopup, categories } = this.props;
+    const { user, showConfirmPopup, categories, services } = this.props;
     const { renderServices } = this.state;
     const serviceSelections = [];
 
@@ -107,7 +107,12 @@ class AdminServices extends Component {
           {isAdmin(user) && edit && (
             <AdminServicesForm
               edit={true}
-              serviceId={serviceId}
+              initialValues={services[serviceId] && {
+                ...services[serviceId],
+                categories: services[serviceId].categories.join(','),
+                skills: services[serviceId].skills.join(','),
+                classes: Object.values(services[serviceId].classes),
+              }}
               updateServiceList={() => this.updateServiceList()}
             />
           )}
@@ -177,7 +182,7 @@ class AdminServices extends Component {
                             Edit
                           </Link>
                           <div className={cx('btn', s.tableListBtn, s.red)}
-                            onClick={() => showConfirmPopup("Are you sure you want to delete?", this.onDeleteServicey(cellData))}>
+                            onClick={() => showConfirmPopup("Are you sure you want to delete?", () => this.onDeleteService(cellData))}>
                             Delete
                           </div>
                         </div>
@@ -214,7 +219,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  deleteService: (params) => dispatch(deleteService(params)),
   fetchServices: () => dispatch(fetchServices()),
+  showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminServices);

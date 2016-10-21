@@ -1359,21 +1359,6 @@ const bookingApp = combineReducers({
         default:
           return state;
       }
-    },
-    adminServicesForm: (state, action) => {
-      switch (action.type) {
-        case ActionTypes.SERVICE_SUCCESS:
-          const { data } = action.response;
-          console.log('data', data);
-          return {
-            ...state,
-            _id: { ...state._id, value: data._id },
-            name: { ...state.name, value: data.name },
-            categories: { ...state.categories, value: data.categories.join(',') },
-          }
-        default:
-          return state;
-      }
     }
   })
 });

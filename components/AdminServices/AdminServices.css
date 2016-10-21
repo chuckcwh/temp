@@ -46,6 +46,7 @@
 
   & .tableListBtn {
     display: inline-block;
+    vertical-align: top;
     background-color: #f78d00;
     color: #FFFFFF;
     border-radius: 15px;

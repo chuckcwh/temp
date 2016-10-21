@@ -5,7 +5,7 @@ import some from 'lodash/some';
 import remove from 'lodash/remove';
 import cx from 'classnames';
 import moment from 'moment';
-import { reduxForm, addArrayValue, reset } from 'redux-form';
+import { reduxForm, addArrayValue, destroy, initialize } from 'redux-form';
 import 'react-day-picker/lib/style.css';
 import s from './AdminServicesForm.css';
 import { isAdmin } from '../../../core/util';
@@ -13,19 +13,20 @@ import history from '../../../core/history';
 import DayPickerPopup from '../../DayPickerPopup';
 import MultiSelect from '../../MultiSelect';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import ConfirmPopup from '../../ConfirmPopup';
 import {
   SERVICE_CREATE_SUCCESS,
-  SERVICE_FAILURE,
   SERVICE_EDIT_SUCCESS,
   SERVICE_DELETE_SUCCESS,
   createService,
-  getService,
   editService,
   deleteService,
   showAlertPopup,
+  showConfirmPopup,
 } from '../../../actions';
 // react-icons
 import FaPlus from 'react-icons/lib/fa/plus';
+import FaMinus from 'react-icons/lib/fa/minus';
 
 
 class AdminServicesForm extends Component {
@@ -37,49 +38,50 @@ class AdminServicesForm extends Component {
   }
 
   componentDidMount() {
-    const { getService, edit, serviceId, fields: { classes, keywords } } = this.props;
-
-    if (edit) {
-      getService({ serviceId }).then(res => {
-        if (res.type === SERVICE_FAILURE) {
-          history.push({ pathname: '/admin-services' });
-        }
-      });
-    }
+    const { fields: { classes, keywords } } = this.props;
 
     classes.addField();
     keywords.addField();
   }
 
-  onDeleteService = (e) => {
-    e.preventDefault();
-    const { fields, deleteService } = this.props;
+  onDeleteService = (values) => {
+    const { showAlertPopup, updateServiceList, deleteService, showConfirmPopup } = this.props;
 
-    deleteService({serviceId: fields._id.value}).then(res => {
-      if (res.type === SERVICE_DELETE_SUCCESS) {
-        showAlertPopup('Service delete success!');
-        history.push({ pathname: '/admin-services' });
-      } else {
-        showAlertPopup('Service delete failed.');
+    showConfirmPopup(
+      'Are you sure you want to delete?',
+      () => {
+        deleteService({serviceId: values._id}).then(res => {
+          if (res.type === SERVICE_DELETE_SUCCESS) {
+            showAlertPopup('Service delete success!');
+            updateServiceList();
+            history.push({ pathname: '/admin-services' });
+          } else {
+            showAlertPopup('Service delete failed.');
+          }
+        });
       }
-    });
+    )
   }
 
-  onEditService = (e) => {
-    e.preventDefault();
-    const { fields, editService, showAlertPopup, updateServiceList } = this.props;
-
-    const data = {
-      // serviceId: fields._id.value,
-      // name: fields.name.value,
-      // cType: fields.cType.value,
-      // order: fields.order.value,
-      // slug: fields.slug.value,
-      // description: fields.description.value,
-      // avatar,
+  processedData = (values) => {
+    const { _id, name, description, order, categories, parentCategory, classes, keywords, skills } = values;
+    return {
+      serviceId: _id,
+      name,
+      categories: categories && categories.split(','),
+      parentCategory,
+      classes: classes && classes.filter(item => Object.values(item).filter(i => !!i).length),
+      description,
+      keywords: keywords && keywords.filter(keyword => !!keyword),
+      order,
+      skills: skills && skills.split(','),
     }
+  }
 
-    editService(data).then(res => {
+  onEditService = (values) => {
+    const { showAlertPopup, resetForm, updateServiceList, editService } = this.props;
+
+    editService(this.processedData(values)).then(res => {
       if (res.type === SERVICE_EDIT_SUCCESS) {
         showAlertPopup('Service edit success!');
         updateServiceList();
@@ -90,26 +92,16 @@ class AdminServicesForm extends Component {
   }
 
   onSubmit = (values) => {
-    const { showAlertPopup, resetForm, updateServiceList, createService } = this.props;
-    console.log('submit', values);
-    const { name, description, order, categories, parentCategory, classes, keywords, skills } = values;
+    const { showAlertPopup, destroyForm, initializeForm, updateServiceList, createService } = this.props;
 
-    const data = {
-      name,
-      categories: categories && categories.split(','),
-      parentCategory,
-      classes: classes && classes.filter(item => Object.values(item).filter(i => !!i).length),
-      description,
-      keywords: keywords && keywords.map(item => item.name).filter(keyword => !!keyword),
-      order,
-      skills: skills && skills.split(','),
-    }
-
-    createService(data).then(res => {
+    createService(this.processedData(values)).then(res => {
       if (res.type === SERVICE_CREATE_SUCCESS) {
         showAlertPopup('Service create success!');
         updateServiceList();
-        resetForm();
+        destroyForm();
+        initializeForm({order: 0});
+        classes.addField();
+        keywords.addField();
       } else {
         showAlertPopup('Service create failed.');
       }
@@ -145,6 +137,7 @@ class AdminServicesForm extends Component {
       <form className={s.adminServicesForm} onSubmit={handleSubmit(this.onSubmit)}>
         <Grid fluid>
           <Row className={s.mainCat}>
+            <ConfirmPopup />
 
             <Col xs={12} md={6} className={s.mainCatCol}>
               <div className={s.mainCatContainer}>
@@ -191,10 +184,18 @@ class AdminServicesForm extends Component {
                       <span>{index + 1}.</span>
                       <input type="text" className={s.textInput} {...item.duration} /> hr(s)
                       <input type="number" className={s.numberInput} {...item.price} /> SGD
+                      <button
+                        className={cx('btn btn-primary', s.multiFieldBtn)}
+                        onClick={e => {
+                          e.preventDefault();
+                          classes.removeField(index);
+                      }}>
+                        <FaMinus />
+                      </button>
                     </div>
                   ))}
                   <button
-                    className={cx('btn btn-primary', s.multiTextFieldBtn)}
+                    className={cx('btn btn-primary', s.multiFieldBtn)}
                     onClick={e => {
                       e.preventDefault();
                       classes.addField({index: classes.length + 1});
@@ -227,12 +228,20 @@ class AdminServicesForm extends Component {
                     {keywords.map((item, index) => (
                       <div>
                         <span>{index + 1}.</span>
-                        <input type="text" className={s.textInput} {...item.name} />
+                        <input type="text" className={s.textInput} {...item} />
+                        <button
+                          className={cx('btn btn-primary', s.multiFieldBtn)}
+                          onClick={e => {
+                            e.preventDefault();
+                            keywords.removeField(index);
+                        }}>
+                          <FaMinus />
+                        </button>
                       </div>
                     ))}
                     {keywords.touched && keywords.error && <div className={s.formError}>{keywords.error}</div>}
                     <button
-                      className={cx("btn btn-primary", s.multiTextFieldBtn)}
+                      className={cx("btn btn-primary", s.multiFieldBtn)}
                       onClick={e => {
                         e.preventDefault();
                         keywords.addField({index: keywords.length + 1});
@@ -265,8 +274,8 @@ class AdminServicesForm extends Component {
         {edit ? (
           <div className={s.formSectionSubmit}>
             {submitFailed && invalid && <div className={s.formError}>You have one or more form field errors.</div>}
-            <button className="btn btn-primary" disabled={invalid || submitting} onClick={this.onEditCategory}>Update</button>&nbsp;&nbsp;
-            <button className="btn btn-secondary" onClick={this.onDeleteCategory}>Delete</button>
+            <button className="btn btn-primary" disabled={invalid || submitting} onClick={handleSubmit(this.onEditService)}>Update</button>&nbsp;&nbsp;
+            <button className="btn btn-secondary" onClick={handleSubmit(this.onDeleteService)}>Delete</button>
           </div>
         ) : (
           <div className={s.formSectionSubmit}>
@@ -325,7 +334,7 @@ const reduxFormConfig = {
     'classes[].duration',
     'classes[].price',
     'description',
-    'keywords[].name',
+    'keywords[]',
     'order',
     'parentCategory',
     'skills',
@@ -333,21 +342,23 @@ const reduxFormConfig = {
   validate,
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
   categoryChoice: state.services.categories,
   skillChoice: state.config.data && state.config.data.skillChoices,
-  initialValues: {
+  initialValues: ownProps.initialValues || {
     order: 0,
-}});
+  }
+});
 
 const mapDispatchToProps = (dispatch) => ({
   createService: (params) => dispatch(createService(params)),
-  getService: (params) => dispatch(getService(params)),
   editService: (params) => dispatch(editService(params)),
   deleteService: (params) => dispatch(deleteService(params)),
 
-  resetForm: () => dispatch(reset('adminServicesForm')),
+  destroyForm: () => dispatch(destroy('adminServicesForm')),
+  initializeForm: () => dispatch(initialize('adminServicesForm')),
   showAlertPopup: (body) => dispatch(showAlertPopup(body)),
+  showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
   addValue: addArrayValue,
 });
 

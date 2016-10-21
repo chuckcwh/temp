@@ -30,10 +30,6 @@ export const SERVICES_REQUEST = 'SERVICES_REQUEST'
 export const SERVICES_SUCCESS = 'SERVICES_SUCCESS'
 export const SERVICES_FAILURE = 'SERVICES_FAILURE'
 
-export const SERVICE_REQUEST = 'SERVICE_REQUEST'
-export const SERVICE_SUCCESS = 'SERVICE_SUCCESS'
-export const SERVICE_FAILURE = 'SERVICE_FAILURE'
-
 export const SERVICE_CREATE_REQUEST = 'SERVICE_CREATE_REQUEST'
 export const SERVICE_CREATE_SUCCESS = 'SERVICE_CREATE_SUCCESS'
 export const SERVICE_CREATE_FAILURE = 'SERVICE_CREATE_FAILURE'
@@ -499,11 +495,6 @@ function fetchAction(route) {
       entity: 'services',
       defaultEntity: {}
     },
-    getService: {
-      types: [ SERVICE_REQUEST, SERVICE_SUCCESS, SERVICE_FAILURE ],
-      endpoint: '/services/:serviceId',
-      method: 'get',
-    },
     createService: {
       types: [ SERVICE_CREATE_REQUEST, SERVICE_CREATE_SUCCESS, SERVICE_CREATE_FAILURE ],
       endpoint: '/services',
@@ -517,7 +508,7 @@ function fetchAction(route) {
       auth: 'user',
     },
     deleteService: {
-      types: [ SERVICE_CREATE_REQUEST, SERVICE_CREATE_SUCCESS, SERVICE_CREATE_FAILURE ],
+      types: [ SERVICE_DELETE_REQUEST, SERVICE_DELETE_SUCCESS, SERVICE_DELETE_FAILURE ],
       endpoint: '/services/:serviceId',
       method: 'del',
       auth: 'user',
@@ -1145,10 +1136,6 @@ export function fetchServices() {
 
 export function createService(params) {
   return fetch('createService', params);
-}
-
-export function getService(params) {
-  return fetch('getService', params);
 }
 
 export function editService(params) {

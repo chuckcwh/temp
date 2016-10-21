@@ -226,7 +226,7 @@ class AdminServicesForm extends Component {
                 <div className={s.inputField}>
                   <div className={s.keywordsContainer}>
                     {keywords.map((item, index) => (
-                      <div>
+                      <div key={index}>
                         <span>{index + 1}.</span>
                         <input type="text" className={s.textInput} {...item} />
                         <button

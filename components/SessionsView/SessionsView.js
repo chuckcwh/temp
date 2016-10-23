@@ -20,7 +20,7 @@ import { SESSION_CANCEL_SUCCESS,
 import { configToName, formatSessionAlias, isClient, isProvider } from '../../core/util';
 import history from '../../core/history';
 
-const imgPencil = require('../pencil.png');
+import imgPencil from '../pencil.png';
 
 class SessionsView extends Component {
 

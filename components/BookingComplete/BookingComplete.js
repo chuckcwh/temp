@@ -46,8 +46,7 @@ class BookingComplete extends Component {
   onVerified = () => {
     const { booking } = this.props;
     this.props.getBooking({
-      bookingId: booking && booking._id,
-      bookingToken: booking && booking.client && booking.client.contact,
+      bookingId: booking._id,
     }).then(() => {// Notify parent window of booking completion for embedded widget
       const location = history.getCurrentLocation();
       if (location && location.query && location.query.widget === 'true') {

@@ -2,6 +2,7 @@
 
 .bookingPatientForm {
   background-color: #f3f3f3;
+  min-height: 300px;
 
   flex: 10;
   font-size: 21px;
@@ -84,5 +85,58 @@
       flex-flow: row wrap;
       flex-direction: column;
     }
+  }
+
+  & .dropzone {
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 20px;
+    width: 100%;
+    border: 2px dashed var(--border-color);
+
+    & .dropzoneNotes {
+      height: 110px;
+    }
+
+    & ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      & li {
+        position: relative;
+        display: inline-block;
+        list-style: none;
+        margin: 0;
+        padding: 5px;
+
+        & img {
+          margin: 0;
+          padding: 0;
+          height: 100px;
+        }
+
+        & a {
+          position: absolute;
+          display: none;
+          top: -12px;
+          right: 0;
+        }
+
+        &:hover {
+          & img {
+            opacity: 0.75;
+          }
+
+          & a {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  & .dropzoneActive {
+    border: 2px solid var(--brand-color);
   }
 }

@@ -1162,6 +1162,7 @@ export function createBookingWithOptions({ services, order, user }) {
       date: moment(session.date).format('YYYY-MM-DD'),
       timeSlot: session.time,
       additionalInfo: order && order.booker && order.booker.additionalInfo,
+      additionalInfoImages: order && order.booker && order.booker.additionalInfoImages,
     })),
   };
 

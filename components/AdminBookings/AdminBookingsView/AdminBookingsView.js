@@ -14,6 +14,7 @@ import { AutoSizer, Table, Column } from 'react-virtualized';
 import history from '../../../core/history';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import FeedbackPopupForm from '../../FeedbackPopupForm';
 import {
   APPLICATION_CREATE_SUCCESS,
   BOOKING_DELETE_SUCCESS,
@@ -28,13 +29,14 @@ import {
   cancelApplication,
   getUsers,
   getUser,
+  showFeedbackPopupForm,
+  hideFeedbackPopupForm,
 } from '../../../actions';
 // react-icons
 import FaCheck from 'react-icons/lib/fa/check';
 import FaPhoneSquare from 'react-icons/lib/fa/phone-square';
 import FaChild from 'react-icons/lib/fa/child';
 
-//TODO: nurse assign/de-assign
 //TODO: transaction / nurse payment
 
 const providerPickDefault = {
@@ -116,6 +118,7 @@ class AdminBookingsView extends Component {
 
   }
 
+  // should not work because booking shouldn't be deleted
   deleteBooking = () => {
     const { booking, deleteBooking } = this.props;
 
@@ -168,6 +171,7 @@ class AdminBookingsView extends Component {
         <Header title="Booking Detail" />
         <Container>
           <ConfirmPopup />
+          <FeedbackPopupForm onFeedbackSuccess={() => console.log('oh yeh!')}/>
           <GenericPopup>
             <div className={s.providerPickPopup}>
               <h3>Pick an Available Provider</h3>
@@ -419,8 +423,17 @@ class AdminBookingsView extends Component {
                                   <div className={cx('btn', s.tableListSign, s.tableListSignEdit)} onClick={() => history.push({ pathname: `/admin-cases/edit/${cellData}` })}>Edit</div>
                                 </div>
                                 <div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignEdit)}>Cancel</div>
-                                  <div className={cx('btn', s.tableListSign, s.tableListSignDelete)}>Delete</div>
+                                  <div className={cx('btn', s.tableListSign, s.tableListSignDelete)}>Cancel</div>
+                                  <div
+                                    className={cx('btn', s.tableListSign, s.tableListSignDoc, s.font_sm, !rowData.clientFeedback && s.tableListSignDocNo)}
+                                    onClick={() => rowData.clientFeedback && this.props.showFeedbackPopupForm({
+                                      sessionId: cellData,
+                                      feedbackData: rowData.clientFeedback,
+                                      isAdmin: true,
+                                    })}
+                                  >
+                                    Feedback{rowData.clientFeedback && (<span> <FaCheck /></span>)}
+                                  </div>
                                 </div>
                               </div>
                           )}}
@@ -646,6 +659,8 @@ const mapDispatchToProps = (dispatch) => ({
   showGenericPopup: (body) => dispatch(showGenericPopup(body)),
   hideGenericPopup: () => dispatch(hideGenericPopup()),
   getUsers: (params) => dispatch(getUsers(params)),
+  showFeedbackPopupForm: (params) => dispatch(showFeedbackPopupForm(params)),
+  hideFeedbackPopupForm: () => dispatch(hideFeedbackPopupForm()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminBookingsView);

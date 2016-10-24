@@ -50,8 +50,18 @@
   & .tableListSignDoc {
     background: green;
     padding: 5px;
-    width: 60px;
+    width: auto;
     margin-top: 1.5px;
     margin-bottom: 1.5px;
+    border: 2px solid green;
+  }
+
+  & .tableListSignDocNo {
+    background: transparent;
+    color: green;
+  }
+
+  & .textAlign_bottom {
+    vertical-align: bottom;
   }
 }

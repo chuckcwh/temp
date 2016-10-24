@@ -195,10 +195,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  hideFeedbackPopupForm: () => dispatch(hideFeedbackPopupForm()),
   getSessions: (params) => dispatch(getSessions(params)),
   fetchServices: () => dispatch(fetchServices()),
   showFeedbackPopupForm: (params) => dispatch(showFeedbackPopupForm(params)),
+  hideFeedbackPopupForm: () => dispatch(hideFeedbackPopupForm()),
   showAlertPopup: (body) => dispatch(showAlertPopup(body)),
 });
 

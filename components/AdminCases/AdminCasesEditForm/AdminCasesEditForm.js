@@ -10,11 +10,18 @@ import Link from '../../Link';
 import Header from '../../Header';
 import { reduxForm } from 'redux-form';
 import history from '../../../core/history';
-import { getSession, fetchServices } from '../../../actions';
+import {
+  getSession,
+  fetchServices,
+  showFeedbackPopupForm,
+  hideFeedbackPopupForm,
+} from '../../../actions';
 import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
 import { formatSessionAlias, configToName } from '../../../core/util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-
+import FeedbackPopupForm from '../../FeedbackPopupForm';
+// react-icons
+import FaCheck from 'react-icons/lib/fa/check';
 
 class AdminCasesEditForm extends Component {
 
@@ -82,6 +89,7 @@ class AdminCasesEditForm extends Component {
       <form className={s.adminCasesEditForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <Header title="Case Detail" />
         <Container>
+          <FeedbackPopupForm onFeedbackSuccess={() => console.log('oh yeh!')}/>
 
           <h2>{detail.title()}</h2>
 
@@ -119,7 +127,24 @@ class AdminCasesEditForm extends Component {
                   <li><span className={s.title}>Transactions:</span>{session.applications && session.transactions.length}</li>
                   <li><span className={s.title}>Paid:</span>{session.isPaid ? "Yes" : "No"}</li>
                   <li><span className={s.title}>Refund:</span>{session.isRefund ? "Yes" : "No"}</li>
-                  <li><div className={cx('btn', s.tableListSign, s.tableListSignDoc)}  onClick={() => history.push({ pathname: `/sessions/${session._id}/documentation` })}>Doc</div></li>
+                  <li>
+                    <div
+                      className={cx('btn', s.tableListSign, s.tableListSignDoc, !session.documentation && s.tableListSignDocNo)}
+                      onClick={() => history.push({ pathname: `/sessions/${session._id}/documentation` })}
+                    >
+                      Doc{session.documentation && (<span className={s.textAlign_textBottom}> <FaCheck /></span>)}
+                    </div>
+                    <div
+                      className={cx('btn', s.tableListSign, s.tableListSignDoc, !session.clientFeedback && s.tableListSignDocNo)}
+                      onClick={() => session.clientFeedback && this.props.showFeedbackPopupForm({
+                        sessionId: session._id,
+                        feedbackData: session.clientFeedback,
+                        isAdmin: true,
+                      })}
+                    >
+                      Feedback{session.clientFeedback && (<span className={s.textAlign_textBottom}> <FaCheck /></span>)}
+                    </div>
+                  </li>
                 </ul>
               </Col>
             </Row>
@@ -204,6 +229,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
   getSession: (params) => dispatch(getSession(params)),
+  showFeedbackPopupForm: (params) => dispatch(showFeedbackPopupForm(params)),
+  hideFeedbackPopupForm: () => dispatch(hideFeedbackPopupForm()),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(AdminCasesEditForm);

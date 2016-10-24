@@ -54,6 +54,7 @@ class FeedbackPopupForm extends Component {
         content,
       },
       topicChoice,
+      isAdmin,
 
       invalid,
       handleSubmit,
@@ -82,6 +83,7 @@ class FeedbackPopupForm extends Component {
                     size={24}
                     color2={'#fdbc1d'}
                     {...field.value}
+                    disabled={isAdmin}
                     />
                 </div>
               </div>
@@ -95,18 +97,25 @@ class FeedbackPopupForm extends Component {
                   className={s.multiSelect}
                   options={topicChoice}
                   {...topics}
+                  disabled={isAdmin}
                 />
               </div>
               <div className={s.inputField}>
-                <textarea className={s.content} {...content} />
+                {isAdmin ? (
+                  <p><strong>Comment:</strong><br/>{content.value}</p>
+                ) : (
+                  <textarea className={s.content} {...content} disabled={isAdmin} />
+                )}
               </div>
             </div>
           </div>
 
           {submitFailed && (<p className={s.red}>Submit failed.</p>)}
-          <button className={cx("btn btn-default", s.submitBtn)} disabled={submitting || invalid}>
-            Submit
-          </button>
+          {!isAdmin && (
+            <button className={cx("btn btn-default", s.submitBtn)} disabled={submitting || invalid}>
+              Submit
+            </button>
+          )}
         </Popup>
       </form>
     );
@@ -151,6 +160,7 @@ const mapStateToProps = (state) => {
     visible: state.modal.feedback.visible,
     sessionId: params && params.sessionId,
     userId: params && params.userId,
+    isAdmin: params && params.isAdmin,
     topicChoice: state.config.data && state.config.data.feedbackTopics && state.config.data.feedbackTopics.map(item => ({value: item.value, label: item.name})),
     feedbackFieldSelection,
 

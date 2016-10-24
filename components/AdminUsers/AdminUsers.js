@@ -9,11 +9,16 @@ import Container from '../Container';
 import Link from '../Link';
 import Header from '../Header';
 import history from '../../core/history';
+import GenericPopup from '../GenericPopup';
 import { getUserName } from '../../core/util';
-import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
-import { getUsers, showConfirmPopup } from '../../actions';
 import { configToName } from '../../core/util';
-import ConfirmPopup from '../ConfirmPopup';
+import { InfiniteLoader, AutoSizer, Table, Column } from 'react-virtualized';
+import {
+  getUsers,
+  showConfirmPopup,
+  showGenericPopup,
+  hideGenericPopup,
+} from '../../actions';
 // react-icons
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 import FaCaretSquareODown from 'react-icons/lib/fa/caret-square-o-down';
@@ -109,20 +114,17 @@ class AdminUsers extends Component {
     });
   }
 
-  spoofUser = (userId) => {
-    console.log("I'm the user!!!!!", userId);
-  }
-
   render() {
-    const { users } = this.props;
+    const { users, showGenericPopup, hideGenericPopup } = this.props;
     const { sortDirection, filterField, filterKwd } = this.state;
 
     return (
       <div className={s.adminUsers}>
         <Header title="User Management" />
         <Container>
-          <ConfirmPopup />
-
+          <GenericPopup>
+            <h3>Provider Status</h3>
+          </GenericPopup>
 
           <div>
             <div className={s.filter}>
@@ -175,7 +177,7 @@ class AdminUsers extends Component {
 
                         onRowsRendered={onRowsRendered}
                         noRowsRenderer={() => (<div>No data</div>)}
-                        rowHeight={50}
+                        rowHeight={100}
                         rowClassName={({index}) => index % 2 === 0 ? s.tableListEvenRow : null}
                         rowCount={Object.values(users).length}
                         rowGetter={({index}) => Object.values(users)[index]}
@@ -184,41 +186,32 @@ class AdminUsers extends Component {
                           label="role"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="role"
-                          cellRenderer={({cellData}) => cellData}
                           width={75}
                         />
                         <Column
                           label="name"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="name"
-                          cellRenderer={({cellData}) => cellData}
                           width={200}
                         />
                         <Column
                           label="email"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="email"
-                          cellRenderer={({cellData}) => cellData}
                           width={250}
                         />
                         <Column
                           label="contact"
                           headerRenderer={this.setHeaderLabel}
                           dataKey="contact"
-                          cellRenderer={({cellData}) => cellData}
-                          width={150}
-                        />
-                        <Column
-                          label="view"
-                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
-                          dataKey="_id"
-                          cellRenderer={({cellData}) => (
-                            <button className={cx('btn', s.tableListToEdit)} onClick={() => this.props.showConfirmPopup('You are going to spoof this user. Are you sure?', () => this.spoofUser(cellData))}>
-                              View
-                            </button>
-                          )}
-                          disableSort={true}
-                          width={90}
+                          cellRenderer={({rowData, cellData}) => {
+                            return (
+                              <div className={s.contactField}>
+                                <div>{cellData}</div>
+                                <div>({rowData.contact})</div>
+                              </div>
+                          )}}
+                          width={250}
                         />
                         <Column
                           label="pin verified"
@@ -228,11 +221,23 @@ class AdminUsers extends Component {
                           width={110}
                         />
                         <Column
-                          label="created at"
-                          headerRenderer={this.setHeaderLabel}
-                          dataKey="createdAt"
-                          cellRenderer={({cellData}) => moment(cellData).format('YYYY-MM-DD')}
-                          width={110}
+                          label="edit"
+                          headerRenderer={({label}) => <div className={s.headerLabel}>{label}</div>}
+                          dataKey="_id"
+                          cellRenderer={({rowData, cellData}) => (
+                            <div>
+                              <Link className={cx('btn', s.tableListBtn, s.bgOrange)} to={`/admin-users/${cellData}`}>
+                                View
+                              </Link>
+                              {rowData.role === 'provider' && (
+                                <button className={cx('btn btn-primary', s.tableListBtn, s.bgOrange)} onClick={() => showGenericPopup()}>
+                                  Provider Status
+                                </button>
+                              )}
+                            </div>
+                          )}
+                          disableSort={true}
+                          width={250}
                         />
                       </Table>
                     )}
@@ -259,6 +264,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getUsers: (params, extend) => dispatch(getUsers(params, extend)),
   showConfirmPopup: (body, accept) => dispatch(showConfirmPopup(body, accept)),
+  showGenericPopup: (body) => dispatch(showGenericPopup(body)),
+  hideGenericPopup: () => dispatch(hideGenericPopup()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminUsers);

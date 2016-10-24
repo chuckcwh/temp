@@ -41,6 +41,10 @@ class BookingTime extends Component {
   };
 
   render() {
+    const checkedLink = key => linkState(this, key);
+    const handleChange = key => e => {
+      checkedLink(key).requestChange(e.target.checked);
+    };
     return (
       <div className={s.bookingTime}>
         <div>
@@ -49,7 +53,8 @@ class BookingTime extends Component {
               className={s.bookingTimeCheckbox}
               type="checkbox"
               id="timeMorning"
-              checkedLink={linkState(this, 'morning')}
+              checked={checkedLink('morning').value}
+              onChange={handleChange('morning')}
               value="morning"
             />
             <label className={s.bookingTimeCheckboxLabel} htmlFor="timeMorning">
@@ -61,7 +66,8 @@ class BookingTime extends Component {
               className={s.bookingTimeCheckbox}
               type="checkbox"
               id="timeAfternoon"
-              checkedLink={linkState(this, 'afternoon')}
+              checked={checkedLink('afternoon').value}
+              onChange={handleChange('afternoon')}
               value="afternoon"
             />
             <label className={s.bookingTimeCheckboxLabel} htmlFor="timeAfternoon">
@@ -73,7 +79,8 @@ class BookingTime extends Component {
               className={s.bookingTimeCheckbox}
               type="checkbox"
               id="timeEvening"
-              checkedLink={linkState(this, 'evening')}
+              checked={checkedLink('evening').value}
+              onChange={handleChange('evening')}
               value="evening"
             />
             <label className={s.bookingTimeCheckboxLabel} htmlFor="timeEvening">

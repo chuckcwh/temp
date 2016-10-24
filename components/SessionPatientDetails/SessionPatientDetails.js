@@ -5,7 +5,7 @@ import s from './SessionPatientDetails.css';
 import Link from '../Link';
 import { configToName } from '../../core/util';
 
-const imgPencil = require('../pencil.png');
+import imgPencil from '../pencil.png';
 
 const SessionPatientDetails = ({ config, patient, canEdit }) => {
   return (

@@ -2,6 +2,8 @@
 
 .bookingPatient {
   background-color: #f3f3f3;
+  position: relative;
+  min-height: 300px;
 
   & .bookingPatientWrapper {
     display: flex;

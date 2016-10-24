@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Loader from 'react-loader';
 import s from './BookingPatient.css';
 import Container from '../Container';
 import BookingPatientForm from '../BookingPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
 import ConfirmPopup from '../ConfirmPopup';
-import { setOrderBooker, setLastPage, createBookingWithOptions, showLoginPopup, showDayPickerPopup,
-  showAlertPopup, showConfirmPopup } from '../../actions';
+import { S3_UPLOAD_URL_SUCCESS, S3_UPLOAD_SUCCESS, setOrderBooker, setLastPage,
+  createBookingWithOptions, showLoginPopup, showDayPickerPopup,
+  showAlertPopup, showConfirmPopup, getS3UploadUrl, uploadS3 } from '../../actions';
 import history from '../../core/history';
 import { getUniqueId, isNextLastPage } from '../../core/util';
 
@@ -16,6 +18,7 @@ class BookingPatient extends Component {
     super(props);
     this.state = {
       agree: false,
+      uploading: undefined,
     };
   }
 
@@ -46,20 +49,42 @@ class BookingPatient extends Component {
     if (this.agreeForm.checkValidity()) {
       if (!this.formValues) return;
       const values = this.formValues;
-      const user = {
-        clientName: values.clientName,
-        clientEmail: values.clientEmail,
-        clientContact: values.clientContact,
-        patientName: values.patientName,
-        patientDob: values.patientDob,
-        patientContact: values.patientContact,
-        patientIdNum: values.patientIdNum,
-        patientGender: values.patientGender,
-        additionalInfo: values.additionalInfo,
-        isPatient: values.isPatient,
-      };
-      // console.log(user);
-      this.props.setOrderBooker(user);
+      Promise.all((values.additionalInfoImages || []).map(file => new Promise((resolve, reject) => {
+        this.setState({ uploading: true });
+        this.props.getS3UploadUrl({
+          fileType: file.type,
+        }).then((res) => {
+          const { signedRequest, url } = res.response;
+          if (res && res.type === S3_UPLOAD_URL_SUCCESS) {
+            this.props.uploadS3(signedRequest, file).then(res => {
+              if (res && res.type === S3_UPLOAD_SUCCESS) {
+                resolve(url);
+              } else {
+                reject();
+              }
+            });
+          } else {
+            reject();
+          }
+        });
+      }))).then(additionalInfoImages => {
+        this.setState({ uploading: false });
+        const user = {
+          clientName: values.clientName,
+          clientEmail: values.clientEmail,
+          clientContact: values.clientContact,
+          patientName: values.patientName,
+          patientDob: values.patientDob,
+          patientContact: values.patientContact,
+          patientIdNum: values.patientIdNum,
+          patientGender: values.patientGender,
+          additionalInfo: values.additionalInfo,
+          additionalInfoImages,
+          isPatient: values.isPatient,
+        };
+        // console.log(user);
+        this.props.setOrderBooker(user);
+      });
 
       // Delay execution till order is officially updated
       // this.props.createBookingWithOptions(this.props.order, location);
@@ -80,21 +105,24 @@ class BookingPatient extends Component {
   }
 
   render() {
+    const { uploading } = this.state;
     return (
       <div className={s.bookingPatient}>
-        <Container>
-          <div className={s.bookingPatientWrapper}>
-            <div className={s.bookingPatientBody}>
-              <BookingPatientForm
-                showDayPickerPopup={this.props.showDayPickerPopup}
-                showLoginPopup={this.props.showLoginPopup}
-                showAlertPopup={this.props.showAlertPopup}
-                onNext={this.onNext}
-              />
+        <Loader className="spinner" loaded={!uploading}>
+          <Container>
+            <div className={s.bookingPatientWrapper}>
+              <div className={s.bookingPatientBody}>
+                <BookingPatientForm
+                  showDayPickerPopup={this.props.showDayPickerPopup}
+                  showLoginPopup={this.props.showLoginPopup}
+                  showAlertPopup={this.props.showAlertPopup}
+                  onNext={this.onNext}
+                />
+              </div>
+              {this.props.children}
             </div>
-            {this.props.children}
-          </div>
-        </Container>
+          </Container>
+        </Loader>
         <DayPickerPopup
           title="Date of Birth"
           toMonth={new Date()}
@@ -141,6 +169,8 @@ BookingPatient.propTypes = {
   showDayPickerPopup: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
   showConfirmPopup: React.PropTypes.func.isRequired,
+  getS3UploadUrl: React.PropTypes.func.isRequired,
+  uploadS3: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -157,6 +187,8 @@ const mapDispatchToProps = (dispatch) => ({
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),
   showConfirmPopup: () => dispatch(showConfirmPopup()),
+  getS3UploadUrl: (params) => dispatch(getS3UploadUrl(params)),
+  uploadS3: (signedUrl, data) => dispatch(uploadS3(signedUrl, data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookingPatient);

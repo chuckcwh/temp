@@ -196,6 +196,7 @@ const booking = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.LOGIN_BOOKING_REQUEST:
+    case ActionTypes.BOOKING_CREATE_REQUEST:
     case ActionTypes.BOOKING_REQUEST:
     case ActionTypes.BOOKING_CREATE_REQUEST:
     case ActionTypes.BOOKING_EDIT_REQUEST:

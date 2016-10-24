@@ -2,7 +2,7 @@ import React from 'react';
 import Loader from 'react-loader';
 import s from './SessionProviderDetails.css';
 
-const imgPencil = require('../pencil.png');
+import imgPencil from '../pencil.png';
 
 const SessionProviderDetails = ({ provider }) => {
   return (

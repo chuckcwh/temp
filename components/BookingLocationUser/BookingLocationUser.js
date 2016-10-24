@@ -3,17 +3,19 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import moment from 'moment';
 import Loader from 'react-loader';
+import Dropzone from 'react-dropzone';
 import s from './BookingLocationUser.css';
 import Container from '../Container';
+import CloseButton from '../CloseButton';
 import InlineForm from '../InlineForm';
 import BookingLocationUserPatientForm from '../BookingLocationUserPatientForm';
 import DayPickerPopup from '../DayPickerPopup';
-import { USER_EDIT_SUCCESS, PATIENTS_SUCCESS, PATIENT_CREATE_SUCCESS, PATIENT_EDIT_SUCCESS, fetchAddress, getPatients, createPatient,getPatient, editPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
-  setOrderPatient, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
+import { USER_EDIT_SUCCESS, PATIENTS_SUCCESS, PATIENT_CREATE_SUCCESS, PATIENT_EDIT_SUCCESS, S3_UPLOAD_URL_SUCCESS, S3_UPLOAD_SUCCESS, fetchAddress, getPatients, createPatient,getPatient, editPatient, editUser, editEmail, editMobile, verifyMobile, setOrderBooker, setOrderLocation,
+  setOrderPatient, getS3UploadUrl, uploadS3, setLastPage, showAlertPopup, showDayPickerPopup, showInlineForm } from '../../actions';
 import history from '../../core/history';
 import { isNextLastPage, configToName } from '../../core/util';
 
-const imgPencil = require('../pencil.png');
+import imgPencil from '../pencil.png';
 
 class BookingLocationUser extends Component {
 
@@ -22,9 +24,11 @@ class BookingLocationUser extends Component {
     this.state = {
       editing: false,
       savingPatient: false,
+      uploading: false,
 
       patientId: props.order && props.order.patient,
       additionalInfo: props.order && props.order.booker && props.order.booker.additionalInfo,
+      additionalInfoImages: props.order && props.order.booker && props.order.booker.additionalInfoImages || [],
     };
   }
 
@@ -470,31 +474,69 @@ class BookingLocationUser extends Component {
     })
   );
 
+  onOpenClick = () => {
+    this.dropzone.open();
+  };
+
+  onDrop = (files) => {
+    const { additionalInfoImages } = this.state;
+    const newImages = [...additionalInfoImages, ...files];
+    this.setState({ additionalInfoImages: newImages });
+  };
+
+  removeFile = (index) => () => {
+    const { additionalInfoImages } = this.state;
+    const newImages = [...additionalInfoImages];
+    newImages.splice(index, 1);
+    this.setState({ additionalInfoImages: newImages });
+  };
+
   onNext = (event) => {
     if (this.props.patients && this.state.patientId) {
       event.preventDefault();
 
-      const location = history.getCurrentLocation();
-      const booker = {
-        additionalInfo: this.state.additionalInfo,
-      };
-      // console.log(booker);
-      const { postal, description, unit, lat, lng, region, neighborhood } = this.props.patients[this.state.patientId].address;
-      const orderLocation = {
-        postal,
-        description,
-        unit,
-        lat,
-        lng,
-        region,
-        neighborhood,
-      };
-      this.props.setOrderBooker(booker);
-      this.props.setOrderLocation(orderLocation);
-      this.props.setOrderPatient(this.state.patientId);
-      isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
+      Promise.all((this.state.additionalInfoImages || []).map(file => new Promise((resolve, reject) => {
+        this.setState({ uploading: true });
+        this.props.getS3UploadUrl({
+          fileType: file.type,
+        }).then((res) => {
+          const { signedRequest, url } = res.response;
+          if (res && res.type === S3_UPLOAD_URL_SUCCESS) {
+            this.props.uploadS3(signedRequest, file).then(res => {
+              if (res && res.type === S3_UPLOAD_SUCCESS) {
+                resolve(url);
+              } else {
+                reject();
+              }
+            });
+          } else {
+            reject();
+          }
+        });
+      }))).then(additionalInfoImages => {
+        const location = history.getCurrentLocation();
+        const booker = {
+          additionalInfo: this.state.additionalInfo,
+          additionalInfoImages,
+        };
+        // console.log(booker);
+        const { postal, description, unit, lat, lng, region, neighborhood } = this.props.patients[this.state.patientId].address;
+        const orderLocation = {
+          postal,
+          description,
+          unit,
+          lat,
+          lng,
+          region,
+          neighborhood,
+        };
+        this.props.setOrderBooker(booker);
+        this.props.setOrderLocation(orderLocation);
+        this.props.setOrderPatient(this.state.patientId);
+        isNextLastPage('booking2', this.props.lastPage) && this.props.setLastPage('booking2');
 
-      history.push({ pathname: '/booking3a', query: location.query });
+        history.push({ pathname: '/booking3a', query: location.query });
+      });
     } else {
       event.preventDefault();
       // alert('Please fill up all required fields.');
@@ -517,6 +559,7 @@ class BookingLocationUser extends Component {
 
   render() {
     const { config, user } = this.props;
+    const { additionalInfoImages } = this.state;
     let component,
       userDetails,
       patientDetails;
@@ -703,6 +746,38 @@ class BookingLocationUser extends Component {
               onChange={(e) => this.setState({ additionalInfo: e.target.value })}
               value={this.state.additionalInfo}
             />
+            <Dropzone
+              ref={(c) => { this.dropzone = c; }}
+              className={s.dropzone}
+              activeClassName={s.dropzoneActive}
+              onDrop={this.onDrop}
+              disableClick={true}
+            >
+              {(!additionalInfoImages || !Array.isArray(additionalInfoImages) || !additionalInfoImages.length) &&
+                <div className={s.dropzoneNotes}>
+                  <div><strong>IMAGE NOTES</strong></div>
+                  <div>Drop image(s) here, or click on button below.</div>
+                  <button type="button" className="btn btn-primary btn-small" onClick={this.onOpenClick}>
+                    Select File(s)
+                  </button>
+                </div>
+              }
+              {additionalInfoImages && Array.isArray(additionalInfoImages) && !!additionalInfoImages.length &&
+                <div>
+                  <ul>
+                    {additionalInfoImages.map((file, index) => (
+                      <li key={index}>
+                        <img src={file.preview} />
+                        <CloseButton onCloseClicked={this.removeFile(index)} />
+                      </li>
+                    ))}
+                  </ul>
+                  <button type="button" className="btn btn-primary btn-small" onClick={this.onOpenClick}>
+                    Select File(s)
+                  </button>
+                </div>
+              }
+            </Dropzone>
           </div>
         </div>
         <div className={s.bookingLocationUserBodyEditSection}>
@@ -714,14 +789,16 @@ class BookingLocationUser extends Component {
     );
     return (
       <div className={s.bookingLocationUser}>
-        <Container>
-          <div className={s.bookingLocationUserWrapper}>
-            <div className={s.bookingLocationUserBody}>
-              {component}
+        <Loader className="spinner" loaded={!this.state.uploading}>
+          <Container>
+            <div className={s.bookingLocationUserWrapper}>
+              <div className={s.bookingLocationUserBody}>
+                {component}
+              </div>
+              {this.props.children}
             </div>
-            {this.props.children}
-          </div>
-        </Container>
+          </Container>
+        </Loader>
       </div>
     );
   }
@@ -752,6 +829,8 @@ BookingLocationUser.propTypes = {
   setOrderBooker: React.PropTypes.func.isRequired,
   setOrderLocation: React.PropTypes.func.isRequired,
   setOrderPatient: React.PropTypes.func.isRequired,
+  getS3UploadUrl: React.PropTypes.func.isRequired,
+  uploadS3: React.PropTypes.func.isRequired,
   setLastPage: React.PropTypes.func.isRequired,
   showDayPickerPopup: React.PropTypes.func.isRequired,
   showAlertPopup: React.PropTypes.func.isRequired,
@@ -786,6 +865,8 @@ const mapDispatchToProps = (dispatch) => ({
   setOrderBooker: (booker) => dispatch(setOrderBooker(booker)),
   setOrderLocation: (location) => dispatch(setOrderLocation(location)),
   setOrderPatient: (patient) => dispatch(setOrderPatient(patient)),
+  getS3UploadUrl: (params) => dispatch(getS3UploadUrl(params)),
+  uploadS3: (signedUrl, data) => dispatch(uploadS3(signedUrl, data)),
   setLastPage: (page) => dispatch(setLastPage(page)),
   showDayPickerPopup: (value, source) => dispatch(showDayPickerPopup(value, source)),
   showAlertPopup: (message) => dispatch(showAlertPopup(message)),

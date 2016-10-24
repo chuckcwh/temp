@@ -1,16 +1,27 @@
-/* eslint-disable camelcase */
-
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
+import Dropzone from 'react-dropzone';
 import s from './BookingPatientForm.css';
+import CloseButton from '../CloseButton';
 
 class BookingPatientForm extends Component {
 
-  onClickLogin = (event) => {
-    event.preventDefault();
+  onOpenClick = () => {
+    this.dropzone.open();
+  };
 
-    this.props.showLoginPopup();
+  onDrop = (files) => {
+    const { fields: { additionalInfoImages } } = this.props;
+    const newImages = [...(additionalInfoImages.value || []), ...files];
+    additionalInfoImages.onChange(newImages);
+  };
+
+  removeFile = (index) => () => {
+    const { fields: { additionalInfoImages } } = this.props;
+    const newImages = [...additionalInfoImages.value];
+    newImages.splice(index, 1)
+    additionalInfoImages.onChange(newImages);
   };
 
   render() {
@@ -25,6 +36,7 @@ class BookingPatientForm extends Component {
         patientIdNum,
         patientGender,
         additionalInfo,
+        additionalInfoImages,
         isPatient,
       },
       invalid,
@@ -32,15 +44,10 @@ class BookingPatientForm extends Component {
       submitFailed,
       submitting,
       config,
+      onNext,
     } = this.props;
     return (
-      <form className={s.bookingPatientForm} onSubmit={handleSubmit(this.props.onNext)}>
-        {/*
-        <div className={s.bookingPatientFormSection}>
-          <span>I&apos;m an existing customer</span>
-          <a href="#" className="btn btn-primary btn-small btn-inline" onClick={this.onClickLogin}>LOGIN</a>
-        </div>
-        */}
+      <form className={s.bookingPatientForm} onSubmit={handleSubmit(onNext)}>
         <div className={s.bookingPatientFormSection}>
           <div>Contact Details</div>
           {/*
@@ -69,7 +76,7 @@ class BookingPatientForm extends Component {
           <div>
             <span className={s.patientDetailsLabel1}>Patient Details</span>
             <span className={s.patientDetailsLabel2}> (
-              <input className={s.rememberMeCheckbox} type="checkbox" id="isPatient" name="isPatient" {...isPatient} />
+              <input className={s.rememberMeCheckbox} type="checkbox" id="isPatient" {...isPatient} />
               <label className={s.rememberMeCheckboxLabel} htmlFor="isPatient">
                 <span></span><span>Are you the patient?</span>
               </label>
@@ -104,7 +111,6 @@ class BookingPatientForm extends Component {
                     <input
                       type="radio"
                       id={`patient_gender_${elem.value}`}
-                      name="patient_gender"
                       {...patientGender}
                       value={elem.value}
                       checked={patientGender.value === elem.value}
@@ -123,15 +129,45 @@ class BookingPatientForm extends Component {
             <div>
               <div>Additional Info:</div>
               <textarea
-                name="additionalInfo"
                 placeholder="Please provide important notes about patient here."
                 {...additionalInfo}
                 value={additionalInfo.value || ''}
               />
               {additionalInfo.touched && additionalInfo.error && <div className={s.bookingPatientFormError}>{additionalInfo.error}</div>}
+              <Dropzone
+                ref={(c) => { this.dropzone = c; }}
+                className={s.dropzone}
+                activeClassName={s.dropzoneActive}
+                onDrop={this.onDrop}
+                disableClick={true}
+              >
+                {(!additionalInfoImages || !Array.isArray(additionalInfoImages.value) || !additionalInfoImages.value.length) &&
+                  <div className={s.dropzoneNotes}>
+                    <div><strong>IMAGE NOTES</strong></div>
+                    <div>Drop image(s) here, or click on button below.</div>
+                    <button type="button" className="btn btn-primary btn-small" onClick={this.onOpenClick}>
+                      Select File(s)
+                    </button>
+                  </div>
+                }
+                {additionalInfoImages && Array.isArray(additionalInfoImages.value) && !!additionalInfoImages.value.length &&
+                  <div>
+                    <ul>
+                      {additionalInfoImages.value.map((file, index) => (
+                        <li key={index}>
+                          <img src={file.preview} />
+                          <CloseButton onCloseClicked={this.removeFile(index)} />
+                        </li>
+                      ))}
+                    </ul>
+                    <button type="button" className="btn btn-primary btn-small" onClick={this.onOpenClick}>
+                      Select File(s)
+                    </button>
+                  </div>
+                }
+              </Dropzone>
             </div>
           </div>
-          <p className="small">This information will only be used to contact you regarding your booking.</p>
           {submitFailed && invalid && <div className={s.bookingPatientFormError}>You have one or more form field errors.</div>}
           <button className="btn btn-primary" type="submit" disabled={submitting}>BOOK NOW</button>
         </div>
@@ -198,7 +234,6 @@ BookingPatientForm.propTypes = {
   showLoginPopup: PropTypes.func.isRequired,
   showAlertPopup: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
-  config: PropTypes.object,
 };
 
 const reduxFormConfig = {
@@ -213,6 +248,7 @@ const reduxFormConfig = {
     'patientIdNum',
     'patientGender',
     'additionalInfo',
+    'additionalInfoImages',
     'isPatient',
   ],
   validate,
@@ -232,6 +268,7 @@ const mapStateToProps = (state) => {
       patientIdNum: order && order.booker && order.booker.patientIdNum || undefined,
       patientGender: order && order.booker && order.booker.patientGender || undefined,
       additionalInfo: order && order.booker && order.booker.additionalInfo || undefined,
+      additionalInfoImages: order && order.booker && order.booker.additionalInfoImages || [],
       isPatient: order && order.booker && order.booker.isPatient || undefined,
     },
   };

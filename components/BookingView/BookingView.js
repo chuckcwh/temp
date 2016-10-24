@@ -13,7 +13,7 @@ import { SESSION_CANCEL_SUCCESS, fetchServices, getBooking, editBooking, clearBo
 import { configToName, removeByKey } from '../../core/util';
 import history from '../../core/history';
 
-const imgPencil = require('../pencil.png');
+import imgPencil from '../pencil.png';
 
 class BookingView extends Component {
 

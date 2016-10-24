@@ -68,6 +68,7 @@ const feedback = (state = {
     case ActionTypes.SHOW_MODAL_FEEDBACK:
       return {
         visible: true,
+        params: action.params,
       };
     case ActionTypes.HIDE_MODAL_FEEDBACK:
       return {

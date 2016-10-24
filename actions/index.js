@@ -54,6 +54,10 @@ export const SESSION_DOCUMENTATION_GET_REQUEST = 'SESSION_DOCUMENTATION_GET_REQU
 export const SESSION_DOCUMENTATION_GET_SUCCESS = 'SESSION_DOCUMENTATION_GET_SUCCESS'
 export const SESSION_DOCUMENTATION_GET_FAILURE = 'SESSION_DOCUMENTATION_GET_FAILURE'
 
+export const SESSION_FEEDBACK_CREATE_REQUEST = 'SESSION_FEEDBACK_CREATE_REQUEST'
+export const SESSION_FEEDBACK_CREATE_SUCCESS = 'SESSION_FEEDBACK_CREATE_SUCCESS'
+export const SESSION_FEEDBACK_CREATE_FAILURE = 'SESSION_FEEDBACK_CREATE_FAILURE'
+
 export const BOOKINGS_REQUEST = 'BOOKINGS_REQUEST'
 export const BOOKINGS_SUCCESS = 'BOOKINGS_SUCCESS'
 export const BOOKINGS_FAILURE = 'BOOKINGS_FAILURE'
@@ -827,6 +831,12 @@ function fetchAction(route) {
       method: 'get',
       auth: 'user'
     },
+    createSessionFeedback: {
+      types: [ SESSION_FEEDBACK_CREATE_REQUEST, SESSION_FEEDBACK_CREATE_SUCCESS, SESSION_FEEDBACK_CREATE_FAILURE ],
+      endpoint: '/sessions/:sessionId/feedback',
+      method: 'post',
+      auth: 'user'
+    },
     getUserReviews: {
       types: [ USER_REVIEWS_REQUEST, USER_REVIEWS_SUCCESS, USER_REVIEWS_FAILURE ],
       endpoint: '/users/:userId/reviews',
@@ -1254,6 +1264,10 @@ export function editSessionDocumentation(params) {
 
 export function getSessionDocumentation(params) {
   return fetch('getSessionDocumentation', params);
+}
+
+export function createSessionFeedback(params) {
+  return fetch('createSessionFeedback', params);
 }
 
 export function getUserDevices(params) {
@@ -1857,9 +1871,10 @@ export function hideGenericPopup() {
   }
 }
 
-export function showFeedbackPopupForm() {
+export function showFeedbackPopupForm(params) {
   return {
     type: SHOW_MODAL_FEEDBACK,
+    params,
   }
 }
 

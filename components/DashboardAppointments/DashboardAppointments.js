@@ -7,8 +7,16 @@ import s from './DashboardAppointments.css';
 import Link from '../Link';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
-import { fetchServices } from '../../actions';
+import {
+  SESSIONS_SUCCESS,
+  fetchServices,
+  showFeedbackPopupForm,
+  hideFeedbackPopupForm,
+  getSessions,
+  showAlertPopup,
+} from '../../actions';
 import { configToName, formatSessionAlias } from '../../core/util';
+import FeedbackPopupForm from '../FeedbackPopupForm';
 
 class DashboardAppointments extends Component {
 
@@ -23,11 +31,22 @@ class DashboardAppointments extends Component {
     this.props.fetchServices();
   }
 
+  onFeedbackSuccess = () => {
+    const { getSessions, userId, hideFeedbackPopupForm, showAlertPopup } = this.props;
+
+    getSessions({client: userId});
+    hideFeedbackPopupForm();
+    showAlertPopup('Submit success!');
+  }
+
   render() {
     const { config, services, patients, sessions, sessionsFetching, sessionsByPatient } = this.props;
+
     return (
       <div className={s.dashboardAppointments}>
         <Loader className="spinner" loaded={!sessionsFetching}>
+          <FeedbackPopupForm onFeedbackSuccess={() => this.onFeedbackSuccess()}/>
+
           <Link className={s.dashboardInfoBtn} to="/booking1">Book Appointment</Link>
           <div className={s.cases}>
             <div className={s.casesFilter}>
@@ -111,6 +130,15 @@ class DashboardAppointments extends Component {
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
+                            <DashboardTableButton
+                              color={session.clientFeedback ? "green" : "red"}
+                              onClick={() => this.props.showFeedbackPopupForm({
+                                sessionId: session._id,
+                                feedbackData: session.clientFeedback,
+                              })}
+                            >
+                              Feedback
+                            </DashboardTableButton>
                           </Col>
                         </Row>
                       ))
@@ -144,6 +172,7 @@ DashboardAppointments.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  userId: state.user.data._id,
   config: state.config.data,
   services: state.services.data,
   servicesFetching: state.services.isFetching,
@@ -166,7 +195,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  hideFeedbackPopupForm: () => dispatch(hideFeedbackPopupForm()),
+  getSessions: (params) => dispatch(getSessions(params)),
   fetchServices: () => dispatch(fetchServices()),
+  showFeedbackPopupForm: (params) => dispatch(showFeedbackPopupForm(params)),
+  showAlertPopup: (body) => dispatch(showAlertPopup(body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardAppointments);

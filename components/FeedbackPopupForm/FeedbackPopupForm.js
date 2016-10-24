@@ -6,27 +6,54 @@ import s from './FeedbackPopupForm.css';
 import Container from '../Container';
 import Link from '../Link';
 import Popup from '../Popup';
-import { hideFeedbackPopupForm } from '../../actions';
+import { SESSION_FEEDBACK_CREATE_SUCCESS, createSessionFeedback, getSessions, hideFeedbackPopupForm } from '../../actions';
 import history from '../../core/history';
 import { reduxForm } from 'redux-form';
+import MultiSelect from '../MultiSelect';
+import ReactStars from 'react-stars';
 
 
 class FeedbackPopupForm extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      submitFailed: false,
+    }
+  }
 
-    this.state = {}
+  onFormSubmit = (values) => {
+    console.log('values', values);
+    const { sessionId, createSessionFeedback, feedbackFieldSelection, onFeedbackSuccess } = this.props;
+    const { feedbackFields, topics, content } = values;
+
+    const data = {
+      sessionId,
+      fields: values.feedbackFields.filter(item => item.value).map(field => ({
+        name: feedbackFieldSelection.filter(selection => selection.name === field.name)[0].value,
+        value: field.value,
+      })),
+      topics: topics && topics.split(','),
+      content,
+    }
+
+    createSessionFeedback(data).then(res => {
+      if (res.type === SESSION_FEEDBACK_CREATE_SUCCESS) {
+        this.props.onFeedbackSuccess();
+      } else {
+        this.setState({ submitFailed: true})
+      }
+    })
   }
 
   render() {
     const {
       fields: {
-        overall,
-        quality,
-        feedbackTags,
-        feedbackComment,
+        feedbackFields,
+        topics,
+        content,
       },
+      topicChoice,
 
       invalid,
       handleSubmit,
@@ -34,15 +61,10 @@ class FeedbackPopupForm extends Component {
       submitFailed,
       submitting,
     } = this.props;
-
-    const feedbackTagChoice = [
-      {value: "refund", label: "Refund"},
-      {value: "service", label: "Service"},
-      {value: "other", label: "Other"},
-    ]
+    const { submitResult } = this.state;
 
     return (
-      <div className={s.feedbackPopupForm}>
+      <form className={s.feedbackPopupForm} onSubmit={handleSubmit(this.onFormSubmit)}>
         <Popup
           css={s}
           isOpen={this.props.visible}
@@ -50,26 +72,43 @@ class FeedbackPopupForm extends Component {
           onOverlayClicked={this.props.hideFeedbackPopupForm}
         >
           <h2 className={s.title}>Feedback</h2>
-          <div className={s.ratingField}>
-            <div>
-              <span>Overall</span>
-
-            </div>
-            <div>
-              <span>Service Quality</span>
-
-            </div>
+          <div className={s.ratingContainer}>
+            {feedbackFields && feedbackFields.map((field, index) => (
+              <div key={index} className={s.ratingField}>
+                <span>{field.name.value}</span>
+                <div className={s.ratingStars}>
+                  <ReactStars
+                    count={5}
+                    size={24}
+                    color2={'#fdbc1d'}
+                    {...field.value}
+                    />
+                </div>
+              </div>
+            ))}
           </div>
-          <div>
+          <div className={s.feedbackContainer}>
             <h3>Feedback</h3>
-            <div>
-              <div>
-                <input />
+            <div className={s.inputContainer}>
+              <div className={s.inputField}>
+                <MultiSelect
+                  className={s.multiSelect}
+                  options={topicChoice}
+                  {...topics}
+                />
+              </div>
+              <div className={s.inputField}>
+                <textarea className={s.content} {...content} />
               </div>
             </div>
           </div>
+
+          {submitFailed && (<p className={s.red}>Submit failed.</p>)}
+          <button className={cx("btn btn-default", s.submitBtn)} disabled={submitting || invalid}>
+            Submit
+          </button>
         </Popup>
-      </div>
+      </form>
     );
   }
 }
@@ -77,9 +116,9 @@ class FeedbackPopupForm extends Component {
 const validate = values => {
   const errors = {};
 
-  // if (!values.bankCode) {
-  //   errors.bankCode = 'Required';
-  // }
+  if (!values.feedbackFields.length && !values.feedbackFields.filter(item => item.value) && !values.topics && !values.content) {
+    errors.overall = 'Required';
+  }
 
   return errors;
 };
@@ -96,20 +135,40 @@ FeedbackPopupForm.propTypes = {
 const reduxFormConfig = {
   form: 'feedbackPopupForm',
   fields: [
-    'overall',
-    'quality',
-    'feedbackTags',
-    'feedbackComment',
+    'feedbackFields[].name',
+    'feedbackFields[].value',
+    'topics',
+    'content',
   ],
   validate,
 };
 
-const mapStateToProps = (state) => ({
-  visible: state.modal.feedback.visible,
-});
+const mapStateToProps = (state) => {
+  const feedbackFieldSelection = state.config.data && state.config.data.feedbackFields;
+  const { params } = state.modal.feedback;
+
+  return {
+    visible: state.modal.feedback.visible,
+    sessionId: params && params.sessionId,
+    userId: params && params.userId,
+    topicChoice: state.config.data && state.config.data.feedbackTopics && state.config.data.feedbackTopics.map(item => ({value: item.value, label: item.name})),
+    feedbackFieldSelection,
+
+    initialValues: (params && params.feedbackData) ? {
+      feedbackFields: feedbackFieldSelection && feedbackFieldSelection.map(item => ({
+        name: item.name,
+        value: params.feedbackData.fields && params.feedbackData.fields.filter(field => field.name === item.value)[0].value,
+      })),
+      topics: params.feedbackData.topics.join(','),
+      content: params.feedbackData.content,
+    } : {
+      feedbackFields: feedbackFieldSelection && feedbackFieldSelection.map(item => ({ name: item.name, value: "" })),
+    }
+}};
 
 const mapDispatchToProps = (dispatch) => ({
   hideFeedbackPopupForm: () => dispatch(hideFeedbackPopupForm()),
+  createSessionFeedback: (params) => dispatch(createSessionFeedback(params)),
 });
 
 export default reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(FeedbackPopupForm);

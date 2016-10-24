@@ -119,19 +119,10 @@
         }
       }
 
-      & .patientAddress {
-        display: flex;
-
-        & .patientAddressLeft {
-          flex: 1 0;
-        }
-
-        & .patientAddressRight {
-          flex: 1 0;
-        }
-
-        @media (--sm-viewport) {
-          flex-flow: row wrap;
+      & .additionalInfoImages {
+        & img {
+          height: 150px;
+          margin-right: 5px;
         }
       }
 

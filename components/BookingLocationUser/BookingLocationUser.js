@@ -499,6 +499,7 @@ class BookingLocationUser extends Component {
         this.setState({ uploading: true });
         this.props.getS3UploadUrl({
           fileType: file.type,
+          acl: 'private',
         }).then((res) => {
           const { signedRequest, url } = res.response;
           if (res && res.type === S3_UPLOAD_URL_SUCCESS) {

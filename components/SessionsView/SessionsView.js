@@ -14,10 +14,10 @@ import SessionPatientDetails from '../SessionPatientDetails';
 import SessionAddressDetails from '../SessionAddressDetails';
 import SessionProviderDetails from '../SessionProviderDetails';
 import { SESSION_CANCEL_SUCCESS,
-    fetchServices, getSessions, getPatients, getSuggestedSession, editBooking,
-    clearBooking, setPostStatus, cancelSession,
+  fetchServices, getSessions, getPatients, getSuggestedSession, editBooking,
+  clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showDayPickerPopup, showInlineForm } from '../../actions';
-import { configToName, formatSessionAlias, isClient, isProvider } from '../../core/util';
+import { configToName, formatSessionAlias, getDownloadUrl, isClient, isProvider } from '../../core/util';
 import history from '../../core/history';
 
 import imgPencil from '../pencil.png';
@@ -546,7 +546,16 @@ class SessionsView extends Component {
                       <div className="TableRow">
                         <div className="TableRowItem1">Additional Notes</div>
                         <div className="TableRowItem3">
-                          {session.additionalInfo}
+                          <div>{session.additionalInfo}</div>
+                          {session && session.additionalInfoImages && session.additionalInfoImages.length &&
+                            <div className={s.additionalInfoImages}>
+                              {
+                                session.additionalInfoImages.map(additionalInfoImage => (
+                                  <img src={getDownloadUrl(additionalInfoImage)} />
+                                ))
+                              }
+                            </div>
+                          }
                         </div>
                       </div>
                     }

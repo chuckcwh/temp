@@ -47,6 +47,10 @@ export function getUriQueryParam(key) {
     && location.query[key];
 }
 
+export function getDownloadUrl(privateUrl) {
+  return `${host}/api/s3/redirectObjectUrl?fileName=${encodeURIComponent(privateUrl)}&access_token=${cookie.load('user_token') || cookie.load('booking_token')}`;
+}
+
 export function isProduction() {
   return (typeof window !== 'undefined' &&
     window.location.hostname.indexOf('www.ebeecare.com') > -1);

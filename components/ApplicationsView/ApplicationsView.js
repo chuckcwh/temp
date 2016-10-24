@@ -15,7 +15,7 @@ import SessionAddressDetails from '../SessionAddressDetails';
 import SessionProviderDetails from '../SessionProviderDetails';
 import { SESSION_CANCEL_SUCCESS, fetchServices, getApplication, editBooking, clearBooking, setPostStatus, cancelSession,
   showConfirmPopup, showInlineForm } from '../../actions';
-import { configToName, formatSessionAlias, isClient, isProvider } from '../../core/util';
+import { configToName, formatSessionAlias, getDownloadUrl, isClient, isProvider } from '../../core/util';
 import history from '../../core/history';
 
 const imgPencil = require('../pencil.png');
@@ -494,7 +494,16 @@ class ApplicationsView extends Component {
                       <div className="TableRow">
                         <div className="TableRowItem1">Additional Notes</div>
                         <div className="TableRowItem3">
-                          {session.additionalInfo}
+                          <div>{session.additionalInfo}</div>
+                          {session && session.additionalInfoImages && session.additionalInfoImages.length &&
+                            <div className={s.additionalInfoImages}>
+                              {
+                                session.additionalInfoImages.map(additionalInfoImage => (
+                                  <img src={getDownloadUrl(additionalInfoImage)} />
+                                ))
+                              }
+                            </div>
+                          }
                         </div>
                       </div>
                     }

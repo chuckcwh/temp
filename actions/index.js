@@ -811,19 +811,19 @@ function fetchAction(route) {
     },
     createSessionDocumentation: {
       types: [ SESSION_DOCUMENTATION_CREATE_REQUEST, SESSION_DOCUMENTATION_CREATE_SUCCESS, SESSION_DOCUMENTATION_CREATE_FAILURE ],
-      endpoint: '/sessions/:sessionId/documentation',
+      endpoint: '/sessions/:sessionId/documentations',
       method: 'post',
       auth: 'user'
     },
     editSessionDocumentation: {
       types: [ SESSION_DOCUMENTATION_EDIT_REQUEST, SESSION_DOCUMENTATION_EDIT_SUCCESS, SESSION_DOCUMENTATION_EDIT_FAILURE ],
-      endpoint: '/sessions/:sessionId/documentation',
+      endpoint: '/sessions/:sessionId/documentations',
       method: 'put',
       auth: 'user'
     },
     getSessionDocumentation: {
       types: [ SESSION_DOCUMENTATION_GET_REQUEST, SESSION_DOCUMENTATION_GET_SUCCESS, SESSION_DOCUMENTATION_GET_FAILURE ],
-      endpoint: '/sessions/:sessionId/documentation',
+      endpoint: '/sessions/:sessionId/documentations',
       method: 'get',
       auth: 'user'
     },

@@ -1814,6 +1814,8 @@ export const SHOW_MODAL_CONFIRM = 'SHOW_MODAL_CONFIRM'
 export const HIDE_MODAL_CONFIRM = 'HIDE_MODAL_CONFIRM'
 export const SHOW_MODAL_GENERIC = 'SHOW_MODAL_GENERIC'
 export const HIDE_MODAL_GENERIC = 'HIDE_MODAL_GENERIC'
+export const SHOW_MODAL_FEEDBACK = 'SHOW_MODAL_FEEDBACK'
+export const HIDE_MODAL_FEEDBACK = 'HIDE_MODAL_FEEDBACK'
 export const SHOW_MODAL_LOGIN = 'SHOW_MODAL_LOGIN'
 export const HIDE_MODAL_LOGIN = 'HIDE_MODAL_LOGIN'
 export const SHOW_MODAL_DAYPICKER = 'SHOW_MODAL_DAYPICKER'
@@ -1851,6 +1853,18 @@ export function showGenericPopup() {
 export function hideGenericPopup() {
   return {
     type: HIDE_MODAL_GENERIC,
+  }
+}
+
+export function showFeedbackPopupForm() {
+  return {
+    type: SHOW_MODAL_FEEDBACK,
+  }
+}
+
+export function hideFeedbackPopupForm() {
+  return {
+    type: HIDE_MODAL_FEEDBACK,
   }
 }
 

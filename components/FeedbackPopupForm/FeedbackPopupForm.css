@@ -1,0 +1,37 @@
+@import '../variables.css';
+
+/* .bookingApp {} */
+.feedbackPopupForm {
+  & .popupDialog {
+    box-sizing: border-box;
+    width: 60%;
+    margin-left: -12.5%;
+    height: auto;
+    margin-top: 0;
+    top: 100px;
+    text-align: center;
+
+    @media (--sm-viewport) {
+      width: 80%;
+      margin-left: -40%;
+    }
+  }
+
+  & a {
+    color: var(--brand-color);
+  }
+
+  & label {
+    margin: 0;
+  }
+
+  &Footer {
+    text-align: center;
+    margin: 20px 0;
+
+    & a {
+      margin: 5px;
+      color: #fff;
+    }
+  }
+}

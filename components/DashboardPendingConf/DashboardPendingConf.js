@@ -7,8 +7,10 @@ import s from './DashboardPendingConf.css';
 import Link from '../Link';
 import DashboardDataTable from '../DashboardDataTable';
 import DashboardTableButton from '../DashboardTableButton';
-import { fetchServices } from '../../actions';
+import { fetchServices, showFeedbackPopupForm } from '../../actions';
 import { configToName, formatSessionAlias } from '../../core/util';
+import FeedbackPopupForm from '../FeedbackPopupForm';
+
 
 class DashboardPendingConf extends Component {
 
@@ -27,6 +29,7 @@ class DashboardPendingConf extends Component {
       <div className={s.dashboardPendingConf}>
         <Loader className="spinner" loaded={!sessionsFetching}>
           <Link className={s.dashboardInfoBtn} to="/booking1">Book Appointment</Link>
+          <FeedbackPopupForm />
           <div className={s.cases}>
           {
             sessionsByPatient && Object.keys(sessionsByPatient).map(patientId => {
@@ -73,6 +76,7 @@ class DashboardPendingConf extends Component {
                           <Col xs={4}>Action(s)</Col>
                           <Col xs={8} md={2}>
                             <DashboardTableButton to={`/sessions/${session._id}`}>View</DashboardTableButton>
+                            <DashboardTableButton onClick={this.props.showFeedbackPopupForm}>Feedback</DashboardTableButton>
                             <DashboardTableButton onClick={this.props.onCancelSession(session._id)}>Cancel</DashboardTableButton>
                           </Col>
                         </Row>
@@ -130,6 +134,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchServices: () => dispatch(fetchServices()),
+  showFeedbackPopupForm: (body) => dispatch(showFeedbackPopupForm(body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPendingConf);

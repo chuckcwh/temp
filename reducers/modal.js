@@ -61,6 +61,23 @@ const generic = (state = {
   }
 }
 
+const feedback = (state = {
+  visible: false,
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.SHOW_MODAL_FEEDBACK:
+      return {
+        visible: true,
+      };
+    case ActionTypes.HIDE_MODAL_FEEDBACK:
+      return {
+        visible: false,
+      }
+    default:
+      return state;
+  }
+}
+
 const login = (state = false, action) => {
   switch (action.type) {
     case ActionTypes.SHOW_MODAL_LOGIN:
@@ -197,6 +214,7 @@ const modal = combineReducers({
   alert,
   confirm,
   generic,
+  feedback,
   login,
   daypicker,
   verifyUser,

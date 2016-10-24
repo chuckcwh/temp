@@ -58,11 +58,11 @@ class DashboardPendingPayment extends Component {
           }
           <div className={s.cases}>
           {
-            sessionsByPatient && Object.keys(sessionsByPatient).map(patientId => {
+            sessionsByPatient && Object.keys(sessionsByPatient).map((patientId, index) => {
               const patientName = patients && patients[patientId] && patients[patientId].name;
               const filteredSessions = sessionsByPatient[patientId].filter(session => session.status === 'pending-payment');
               if (filteredSessions.length === 0) {
-                return <div>
+                return <div key={index}>
                   <h3>{patientName}</h3>
                   <p>No appointments found.</p>
                 </div>;

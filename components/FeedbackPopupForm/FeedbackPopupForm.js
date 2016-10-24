@@ -8,6 +8,7 @@ import Link from '../Link';
 import Popup from '../Popup';
 import { hideFeedbackPopupForm } from '../../actions';
 import history from '../../core/history';
+import { reduxForm } from 'redux-form';
 
 
 class FeedbackPopupForm extends Component {

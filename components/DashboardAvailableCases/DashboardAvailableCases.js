@@ -56,7 +56,7 @@ class DashboardAvailableCases extends Component {
     return (
       <div className={s.dashboardAvailableCases}>
         <Container>
-          {!isActivatedProvider(user) &&
+          {isProvider(user) && !isActivatedProvider(user) &&
             <p>You are unable to view cases because your account is not activated. Please contact eBeeCare at 6514 9729 or <a href="mailto:contact@ebeecare.com">contact@ebeecare.com</a> to activate your account right away.</p>
           }
           <Loader className="spinner" loaded={!sessionsFetching}>
